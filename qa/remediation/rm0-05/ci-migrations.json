@@ -1,8 +1,8 @@
 {
-  "timestamp": "2026-11-17T06:16:11.791729+00:00",
+  "timestamp": "2026-11-17T07:33:19.417021+00:00",
   "scope": "disposable PostgreSQL DDL/ledger/role integration only",
   "image": "postgres:18.7-alpine@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015",
-  "container": "helpdesk-m0-contract-315d886664",
+  "container": "helpdesk-m0-contract-1e757302ad",
   "host_ports": [],
   "persistent_volumes": [],
   "command": "python scripts/test_owner_migrations.py",

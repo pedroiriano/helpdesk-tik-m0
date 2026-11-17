@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-11-17T06:16:40.016434+00:00",
+  "timestamp": "2026-11-17T07:34:04.612910+00:00",
   "task_id": "M0-13",
   "scope": "frontend_link_audit",
   "result": "PASS",
-  "scanned_files_count": 26,
-  "total_links_checked": 579,
+  "scanned_files_count": 25,
+  "total_links_checked": 580,
   "broken_links_count": 0,
   "broken_links": [],
   "placeholder_matches_count": 0,
@@ -114,14 +114,14 @@
       "path": "/status",
       "url": "http://127.0.0.1:18090/status",
       "status": 200,
-      "size_bytes": 10844,
+      "size_bytes": 11394,
       "ok": true
     },
     {
       "path": "/kontak",
       "url": "http://127.0.0.1:18090/kontak",
       "status": 200,
-      "size_bytes": 13236,
+      "size_bytes": 11090,
       "ok": true
     },
     {
@@ -135,21 +135,21 @@
       "path": "/admin/app/helpdesk/index.html",
       "url": "http://127.0.0.1:18090/admin/app/helpdesk/index.html",
       "status": 200,
-      "size_bytes": 68027,
+      "size_bytes": 63561,
       "ok": true
     },
     {
       "path": "/admin/app/tickets/index.html",
       "url": "http://127.0.0.1:18090/admin/app/tickets/index.html",
       "status": 200,
-      "size_bytes": 32105,
+      "size_bytes": 27639,
       "ok": true
     },
     {
       "path": "/admin/auth/login.html",
       "url": "http://127.0.0.1:18090/admin/auth/login.html",
       "status": 200,
-      "size_bytes": 19927,
+      "size_bytes": 19919,
       "ok": true
     }
   ],
