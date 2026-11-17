@@ -272,13 +272,19 @@ const setStatus = (text: string, selector = '[data-ticket-status]'): void => {
 };
 
 const formValue = (form: HTMLFormElement, name: string): string => {
-
   const item = form.elements.namedItem(name);
-
   if (!item) return '';
-
   return ((item as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement).value ?? '').trim();
+};
 
+const toWibDatetimeInput = (date: Date): string =>
+  new Date(date.getTime() + 7 * 3600000).toISOString().slice(0, 16);
+
+const parseWibDatetimeInput = (raw: string): Date | undefined => {
+  const trimmed = raw.trim();
+  if (!trimmed) return undefined;
+  const parsed = new Date(trimmed.length === 16 ? `${trimmed}:00+07:00` : `${trimmed}+07:00`);
+  return Number.isNaN(parsed.getTime()) ? undefined : parsed;
 };
 
 function attachmentSender() {
@@ -2655,21 +2661,24 @@ async function ticketDetail(): Promise<void> {
         for (const control of confirmSec.querySelectorAll<HTMLButtonElement>('button[type=submit], [data-btn-confirm-accept], [data-btn-confirm-reject]')) control.disabled = !resolution;
       }
       if (vendorSec) {
-
         vendorSec.hidden = !available.vendor;
-
-        const pic = $<HTMLInputElement>('#vendor-pic', vendorSec);
-
-        if (pic && !pic.value && session) pic.value = session.actor.subject_id;
-
+        if (available.vendor) {
+          const pic = $<HTMLInputElement>('#vendor-pic', vendorSec);
+          const defaultPic = currentTicket.assignee_id || session?.actor.subject_id || '';
+          if (pic && !pic.value && defaultPic) pic.value = defaultPic;
+          const retInput = $<HTMLInputElement>('#vendor-return', vendorSec);
+          if (retInput && !retInput.value) retInput.value = toWibDatetimeInput(new Date(Date.now() + 24 * 3600000));
+          const folInput = $<HTMLInputElement>('#vendor-followup', vendorSec);
+          if (folInput && !folInput.value) folInput.value = toWibDatetimeInput(new Date(Date.now() + 4 * 3600000));
+        }
       }
 
-
-
       if (pauseSec) {
-
         pauseSec.hidden = !available.pause;
-
+        if (available.pause) {
+          const untilInput = $<HTMLInputElement>('#pause-until', pauseSec);
+          if (untilInput && !untilInput.value) untilInput.value = toWibDatetimeInput(new Date(Date.now() + 2 * 3600000));
+        }
       }
 
 
@@ -3260,133 +3269,111 @@ async function ticketDetail(): Promise<void> {
   }
 
   // M0-07: Form Vendor
-
   const formVendor = $<HTMLFormElement>('[data-form-vendor]');
-
   if (formVendor) {
-
     let vendorPending = false;
-
     formVendor.addEventListener('submit', async e => {
-
       e.preventDefault();
-
       if (vendorPending || !currentTicket || !formVendor.reportValidity()) return;
-
-      vendorPending = true;
-
-      const btn = $<HTMLButtonElement>('button[type=submit]', formVendor);
-
-      if (btn) btn.disabled = true;
-
       const vendorId = formValue(formVendor, 'vendor_id');
-
       const internalPicId = formValue(formVendor, 'internal_pic_id');
-
-      const referenceNo = formValue(formVendor, 'reference_no');
-
-      const summary = formValue(formVendor, 'summary');
-
-      try {
-
-        await api(`/tickets/${ticketId}/vendor-cases`, 'POST', {
-
-          expected_version: currentTicket.version,
-
-          vendor_id: vendorId,
-
-          internal_pic_id: internalPicId,
-
-          reference_no: referenceNo,
-
-          summary
-
-        }, keyGen('vendor', currentTicket.id + currentTicket.version));
-
-        setStatus('Kasus vendor berhasil dicatat.', '[data-vendor-status]');
-
-        formVendor.reset();
-
-        await refresh();
-
-      } catch (err) {
-
-        if (err instanceof APIError && err.status === 409 && conflictBanner) conflictBanner.hidden = false;
-
-        setStatus(errorText(err), '[data-vendor-status]');
-
-      } finally {
-
-        vendorPending = false;
-
-        if (btn) btn.disabled = false;
-
+      const externalReference = formValue(formVendor, 'external_reference');
+      const contractReference = formValue(formVendor, 'contract_reference');
+      const expectedReturnAt = parseWibDatetimeInput(formValue(formVendor, 'expected_return_at'));
+      const nextFollowupAt = parseWibDatetimeInput(formValue(formVendor, 'next_followup_at'));
+      const nowMs = Date.now();
+      if (!expectedReturnAt || expectedReturnAt.getTime() <= nowMs) {
+        setStatus('Estimasi selesai vendor harus berupa waktu di masa depan (WIB).', '[data-vendor-status]');
+        $<HTMLInputElement>('#vendor-return', formVendor)?.focus();
+        return;
       }
-
+      if (!nextFollowupAt || nextFollowupAt.getTime() <= nowMs) {
+        setStatus('Batas waktu tindak lanjut PIC harus berupa waktu di masa depan (WIB).', '[data-vendor-status]');
+        $<HTMLInputElement>('#vendor-followup', formVendor)?.focus();
+        return;
+      }
+      vendorPending = true;
+      const btn = $<HTMLButtonElement>('button[type=submit]', formVendor);
+      if (btn) btn.disabled = true;
+      const payload = {
+        expected_version: currentTicket.version,
+        vendor_id: vendorId,
+        internal_pic_id: internalPicId,
+        external_reference: externalReference,
+        contract_reference: contractReference,
+        expected_return_at: expectedReturnAt.toISOString(),
+        next_followup_at: nextFollowupAt.toISOString(),
+      };
+      try {
+        await api(`/tickets/${ticketId}/vendor-cases`, 'POST', payload, keyGen('vendor', {
+          id: currentTicket.id,
+          version: currentTicket.version,
+          vendor_id: vendorId,
+          internal_pic_id: internalPicId,
+          external_reference: externalReference,
+          contract_reference: contractReference,
+          expected_return_at: payload.expected_return_at,
+          next_followup_at: payload.next_followup_at,
+        }));
+        setStatus('Kasus vendor berhasil dicatat.', '[data-vendor-status]');
+        formVendor.reset();
+        await refresh();
+      } catch (err) {
+        if (err instanceof APIError && err.status === 409 && conflictBanner) conflictBanner.hidden = false;
+        setStatus(errorText(err), '[data-vendor-status]');
+      } finally {
+        vendorPending = false;
+        if (btn) btn.disabled = false;
+      }
     });
-
   }
 
-
-
   // M0-07: Form Pause
-
   const formPause = $<HTMLFormElement>('[data-form-pause]');
-
   if (formPause) {
-
     let pausePending = false;
-
     formPause.addEventListener('submit', async e => {
-
       e.preventDefault();
-
       if (pausePending || !currentTicket || !formPause.reportValidity()) return;
-
-      pausePending = true;
-
-      const btn = $<HTMLButtonElement>('button[type=submit]', formPause);
-
-      if (btn) btn.disabled = true;
-
       const reason = formValue(formPause, 'reason');
-
-      const durationMinutes = parseInt(formValue(formPause, 'duration_minutes') || '60', 10);
-
-      try {
-
-        await api(`/tickets/${ticketId}/pauses`, 'POST', {
-
-          expected_version: currentTicket.version,
-
-          reason,
-
-          duration_minutes: durationMinutes
-
-        }, keyGen('pause', currentTicket.id + currentTicket.version));
-
-        setStatus('Jeda layanan berhasil disetujui.', '[data-pause-status]');
-
-        formPause.reset();
-
-        await refresh();
-
-      } catch (err) {
-
-        if (err instanceof APIError && err.status === 409 && conflictBanner) conflictBanner.hidden = false;
-
-        setStatus(errorText(err), '[data-pause-status]');
-
-      } finally {
-
-        pausePending = false;
-
-        if (btn) btn.disabled = false;
-
+      const untilDate = parseWibDatetimeInput(formValue(formPause, 'until'));
+      const nowMs = Date.now();
+      if (!untilDate || untilDate.getTime() <= nowMs) {
+        setStatus('Batas waktu jeda layanan harus lebih dari waktu sekarang (WIB).', '[data-pause-status]');
+        $<HTMLInputElement>('#pause-until', formPause)?.focus();
+        return;
       }
-
+      if (untilDate.getTime() - nowMs > 7 * 86400000) {
+        setStatus('Batas jeda SLA maksimal 7 hari dari waktu sekarang.', '[data-pause-status]');
+        $<HTMLInputElement>('#pause-until', formPause)?.focus();
+        return;
+      }
+      pausePending = true;
+      const btn = $<HTMLButtonElement>('button[type=submit]', formPause);
+      if (btn) btn.disabled = true;
+      const untilIso = untilDate.toISOString();
+      try {
+        await api(`/tickets/${ticketId}/pauses`, 'POST', {
+          expected_version: currentTicket.version,
+          reason,
+          until: untilIso,
+        }, keyGen('pause', {
+          id: currentTicket.id,
+          version: currentTicket.version,
+          reason,
+          until: untilIso,
+        }));
+        setStatus('Jeda layanan berhasil disetujui.', '[data-pause-status]');
+        formPause.reset();
+        await refresh();
+      } catch (err) {
+        if (err instanceof APIError && err.status === 409 && conflictBanner) conflictBanner.hidden = false;
+        setStatus(errorText(err), '[data-pause-status]');
+      } finally {
+        pausePending = false;
+        if (btn) btn.disabled = false;
+      }
     });
-
   }
 
 
@@ -3975,58 +3962,33 @@ async function ticketDetail(): Promise<void> {
 
 
 
-  await refresh();
-  await readEscalation();
+  for (const [selector, revoke] of [['[data-tracking-logout]', false], ['[data-tracking-revoke]', true]] as const) {
+    $(selector)?.addEventListener('click', async () => {
+      if (revoke && !confirm('Cabut kunci tiket ini? Kunci lama dan sesi pelacakan tidak dapat digunakan kembali.')) return;
+      try {
+        await api(revoke ? `/tickets/${ticketId}/capability/revoke` : '/guest/tracking-session/logout', 'POST', {
+          expected_version: 1,
+          reason: revoke ? 'Pencabutan oleh pemegang kunci' : 'Logout pelacakan'
+        });
+        cleanAllAccountDrafts();
+        location.assign('/lacak.html');
+      } catch (err) {
+        setStatus(errorText(err));
+      }
+    });
+  }
 
   if (!session) {
-
-    try {
-
-      await api('/guest/tracking-session');
-
+    api('/guest/tracking-session').then(() => {
       const logoutBtn = $('[data-tracking-logout]');
-
       if (logoutBtn) logoutBtn.hidden = false;
-
       const revokeBtn = $('[data-tracking-revoke]');
-
       if (revokeBtn) revokeBtn.hidden = false;
-
-    } catch {}
-
+    }).catch(() => {});
   }
 
-
-
-  for (const [selector, revoke] of [['[data-tracking-logout]', false], ['[data-tracking-revoke]', true]] as const) {
-
-    $(selector)?.addEventListener('click', async () => {
-
-      if (revoke && !confirm('Cabut kunci tiket ini? Kunci lama dan sesi pelacakan tidak dapat digunakan kembali.')) return;
-
-      try {
-
-        await api(revoke ? `/tickets/${ticketId}/capability/revoke` : '/guest/tracking-session/logout', 'POST', {
-
-          expected_version: 1,
-
-          reason: revoke ? 'Pencabutan oleh pemegang kunci' : 'Logout pelacakan'
-
-        });
-
-        cleanAllAccountDrafts();
-
-        location.assign('/lacak.html');
-
-      } catch (err) {
-
-        setStatus(errorText(err));
-
-      }
-
-    });
-
-  }
+  await refresh();
+  await readEscalation();
 
 }
 

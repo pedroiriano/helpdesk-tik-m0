@@ -87,3 +87,13 @@ assert.equal(calls[0].key,calls[1].key);assert.equal(calls[1].body.expected_vers
 assert.equal(commandFingerprint({expected_version:1,decision:'REJECT',reason:'Sama'}),commandFingerprint({expected_version:2,decision:'REJECT',reason:'Sama'}));
 assert.notEqual(commandFingerprint({expected_version:1,decision:'REJECT'}),commandFingerprint({expected_version:1,decision:'ACCEPT'}));
 console.log('PASS command fingerprint preserves original CAS on unknown-commit retry');
+
+// Regression guard: vendor and pause form payloads must match HTML field names in ticket-pages.mjs.
+const ticketHtmlSource = await readFile(new URL('../frontend/ticket-pages.mjs', import.meta.url), 'utf8');
+for (const name of ['external_reference', 'contract_reference', 'expected_return_at', 'next_followup_at', 'until']) {
+  assert.ok(ticketHtmlSource.includes(`name="${name}"`), `ticket-pages.mjs missing name="${name}"`);
+  assert.ok(source.includes(`'${name}'`), `m0-04.ts missing formValue('${name}')`);
+}
+assert.ok(!source.includes("'reference_no'"), 'Stale vendor field reference_no must not reappear in m0-04.ts');
+assert.ok(!source.includes("'duration_minutes'"), 'Stale pause field duration_minutes must not reappear in m0-04.ts');
+console.log('PASS vendor and pause form field parity with backend schema');

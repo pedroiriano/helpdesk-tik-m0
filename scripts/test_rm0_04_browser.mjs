@@ -777,7 +777,7 @@ async function main() {
           inp.closest('form').querySelector('button[type="submit"]').click();
         })()`);
         await waitFor(() => cdp.eval(`location.pathname.endsWith('/detail-tiket.html')`), 10000, 're-tracked via /lacak.html');
-        await sleep(500);
+        await waitFor(() => cdp.eval(`Boolean(document.querySelector('[data-tracking-revoke]') && !document.querySelector('[data-tracking-revoke]').hidden)`), 8000, 'tracking revoke visible');
         // Revoke via fetch (bypass native confirm dialog by overriding confirm cleanly in page)
         await cdp.eval(`window.confirm = () => true; document.querySelector('[data-tracking-revoke]')?.click();`);
         await waitFor(() => cdp.eval(`location.pathname.endsWith('/lacak.html')`), 10000, 'redirect after revoke');

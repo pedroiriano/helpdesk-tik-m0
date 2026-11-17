@@ -288,7 +288,7 @@ const SERVICE_SLUGS: Record<string, string> = {
 };
 async function detail(): Promise<void> {
   const params = new URLSearchParams(location.search);
-  let id = params.get('id') ?? params.get('layanan') ?? params.get('slug') ?? params.get('service') ?? '';
+  let id = params.get('id') ?? params.get('layanan') ?? params.get('slug') ?? params.get('service') ?? params.get('code') ?? '';
   if (!id && location.pathname.startsWith('/layanan/')) {
     id = location.pathname.replace(/^\/layanan\//, '').replace(/\.html$/, '').replace(/\/$/, '');
   }
@@ -1989,6 +1989,32 @@ async function admin(): Promise<void> {
   if (adminPanel) adminPanel.hidden = false;
 }
 
+async function statusPage(): Promise<void> {
+  const apiTarget = $('[data-hd-status-api]');
+  const catalogTarget = $('[data-hd-status-catalog]');
+  const csirtTarget = $('[data-hd-status-csirt]');
+  const observedTarget = $('[data-hd-status-observed]');
+  try {
+    const readyRes = await fetch('/api/v1/health/ready', { cache: 'no-store', signal: AbortSignal.timeout(5000) });
+    const readyJson = readyRes.ok ? (await readyRes.json()) as { status?: string } : null;
+    if (apiTarget) apiTarget.textContent = readyJson?.status === 'ready' ? 'Aktif & Siap Menerima Permintaan' : `Terbatas (HTTP ${readyRes.status})`;
+  } catch {
+    if (apiTarget) apiTarget.textContent = 'Pemeriksaan koneksi gagal';
+  }
+  try {
+    const catalog = await api<Page<Service>>('/catalog/services?limit=100');
+    const services = catalog.items ?? [];
+    if (catalogTarget) catalogTarget.textContent = `${services.length} layanan aktif tersedia untuk hak akses saat ini`;
+    const csirt = services.find(s => s.code === 'TIK-SEC-01');
+    if (csirtTarget) csirtTarget.textContent = csirt ? 'Aktif · Kalender 24/7 (CAL-247)' : 'Hubungi 112 / CSIRT Diskominfo';
+  } catch (error) {
+    if (catalogTarget) catalogTarget.textContent = errorText(error);
+  }
+  if (observedTarget) {
+    observedTarget.textContent = `Diperiksa pada ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta', dateStyle: 'medium', timeStyle: 'short' })} WIB`;
+  }
+}
+
 async function main() {
   setupSearchCombobox();
   for (const f of nodes<HTMLFormElement>('form[data-hd-register]')) void registerUser(f);
@@ -2003,6 +2029,7 @@ async function main() {
     if (location.pathname.startsWith('/admin/') && !canOpenAdminPage(location.pathname,location.search,session)) return;
     if (page === 'catalog') await catalog();
     if (page === 'detail') await detail();
+    if (page === 'status') await statusPage();
     if (page === 'admin') await admin();
     if (page === 'dashboard') initDashboard(session?.actor.memberships ?? [], session?.actor.role);
     if (page === 'knowledge' || page === 'pages') initKnowledgeBase();

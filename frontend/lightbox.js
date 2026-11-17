@@ -176,7 +176,7 @@ function initLightbox() {
 
           <div class="vy-lightbox__viewport" id="vy-lb-viewport">
             <div class="vy-lightbox__canvas" id="vy-lb-canvas">
-              <img id="vy-lb-image" class="vy-lightbox__img" src="" alt="" draggable="false">
+              <img id="vy-lb-image" class="vy-lightbox__img" src="/assets/helpdesk/03_Ilustrasi_Pendukung/ilustrasi-akun-identitas.png" alt="" draggable="false">
             </div>
           </div>
 

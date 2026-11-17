@@ -148,7 +148,12 @@ function adminPage(file, source) {
       .replaceAll('Akhiri Sesi (Logout)', 'Keluar akun')
       .replaceAll('sesi administrator', 'sesi petugas')
       .replaceAll('Informasi Sesi Administrator', 'Informasi akun petugas')
-      .replace(/<a href="\/admin\/app\/dashboard\/index\.html" class="piui-btn piui-btn--secondary piui-btn--sm">Portal Dokumentasi<\/a>/g, '<a href="/admin/auth/login.html" class="piui-btn piui-btn--secondary piui-btn--sm" data-admin-account-switch>Masuk petugas</a>');
+      .replace(/<a href="\/admin\/app\/dashboard\/index\.html" class="piui-btn piui-btn--secondary piui-btn--sm">Portal Dokumentasi<\/a>/g, '<a href="/admin/auth/login.html" class="piui-btn piui-btn--secondary piui-btn--sm" data-admin-account-switch>Masuk petugas</a>')
+      .replace(/<!-- DIALOG 2: KONFIRMASI PENCABUTAN AKSES DARURAT -->[\s\S]*?<dialog id="dialog-revoke-user"[\s\S]*?<\/dialog>/, '')
+      .replace(/<!-- DIALOG 3: FORM ISIAN TAMBAH \/ EDIT PENGGUNA \(SLIDE-OVER MODAL SISI KANAN\) -->[\s\S]*?<dialog id="dialog-user-form"[\s\S]*?<\/dialog>/, '')
+      .replace(/<meta name="description" content="[^"]*">/i, '<meta name="description" content="Ruang kerja petugas Helpdesk TIK Pemerintah Kota Depok.">')
+      .replace(/<meta property="og:title" content="[^"]*">/i, '<meta property="og:title" content="Ruang Kerja Petugas · Helpdesk TIK Kota Depok">')
+      .replace(/<meta property="og:description" content="[^"]*">/i, '<meta property="og:description" content="Konsol internal pelayanan dan pengelolaan Helpdesk TIK Pemerintah Kota Depok.">');
     const admin2TierFooter = `<footer class="piui-footer" aria-label="Footer Operasional Helpdesk TIK Kota Depok">
         <div class="hd-admin-footer-top">
           <ul class="piui-footer__links">${adminItems.filter(i => i.footer).map(i => `<li${i.audience ? '' : ' hidden'}>${adminNavLink(i, file, 'hd-admin-footer-link')}</li>`).join('')}</ul>
@@ -252,7 +257,7 @@ const contactSource = localizePublic('contact.html', publicPage('contact.html', 
 for (const [file,kind] of [['akses.html','login'],['daftar.html','register'],['layanan.html','catalog'],['detail-layanan.html','detail'],['faq.html','faq'],['status.html','status'],['panduan.html','knowledge'],['halaman.html','pages']]) {
   await writeFile(join(output,file),publicUI(publicBusinessPage(contactSource,kind)));
 }
-await writeFile(join(output,'kontak.html'),publicUI(contactSource));
+await writeFile(join(output,'kontak.html'),publicUI(publicBusinessPage(contactSource,'contact')));
 await mkdir(join(output,'admin/app/helpdesk'),{recursive:true});
 await writeFile(join(output,'admin/app/helpdesk/index.html'),adminBusinessPage(adminPage('app/users/index.html',await readFile(join(references,'piui-zero/app/users/index.html'),'utf8'))));
 await writeFile(join(output,'helpdesk/business.css'),await readFile(new URL('./business.css',import.meta.url)));

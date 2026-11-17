@@ -215,6 +215,17 @@ def verify():
     for folder in ("02_Hero_Tanpa_Teks", "03_Ilustrasi_Pendukung", "05_Brand"):
         for original in (ROOT/"assets"/folder).glob("*.png"):
             assert original.read_bytes() == (DIST/"assets/helpdesk"/folder/original.name).read_bytes(), original
+
+    # Fase 1 regressions: clean admin shell, kontak, status, and lightbox img src
+    for adm in official_admin_pages:
+        adm_html = (DIST/adm).read_text(encoding="utf-8")
+        assert "piui-zero.internal" not in adm_html, f"Template placeholder remains in {adm}"
+    kontak_html = (DIST/"kontak.html").read_text(encoding="utf-8")
+    assert "Gedung Dibaleka II" in kontak_html and "Draf kendala" not in kontak_html, "kontak.html must render official Diskominfo contact info"
+    status_html = (DIST/"status.html").read_text(encoding="utf-8")
+    assert "data-hd-status-api" in status_html and "Monitoring Keamanan" in status_html and "Kemanan" not in status_html and "99.85%" not in status_html, "status.html must use live readiness slots without typos or static metrics"
+    lb_js = (ROOT/"frontend/lightbox.js").read_text(encoding="utf-8")
+    assert 'id="vy-lb-image" class="vy-lightbox__img" src=""' not in lb_js, "Lightbox initial img must not use empty src"
     print(f"PASS PIUI (runtime files, HTML pages, byte-identical files) {counts}")
 
 

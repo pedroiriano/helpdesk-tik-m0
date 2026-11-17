@@ -205,8 +205,24 @@ INSERT INTO assignment.routing_rules (id, service_id, team_id, level, required_s
 ('90000000-0000-4000-8000-000000000023', '30000000-0000-4000-8000-000000000023', '50000000-0000-4000-8000-000000000001', 'L1', ARRAY['cctv','surveillance'], true),
 ('90000000-0000-4000-8000-000000000024', '30000000-0000-4000-8000-000000000024', '50000000-0000-4000-8000-000000000001', 'L1', ARRAY['wifi','public'], true),
 ('90000000-0000-4000-8000-000000000025', '30000000-0000-4000-8000-000000000025', '50000000-0000-4000-8000-000000000001', 'L2', ARRAY['consulting','architecture'], true),
-('90000000-0000-4000-8000-000000000026', '30000000-0000-4000-8000-000000000026', '50000000-0000-4000-8000-000000000001', 'L1', ARRAY['identity','credential'], true)
+('90000000-0000-4000-8000-000000000026', '30000000-0000-4000-8000-000000000026', '50000000-0000-4000-8000-000000000001', 'L1', ARRAY['identity','credential'], true),
+('90000000-0000-4000-8000-000000000113', '30000000-0000-4000-8000-000000000013', '50000000-0000-4000-8000-000000000001', 'L1', ARRAY['triage'], true),
+('90000000-0000-4000-8000-000000000114', '30000000-0000-4000-8000-000000000014', '50000000-0000-4000-8000-000000000001', 'L1', ARRAY['triage'], true),
+('90000000-0000-4000-8000-000000000116', '30000000-0000-4000-8000-000000000016', '50000000-0000-4000-8000-000000000001', 'L1', ARRAY['triage'], true),
+('90000000-0000-4000-8000-000000000118', '30000000-0000-4000-8000-000000000018', '50000000-0000-4000-8000-000000000001', 'L1', ARRAY['triage'], true),
+('90000000-0000-4000-8000-000000000125', '30000000-0000-4000-8000-000000000025', '50000000-0000-4000-8000-000000000001', 'L1', ARRAY['triage'], true)
 ON CONFLICT (id) DO NOTHING;
+
+-- Pastikan roster teknisi lab L1 & L2 memiliki skill operasional katalog resmi Depok
+UPDATE assignment.rosters
+SET skills = ARRAY['hardware','network','governance','account','security','certificate','multimedia','lan','software','simpeg','finance','mobile','portal','cctv','surveillance','wifi','public','identity','credential','triage'],
+    version = version + 1, updated_at = now()
+WHERE id = '91000000-0000-4000-8000-000000000001';
+
+UPDATE assignment.rosters
+SET skills = ARRAY['system','security','web','server','api','integration','csirt','storage','consulting','architecture'],
+    version = version + 1, updated_at = now()
+WHERE id = '91000000-0000-4000-8000-000000000002';
 
 -- 7. Portal Navigasi Resmi Kota Depok (M2)
 DELETE FROM catalog.portal_navigation;

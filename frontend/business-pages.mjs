@@ -223,28 +223,63 @@ function faqSection() {
 function statusSection() {
   return `<section class="vy-contact-form hd-faq-section">
     <h2>Status Operasional Layanan &amp; Infrastruktur SPBE</h2>
-    <p>Pemantauan langsung ketersediaan infrastruktur jaringan, server, dan aplikasi terpadu Kota Depok.</p>
+    <p>Pemantauan langsung kesiapan gerbang aplikasi, katalog layanan aktif, serta kalender operasional Helpdesk TIK Kota Depok.</p>
+    <p data-hd-status-observed role="status">Memeriksa status layanan…</p>
     <div class="hd-status-grid">
       <div class="hd-status-tile">
-        <div class="hd-status-tile__head"><span class="hd-status-dot"></span><strong>Jaringan Intranet &amp; Internet OPD</strong></div>
-        <p class="hd-status-tile__body">Kondisi: <strong>Normal / Operasional</strong><br>Uptime 30 hari: 99.85%</p>
+        <div class="hd-status-tile__head"><span class="hd-status-dot"></span><strong>Gerbang Aplikasi &amp; Basis Data Helpdesk</strong></div>
+        <p class="hd-status-tile__body">Kondisi: <strong data-hd-status-api>Memeriksa kesiapan…</strong><br>Kalender utama: CAL-1 (Senin–Jumat 08.00–16.00 WIB)</p>
       </div>
       <div class="hd-status-tile">
-        <div class="hd-status-tile__head"><span class="hd-status-dot"></span><strong>Pusat Data &amp; Server Balai Kota</strong></div>
-        <p class="hd-status-tile__body">Kondisi: <strong>Normal / Operasional</strong><br>Beban CPU Rata-rata: 24%</p>
+        <div class="hd-status-tile__head"><span class="hd-status-dot"></span><strong>Katalog Layanan TIK Resmi</strong></div>
+        <p class="hd-status-tile__body">Akses: <strong data-hd-status-catalog>Memuat katalog…</strong><br>Pemohon publik &amp; ASN terhubung melalui portal tunggal</p>
       </div>
       <div class="hd-status-tile">
-        <div class="hd-status-tile__head"><span class="hd-status-dot"></span><strong>Portal Satu Data &amp; SPLP Depok</strong></div>
-        <p class="hd-status-tile__body">Kondisi: <strong>Normal / Operasional</strong><br>Interoperabilitas: Aktif</p>
+        <div class="hd-status-tile__head"><span class="hd-status-dot"></span><strong>Pusat Pengetahuan &amp; Pelacakan Tiket</strong></div>
+        <p class="hd-status-tile__body">Kondisi: <strong>Aktif</strong><br>Pelacakan tamu memakai Capability Key 64 karakter</p>
       </div>
       <div class="hd-status-tile">
-        <div class="hd-status-tile__head"><span class="hd-status-dot"></span><strong>Depok-CSIRT &amp; Monitoring Kemanan</strong></div>
-        <p class="hd-status-tile__body">Kondisi: <strong>Siaga Penuh 24/7</strong><br>Ancaman Terkini: Termitigasi</p>
+        <div class="hd-status-tile__head"><span class="hd-status-dot"></span><strong>Depok-CSIRT &amp; Monitoring Keamanan</strong></div>
+        <p class="hd-status-tile__body">Kondisi: <strong data-hd-status-csirt>Siaga 24/7 (CAL-247)</strong><br>Kedaruratan siber: Layanan <code>TIK-SEC-01</code> / Call Center 112</p>
       </div>
     </div>
     <div class="hd-status-window">
-      <h3 class="hd-status-window__title">Jadwal Jendela Pemeliharaan Terencana</h3>
-      <p class="hd-status-window__desc">Pemeliharaan rutin infrastruktur server dan basis data dilaksanakan setiap hari <strong>Sabtu pukul 22.00–02.00 WIB</strong> untuk memastikan stabilitas dan keamanan tanpa mengganggu jam kerja pelayanan publik.</p>
+      <h3 class="hd-status-window__title">Jadwal Layanan &amp; Jendela Pemeliharaan</h3>
+      <p class="hd-status-window__desc">Layanan reguler operasional berlangsung setiap hari kerja <strong>Senin–Jumat pukul 08.00–16.00 WIB</strong>, sedangkan pelaporan insiden keamanan siber Depok-CSIRT didukung <strong>24 jam / 7 hari (CAL-247)</strong>.</p>
+    </div>
+    <div class="hd-actions hd-actions--spaced">
+      <a class="btn btn-primary" href="/layanan.html">📋 Buka Katalog Layanan &rarr;</a>
+      <a class="btn btn-secondary" href="/kontak.html">📍 Kontak &amp; Lokasi Layanan</a>
+    </div>
+  </section>`;
+}
+
+function contactSection() {
+  return `<section class="vy-contact-form hd-faq-section">
+    <h2>Kontak Resmi &amp; Lokasi Pelayanan Helpdesk TIK</h2>
+    <p>Pengaduan kendala, permohonan fasilitas TIK kedinasan, dan pelaporan insiden siber diproses terpusat melalui sistem tiket agar setiap penanganan memiliki nomor register dan batas SLA yang terukur.</p>
+    <div class="hd-status-grid">
+      <div class="hd-status-tile">
+        <div class="hd-status-tile__head"><span class="hd-status-dot"></span><strong>Kantor Layanan Diskominfo Kota Depok</strong></div>
+        <p class="hd-status-tile__body">Gedung Dibaleka II Lantai 7, Balai Kota Depok<br>Jl. Margonda Raya No. 54, Pancoran Mas, Kota Depok 16431</p>
+      </div>
+      <div class="hd-status-tile">
+        <div class="hd-status-tile__head"><span class="hd-status-dot"></span><strong>Jam Operasional Meja Layanan (CAL-1)</strong></div>
+        <p class="hd-status-tile__body">Senin – Jumat: <strong>08.00 – 16.00 WIB</strong><br>Dikecualikan hari libur nasional &amp; cuti bersama</p>
+      </div>
+      <div class="hd-status-tile">
+        <div class="hd-status-tile__head"><span class="hd-status-dot"></span><strong>Tanggap Insiden Siber (Depok-CSIRT)</strong></div>
+        <p class="hd-status-tile__body">Siaga <strong>24 Jam / 7 Hari (CAL-247)</strong><br>Kedaruratan Kota Depok: <strong>Call Center 112</strong> · Layanan <code>TIK-SEC-01</code></p>
+      </div>
+      <div class="hd-status-tile">
+        <div class="hd-status-tile__head"><span class="hd-status-dot"></span><strong>Pengiriman Tiket &amp; Pelacakan Resmi</strong></div>
+        <p class="hd-status-tile__body">Masyarakat dapat melapor tanpa login pada layanan publik dan memantau progres melalui kunci pelacakan 64 karakter.</p>
+      </div>
+    </div>
+    <div class="hd-actions hd-actions--spaced">
+      <a class="btn btn-primary" href="/layanan.html">📋 Pilih Layanan &amp; Buat Laporan &rarr;</a>
+      <a class="btn btn-secondary" href="/lacak.html">🔎 Lacak Tiket Tamu</a>
+      <a class="btn btn-secondary" href="/faq.html">❓ Tanya Jawab (FAQ)</a>
     </div>
   </section>`;
 }
@@ -305,7 +340,8 @@ export function publicBusinessPage(source, kind) {
  if (kind === 'catalog') main = banner('Katalog Layanan TIK', 'Pilih layanan sesuai kebutuhan dan hak akses Anda. Jika belum yakin, mulai dari laporan kendala TIK umum.') + session + '<div class="hd-actions"><a class="btn btn-primary" href="/lapor.html?id=31000000-0000-4000-8000-000000000001">Laporkan kendala TIK umum</a></div><div class="hd-search-box" data-hd-search-wrap><label for="hd-public-search" class="u-sr-only">Cari layanan atau panduan</label><div class="vy-input-group hd-search-input"><input type="search" maxlength="100" id="hd-public-search" class="vy-input" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-controls="hd-search-suggestions" aria-activedescendant="" placeholder="Cari layanan, panduan, atau informasi TIK..." autocomplete="off"><ul id="hd-search-suggestions" class="hd-suggestions-list" role="listbox" aria-label="Saran layanan dan panduan" hidden></ul></div><p id="hd-search-status" role="status"></p></div><p data-hd-status role="status" tabindex="-1">Memuat katalog…</p><div class="hd-catalog" data-hd-catalog></div><nav class="hd-actions hd-pager-nav" aria-label="Halaman katalog"><button class="btn hd-btn-pager" data-hd-prev disabled><span aria-hidden="true">←</span> Halaman Sebelumnya</button><button class="btn hd-btn-pager" data-hd-next disabled>Halaman Berikutnya <span aria-hidden="true">→</span></button></nav>';
  if (kind === 'detail') main = banner('Detail Spesifikasi Layanan', 'Periksa parameter SLA, persyaratan teknis, dan formulir permohonan sebelum mengajukan tiket.') + session + '<p data-hd-status role="status" tabindex="-1">Memuat layanan…</p><article class="vy-contact-form" data-hd-detail hidden><h2 data-hd-service-name></h2><p data-hd-service-meta></p><h3>Pratinjau formulir layanan</h3><div data-hd-fields></div><p data-hd-policy></p><p class="vy-form-privacy">Isian di atas adalah pratinjau. Gunakan tombol Buat laporan untuk mengisi dan mengirim tiket melalui formulir operasional.</p></article>';
  if (kind === 'faq') main = banner('Tanya Jawab (FAQ)', 'Pertanyaan yang sering diajukan seputar layanan TIK, permohonan fasilitas, dan penanganan kendala SPBE Kota Depok.') + faqSection();
- if (kind === 'status') main = banner('Status Layanan TIK', 'Informasi ketersediaan real-time infrastruktur jaringan, server, dan aplikasi SPBE Kota Depok.') + statusSection();
+ if (kind === 'status') main = banner('Status Layanan TIK', 'Informasi ketersediaan gerbang aplikasi, katalog layanan resmi, dan kalender operasional SPBE Kota Depok.') + statusSection();
+ if (kind === 'contact') main = banner('Kontak &amp; Lokasi Layanan', 'Alamat kantor pelayanan, jam operasional, dan kanal resmi pengajuan bantuan Helpdesk TIK Pemerintah Kota Depok.') + contactSection();
  if (kind === 'knowledge' || kind === 'pages') main = knowledgeSection(kind);
 
  const titleMap = {
@@ -315,6 +351,7 @@ export function publicBusinessPage(source, kind) {
    detail: 'Detail Layanan',
    faq: 'Tanya Jawab (FAQ)',
    status: 'Status Layanan',
+   contact: 'Kontak & Lokasi Layanan',
    knowledge: 'Basis Pengetahuan & Panduan Operasional TIK',
    pages: 'Halaman Portal Resmi Helpdesk TIK'
  };
