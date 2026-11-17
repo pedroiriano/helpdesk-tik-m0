@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-17T04:58:23.255Z",
+  "timestamp": "2026-11-17T06:16:40.675Z",
   "base_url": "http://127.0.0.1:18090",
   "browser": "Microsoft Edge Headless (CDP)",
   "suites": {
@@ -24,7 +24,7 @@
       "profileCount": 5,
       "ceilingWarn": "7 izin berada di luar kebijakan atau mandat delegasi saat ini. Sesuaikan pilihan sebelum menyimpan.",
       "editInfo": "Operator OPD A · OperatorDinas Komunikasi dan Informatika Ko",
-      "saveMsg": "Tersimpan pada server. Versi 18.",
+      "saveMsg": "Tersimpan pada server. Versi 19.",
       "editorTitleAfterSave": "Ubah akses pengguna"
     },
     "candidate_catalog_routing": {
@@ -32,16 +32,16 @@
       "catCount": 25,
       "opdCount": 37,
       "routeSaveTrigger": true,
-      "routeStatus": "Aturan tersimpan. Versi 17.",
-      "reloadedVersion": "Aturan versi 17."
+      "routeStatus": "Aturan tersimpan. Versi 18.",
+      "reloadedVersion": "Aturan versi 18."
     },
     "candidate_role_hero": {
       "status": "PASS",
       "superAdminLocked": "Hak inti Super Admin dilindungi.",
-      "roleFeedback": "Kebijakan tersimpan. Versi 16. Berlaku pada permintaan akun berikutnya.",
+      "roleFeedback": "Kebijakan tersimpan. Versi 17. Berlaku pada permintaan akun berikutnya.",
       "slotCount": 5,
-      "heroDraftMsg": "Draf tersimpan. Versi 61.",
-      "heroPubMsg": "Banner terbit. Versi 62.",
+      "heroDraftMsg": "Draf tersimpan. Versi 65.",
+      "heroPubMsg": "Banner terbit. Versi 66.",
       "heroFit": {
         "desktop_1280x720": {
           "height": 720,
@@ -65,17 +65,17 @@
     },
     "RM0_03_R3_H_backup_manifest_ui": {
       "status": "PASS",
-      "jobId": "7c5ab7e1-fdeb-4bc1-8391-ce42c285ec6a",
+      "jobId": "5928f048-8970-466f-ad05-0a9541d5d523",
       "execStatus": "Status pekerjaan SUCCEEDED.",
       "artifactVerify": {
         "status": 200,
-        "headerSha": "11169bb655f75cdb3b20d735a5d9c6df3e95d653cb4838d363a017f98f403018",
-        "computedSha": "11169bb655f75cdb3b20d735a5d9c6df3e95d653cb4838d363a017f98f403018",
+        "headerSha": "be4732b6cf7622ee2fed6829adbd6dd029ae8628f298d7e42acb23eef9d29c03",
+        "computedSha": "be4732b6cf7622ee2fed6829adbd6dd029ae8628f298d7e42acb23eef9d29c03",
         "shaMatch": true,
         "ownersCount": 9,
         "migrationCount": 35,
         "configShaLen": 64,
-        "jobId": "7c5ab7e1-fdeb-4bc1-8391-ce42c285ec6a"
+        "jobId": "5928f048-8970-466f-ad05-0a9541d5d523"
       }
     },
     "R4-D_form_lost_response_draft_tracking": {
@@ -87,13 +87,13 @@
       },
       "retryPrompt": {
         "retryVisible": true,
-        "href": "http://127.0.0.1:18090/detail-tiket.html?id=744455f5-7597-4da7-a43d-d4e89a8c901c"
+        "href": "http://127.0.0.1:18090/detail-tiket.html?id=4d48e47d-a2df-4424-bbad-f14acf4c745d"
       },
       "uploadRecovered": true,
       "sameIdemKey": true,
       "guestTrackingChecked": true,
-      "draftSavedText": "Draft tersimpan (v10 pada 11.59)",
-      "testTicketId": "744455f5-7597-4da7-a43d-d4e89a8c901c"
+      "draftSavedText": "Draft tersimpan (v11 pada 13.17)",
+      "testTicketId": "4d48e47d-a2df-4424-bbad-f14acf4c745d"
     },
     "R4-E_queue_lifecycle_conflict": {
       "status": "PASS",
@@ -108,7 +108,7 @@
       "status": "PASS",
       "reportSummary": {
         "measure": "100% tepat waktu",
-        "watermark": "17/11/2026, 11.02.28"
+        "watermark": "17/11/2026, 11.59.25"
       },
       "dlCheck": {
         "status": 200,
@@ -119,7 +119,7 @@
     },
     "R4-G_m8_page_editorial_search_reader": {
       "status": "PASS",
-      "slug": "rm004-e2e-halaman-1794891572288",
+      "slug": "rm004-e2e-halaman-1794896268255",
       "rendered": true,
       "searchHitFound": true,
       "archivedUnavailable": true

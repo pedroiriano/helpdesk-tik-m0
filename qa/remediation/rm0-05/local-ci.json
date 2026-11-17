@@ -1,0 +1,228 @@
+{
+  "timestamp": "2026-11-17T06:18:08.966860+00:00",
+  "scope": "Reproducible local CI pipeline before/during RM0-05",
+  "git_commit": "0753f412c59740d6df4ee794959603f0f73e0934",
+  "git_working_tree_dirty": true,
+  "source_manifest": "qa/remediation/rm0-05/source-manifest.json",
+  "source_manifest_sha256": "fb55fc2540672ba847c71ec81822e1a7cbfe00a102e41d7362d55e41aff72b9f",
+  "with_live_browser": true,
+  "skip_docker": false,
+  "steps": [
+    {
+      "name": "adr_unique_numbering",
+      "command": "internal:check_unique_adrs",
+      "exit_code": 0,
+      "duration_s": 0.01,
+      "result": "PASS",
+      "tail": [
+        "Unique ADR files: 11 (0001, 0002, 0003, 0004, 0005, 0006, 0007, 0008, 0009, 0010, 0011)"
+      ]
+    },
+    {
+      "name": "package_consistency",
+      "command": "C:\\Python313\\python.exe scripts/verify_package.py",
+      "exit_code": 0,
+      "duration_s": 0.093,
+      "result": "PASS",
+      "tail": [
+        "PASS package consistency: 9 modules, 13 tasks, 25 acceptance, 29 source groups, 21 chapters",
+        "NOT_RUN application tests, agent runtime loading, UAT and deployment"
+      ]
+    },
+    {
+      "name": "package_validator_tests",
+      "command": "C:\\Python313\\python.exe -m unittest discover -s scripts -p test_verify_package.py",
+      "exit_code": 0,
+      "duration_s": 0.185,
+      "result": "PASS",
+      "tail": [
+        "......",
+        "----------------------------------------------------------------------",
+        "Ran 6 tests in 0.003s",
+        "",
+        "OK"
+      ]
+    },
+    {
+      "name": "business_contracts_check",
+      "command": "C:\\Python313\\python.exe scripts/build_business_contracts.py --check",
+      "exit_code": 0,
+      "duration_s": 0.124,
+      "result": "PASS",
+      "tail": [
+        "PASS business contract generation consistency"
+      ]
+    },
+    {
+      "name": "business_contracts_tests",
+      "command": "C:\\Python313\\python.exe -X utf8 -m unittest tests/contract/test_business_contracts.py",
+      "exit_code": 0,
+      "duration_s": 6.473,
+      "result": "PASS",
+      "tail": [
+        "........",
+        "----------------------------------------------------------------------",
+        "Ran 8 tests in 5.550s",
+        "",
+        "OK"
+      ]
+    },
+    {
+      "name": "go_module_boundaries",
+      "command": "C:\\Python313\\python.exe scripts/check_boundaries.py",
+      "exit_code": 0,
+      "duration_s": 1.143,
+      "result": "PASS",
+      "tail": [
+        "PASS module boundaries (53 Go packages)"
+      ]
+    },
+    {
+      "name": "go_boundary_negative",
+      "command": "C:\\Python313\\python.exe scripts/test_boundaries.py",
+      "exit_code": 0,
+      "duration_s": 0.188,
+      "result": "PASS",
+      "tail": [
+        "..",
+        "----------------------------------------------------------------------",
+        "Ran 2 tests in 0.001s",
+        "",
+        "OK"
+      ]
+    },
+    {
+      "name": "piui_build_parity",
+      "command": "C:\\Python313\\python.exe scripts/test_piui_build.py",
+      "exit_code": 0,
+      "duration_s": 0.265,
+      "result": "PASS",
+      "tail": [
+        "PASS PIUI (runtime files, HTML pages, byte-identical files) {'piui-modern': (60, 51), 'piui-zero': (73, 52)}"
+      ]
+    },
+    {
+      "name": "compose_config_valid",
+      "command": "docker compose config --quiet",
+      "exit_code": 0,
+      "duration_s": 0.351,
+      "result": "PASS",
+      "tail": []
+    },
+    {
+      "name": "go_127_vet_and_test",
+      "command": "docker build --pull=false --target test -t helpdesk-m0-ci-go-test:0.1.0 -f infra/docker/backend.Dockerfile .",
+      "exit_code": 0,
+      "duration_s": 5.538,
+      "result": "PASS",
+      "tail": [
+        "#13 exporting layers done",
+        "#13 exporting manifest sha256:6f5d019476d7e41d36a12e157e485f19e9740b5e744027ac3185ccca549588ea done",
+        "#13 exporting config sha256:8cf445138c785c2297d28fda414f30a44e365d42a4cc692db35f2a6dea58b4f3 0.0s done",
+        "#13 exporting attestation manifest sha256:65c9c68fa58451ad5ccbfeee2ac6e50db4e438895e0085c226e9cc658e8ff5ba 0.1s done",
+        "#13 exporting manifest list sha256:0c268d0968e8142353af62d110636d4e8a15908bcd702aa7af5d504e7d194516",
+        "#13 exporting manifest list sha256:0c268d0968e8142353af62d110636d4e8a15908bcd702aa7af5d504e7d194516 0.0s done",
+        "#13 naming to docker.io/library/helpdesk-m0-ci-go-test:0.1.0 done",
+        "#13 unpacking to docker.io/library/helpdesk-m0-ci-go-test:0.1.0",
+        "#13 unpacking to docker.io/library/helpdesk-m0-ci-go-test:0.1.0 1.9s done",
+        "#13 DONE 2.1s",
+        "",
+        "View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/35a58fw58e5nq0n5xq0fd3vri"
+      ]
+    },
+    {
+      "name": "node_26_frontend_mjs_suites",
+      "command": "docker run --rm -v C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith:/work:ro -w /work node:26.13.1-alpine@sha256:6bd9ab43c0ec0190ca7b2d193906cb8b7edf6e7f4afa43ddeccd6452710bffb5 sh -c set -e; node scripts/test_admin_navigation.mjs; node scripts/test_admin_profiles.mjs; node scripts/test_ticket_actions.mjs; node scripts/test_ux_flow.mjs; node scripts/test_business_intent.mjs; node scripts/test_public_cache.mjs",
+      "exit_code": 0,
+      "duration_s": 3.181,
+      "result": "PASS",
+      "tail": [
+        "PASS rendered ticket text/attribute escaping and server confirmation deadline",
+        "PASS unknown-commit intent holds key/payload/version across refresh, rejects changed intent, and resets after receipt or definite rejection",
+        "PASS public stale-image refresh, offline fallback, scoped cleanup, private-route bypass and one-time client update",
+        "",
+        "(node:8) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time",
+        "(Use `node --trace-warnings ...` to show where the warning was created)",
+        "(node:19) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time",
+        "(Use `node --trace-warnings ...` to show where the warning was created)",
+        "(node:30) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time",
+        "(Use `node --trace-warnings ...` to show where the warning was created)",
+        "(node:41) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time",
+        "(Use `node --trace-warnings ...` to show where the warning was created)"
+      ]
+    },
+    {
+      "name": "pg_18_disposable_migrations",
+      "command": "C:\\Python313\\python.exe -X utf8 scripts/test_owner_migrations.py --report qa/remediation/rm0-05/ci-migrations.json",
+      "exit_code": 0,
+      "duration_s": 28.071,
+      "result": "PASS",
+      "tail": [
+        "PASS isolated migrations; report qa/remediation/rm0-05/ci-migrations.json"
+      ]
+    },
+    {
+      "name": "live_link_audit",
+      "command": "C:\\Python313\\python.exe -X utf8 scripts/test_m0_13_links.py",
+      "exit_code": 0,
+      "duration_s": 0.308,
+      "result": "PASS",
+      "tail": [
+        "   - /masuk                                   : HTTP 200",
+        "   - /admin/app/helpdesk/index.html           : HTTP 200",
+        "   - /admin/app/tickets/index.html            : HTTP 200",
+        "   - /admin/auth/login.html                   : HTTP 200",
+        "",
+        "3. Memeriksa menu portal navigasi M2...",
+        "   - Status catalog.portal_navigation: 20 menu items verified",
+        "",
+        "======================================================================",
+        "Hasil Audit Tautan: PASS",
+        "Laporan tersimpan di: qa\\m0-13\\link_audit.json",
+        "======================================================================"
+      ]
+    },
+    {
+      "name": "live_modal_and_mobile",
+      "command": "C:\\Python313\\python.exe -X utf8 scripts/test_modal_and_mobile.py",
+      "exit_code": 0,
+      "duration_s": 0.382,
+      "result": "PASS",
+      "tail": [
+        "[PASS] HTTP GET /admin/app/helpdesk/index.html?kind=services [Master Layanan TIK] -> 200",
+        "[PASS] HTTP GET /admin/app/helpdesk/index.html?kind=navigation [Pengelolaan Portal (M2)] -> 200",
+        "[PASS] HTTP GET /admin/app/helpdesk/index.html?kind=media  [Pustaka Media Terpadu (M3/M8)] -> 200",
+        "[PASS] HTTP GET /admin/app/helpdesk/index.html?kind=memberships [Pengelolaan Akun & Akses (M1)] -> 200",
+        "[PASS] HTTP GET /admin/app/helpdesk/index.html?kind=teams  [Tim Teknis & Roster] -> 200",
+        "[PASS] HTTP GET /admin/app/helpdesk/index.html?kind=reports [Laporan Kinerja SLA (M9)] -> 200",
+        "[PASS] HTTP GET /admin/app/helpdesk/index.html?kind=notifications [Pusat Notifikasi & Bot (M9)] -> 200",
+        "[PASS] HTTP GET /admin/app/helpdesk/index.html?kind=audit  [Jejak Audit Append-Only (M9)] -> 200",
+        "[PASS] HTTP GET /admin/app/helpdesk/index.html?kind=maintenance [Pemeliharaan Sistem (M11)] -> 200",
+        "[PASS] HTTP GET /admin/auth/login.html                     [Login Petugas Internal] -> 200",
+        "==========================================================================",
+        "[FINAL RESULT: 100% PASS] Seluruh sistem modal kanonis, aturan mobile first, dan 27 halaman aktif terverifikasi sempurna!"
+      ]
+    },
+    {
+      "name": "live_edge_cdp_browser",
+      "command": "node scripts/test_rm0_04_browser.mjs",
+      "exit_code": 0,
+      "duration_s": 88.556,
+      "result": "PASS",
+      "tail": [
+        "[PASS] R4-B_csp_routes_overflow_faq",
+        "[PASS] candidate_access_profiles",
+        "[PASS] candidate_catalog_routing",
+        "[PASS] candidate_role_hero",
+        "[PASS] RM0_03_R3_H_backup_manifest_ui",
+        "[PASS] R4-D_form_lost_response_draft_tracking",
+        "[PASS] R4-E_queue_lifecycle_conflict",
+        "[PASS] R4-F_m9_reports_export",
+        "[PASS] R4-G_m8_page_editorial_search_reader",
+        "[PASS] R4-H_lightbox_and_media",
+        "[PASS] R4-I_footer_zoom_reduced_motion"
+      ]
+    }
+  ],
+  "result": "PASS"
+}
