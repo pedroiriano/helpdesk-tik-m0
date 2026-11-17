@@ -1,0 +1,126 @@
+{
+  "timestamp": "2026-11-04T16:08:14.284609+00:00",
+  "task_id": "M0-03",
+  "change_type": "post_phase_public_cache_fix",
+  "requirements": [
+    "AC11"
+  ],
+  "result": "PASS",
+  "root_cause": "Public native worker returned cache-first artwork at unchanged URLs despite Nginx no-store; fixed cache version did not invalidate on asset-only changes.",
+  "changed_files": [
+    "frontend/build-templates.mjs",
+    "scripts/test_public_cache.mjs",
+    "docs/05_ATURAN_UI_UX_WEB_PUBLIK.md",
+    "runbooks/local-development.md",
+    "planning/command_registry.json",
+    "status/PROJECT_STATE.md"
+  ],
+  "commands": [
+    {
+      "command": "npm.cmd --prefix frontend run build",
+      "exit_code": 0,
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "result": "PASS"
+    },
+    {
+      "command": "node frontend/build-templates.mjs",
+      "exit_code": 0,
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "result": "PASS"
+    },
+    {
+      "command": "node scripts/test_public_cache.mjs",
+      "exit_code": 0,
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "result": "PASS"
+    },
+    {
+      "command": "python scripts/test_piui_build.py",
+      "exit_code": 0,
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "result": "PASS"
+    },
+    {
+      "command": "docker compose up -d --no-deps --build --pull never --wait --wait-timeout 120 web",
+      "exit_code": 0,
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "result": "PASS"
+    },
+    {
+      "command": "python scripts/smoke_local.py",
+      "exit_code": 0,
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "result": "PASS"
+    },
+    {
+      "command": "python scripts/verify_package.py",
+      "exit_code": 0,
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "result": "PASS"
+    }
+  ],
+  "checks": [
+    "Published worker/client executed with stale-cache fixture: current network artwork wins",
+    "Only old public cache namespaces removed; admin/unrelated caches retained",
+    "Offline fallback returns last fetched artwork",
+    "API/admin/dynamic/auth routes and non-GET excluded from public cache",
+    "Client bypasses worker HTTP cache and checks update; existing controlled page reloads once; first install/edited form do not reload",
+    "Representative existing IAB tab navigated normally to landing without Ctrl+R: all Helpdesk img elements loaded, five banners present, console errors empty",
+    "Live worker/client and every published Helpdesk PNG byte-identical to final dist, with Cache-Control no-store",
+    "Web-only rebuild healthy; no backend/DB migration, session/draft clearing or M0-04 work"
+  ],
+  "served_file_sha256": {
+    "assets/helpdesk/02_Hero_Tanpa_Teks/hero-01-bantuan-tik-terpadu-tanpa-teks.png": "e862c50013371461807d91d57ae74607d56227a9638a5c3621d81df1031bf4e1",
+    "assets/helpdesk/02_Hero_Tanpa_Teks/hero-02-tiket-layanan-tanpa-teks.png": "68822cbd8db82f630f6c5e4c3631e6fcbe6ed02068989c4a2d0c13181cc3354b",
+    "assets/helpdesk/02_Hero_Tanpa_Teks/hero-03-dukungan-kinerja-tanpa-teks.png": "3d5448b0c11cada27c2eb52dbfb1fa1e29bf0b7241bd1e605d23f910c7920f0f",
+    "assets/helpdesk/02_Hero_Tanpa_Teks/hero-04-layanan-terintegrasi-tanpa-teks.png": "e4c9a4e7dbde20d5cfd0017ccb73bbfd981ae54e42934cdb1b25c6f9a111725b",
+    "assets/helpdesk/02_Hero_Tanpa_Teks/hero-05-pusat-panduan-mandiri-tanpa-teks.png": "bd9acc288ae6baf86ff4f33c3b9b2da455debd3618ed3dc60f8e4020325ed1ad",
+    "assets/helpdesk/02_Hero_Tanpa_Teks/hero-06-kolaborasi-perangkat-daerah-tanpa-teks.png": "3058640efe42604412f4cc06c9e48257d0995f237b1e3751f8d61cafc0a1d41e",
+    "assets/helpdesk/03_Ilustrasi_Pendukung/ilustrasi-akun-identitas.png": "8ebc2485fed5a907e283268b2c60f0341080e9f3848d09ab3e91c229dc3993ab",
+    "assets/helpdesk/03_Ilustrasi_Pendukung/ilustrasi-aplikasi-digital.png": "f659cf2643247e12a35a747c0892784ee7563ba6cb86c4f36b3441c5f4753ff8",
+    "assets/helpdesk/03_Ilustrasi_Pendukung/ilustrasi-bantuan-operator.png": "fdc5e374e81fac5aeb032a2fa860835514fcbd96811015620b667582d8503578",
+    "assets/helpdesk/03_Ilustrasi_Pendukung/ilustrasi-cloud-layanan.png": "9e00c92c607144df97321236529a6d2e06be3044f7205d9c98c7c237c247f7be",
+    "assets/helpdesk/03_Ilustrasi_Pendukung/ilustrasi-dashboard-monitoring.png": "4bbdde9244a2b7141c7a0b557507fe946b9d7a84a4f78eeb1ba3b8f0b65fb5b4",
+    "assets/helpdesk/03_Ilustrasi_Pendukung/ilustrasi-gedung-pemerintah.png": "1da422b879c64bf37e9b292365b49c3443f49568f7891290a6d5ae09b960b84f",
+    "assets/helpdesk/03_Ilustrasi_Pendukung/ilustrasi-keamanan-siber.png": "b559968e51c800d41206bac93811acb35ec1b3a421021855de08563ad9fe73ec",
+    "assets/helpdesk/03_Ilustrasi_Pendukung/ilustrasi-kolaborasi-opd.png": "96df1a3a693de77addf01a5c67471e6aeaaa3b2e85f73edb3bc480966d9bd55c",
+    "assets/helpdesk/03_Ilustrasi_Pendukung/ilustrasi-notifikasi-audit.png": "ddd2d07d4cdd2c8f86d301e6672962c70e87714080f5bcde2920301608e3967c",
+    "assets/helpdesk/03_Ilustrasi_Pendukung/ilustrasi-panduan-pengetahuan.png": "c5c39974605a46876191abe9f89dbfb90137d55a090f6e7b144bbdd3bea955a3",
+    "assets/helpdesk/03_Ilustrasi_Pendukung/ilustrasi-pelacakan-sla.png": "480f9dfb8858465bf1882630c21ee1bab75e7822425c562fbe1050d50cbcad3d",
+    "assets/helpdesk/03_Ilustrasi_Pendukung/ilustrasi-perawatan-tik.png": "586e62f069189e10a2137b57916bf6a005dd9f089e93476ff9aa1a01ac53de92",
+    "assets/helpdesk/03_Ilustrasi_Pendukung/ilustrasi-server-infrastruktur.png": "def33e53b04456c88201c051305899555847ff0ef3d0612ca1c4023053b2c48c",
+    "assets/helpdesk/03_Ilustrasi_Pendukung/ilustrasi-tiket-helpdesk.png": "c0e75e1671aeafb9d5236a7dcc026ce6b40fff2c729a7859b4b1803fb0ee416e",
+    "assets/helpdesk/03_Ilustrasi_Pendukung/ilustrasi-wifi-jaringan.png": "c8bcfcd651c683b5f83e59acff4a7f718cd2aba9ee5eaef24ea02e6bcaf7b331",
+    "assets/helpdesk/05_Brand/logo-dark.png": "e6943f6e24e7175db1d6326a1e08e8c67fff812b5b82165f6e708ea82113ef9e",
+    "assets/helpdesk/05_Brand/logo-favicon.png": "8641e8d74ffd73ff00b1758c6a4d67f76df8cbd018997e4a02cede094a055893",
+    "assets/helpdesk/05_Brand/logo-full.png": "428cbfcce6ec5384d347c1db8391ab7b542e5592a8e6a744152252f819414131",
+    "assets/helpdesk/05_Brand/logo-light.png": "6bcb536a2b2440bd46eb10cf2d011cfda5ac634ef92ce8e9db06b9ee277172d5",
+    "assets/helpdesk/05_Brand/logo-pastel-full.png": "6fbaf9b6e0f382c56a622a17962e19b47309e109b7769f8d2546d8b8a6e096bb",
+    "assets/helpdesk/05_Brand/logo-pastel-mark.png": "cc9977c2793521d1757b69e0d88f30b11d4e13ffb33d2fc97841188105346ae7",
+    "sw.js": "236ee49ff229f62c8226d8a65ba15228e64a6ce590341a4a8f9a62cfd916b5ae",
+    "js/main.js": "6a74a001db90b5e13f7f52099c90b493e7e9709c5b41b30bc09ec1ef9ae6f358"
+  },
+  "source": {
+    "git_sha": null,
+    "file_sha256": {
+      "frontend/build-templates.mjs": "975b6c8e091e4c9bce38ff3e2adf0d5841075964e541add90bf3d481c107bd7e",
+      "scripts/test_public_cache.mjs": "9569cf038b5ba0cd372acaa04c8b0c077e024129fc84d35b101cbd5f3996005f",
+      "docs/05_ATURAN_UI_UX_WEB_PUBLIK.md": "bc0aef3ce8300215fb1dda234d5bb2685f16be6f423ac2fae66b735b28354093",
+      "runbooks/local-development.md": "7a7cbdd6a32cc56237be7aaaec6653e5f2bfec8e0864e89f76572e2bd29669e0",
+      "planning/command_registry.json": "7180949322ad2b9defcc75abab7747eb30bc4a869746641b1f4f21ebbf318116",
+      "status/PROJECT_STATE.md": "1d1e3fa0e5eb049caf79d660e1ff0346ec731c9667cd670330149ce4fefdaba5"
+    }
+  },
+  "browser": {
+    "url": "http://127.0.0.1:18080/",
+    "method": "ordinary navigation, no manual reload",
+    "screenshot": "qa/bootstrap/public-cache.jpg",
+    "screenshot_sha256": "07bed26437e30c2e8aa275974e4565ba9797572f55906e45171528593c0b0ff6"
+  },
+  "limits": [
+    "Service-worker lifecycle/offline behavior tested with executed worker fixture, not full offline browser matrix",
+    "Other browser profiles receive cleanup when they next visit this local web origin",
+    "M0-03 reports remain historical source snapshots; this overlay records later frontend changes",
+    "AC06/AC11 global PARTIAL; M0-04 NOT_STARTED; no production/UAT claim"
+  ]
+}

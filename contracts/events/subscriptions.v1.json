@@ -1,0 +1,238 @@
+{
+  "subscriptions": [
+    {
+      "event_type": "TicketCreated",
+      "producers": [
+        "M3"
+      ],
+      "consumers": [
+        "M5",
+        "M6",
+        "M7",
+        "M9"
+      ],
+      "schema_version": 1,
+      "ordering": "monotonic aggregate snapshots; no consecutive-version assumption for partial subscriptions",
+      "projection": "canonical complete snapshot; CAS source_version, ignore older/equal snapshot",
+      "dedup": "consumer_id + event_id; differing digest is integrity error",
+      "ack": "after inbox and effect commit in consumer owner transaction",
+      "self_relay": false
+    },
+    {
+      "event_type": "TicketVerified",
+      "producers": [
+        "M3"
+      ],
+      "consumers": [
+        "M9"
+      ],
+      "schema_version": 1,
+      "ordering": "monotonic aggregate snapshots; no consecutive-version assumption for partial subscriptions",
+      "projection": "intent stream, inbox dedup by event ID; never advance canonical snapshot watermark from partial intent",
+      "dedup": "consumer_id + event_id; differing digest is integrity error",
+      "ack": "after inbox and effect commit in consumer owner transaction",
+      "self_relay": false
+    },
+    {
+      "event_type": "AssignmentChanged",
+      "producers": [
+        "M3"
+      ],
+      "consumers": [
+        "M9"
+      ],
+      "schema_version": 1,
+      "ordering": "monotonic aggregate snapshots; no consecutive-version assumption for partial subscriptions",
+      "projection": "intent stream, inbox dedup by event ID; never advance canonical snapshot watermark from partial intent",
+      "dedup": "consumer_id + event_id; differing digest is integrity error",
+      "ack": "after inbox and effect commit in consumer owner transaction",
+      "self_relay": false
+    },
+    {
+      "event_type": "TicketStateChanged",
+      "producers": [
+        "M3"
+      ],
+      "consumers": [
+        "M5",
+        "M6",
+        "M7",
+        "M9"
+      ],
+      "schema_version": 1,
+      "ordering": "monotonic aggregate snapshots; no consecutive-version assumption for partial subscriptions",
+      "projection": "canonical complete snapshot; CAS source_version, ignore older/equal snapshot",
+      "dedup": "consumer_id + event_id; differing digest is integrity error",
+      "ack": "after inbox and effect commit in consumer owner transaction",
+      "self_relay": false
+    },
+    {
+      "event_type": "ResolutionProposed",
+      "producers": [
+        "M3"
+      ],
+      "consumers": [
+        "M7",
+        "M9"
+      ],
+      "schema_version": 1,
+      "ordering": "monotonic aggregate snapshots; no consecutive-version assumption for partial subscriptions",
+      "projection": "intent stream, inbox dedup by event ID; never advance canonical snapshot watermark from partial intent",
+      "dedup": "consumer_id + event_id; differing digest is integrity error",
+      "ack": "after inbox and effect commit in consumer owner transaction",
+      "self_relay": false
+    },
+    {
+      "event_type": "NotificationStored",
+      "producers": [
+        "M9"
+      ],
+      "consumers": [
+        "M3"
+      ],
+      "schema_version": 1,
+      "ordering": "monotonic aggregate snapshots; no consecutive-version assumption for partial subscriptions",
+      "projection": "intent stream, inbox dedup by event ID; never advance canonical snapshot watermark from partial intent",
+      "dedup": "consumer_id + event_id; differing digest is integrity error",
+      "ack": "after inbox and effect commit in consumer owner transaction",
+      "self_relay": false
+    },
+    {
+      "event_type": "ConfirmationRecorded",
+      "producers": [
+        "M3"
+      ],
+      "consumers": [
+        "M6",
+        "M7",
+        "M9"
+      ],
+      "schema_version": 1,
+      "ordering": "monotonic aggregate snapshots; no consecutive-version assumption for partial subscriptions",
+      "projection": "intent stream, inbox dedup by event ID; never advance canonical snapshot watermark from partial intent",
+      "dedup": "consumer_id + event_id; differing digest is integrity error",
+      "ack": "after inbox and effect commit in consumer owner transaction",
+      "self_relay": false
+    },
+    {
+      "event_type": "VendorCaseRecorded",
+      "producers": [
+        "M3"
+      ],
+      "consumers": [
+        "M7",
+        "M9"
+      ],
+      "schema_version": 1,
+      "ordering": "monotonic aggregate snapshots; no consecutive-version assumption for partial subscriptions",
+      "projection": "intent stream, inbox dedup by event ID; never advance canonical snapshot watermark from partial intent",
+      "dedup": "consumer_id + event_id; differing digest is integrity error",
+      "ack": "after inbox and effect commit in consumer owner transaction",
+      "self_relay": false
+    },
+    {
+      "event_type": "PauseChanged",
+      "producers": [
+        "M3"
+      ],
+      "consumers": [
+        "M7",
+        "M9"
+      ],
+      "schema_version": 1,
+      "ordering": "monotonic aggregate snapshots; no consecutive-version assumption for partial subscriptions",
+      "projection": "intent stream, inbox dedup by event ID; never advance canonical snapshot watermark from partial intent",
+      "dedup": "consumer_id + event_id; differing digest is integrity error",
+      "ack": "after inbox and effect commit in consumer owner transaction",
+      "self_relay": false
+    },
+    {
+      "event_type": "HandoffAccepted",
+      "producers": [
+        "M3"
+      ],
+      "consumers": [
+        "M5",
+        "M6",
+        "M7",
+        "M9"
+      ],
+      "schema_version": 1,
+      "ordering": "monotonic aggregate snapshots; no consecutive-version assumption for partial subscriptions",
+      "projection": "intent stream, inbox dedup by event ID; never advance canonical snapshot watermark from partial intent",
+      "dedup": "consumer_id + event_id; differing digest is integrity error",
+      "ack": "after inbox and effect commit in consumer owner transaction",
+      "self_relay": false
+    },
+    {
+      "event_type": "EscalationRequested",
+      "producers": [
+        "M3"
+      ],
+      "consumers": [
+        "M7",
+        "M9"
+      ],
+      "schema_version": 1,
+      "ordering": "monotonic aggregate snapshots; no consecutive-version assumption for partial subscriptions",
+      "projection": "intent stream, inbox dedup by event ID; never advance canonical snapshot watermark from partial intent",
+      "dedup": "consumer_id + event_id; differing digest is integrity error",
+      "ack": "after inbox and effect commit in consumer owner transaction",
+      "self_relay": false
+    },
+    {
+      "event_type": "MediaScanCompleted",
+      "producers": [
+        "M3",
+        "M8"
+      ],
+      "consumers": [
+        "M9"
+      ],
+      "schema_version": 1,
+      "ordering": "monotonic aggregate snapshots; no consecutive-version assumption for partial subscriptions",
+      "projection": "intent stream, inbox dedup by event ID; never advance canonical snapshot watermark from partial intent",
+      "dedup": "consumer_id + event_id; differing digest is integrity error",
+      "ack": "after inbox and effect commit in consumer owner transaction",
+      "self_relay": false
+    },
+    {
+      "event_type": "ContentPublished",
+      "producers": [
+        "M8"
+      ],
+      "consumers": [
+        "M9"
+      ],
+      "schema_version": 1,
+      "ordering": "monotonic aggregate snapshots; no consecutive-version assumption for partial subscriptions",
+      "projection": "intent stream, inbox dedup by event ID; never advance canonical snapshot watermark from partial intent",
+      "dedup": "consumer_id + event_id; differing digest is integrity error",
+      "ack": "after inbox and effect commit in consumer owner transaction",
+      "self_relay": false
+    },
+    {
+      "event_type": "AuditRecorded",
+      "producers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5",
+        "M6",
+        "M7",
+        "M8",
+        "M9"
+      ],
+      "consumers": [
+        "M9"
+      ],
+      "schema_version": 1,
+      "ordering": "monotonic aggregate snapshots; no consecutive-version assumption for partial subscriptions",
+      "projection": "intent stream, inbox dedup by event ID; never advance canonical snapshot watermark from partial intent",
+      "dedup": "consumer_id + event_id; differing digest is integrity error",
+      "ack": "after inbox and effect commit in consumer owner transaction",
+      "self_relay": false
+    }
+  ]
+}

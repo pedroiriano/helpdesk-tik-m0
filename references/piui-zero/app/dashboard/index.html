@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Pusat Komando Eksekutif — PIUI Zero Admin</title>
+  <meta name="description" content="Template pusat komando dengan KPI data contoh, grafik SVG native, dan tampilan log audit PIUI Zero.">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta property="og:title" content="Pusat Komando Eksekutif — PIUI Zero Admin">
+  <meta property="og:description" content="Panel internal operasional PIUI Zero (Data Rahasia &amp; Terbatas).">
+  <meta property="og:type" content="website">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="stylesheet" href="/assets/css/main.css?v=2.2.2">
+  <script type="module" src="/assets/js/app.js?v=2.2.2"></script>
+<link rel="icon" href="/assets/icons/favicon.ico?v=2.2.2" sizes="16x16 32x32 48x48"><link rel="icon" href="/assets/icons/piui-favicon.svg?v=2.2.2" type="image/svg+xml" sizes="any"><link rel="apple-touch-icon" href="/assets/icons/piui-180.png?v=2.2.2" sizes="180x180">
+</head>
+<body>
+  <a class="piui-skip-link" href="#main-content">Langsung ke konten utama</a>
+  <div id="piui-live-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="piui-app-shell" data-sidebar="expanded" id="piui-dashboard-workspace">
+    <!-- =====================================================================
+         TOPBAR GLOBAL: Maksimal 4 kontrol kompak di HP (320px-639px)
+         ===================================================================== -->
+    <header class="piui-topbar">
+      <div class="piui-topbar__start">
+        <button type="button" class="piui-icon-btn" id="btn-sidebar-toggle"
+                aria-label="Buka atau ciutkan panel navigasi" aria-expanded="true" aria-controls="piui-sidebar">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-menu"></use></svg>
+        </button>
+        <a href="/app/dashboard/index.html" class="piui-brand"><img class="piui-brand__mark" src="/assets/icons/piui-mark.svg" alt="" width="32" height="32"><span class="piui-brand__name">PIUI Zero™</span><span class="piui-badge piui-badge--env" title="Lingkungan demo lokal">DEMO</span></a>
+      </div>
+
+      <div class="piui-topbar__end">
+        <button type="button" class="piui-cmd-trigger" id="btn-open-cmd"
+                aria-label="Buka pencarian cepat dan palet perintah (Ctrl+K)">
+          <svg width="18" height="18" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-search"></use></svg>
+          <span class="piui-cmd-trigger__label">Cari rute, audit ID, perintah...</span>
+          <kbd class="piui-cmd-trigger__kbd">Ctrl+K</kbd>
+        </button>
+
+        <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm piui-topbar__desktop-only tabular-nums"
+                id="btn-tz-toggle" title="Ganti tampilan zona waktu antara WIB dan UTC">
+          Zona: WIB UTC+7 (Klik ke UTC)
+        </button>
+
+        <button type="button" class="piui-icon-btn" id="btn-theme-toggle"
+                aria-label="Ganti tema terang atau gelap">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-theme"></use></svg>
+        </button>
+
+        <button type="button" class="piui-icon-btn" popovertarget="popover-profile"
+                aria-label="Buka menu profil dan sesi administrator">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-user"></use></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- POPOVER PROFIL & SESI ADMIN (Native Popover API) -->
+    <div id="popover-profile" popover="auto" class="piui-popover" role="region" aria-label="Informasi Sesi Administrator">
+      <div class="piui-field">
+        <strong>budi.sec@piui-zero.internal</strong>
+        <span class="piui-page-subtitle">Peran: Super Admin &amp; AppSec Lead</span>
+        <span class="piui-badge" data-status="success">Mode prototipe</span>
+      </div>
+      <hr>
+      <div class="piui-page-actions">
+        <a href="/index.html" class="piui-btn piui-btn--secondary piui-btn--sm">Portal Dokumentasi</a>
+        <button type="button" class="piui-btn piui-btn--danger piui-btn--sm" id="btn-session-logout">
+          <svg width="16" height="16" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-logout"></use></svg>
+          <span>Akhiri Sesi (Logout)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- =====================================================================
+         SIDEBAR NAVIGASI (Rail 64px di Tablet >= 768px, Full 260px di >= 1024px)
+         ===================================================================== -->
+    <aside class="piui-sidebar" id="piui-sidebar" aria-label="Navigasi Modul Admin">
+      <nav aria-label="Navigasi Utama">
+        <div class="piui-sidebar__group-label">Menu Utama</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/app/dashboard/index.html" class="piui-nav-link" aria-current="page" title="Beranda Dashboard Utama">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-dashboard"></use></svg>
+              <span class="piui-nav-link__text">Beranda Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/analytics/index.html" class="piui-nav-link" title="Analitik &amp; Grafik Kinerja">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-analytics"></use></svg>
+              <span class="piui-nav-link__text">Analitik &amp; Grafik</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/notifications/index.html" class="piui-nav-link" title="Pusat Notifikasi &amp; Peringatan">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-bell"></use></svg>
+              <span class="piui-nav-link__text">Pusat Notifikasi</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="piui-sidebar__group-label">Kelola Data &amp; Media</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/app/users/index.html" class="piui-nav-link" title="Kelola Data Pengguna &amp; Hak Akses">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-users"></use></svg>
+              <span class="piui-nav-link__text">Data Pengguna</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/transactions/index.html" class="piui-nav-link" title="Kelola Data Transaksi Keuangan">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-transactions"></use></svg>
+              <span class="piui-nav-link__text">Data Transaksi</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/gallery/index.html" class="piui-nav-link" title="Galeri Foto &amp; Video (Masonry &amp; Lightbox)">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-gallery"></use></svg>
+              <span class="piui-nav-link__text">Galeri Foto &amp; Video</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="piui-sidebar__group-label">Komponen &amp; Tampilan</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/app/components/index.html" class="piui-nav-link" title="Katalog Komponen UI/UX (UI Kit)">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-components"></use></svg>
+              <span class="piui-nav-link__text">Katalog Komponen</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="piui-sidebar__group-label">Sistem &amp; Keamanan</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/app/audit/index.html" class="piui-nav-link" title="Riwayat Aktivitas &amp; Log Audit">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-audit"></use></svg>
+              <span class="piui-nav-link__text">Riwayat Aktivitas</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/settings/index.html" class="piui-nav-link" title="Pengaturan Sistem &amp; Keamanan">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-settings"></use></svg>
+              <span class="piui-nav-link__text">Pengaturan Sistem</span>
+            </a>
+          </li>
+          <li>
+            <a href="/status/index.html" class="piui-nav-link" title="Status Server &amp; Layanan">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-status"></use></svg>
+              <span class="piui-nav-link__text">Status Server</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html" class="piui-nav-link" title="Panduan &amp; Dokumentasi Sistem">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-info"></use></svg>
+              <span class="piui-nav-link__text">Panduan &amp; Dokumentasi</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- =====================================================================
+         OFF-CANVAS MOBILE NAVIGATION DRAWER (<dialog> untuk HP < 768px)
+         ===================================================================== -->
+    <dialog id="piui-mobile-drawer" class="piui-drawer-mobile" aria-labelledby="mobile-drawer-title">
+      <div class="piui-dialog__header">
+        <strong id="mobile-drawer-title">Menu Navigasi PIUI Zero</strong>
+        <button type="button" class="piui-icon-btn" id="btn-close-mobile-drawer" aria-label="Tutup menu navigasi">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-close"></use></svg>
+        </button>
+      </div>
+      <nav aria-label="Navigasi Mobile">
+        <ul class="piui-nav-list">
+          <li><a href="/app/dashboard/index.html" class="piui-nav-link" aria-current="page">Beranda Dashboard</a></li>
+          <li><a href="/app/analytics/index.html" class="piui-nav-link">Analitik &amp; Grafik</a></li>
+          <li><a href="/app/users/index.html" class="piui-nav-link">Data Pengguna</a></li>
+          <li><a href="/app/transactions/index.html" class="piui-nav-link">Data Transaksi</a></li>
+          <li><a href="/app/gallery/index.html" class="piui-nav-link">Galeri Foto &amp; Video</a></li>
+          <li><a href="/app/components/index.html" class="piui-nav-link">Katalog Komponen (UI Kit)</a></li>
+          <li><a href="/app/audit/index.html" class="piui-nav-link">Riwayat Aktivitas (Audit)</a></li>
+          <li><a href="/app/settings/index.html" class="piui-nav-link">Pengaturan Sistem</a></li>
+          <li><a href="/status/index.html" class="piui-nav-link">Status Server</a></li>
+          <li><a href="/index.html" class="piui-nav-link">Panduan &amp; Dokumentasi</a></li>
+          <li><a href="/auth/login.html" class="piui-nav-link">Masuk Akun Admin</a></li>
+        </ul>
+      </nav>
+    </dialog>
+
+    <!-- =====================================================================
+         AREA KERJA UTAMA (<main id="main-content" class="piui-main">)
+         Dilengkapi @container workspace & min-inline-size: 0
+         ===================================================================== -->
+    <main id="main-content" class="piui-main">
+      <!-- Breadcrumb Kontekstual -->
+      <nav aria-label="Breadcrumb" class="piui-breadcrumb">
+        <ol>
+          <li><a href="/index.html">Panduan &amp; Dokumentasi</a></li>
+          <li>Menu Utama</li>
+          <li aria-current="page">Beranda Dashboard</li>
+        </ol>
+      </nav>
+
+      <!-- System Health Banner (Above the Fold) -->
+      <div class="piui-health-banner" role="status">
+        <div class="piui-health-banner__content">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-check-circle"></use></svg>
+          <span><strong>Ringkasan Status Layanan (Data Contoh)</strong> • Kecepatan Respons API: <strong class="tabular-nums">42 ms</strong> • Belum terhubung ke pemantauan server.</span>
+        </div>
+        <span class="piui-badge" data-status="success">Contoh • 21 Okt 2026, 08:55 WIB</span>
+      </div>
+
+      <!-- Page Header (Stack-to-Row di < 768px -> >= 768px) -->
+      <div class="piui-page-header">
+        <div class="piui-page-header__titles">
+          <h1 class="piui-page-title">Beranda Dashboard Utama</h1>
+          <p class="piui-page-subtitle">Ringkasan Angka Penting, Grafik Transaksi Harian, Papan Tugas (Kanban), dan Aktivitas Terbaru</p>
+        </div>
+
+        <div class="piui-page-actions">
+          <!-- Pemilih Rentang Waktu (Tersinkronisasi ke URL ?range=today|7d|30d) -->
+          <div class="piui-segmented" role="group" aria-label="Pilih rentang waktu metrik">
+            <button type="button" class="piui-segmented__btn" data-range-select="today" aria-pressed="true">Hari Ini</button>
+            <button type="button" class="piui-segmented__btn" data-range-select="7d" aria-pressed="false">7 Hari</button>
+            <button type="button" class="piui-segmented__btn" data-range-select="30d" aria-pressed="false">30 Hari</button>
+          </div>
+
+          <button type="button" class="piui-btn piui-btn--secondary" id="btn-export-summary">
+            <svg width="16" height="16" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-download"></use></svg>
+            <span>Ekspor CSV</span>
+          </button>
+
+          <button type="button" class="piui-btn piui-btn--secondary" id="btn-export-json">
+            <svg width="16" height="16" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-code"></use></svg>
+            <span>Salin JSON</span>
+          </button>
+
+          <button type="button" class="piui-btn piui-btn--secondary" id="btn-print-report">
+            <svg width="16" height="16" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-info"></use></svg>
+            <span>Cetak PDF</span>
+          </button>
+
+          <button type="button" class="piui-btn piui-btn--danger" id="btn-open-lockdown">
+            <svg width="16" height="16" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-shield-alert"></use></svg>
+            <span>Isolasi Sesi (Simulasi Lokal)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           SECTION 1: GRID 4 KARTU KPI UTAMA (@container workspace: 1 -> 2 -> 4 kolom)
+           =================================================================== -->
+      <section id="section-kpi" aria-labelledby="heading-kpi">
+        <h2 id="heading-kpi" class="sr-only">Empat Indikator Kinerja Utama (KPI)</h2>
+        <div class="piui-kpi-grid">
+          <article class="piui-card">
+            <div class="piui-card__header">
+              <h3 class="piui-card__title">Pengguna Aktif Terverifikasi</h3>
+              <span class="piui-badge" data-status="success" id="kpi-trend-users">▲ +6,8% vs kemarin</span>
+            </div>
+            <div class="piui-card__body-row">
+              <div class="piui-card__value tabular-nums" id="kpi-val-users">1.420</div>
+              <svg class="piui-sparkline" width="88" height="28" viewBox="0 0 88 28" fill="none" aria-hidden="true">
+                <path d="M2 22 C 18 20, 28 14, 44 16 C 60 18, 70 8, 86 4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="piui-card__meta">
+              <span>Contoh • Auth-DB</span>
+              <a href="#section-audit">Tinjau Aktivitas</a>
+            </div>
+          </article>
+
+          <article class="piui-card">
+            <div class="piui-card__header">
+              <h3 class="piui-card__title">Volume Transaksi Sukses</h3>
+              <span class="piui-badge" data-status="success" id="kpi-trend-tx">▲ +12,4% vs kemarin</span>
+            </div>
+            <div class="piui-card__body-row">
+              <div class="piui-card__value tabular-nums" id="kpi-val-tx">Rp 842.500.000</div>
+              <svg class="piui-sparkline" width="88" height="28" viewBox="0 0 88 28" fill="none" aria-hidden="true">
+                <path d="M2 24 C 20 22, 32 10, 48 14 C 64 18, 72 6, 86 2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="piui-card__meta">
+              <span>Contoh • Settlement-Engine</span>
+              <a href="#section-analytics">Lihat Grafik Tren</a>
+            </div>
+          </article>
+
+          <article class="piui-card">
+            <div class="piui-card__header">
+              <h3 class="piui-card__title">Latensi API Inti (p95)</h3>
+              <span class="piui-badge" data-status="info" id="kpi-trend-latency">▼ -4 ms (Target &le; 100ms)</span>
+            </div>
+            <div class="piui-card__body-row">
+              <div class="piui-card__value tabular-nums" id="kpi-val-latency">42 ms</div>
+              <svg class="piui-sparkline" width="88" height="28" viewBox="0 0 88 28" fill="none" aria-hidden="true">
+                <path d="M2 6 C 22 8, 36 18, 50 16 C 66 14, 74 22, 86 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="piui-card__meta">
+              <span>Batas SLA: &le; 100 ms</span>
+              <a href="#section-analytics">Detail Performa</a>
+            </div>
+          </article>
+
+          <article class="piui-card">
+            <div class="piui-card__header">
+              <h3 class="piui-card__title">Antrean Verifikasi RBAC</h3>
+              <span class="piui-badge" data-status="warning" id="kpi-trend-queue">3 butuh tindakan segera</span>
+            </div>
+            <div class="piui-card__body-row">
+              <div class="piui-card__value tabular-nums" id="kpi-val-queue">14</div>
+              <svg class="piui-sparkline" width="88" height="28" viewBox="0 0 88 28" fill="none" aria-hidden="true">
+                <path d="M2 14 C 18 10, 32 20, 46 12 C 60 8, 72 16, 86 10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="piui-card__meta">
+              <span>Prioritas Tinggi</span>
+              <a href="#section-audit">Periksa Antrean</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           SECTION 2: GRAFIK SVG DEKLARATIF NATIVE & STATUS KEAMANAN SISTEM
+           =================================================================== -->
+      <section id="section-analytics" class="piui-dashboard-split" aria-labelledby="heading-analytics">
+        <div class="piui-card">
+          <div class="piui-card__header">
+            <div>
+              <h2 id="heading-analytics" class="piui-card__title">Grafik Tren Volume Operasional &amp; Latensi </h2>
+              <p class="piui-page-subtitle" id="chart-period-label">Hari Ini (Per 4 Jam — 21 Okt 2026)</p>
+            </div>
+            
+          </div>
+
+          <div class="piui-chart-box">
+            <svg id="piui-main-svg-chart" class="piui-svg-chart" viewBox="0 0 680 210" role="img"
+                 aria-labelledby="svg-chart-title svg-chart-desc">
+              <title id="svg-chart-title">Grafik Tren Volume Transaksi Operasional PIUI Zero</title>
+              <desc id="svg-chart-desc">Visualisasi kurva volume transaksi dan latensi p95 yang dilengkapi tabel angka aksesibel di bawah grafik.</desc>
+              <g id="svg-chart-plot"></g>
+            </svg>
+          </div>
+
+          <!-- Tabel Data Alternatif Aksesibel (Kontrak Bagian 7.2 & 12.3 Blueprint) -->
+          <details class="piui-chart-details">
+            <summary>Lihat Tabel Data Angka Lengkap (Aksesibilitas &amp; Salin Cepat)</summary>
+            <div class="piui-table-scroll" role="region" aria-label="Data angka grafik tren operasional" tabindex="0">
+              <table class="piui-table tabular-nums">
+                <thead>
+                  <tr>
+                    <th scope="col">Periode Waktu</th>
+                    <th scope="col">Volume Transaksi</th>
+                    <th scope="col">Latensi p95</th>
+                    <th scope="col">Rasio Error</th>
+                  </tr>
+                </thead>
+                <tbody id="chart-data-tbody"></tbody>
+              </table>
+            </div>
+          </details>
+        </div>
+
+        <!-- Panel Status Pertahanan & Kepatuhan -->
+        <aside class="piui-card" aria-labelledby="heading-sec-posture">
+          <div class="piui-card__header">
+            <h2 id="heading-sec-posture" class="piui-card__title">Contoh Konfigurasi Keamanan</h2>
+            <span class="piui-badge" data-status="success">KONFIGURASI CONTOH</span>
+          </div>
+
+          <div class="piui-table-scroll" role="region" aria-label="Daftar pemeriksaan postur keamanan" tabindex="0">
+            <table class="piui-table">
+              <thead>
+                <tr>
+                  <th scope="col">Kontrol Pertahanan</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Content Security Policy (Strict)</td>
+                  <td><span class="piui-badge" data-status="success">Aktif (0 Pelanggaran)</span></td>
+                </tr>
+                <tr>
+                  <td>Trusted Types (<code>piui-dom-policy</code>)</td>
+                  <td><span class="piui-badge" data-status="success">Enforced</span></td>
+                </tr>
+                <tr>
+                  <td>Isolasi Cache Service Worker</td>
+                  <td><span class="piui-badge" data-status="success">No-PII Verified</span></td>
+                </tr>
+                <tr>
+                  <td>Integritas Tautan (<code>routes.manifest</code>)</td>
+                  <td><span class="piui-badge" data-status="success">100% Valid</span></td>
+                </tr>
+                <tr>
+                  <td>Kepatuhan Aksesibilitas</td>
+                  <td><span class="piui-badge" data-status="info">WCAG 2.2 AA</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="piui-card__meta">
+            <span>Audit otomatis oleh <code>verify-gates.mjs</code></span>
+            <a href="/index.html">Dokumentasi</a>
+          </div>
+        </aside>
+      </section>
+
+      <!-- ===================================================================
+           SECTION 3: TABEL JEJAK AUDIT & PERINGATAN KEAMANAN TERBARU
+           Dilengkapi Filter URLSearchParams, Sticky Column HP, & Copy ID
+           =================================================================== -->
+      <section id="section-audit" class="piui-card" aria-labelledby="heading-audit-table">
+        <div class="piui-page-header">
+          <div class="piui-page-header__titles">
+            <h2 id="heading-audit-table" class="piui-page-title">Jejak Audit Keamanan &amp; Operasional Terbaru</h2>
+            <p class="piui-page-subtitle" id="audit-count-summary">Menampilkan 6 dari 6 aktivitas terbaru</p>
+          </div>
+          <div class="piui-page-actions">
+            <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" id="btn-reset-audit-filter">
+              Reset Filter
+            </button>
+          </div>
+        </div>
+
+        <!-- Multi-Facet Filter Bar (<search>) yang tersinkronisasi ke URL -->
+        <search aria-label="Saring daftar aktivitas audit">
+          <form id="audit-filter-form" class="piui-filter-bar" method="get" action="/app/dashboard/index.html">
+            <div class="piui-field">
+              <label for="audit-search-q" class="piui-field__label">Cari ID Audit, Aktor, IP, atau Tindakan</label>
+              <input type="search" id="audit-search-q" name="q" class="piui-input"
+                     placeholder="Ketik mis. AUD-2026, budi.sec, atau 10.24..." autocomplete="off" spellcheck="false">
+            </div>
+
+            <div class="piui-field">
+              <label for="audit-filter-severity" class="piui-field__label">Filter Tingkat Risiko</label>
+              <select id="audit-filter-severity" name="severity" class="piui-select">
+                <option value="all">Semua Tingkat Risiko</option>
+                <option value="high-risk">Risiko Tinggi (HIGH-RISK)</option>
+                <option value="warning">Peringatan (WARNING)</option>
+                <option value="info">Informasi (INFO)</option>
+              </select>
+            </div>
+          </form>
+        </search>
+
+        <!-- Kontainer Tabel Anti-Jebol (.piui-table-scroll) dengan Sticky First Column -->
+        <div class="piui-table-scroll" role="region" aria-labelledby="heading-audit-table" tabindex="0">
+          <table class="piui-table">
+            <thead>
+              <tr>
+                <th scope="col" class="is-sticky-col">ID Audit</th>
+                <th scope="col">Waktu Kejadian</th>
+                <th scope="col">Aktor &amp; Peran</th>
+                <th scope="col">Tindakan Operasional</th>
+                <th scope="col">IP Sumber</th>
+                <th scope="col">Tingkat Risiko</th>
+                <th scope="col" data-table-column="actions">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="audit-log-tbody"></tbody>
+          </table>
+        </div>
+
+        <!-- Empty State saat hasil pencarian/filter kosong -->
+        <div id="audit-empty-state" class="piui-card" hidden>
+          <p><strong>Tidak ditemukan catatan log audit yang cocok dengan kriteria pencarian atau filter Anda.</strong></p>
+          <div class="piui-page-actions">
+            <button type="button" class="piui-btn piui-btn--primary piui-btn--sm" id="btn-empty-reset">Reset Semua Filter</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           SEKSYEN 3: PAPAN KANBAN INSIDEN & TUGAS OPERASIONAL (DRAG & DROP)
+           =================================================================== -->
+      <section aria-labelledby="heading-kanban-board" class="piui-panel">
+        <div class="piui-panel__header">
+          <div>
+            <h2 id="heading-kanban-board" class="piui-panel__title">Papan Kanban Insiden &amp; Alur Kerja Operasional (Drag &amp; Drop)</h2>
+            <p class="piui-page-subtitle">Tarik &amp; lepaskan kartu tiket antar kolom atau gunakan tombol ‹ Geser / Geser › untuk memindahkan tahapan mitigasi.</p>
+          </div>
+          <div class="piui-page-actions">
+            <button type="button" class="piui-btn piui-btn--primary piui-btn--sm" id="btn-add-kanban-task">
+              + Tambah Tiket Kanban
+            </button>
+          </div>
+        </div>
+        <div id="piui-kanban-board" class="piui-kanban" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <!-- =====================================================================
+         FOOTER OPERASIONAL ADMIN DASHBOARD
+         ===================================================================== -->
+    <footer class="piui-footer">
+      
+      <ul class="piui-footer__links">
+        <li><a href="/index.html">Portal Arsitektur</a></li>
+        <li><a href="/auth/login.html">Manajemen Sesi</a></li>
+        <li><a href="#main-content">Kembali ke Atas &uarr;</a></li>
+      </ul>
+    <p class="piui-product-credit"><span class="piui-product-signature"><img class="piui-brand__mark" src="/assets/icons/piui-mark.svg" alt="" width="24" height="24"><span>PIUI Zero™ v2.2.2</span></span> • Created by Ipi &quot;Pedro Iriano&quot; • © 2026 • <a href="/about/index.html">Tentang produk</a></p></footer>
+  </div>
+
+  <!-- =======================================================================
+       DIALOG 1: GLOBAL COMMAND PALETTE (Ctrl+K / Cmd+K)
+       ======================================================================= -->
+  <dialog id="piui-cmd-palette" class="piui-dialog" aria-labelledby="cmd-palette-title">
+    <div class="piui-dialog__header">
+      <strong id="cmd-palette-title">Palet Perintah &amp; Navigasi Cepat (Ctrl+K)</strong>
+      <button type="button" class="piui-icon-btn" id="btn-close-cmd" aria-label="Tutup palet perintah (Escape)">
+        <svg width="18" height="18" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-close"></use></svg>
+      </button>
+    </div>
+    <div class="piui-dialog__body">
+      <div class="piui-field">
+        <label for="cmd-search-input" class="piui-field__label">Ketik nama halaman, modul, atau aksi cepat</label>
+        <input type="search" name="cmd-search-input" id="cmd-search-input" class="piui-input"
+               role="combobox" aria-expanded="true" aria-controls="cmd-results-list"
+               autocomplete="off" spellcheck="false"
+               placeholder="Contoh: Pusat Komando, Tema Gelap, Ekspor CSV...">
+      </div>
+      <ul id="cmd-results-list" class="piui-cmd-list" role="listbox" aria-label="Daftar perintah yang tersedia"></ul>
+      <p id="cmd-empty-state" class="piui-page-subtitle" hidden>Tidak ada perintah yang cocok dengan kata kunci tersebut.</p>
+    </div>
+  </dialog>
+
+  <!-- =======================================================================
+       DIALOG 2: KONFIRMASI AKSI DESTRUKTIF (Wajib Alasan Audit + Ketik Ulang Kode)
+       ======================================================================= -->
+  <dialog id="dialog-security-lockdown" class="piui-dialog"
+          aria-labelledby="lockdown-title" aria-describedby="lockdown-desc">
+    <form data-local-mutation id="form-security-lockdown" method="dialog">
+      <div class="piui-dialog__header">
+        <strong id="lockdown-title">Konfirmasi Isolasi Sesi Mencurigakan</strong>
+        <span class="piui-badge" data-status="danger">Aksi Berisiko Tinggi</span>
+      </div>
+      <div class="piui-dialog__body">
+        <p id="lockdown-desc">
+          Form ini memvalidasi rencana pencabutan sesi secara lokal. Pemutusan sesi, verifikasi MFA, dan pencatatan audit memerlukan integrasi server.
+        </p>
+
+        <div class="piui-field">
+          <label for="lockdown-reason" class="piui-field__label">Alasan Audit &amp; Nomor Tiket Insiden (Wajib, min. 10 karakter)</label>
+          <textarea name="lockdown-reason" id="lockdown-reason" class="piui-textarea" rows="3" required minlength="10"
+                    placeholder="Contoh: INC-2026-8841 Terdeteksi anomali percobaan OTP dari IP luar..."></textarea>
+        </div>
+
+        <div class="piui-field">
+          <label for="lockdown-confirm-code" class="piui-field__label">
+            Ketik ulang kode <code>ISOLASI-SESI</code> untuk mengaktifkan tombol eksekusi
+          </label>
+          <input type="text" name="lockdown-confirm-code" id="lockdown-confirm-code" class="piui-input text-mono"
+                 required autocomplete="off" spellcheck="false" placeholder="ISOLASI-SESI">
+        </div>
+      </div>
+      <div class="piui-dialog__footer">
+        <button type="button" class="piui-btn piui-btn--secondary" id="btn-cancel-lockdown">Batalkan</button>
+        <button type="submit" class="piui-btn piui-btn--danger" id="btn-submit-lockdown" disabled>
+          Konfirmasi &amp; Eksekusi Isolasi Sesi
+        </button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- CONTAINER TOAST NOTIFICATION -->
+  <div id="piui-toast-region" class="piui-toast-region" aria-live="polite"></div>
+
+  <!-- =======================================================================
+       TEMPLATES DEKLARATIF (<template> untuk DOM Cloning Aman Tanpa innerHTML)
+       ======================================================================= -->
+  <template id="tpl-audit-row">
+    <tr>
+      <th scope="row" class="is-sticky-col text-mono" data-col="id"></th>
+      <td class="tabular-nums" data-col="time"></td>
+      <td data-col="actor"></td>
+      <td class="overflow-anywhere" data-col="action"></td>
+      <td class="text-mono" data-col="ip"></td>
+      <td><span class="piui-badge" data-col="severity"></span></td>
+      <td>
+        <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-action="copy-audit-id">
+          Salin ID
+        </button>
+      </td>
+    </tr>
+  </template>
+
+  <template id="tpl-chart-data-row">
+    <tr>
+      <th scope="row" data-chart-col="period"></th>
+      <td data-chart-col="volume"></td>
+      <td data-chart-col="latency"></td>
+      <td data-chart-col="error"></td>
+    </tr>
+  </template>
+
+  <template id="tpl-cmd-item">
+    <li class="piui-cmd-item" role="option" tabindex="-1">
+      <div>
+        <strong data-cmd-title></strong>
+        <div class="piui-page-subtitle" data-cmd-category></div>
+      </div>
+      <kbd class="piui-cmd-trigger__kbd text-mono" data-cmd-shortcut></kbd>
+    </li>
+  </template>
+
+  <template id="tpl-toast">
+    <div class="piui-toast" role="status">
+      <span data-toast-text></span>
+      <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-toast-close>Tutup</button>
+    </div>
+  </template>
+</body>
+</html>

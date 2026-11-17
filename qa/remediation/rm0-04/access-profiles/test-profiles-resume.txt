@@ -1,0 +1,2 @@
+PASS five profiles; exact role mapping; least-privilege quick login; org/role/ceiling negative cases; guarded work destinations; compiled login/editor
+PASS successful grant reopens the saved record and retains success after edit

@@ -1,0 +1,68 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "method": "POST",
+      "path": "/auth/sessions",
+      "operation_id": "CreateLabSession",
+      "handler": "backend/internal/modules/m1/internal/app/http.go",
+      "status": "PASS"
+    },
+    {
+      "method": "POST",
+      "path": "/auth/register",
+      "operation_id": "RegisterPublicSubject",
+      "handler": "backend/internal/modules/m1/internal/app/http.go",
+      "status": "PASS"
+    },
+    {
+      "method": "POST",
+      "path": "/media",
+      "operation_id": "UploadMedia",
+      "handler": "backend/internal/modules/m8/internal/app/http.go",
+      "status": "PASS"
+    },
+    {
+      "method": "PUT",
+      "path": "/media/{id}/content",
+      "operation_id": "StoreQuarantineBlob",
+      "handler": "backend/internal/modules/m8/internal/app/http.go",
+      "status": "PASS"
+    },
+    {
+      "method": "GET",
+      "path": "/media/{id}/content",
+      "operation_id": "DownloadCleanBlob",
+      "handler": "backend/internal/modules/m8/internal/app/http.go",
+      "status": "PASS"
+    },
+    {
+      "method": "GET",
+      "path": "/media/{id}/download",
+      "operation_id": "DownloadMedia",
+      "handler": "backend/internal/modules/m8/internal/app/http.go",
+      "status": "PASS"
+    },
+    {
+      "method": "POST",
+      "path": "/media/{id}/approvals",
+      "operation_id": "ApproveSanitizedMedia",
+      "handler": "backend/internal/modules/m8/internal/app/http.go",
+      "status": "PASS"
+    },
+    {
+      "method": "POST",
+      "path": "/media/approvals/{id}/revoke",
+      "operation_id": "RevokeMediaApproval",
+      "handler": "backend/internal/modules/m8/internal/app/http.go",
+      "status": "PASS"
+    },
+    {
+      "method": "POST",
+      "path": "/media/{id}/reuse",
+      "operation_id": "ReuseMedia",
+      "handler": "backend/internal/modules/m8/internal/app/http.go",
+      "status": "PASS"
+    }
+  ]
+}

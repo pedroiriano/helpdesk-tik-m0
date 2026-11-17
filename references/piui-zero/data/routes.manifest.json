@@ -1,0 +1,187 @@
+{
+  "project": "PIUI Zero Admin Dashboard",
+  "version": "2.2.2",
+  "updatedAt": "2026-10-26",
+  "routes": [
+    {
+      "id": "portal-home",
+      "path": "/index.html",
+      "level": 0,
+      "parent": null,
+      "title": "Portal Sistem & Dokumentasi Arsitektur — PIUI Zero",
+      "robots": "index, follow",
+      "zone": "public",
+      "phase": 1
+    },
+    {
+      "id": "auth-login",
+      "path": "/auth/login.html",
+      "level": 0,
+      "parent": "/index.html",
+      "title": "Autentikasi Administrator — PIUI Zero Admin",
+      "robots": "noindex, nofollow, noarchive",
+      "zone": "auth",
+      "phase": 2
+    },
+    {
+      "id": "app-dashboard",
+      "path": "/app/dashboard/index.html",
+      "level": 0,
+      "parent": "/index.html",
+      "title": "Pusat Komando Eksekutif — PIUI Zero Admin",
+      "robots": "noindex, nofollow, noarchive",
+      "zone": "protected",
+      "phase": 2
+    },
+    {
+      "id": "app-notifications",
+      "path": "/app/notifications/index.html",
+      "level": 1,
+      "parent": "/app/dashboard/index.html",
+      "title": "Pusat Notifikasi & Peringatan — PIUI Zero Admin",
+      "robots": "noindex, nofollow, noarchive",
+      "zone": "protected",
+      "phase": 2
+    },
+    {
+      "id": "app-components",
+      "path": "/app/components/index.html",
+      "level": 1,
+      "parent": "/app/dashboard/index.html",
+      "title": "Katalog Komponen (UI Kit) — PIUI Zero Admin",
+      "robots": "noindex, nofollow, noarchive",
+      "zone": "protected",
+      "phase": 2
+    },
+    {
+      "id": "app-users",
+      "path": "/app/users/index.html",
+      "level": 1,
+      "parent": "/app/dashboard/index.html",
+      "title": "Manajemen Pengguna & RBAC — PIUI Zero Admin",
+      "robots": "noindex, nofollow, noarchive",
+      "zone": "protected",
+      "phase": 3
+    },
+    {
+      "id": "app-users-detail",
+      "path": "/app/users/detail.html",
+      "level": 2,
+      "parent": "/app/users/index.html",
+      "title": "Detail Pengguna — PIUI Zero Admin",
+      "robots": "noindex, nofollow, noarchive",
+      "zone": "protected",
+      "phase": 4
+    },
+    {
+      "id": "app-transactions",
+      "path": "/app/transactions/index.html",
+      "level": 1,
+      "parent": "/app/dashboard/index.html",
+      "title": "Data & Transaksi Operasional — PIUI Zero Admin",
+      "robots": "noindex, nofollow, noarchive",
+      "zone": "protected",
+      "phase": 3
+    },
+    {
+      "id": "app-analytics",
+      "path": "/app/analytics/index.html",
+      "level": 1,
+      "parent": "/app/dashboard/index.html",
+      "title": "Analitik & Kinerja Layanan — PIUI Zero Admin",
+      "robots": "noindex, nofollow, noarchive",
+      "zone": "protected",
+      "phase": 4
+    },
+    {
+      "id": "app-gallery",
+      "path": "/app/gallery/index.html",
+      "level": 1,
+      "parent": "/app/dashboard/index.html",
+      "title": "Galeri Media Gambar & Video — PIUI Zero Admin",
+      "robots": "noindex, nofollow, noarchive",
+      "zone": "protected",
+      "phase": 4
+    },
+    {
+      "id": "app-audit",
+      "path": "/app/audit/index.html",
+      "level": 1,
+      "parent": "/app/dashboard/index.html",
+      "title": "Jejak Audit Keamanan — PIUI Zero Admin",
+      "robots": "noindex, nofollow, noarchive",
+      "zone": "protected",
+      "phase": 4
+    },
+    {
+      "id": "app-audit-detail",
+      "path": "/app/audit/detail.html",
+      "level": 2,
+      "parent": "/app/audit/index.html",
+      "title": "Detail Riwayat Aktivitas — PIUI Zero Admin",
+      "robots": "noindex, nofollow, noarchive",
+      "zone": "protected",
+      "phase": 4
+    },
+    {
+      "id": "app-settings",
+      "path": "/app/settings/index.html",
+      "level": 1,
+      "parent": "/app/dashboard/index.html",
+      "title": "Konfigurasi Sistem & Kebijakan — PIUI Zero Admin",
+      "robots": "noindex, nofollow, noarchive",
+      "zone": "protected",
+      "phase": 4
+    },
+    {
+      "id": "public-status",
+      "path": "/status/index.html",
+      "level": 1,
+      "parent": "/index.html",
+      "title": "Status Kesehatan Layanan — PIUI Zero",
+      "robots": "index, follow",
+      "zone": "public",
+      "phase": 4
+    },
+    {
+      "id": "system-404",
+      "path": "/404.html",
+      "level": 4,
+      "parent": "/app/dashboard/index.html",
+      "title": "404 Rute Tidak Ditemukan — PIUI Zero",
+      "robots": "noindex, nofollow, noarchive",
+      "zone": "system",
+      "phase": 4
+    },
+    {
+      "id": "system-403",
+      "path": "/403.html",
+      "level": 4,
+      "parent": "/app/dashboard/index.html",
+      "title": "403 Akses Ditolak (RBAC) — PIUI Zero",
+      "robots": "noindex, nofollow, noarchive",
+      "zone": "system",
+      "phase": 4
+    },
+    {
+      "id": "system-offline",
+      "path": "/offline.html",
+      "level": 4,
+      "parent": "/app/dashboard/index.html",
+      "title": "Koneksi Terputus (Mode Offline) — PIUI Zero",
+      "robots": "noindex, nofollow, noarchive",
+      "zone": "system",
+      "phase": 5
+    },
+    {
+      "id": "product-about",
+      "path": "/about/index.html",
+      "level": 1,
+      "parent": "/index.html",
+      "title": "Tentang Produk — PIUI Zero™",
+      "robots": "index, follow",
+      "zone": "public",
+      "phase": 5
+    }
+  ]
+}

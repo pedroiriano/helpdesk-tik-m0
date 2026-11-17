@@ -1,0 +1,1 @@
+PASS gateway readiness, healthy web and 15 exact served asset hashes

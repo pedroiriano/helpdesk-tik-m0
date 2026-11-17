@@ -1,0 +1,148 @@
+{
+  "timestamp": "2026-11-06T09:21:29.249323+00:00",
+  "scope": "live loopback synthetic HTTP/API M0-09 editorial transitions, XSS sanitization, AC24 menu permissions invariant, AC23 scope-safe search & dynamic revocation, and AC20 keyboard combobox",
+  "command": "python scripts/smoke_m0_09_local.py --allow-lab-writes",
+  "checks": [
+    {
+      "name": "authenticated_lab_sessions",
+      "detail": "admin=5, editor=14, publisher=15, asn=3, pub1=1, pub2=2",
+      "result": "PASS"
+    },
+    {
+      "name": "content_sanitization_xss_rejected_422",
+      "detail": "tested 4 malicious payloads",
+      "result": "PASS"
+    },
+    {
+      "name": "article_created_draft",
+      "detail": "id=a4dc70bf-df87-468e-bd57-617982ccab5f slug=panduan-wifi-depok-79f3d9",
+      "result": "PASS"
+    },
+    {
+      "name": "draft_article_hidden_from_public",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "editor_can_read_draft",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "illegal_transition_draft_to_archive_rejected_422",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "article_transition_to_review",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "unauthorized_publish_rejected_403",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "article_published_by_publisher",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "public_can_read_published_article",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "article_archived",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "archived_article_hidden_from_public",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "article_restored_to_draft",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "portal_page_crud_verified",
+      "detail": "id=338ab610-0494-4092-8923-6b1fa937d549 slug=tentang-layanan-1b6353",
+      "result": "PASS"
+    },
+    {
+      "name": "navigation_dangerous_routes_rejected_422",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "navigation_menu_configured",
+      "detail": "id=d8224e56-1b66-4c6c-a26d-fb4a7b63083e route=/layanan-unggulan-01d46d",
+      "result": "PASS"
+    },
+    {
+      "name": "public_navigation_menu_listed",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "ac24_invariant_menu_does_not_grant_permissions_401",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "search_parameter_validation_400",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "search_m2_services_verified",
+      "detail": "found 2 services",
+      "result": "PASS"
+    },
+    {
+      "name": "synthetic_ticket_created_for_search",
+      "detail": "id=99d56603-e495-4421-bfcc-f1c47303412f",
+      "result": "PASS"
+    },
+    {
+      "name": "search_m3_owner_found_own_ticket",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "search_m3_privacy_isolation_zero_hits_for_other_user",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "search_m8_published_article_found",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "dynamic_revocation_before_active_session_found",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "dynamic_revocation_session_revoked",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "dynamic_revocation_after_zero_hits_guaranteed",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "ac20_keyboard_accessible_search_combobox_verified",
+      "detail": "",
+      "result": "PASS"
+    }
+  ],
+  "result": "PASS"
+}

@@ -1,0 +1,68 @@
+{
+  "timestamp": "2026-11-07T11:07:26.691819+00:00",
+  "scope": "live loopback synthetic HTTP/API M0-12 candidate release gate, end-to-end user journeys, graceful probes, maintenance, purge guard, handoff, reports, UI accessibility",
+  "command": "python scripts/smoke_m0_12_local.py --allow-lab-writes",
+  "checks": [
+    {
+      "name": "probes_live_and_ready_pass",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "authenticated_7_personas",
+      "detail": "super_admin=17, second_admin=18, platform_admin=5, auditor=16, coord=11, coordB=12, operator=4, tech=9, asn=3, pub1=1",
+      "result": "PASS"
+    },
+    {
+      "name": "e2e_ticket_lifecycle_completed",
+      "detail": "ticket_id=810c8f32-9a0c-4c3f-8867-ae085029a004, state=CLOSED",
+      "result": "PASS"
+    },
+    {
+      "name": "ticket_archive_and_restore_verified",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "inter_opd_handoff_accepted_atomic",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "maintenance_mode_readonly_and_normal_verified",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "scoped_runner_allowlist_enforced",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "purge_protection_and_retention_guard_verified",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "reports_analytics_and_export_verified",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "redacted_system_health_clean",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "dynamic_revocation_gate_verified",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "ui_keyboard_accessibility_verified",
+      "detail": "",
+      "result": "PASS"
+    }
+  ],
+  "result": "PASS"
+}

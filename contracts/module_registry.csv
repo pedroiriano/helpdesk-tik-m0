@@ -1,0 +1,10 @@
+﻿module_id,name,schema,db_pool_max,cpu_credit_m,memory_credit_mib
+M1,Identity and Access,identity,4,278,512
+M2,Service Catalog,catalog,4,278,512
+M3,Ticket Management,intake,4,278,512
+M4,Classification,classification,4,278,512
+M5,Assignment,assignment,4,278,512
+M6,SLA Management,sla,4,278,512
+M7,Escalation,escalation,4,278,512
+M8,Knowledge Base,knowledge,4,277,512
+M9,Notification and Audit,notify_audit,4,277,512

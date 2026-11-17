@@ -1,0 +1,106 @@
+ Image helpdesk-m0-web:0.1.0 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.03kB done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from web.Dockerfile
+#2 transferring dockerfile: 726B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:24.11.1-alpine@sha256:682368d8253e0c3364b803956085c456a612d738bd635926d73fa24db3ce53d7
+#3 DONE 0.1s
+
+#4 [internal] load metadata for docker.io/library/nginx:1.30.6-alpine@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949
+#4 DONE 0.1s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 238B done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 DONE 0.0s
+
+#7 [build 1/9] FROM docker.io/library/node:24.11.1-alpine@sha256:682368d8253e0c3364b803956085c456a612d738bd635926d73fa24db3ce53d7
+#7 resolve docker.io/library/node:24.11.1-alpine@sha256:682368d8253e0c3364b803956085c456a612d738bd635926d73fa24db3ce53d7 0.1s done
+#7 DONE 0.1s
+
+#8 [stage-1 1/3] FROM docker.io/library/nginx:1.30.6-alpine@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949
+#8 resolve docker.io/library/nginx:1.30.6-alpine@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949 0.1s done
+#8 DONE 0.1s
+
+#6 [internal] load build context
+#6 transferring context: 123.82kB 0.0s done
+#6 DONE 0.1s
+
+#9 [build 2/9] WORKDIR /src/frontend
+#9 CACHED
+
+#10 [build 3/9] COPY frontend/package.json frontend/package-lock.json ./
+#10 CACHED
+
+#11 [build 4/9] RUN npm ci --ignore-scripts --no-audit --no-fund
+#11 CACHED
+
+#12 [build 5/9] COPY frontend/ ./
+#12 DONE 0.1s
+
+#13 [build 6/9] COPY references/piui-modern/ /src/references/piui-modern/
+#13 DONE 0.1s
+
+#14 [build 7/9] COPY references/piui-zero/ /src/references/piui-zero/
+#14 DONE 0.1s
+
+#15 [build 8/9] COPY assets/ /src/assets/
+#15 DONE 0.2s
+
+#16 [build 9/9] RUN npm run build
+#16 0.602 
+#16 0.602 > helpdesk-web@0.1.0 build
+#16 0.602 > npm run typecheck && vite build && node build-templates.mjs
+#16 0.602 
+#16 0.766 
+#16 0.766 > helpdesk-web@0.1.0 typecheck
+#16 0.766 > tsc --noEmit
+#16 0.766 
+#16 1.257 vite v8.3.5 building client environment for production...
+#16 1.273 transforming...
+#16 1.342 ✓ 19 modules transformed.
+#16 1.379 rendering chunks...
+#16 1.440 computing gzip size...
+#16 1.446 dist/transport-I1ZBZwPy.js    1.94 kB │ gzip:  1.06 kB
+#16 1.446 dist/helpdesk/m0-04.js       65.95 kB │ gzip: 18.53 kB
+#16 1.446 dist/helpdesk/m0-03.js       76.78 kB │ gzip: 22.92 kB
+#16 1.446 dist/helpdesk/health.js     298.73 kB │ gzip: 77.28 kB
+#16 1.446 
+#16 1.447 ✓ built in 188ms
+#16 1.589 piui-modern: 63 source files published
+#16 1.679 piui-zero: 78 source files published
+#16 1.748 npm notice
+#16 1.748 npm notice New minor version of npm available! 11.6.2 -> 11.21.2
+#16 1.748 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.21.2
+#16 1.748 npm notice To update run: npm install -g npm@11.21.2
+#16 1.748 npm notice
+#16 DONE 1.8s
+
+#17 [stage-1 2/3] COPY infra/nginx/nginx.conf /etc/nginx/nginx.conf
+#17 CACHED
+
+#18 [stage-1 3/3] COPY --from=build /src/frontend/dist/ /usr/share/nginx/html/
+#18 DONE 0.2s
+
+#19 exporting to image
+#19 exporting layers
+#19 exporting layers 1.2s done
+#19 exporting manifest sha256:2b63324eaa340d55d6d8dec5d79384afab4c643af302695babc87856a6f0cfab 0.0s done
+#19 exporting config sha256:af6cc0514d52072b7ef5f599983929cfb0a1b1b0728fe12e50313eb74962b83b 0.0s done
+#19 exporting attestation manifest sha256:8f649fb22e54939106452c772b4024ea51248f8efd5f5ca4276bf34397615f85
+#19 exporting attestation manifest sha256:8f649fb22e54939106452c772b4024ea51248f8efd5f5ca4276bf34397615f85 0.1s done
+#19 exporting manifest list sha256:4d08d5ae90a2516e27632ffc449ce84293d271d11a8aea3a0668e9ba272232f4 0.1s done
+#19 naming to docker.io/library/helpdesk-m0-web:0.1.0
+#19 naming to docker.io/library/helpdesk-m0-web:0.1.0 done
+#19 unpacking to docker.io/library/helpdesk-m0-web:0.1.0 0.1s done
+#19 DONE 1.7s
+
+#20 resolving provenance for metadata file
+#20 DONE 0.0s
+ Image helpdesk-m0-web:0.1.0 Built 

@@ -1,0 +1,515 @@
+{
+  "timestamp": "2026-11-04T15:57:18.745330+00:00",
+  "result": "PASS",
+  "scope": "read-only local runtime verification after restarting same app container; synthetic browser writes only",
+  "commands": [
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "helpdesk-m0"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "helpdesk-m0-nginx"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "helpdesk-m0-db"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "helpdesk-m0-migrate"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "--user",
+        "postgres",
+        "helpdesk-m0-db",
+        "psql",
+        "-X",
+        "-U",
+        "postgres",
+        "-d",
+        "helpdesk",
+        "-At",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT id,checksum FROM migration_control.ledger ORDER BY id"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "--user",
+        "postgres",
+        "helpdesk-m0-db",
+        "psql",
+        "-X",
+        "-U",
+        "postgres",
+        "-d",
+        "helpdesk",
+        "-At",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT version FROM identity.schema_version"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "--user",
+        "postgres",
+        "helpdesk-m0-db",
+        "psql",
+        "-X",
+        "-U",
+        "postgres",
+        "-d",
+        "helpdesk",
+        "-At",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT version FROM catalog.schema_version"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "--user",
+        "postgres",
+        "helpdesk-m0-db",
+        "psql",
+        "-X",
+        "-U",
+        "postgres",
+        "-d",
+        "helpdesk",
+        "-At",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT version FROM intake.schema_version"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "--user",
+        "postgres",
+        "helpdesk-m0-db",
+        "psql",
+        "-X",
+        "-U",
+        "postgres",
+        "-d",
+        "helpdesk",
+        "-At",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT version FROM classification.schema_version"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "--user",
+        "postgres",
+        "helpdesk-m0-db",
+        "psql",
+        "-X",
+        "-U",
+        "postgres",
+        "-d",
+        "helpdesk",
+        "-At",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT version FROM assignment.schema_version"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "--user",
+        "postgres",
+        "helpdesk-m0-db",
+        "psql",
+        "-X",
+        "-U",
+        "postgres",
+        "-d",
+        "helpdesk",
+        "-At",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT version FROM sla.schema_version"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "--user",
+        "postgres",
+        "helpdesk-m0-db",
+        "psql",
+        "-X",
+        "-U",
+        "postgres",
+        "-d",
+        "helpdesk",
+        "-At",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT version FROM escalation.schema_version"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "--user",
+        "postgres",
+        "helpdesk-m0-db",
+        "psql",
+        "-X",
+        "-U",
+        "postgres",
+        "-d",
+        "helpdesk",
+        "-At",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT version FROM knowledge.schema_version"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "--user",
+        "postgres",
+        "helpdesk-m0-db",
+        "psql",
+        "-X",
+        "-U",
+        "postgres",
+        "-d",
+        "helpdesk",
+        "-At",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT version FROM notify_audit.schema_version"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "--user",
+        "postgres",
+        "helpdesk-m0-db",
+        "psql",
+        "-X",
+        "-U",
+        "postgres",
+        "-d",
+        "helpdesk",
+        "-At",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT version FROM identity.domain_version"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "--user",
+        "postgres",
+        "helpdesk-m0-db",
+        "psql",
+        "-X",
+        "-U",
+        "postgres",
+        "-d",
+        "helpdesk",
+        "-At",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT version FROM catalog.domain_version"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "--user",
+        "postgres",
+        "helpdesk-m0-db",
+        "psql",
+        "-X",
+        "-U",
+        "postgres",
+        "-d",
+        "helpdesk",
+        "-At",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT json_build_object('code',s.code,'active',s.active,'version',s.version,'form_versions',(SELECT array_agg(form_version ORDER BY form_version) FROM catalog.service_forms WHERE service_id=s.id),'policy_versions',(SELECT array_agg(policy_version ORDER BY policy_version) FROM catalog.policies WHERE service_id=s.id)) FROM catalog.services s WHERE code='LAB-BROWSER-M003'"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0
+    }
+  ],
+  "containers": [
+    {
+      "name": "helpdesk-m0",
+      "image": "sha256:40d19ea3926dae0da707d27d75b30ecc3573e027ea367698ed379016217f51a0",
+      "status": "running",
+      "health": "healthy",
+      "exit_code": 0,
+      "oom_killed": false,
+      "restart_count": 0,
+      "ports": {
+        "8080/tcp": null
+      },
+      "mounts": []
+    },
+    {
+      "name": "helpdesk-m0-nginx",
+      "image": "sha256:fcc755cc94d87be43b54b7095f000782a053be7d90cbfdae81205950f08d0aff",
+      "status": "running",
+      "health": "healthy",
+      "exit_code": 0,
+      "oom_killed": false,
+      "restart_count": 0,
+      "ports": {
+        "8080/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "18080"
+          }
+        ]
+      },
+      "mounts": []
+    },
+    {
+      "name": "helpdesk-m0-db",
+      "image": "sha256:57c72fd2a128e416c7fcc499958864df5301e940bca0a56f58fddf30ffc07777",
+      "status": "running",
+      "health": "healthy",
+      "exit_code": 0,
+      "oom_killed": false,
+      "restart_count": 0,
+      "ports": {
+        "5432/tcp": null
+      },
+      "mounts": [
+        {
+          "name": "helpdesk-m0_postgres-data",
+          "destination": "/var/lib/postgresql/data",
+          "rw": true
+        }
+      ]
+    },
+    {
+      "name": "helpdesk-m0-migrate",
+      "image": "sha256:57c72fd2a128e416c7fcc499958864df5301e940bca0a56f58fddf30ffc07777",
+      "status": "exited",
+      "health": null,
+      "exit_code": 0,
+      "oom_killed": false,
+      "restart_count": 0,
+      "ports": {},
+      "mounts": [
+        {
+          "name": "28d0d26b31714908168fa34ddc25fddc6e685d395b6977db11f19bfca9a7032b",
+          "destination": "/var/lib/postgresql/data",
+          "rw": true
+        }
+      ]
+    }
+  ],
+  "ledger": [
+    [
+      "001",
+      "9d87f326cbec57bdf8950337bb7646a8fef04ccfcfba06b3491f2d7cecbfb3b9"
+    ],
+    [
+      "002",
+      "22b20ee7aed43f9f65f3495ecf994e7c17fde3fc8b61573d1556d0e24b5cf230"
+    ],
+    [
+      "003",
+      "9c60061768b0e99975c7ce1cfb3a1f511bf1dd0b59c460db720bbd2d0945d3d1"
+    ],
+    [
+      "004",
+      "2309199a00d065973050bb5ee6e74e1ca311b48d005f6a5170232cf30ec9ce8f"
+    ],
+    [
+      "005",
+      "119ab08d6916e51a6f055f5666a1fd2eb41fb66f73cc2d1a530770a9e4b4cfaf"
+    ],
+    [
+      "006",
+      "3e418c239b167e48f0d202bab5205a9f3dd6fb5d3235dd02870f2ca90eeaa191"
+    ],
+    [
+      "007",
+      "26cd015b67eeeb55d14d73928947d1883475978b961ae32919124d5c599b0f69"
+    ],
+    [
+      "008",
+      "e7a0a7c1ef3a44eb619619140d1bc564e8bf7f0033d5efec0c4907b698d87335"
+    ],
+    [
+      "009",
+      "fddca939a3849bcf962df7008b97ff85c78be631207ba69e5e8d0eb0109967f1"
+    ],
+    [
+      "010",
+      "dbb65ccc1c84c0b4081f5475bb81ed6a1e6df24eb9d8fa296d29a3940460b867"
+    ],
+    [
+      "011",
+      "115a31a4192a61a7112f5e83014c4be97b4cc59df005bedc3eabd5cb9ade519a"
+    ],
+    [
+      "012",
+      "3fee6d052bc20b9d9900b2af9330bc7adf6b546a7be58948d795ae17349e6b17"
+    ]
+  ],
+  "ledger_checksums_match_manifest": true,
+  "foundation_markers": {
+    "identity": 1,
+    "catalog": 1,
+    "intake": 1,
+    "classification": 1,
+    "assignment": 1,
+    "sla": 1,
+    "escalation": 1,
+    "knowledge": 1,
+    "notify_audit": 1
+  },
+  "domain_markers": {
+    "identity": 3,
+    "catalog": 3
+  },
+  "fixture": {
+    "code": "LAB-BROWSER-M003",
+    "active": false,
+    "version": 3,
+    "form_versions": [
+      1,
+      2
+    ],
+    "policy_versions": [
+      1,
+      2
+    ]
+  },
+  "http": {
+    "/api/v1/health/live": {
+      "status": 200,
+      "body": {
+        "status": "live"
+      }
+    },
+    "/api/v1/health/ready": {
+      "status": 200,
+      "body": {
+        "status": "ready"
+      }
+    }
+  },
+  "runtime_assets_equal_final_dist": {
+    "helpdesk/m0-03.js": "dceccf4594fad48d6b51adb74111a1836d04ac62a79acd41cdd9effd43dfcd34",
+    "admin/app/helpdesk/index.html": "7f8daca916f5d2b83365856ab72c16a793b562676932cd897fc1b9281407e57a",
+    "admin/auth/login.html": "65f8fbe6c2bb5cd6a71a9b23b36952073e037c3ddd0565e95087a558f8d18504",
+    "admin/assets/js/components/forms.js": "cfd4254cb415ec42de8ce931725888865fdb9493f29894057dec2a6e0752584e",
+    "admin/assets/js/components/feature-registry.js": "c56917d922ea803d26165d4b0552a5b6d9c2335f1540caa179aa492bc50c5a0b",
+    "helpdesk/public-ui.css": "9c9a196aca39431e0b79186686c618689e02797974dd223d90adb47c0a73da43",
+    "index.html": "a30e8581211e3b04d06757cb2b4bfdee49133c74d2dd6bbd555fb871c8cc8e39"
+  },
+  "restart_command": {
+    "command": "docker restart helpdesk-m0",
+    "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+    "exit_code": 0
+  },
+  "smoke_command": {
+    "command": "python scripts/smoke_local.py",
+    "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+    "exit_code": 0
+  },
+  "limits": [
+    "No database reset/restore/volume replacement",
+    "No production SSO, UAT or benchmark",
+    "Local DB prior exit255 OOMfalse: cause not established; same container restarted without reset"
+  ]
+}

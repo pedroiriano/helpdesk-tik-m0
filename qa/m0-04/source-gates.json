@@ -1,0 +1,45 @@
+{
+  "timestamp": "2026-11-05T04:35:07.500918+00:00",
+  "commands": [
+    {
+      "argv": [
+        "go",
+        "vet",
+        "./..."
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith\\backend",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "argv": [
+        "go",
+        "test",
+        "./..."
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith\\backend",
+      "exit_code": 0,
+      "output": "?   \thelpdesk.local/m0/cmd/helpdesk\t[no test files]\nok  \thelpdesk.local/m0/internal/bootstrap\t3.224s\n?   \thelpdesk.local/m0/internal/modules/m1\t[no test files]\nok  \thelpdesk.local/m0/internal/modules/m1/api\t4.619s\n?   \thelpdesk.local/m0/internal/modules/m1/internal/app\t[no test files]\nok  \thelpdesk.local/m0/internal/modules/m1/internal/domain\t4.348s\n?   \thelpdesk.local/m0/internal/modules/m1/internal/store\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m2\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m2/api\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m2/internal/app\t[no test files]\nok  \thelpdesk.local/m0/internal/modules/m2/internal/domain\t2.238s\n?   \thelpdesk.local/m0/internal/modules/m2/internal/store\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m3\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m3/api\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m3/internal/app\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m3/internal/domain\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m3/internal/store\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m4\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m4/api\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m4/internal/app\t[no test files]\nok  \thelpdesk.local/m0/internal/modules/m4/internal/domain\t2.392s\n?   \thelpdesk.local/m0/internal/modules/m4/internal/store\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m5\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m5/api\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m5/internal/app\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m5/internal/domain\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m5/internal/store\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m6\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m6/api\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m6/internal/app\t[no test files]\nok  \thelpdesk.local/m0/internal/modules/m6/internal/domain\t3.023s\n?   \thelpdesk.local/m0/internal/modules/m6/internal/store\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m7\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m7/api\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m7/internal/app\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m7/internal/domain\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m7/internal/store\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m8\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m8/api\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m8/internal/app\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m8/internal/domain\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m8/internal/store\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m9\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m9/api\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m9/internal/app\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m9/internal/domain\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m9/internal/store\t[no test files]\nok  \thelpdesk.local/m0/internal/platform/blob\t5.189s\nok  \thelpdesk.local/m0/internal/platform/config\t4.236s\nok  \thelpdesk.local/m0/internal/platform/database\t3.939s\n?   \thelpdesk.local/m0/internal/platform/delivery\t[no test files]\nok  \thelpdesk.local/m0/internal/platform/httpserver\t5.432s\nok  \thelpdesk.local/m0/internal/platform/web\t4.602s\n"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/check_boundaries.py"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "output": "PASS module boundaries (53 Go packages)\n"
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/test_business_intent.mjs"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "output": "PASS unknown-commit intent holds key/payload/version across refresh, rejects changed intent, and resets after receipt or definite rejection\n"
+    }
+  ],
+  "result": "PASS",
+  "scope": "final vet/unit/boundary and intent regression; opt-in DB tests are separately executed in integration report"
+}

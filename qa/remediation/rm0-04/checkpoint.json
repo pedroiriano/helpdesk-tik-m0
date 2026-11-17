@@ -1,0 +1,40 @@
+{
+  "recorded_at": "2026-11-12T07:49:22.574796+00:00",
+  "task_id": "RM0-04",
+  "scope": "Preflight before RM0-04 source changes",
+  "checkpoints": {
+    "RM0-01": {
+      "status": "DONE_VERIFIED",
+      "manifest": "qa/remediation/rm0-01/source-manifest.json",
+      "sha256": "30c959f49d93bfcdc474554d128f6f19a867ddf5b1ad4f9465a4dad6744336df",
+      "files": 570,
+      "drift_at_start": 59
+    },
+    "RM0-02": {
+      "status": "DONE_VERIFIED",
+      "manifest": "qa/remediation/rm0-02/source-manifest.json",
+      "sha256": "d08c6f01543946935cb4d6a53c362105174aae370e459e38925b9c5f51d00b21",
+      "files": 671,
+      "drift_at_start": 48
+    },
+    "RM0-03": {
+      "status": "IN_PROGRESS",
+      "manifest": "qa/remediation/rm0-03/source-manifest.json",
+      "sha256": "e678c12ae315ca6284cb43321e2278f422b2fdb5f9b60b4ed92f71fad8183002",
+      "files": 694,
+      "drift_at_start": 0
+    }
+  },
+  "dependency_gaps": [
+    "R3-E PARTIAL",
+    "R3-H PARTIAL",
+    "R3-I BLOCKED_RESOURCE_DECISION"
+  ],
+  "independent_work": "Published M8, Hero, queue layout, and read-only M9 facts can be verified without completing operational and resource gates.",
+  "baseline_hero_375x667": {
+    "height_css_px": 667.33,
+    "thumbnail_bottom_css_px": 695.1,
+    "clipped_css_px": 27.77
+  },
+  "rm0_05": "NOT_STARTED"
+}

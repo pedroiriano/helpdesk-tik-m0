@@ -1,0 +1,12 @@
+{
+  "package": "Helpdesk TIK Kota Depok M0",
+  "version": "1.0",
+  "product_baseline": "3.2",
+  "implementation": "NOT_STARTED",
+  "application_test_runs": 0,
+  "benchmark_runs": 0,
+  "agent_runtime_loading": "NOT_TESTED",
+  "deployment": "NOT_STARTED",
+  "scope": "historical_specification_package_at_creation",
+  "current_state": "status/PROJECT_STATE.md"
+}

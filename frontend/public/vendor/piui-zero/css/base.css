@@ -1,0 +1,157 @@
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: var(--piui-font-sans);
+    font-size: 100%;
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    max-inline-size: 100%;
+    overflow-x: clip;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: var(--piui-border-strong) var(--piui-bg-canvas);
+  }
+
+  /* =========================================================================
+     CUSTOM SCROLLBAR TEMA MONOKROM (VERTIKAL & HORIZONTAL KECIL & ELEGAN)
+     ========================================================================= */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--piui-border-strong) transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: rgba(128, 128, 138, 0.08);
+    border-radius: 9999px;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--piui-border-strong);
+    background-image: linear-gradient(180deg, #71717A 0%, #3F3F46 100%);
+    border-radius: 9999px;
+    border: 1px solid transparent;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: var(--piui-text-secondary);
+    background-image: linear-gradient(180deg, #A1A1AA 0%, #52525B 100%);
+  }
+
+  *::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    min-block-size: 100vh;
+    min-block-size: 100dvh;
+    max-inline-size: 100%;
+    overflow-x: clip;
+    background-color: var(--piui-bg-canvas);
+    background-image: var(--piui-gradient-canvas);
+    background-attachment: fixed;
+    color: var(--piui-text-primary);
+    font-size: var(--piui-text-base);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body.is-modal-open {
+    overflow: hidden;
+  }
+
+  img,
+  svg,
+  video,
+  canvas {
+    display: block;
+    max-inline-size: 100%;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    margin-block: 0;
+    color: var(--piui-text-primary);
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+  }
+
+  p {
+    margin-block: 0;
+    max-inline-size: 70ch;
+  }
+
+  a {
+    color: var(--piui-accent-primary);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+  }
+
+  /* Mencegah auto-zoom iOS Safari pada HP (< 768px) */
+  input,
+  select,
+  textarea {
+    font-size: max(1rem, var(--piui-text-sm));
+  }
+
+  code,
+  kbd,
+  pre,
+  samp {
+    font-family: var(--piui-font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Indikator Fokus Kontras Tinggi WCAG 2.2 AA */
+  :focus-visible {
+    outline: var(--piui-focus-width) solid var(--piui-focus-ring);
+    outline-offset: var(--piui-focus-offset);
+  }
+
+  section[id],
+  h1[id],
+  h2[id],
+  h3[id],
+  main[id] {
+    scroll-margin-top: calc(var(--piui-topbar-h) + var(--piui-space-4));
+  }
+
+  /* Skip Link Wajib */
+  .piui-skip-link {
+    position: fixed;
+    inset-block-start: -100%;
+    inset-inline-start: var(--piui-space-4);
+    z-index: var(--piui-z-skip);
+    padding: var(--piui-space-3) var(--piui-space-4);
+    background-color: var(--piui-bg-sidebar);
+    color: var(--piui-text-on-dark);
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: var(--piui-radius-md);
+    box-shadow: var(--piui-shadow-lg);
+    transition: inset-block-start var(--piui-duration-fast) var(--piui-ease-out);
+  }
+
+  .piui-skip-link:focus-visible {
+    inset-block-start: var(--piui-space-3);
+  }
+}

@@ -1,0 +1,13 @@
+﻿id,decision,owner,lab_default,gate,status
+DEC-M01,Katalog layanan dan scope OPD,Pemilik layanan,G01 P01 A01 sintetis,Sebelum UAT layanan resmi,OPEN
+DEC-M02,SSO dan verifikasi guest,Pengelola identitas,Lab identity; real provider disabled,Sebelum integrasi nyata,OPEN
+DEC-M03,SLA kalender dan target tahap,Pemilik layanan,CAL-1; confirmation 24h calendar,Sebelum UAT domain,OPEN
+DEC-M04,Pause vendor dan escalation,Koordinator dan pengelola kontrak,Default SLA terus berjalan,Sebelum policy layanan resmi,OPEN
+DEC-M05,Reopen feedback dan notification policy,Pemilik layanan,Reject melanjutkan episode; unresolved feedback menahan close,Sebelum UAT lifecycle,OPEN
+DEC-M06,Mandat pimpinan dan delegasi,Pemilik proses,Explicit fixture scopes; default deny,Sebelum akses data nyata,OPEN
+DEC-M07,Retensi purge dan hold,Penanggung jawab data,Archive only; purge disabled,Sebelum purge/produksi,OPEN
+DEC-M08,Batas media dan draft,Pemilik data dan keamanan,Bounded synthetic files; safe draft fields,Sebelum penggunaan nyata,OPEN
+DEC-M09,Telegram analytics dan retensi kanal,Pengelola layanan,Sink deterministic; verified fake binding,Sebelum real sends,OPEN
+DEC-M10,RPO RTO dan kapasitas,Infrastruktur,Two-tier lab envelope ADR-0009 (R1 4000m/8192MiB; R2 Compose+ClamAV 4900m/11008MiB; RPO 0 / RTO<=180s lab),Sebelum produksi,DECIDED_LAB_ENVELOPE
+DEC-M11,Versi stack dan tools,Lead implementer,"Go 1.27.4 / pgx 5.12.0 / Node 26.13.1 LTS / React 19.3.1 / TS 7.0.2 / Vite 8.3.5 / PostgreSQL 18.7 / Nginx 1.30.6 rebuild / ClamAV 1.5.4 / Python 3.13.7 (ADR-0010; Docker Desktop 4.99.0 host Engine 29.9.3/Compose v5.7.0, target 29.10.0/5.7.1)",M0-01 + ADR 0010 (Fase 0-4 lulus lab),DECIDED_PINNED_STACK
+DEC-M12,Design system dan lisensi library,Lead implementer dan pemilik produk,Shared React components and tokens,M0-01 sebelum halaman turunan,OPEN

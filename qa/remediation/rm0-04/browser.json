@@ -1,0 +1,109 @@
+{
+  "timestamp": "2026-11-12T08:09:28.272545+00:00",
+  "scope": "Local IAB read-only smoke on synthetic lab, existing Koordinator OPD A session",
+  "candidate": "gateway.json",
+  "result": "PASS_REPRESENTATIVE",
+  "hero": [
+    {
+      "viewport": [
+        1280,
+        720
+      ],
+      "hero_height": 720,
+      "stage_height": 662,
+      "navigation_bottom": 642,
+      "cta_clearance": 91.49,
+      "thumbnail_min_px": 80,
+      "page_width": 1265
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "hero_height": 844,
+      "stage_height": 786,
+      "navigation_bottom": 774,
+      "cta_clearance": 12,
+      "thumbnail_min_px": 64.53,
+      "page_width": 375
+    },
+    {
+      "viewport": [
+        375,
+        667
+      ],
+      "hero_height": 667.33,
+      "stage_height": 609.33,
+      "navigation_bottom": 597.33,
+      "cta_clearance": 12,
+      "thumbnail_min_px": 60.05,
+      "page_width": 360
+    }
+  ],
+  "hero_checks": {
+    "initial_scroll_y": 0,
+    "all_thumbnails_per_viewport": 5,
+    "minimum_cta_height": 44,
+    "all_thumbnails_within_stage": true,
+    "hero_height_rounding_tolerance_css_px": 1,
+    "keyboard": {
+      "pause_activated_by_enter": true,
+      "paused_label": "Lanjutkan pergantian slide",
+      "end_selected_and_focused": "Pusat panduan mandiri",
+      "focus_visible": true
+    },
+    "screenshots": "Captured and displayed during browser inspection. No file export path was returned by the browser.",
+    "reduced_motion_and_zoom": "NOT_RUN"
+  },
+  "knowledge": {
+    "list_count": 7,
+    "search": "email returned one result via Enter",
+    "direct_slug": true,
+    "legacy_alias": true,
+    "unknown_hidden_reader": true,
+    "api_404": true,
+    "editorial_browser_mutations": "NOT_RUN"
+  },
+  "catalog_combobox": {
+    "expanded": true,
+    "aria_activedescendant_and_selected": true,
+    "escape_closes": true,
+    "enter_destination": "/panduan/panduan-konfigurasi-email-depok-go-id"
+  },
+  "admin": {
+    "dashboard": {
+      "session_role": "COORDINATOR",
+      "organization": "OPD A",
+      "periods_days": [
+        7,
+        30
+      ],
+      "m9_table_rows": 4,
+      "watermark_visible": true,
+      "unknown_sla_display": "Belum terukur"
+    },
+    "queue": {
+      "desktop_display": "table",
+      "mobile_row_display": "grid",
+      "dispatch_rows": 1,
+      "permitted_filters": [
+        "all",
+        "dispatch"
+      ],
+      "filter_url_and_browser_back": true,
+      "ticket_detail_link": true
+    },
+    "picker": {
+      "native_modal": true,
+      "focus_on_close_button": true,
+      "first_page_count": 12,
+      "next_previous_cursor": true,
+      "query_empty": true,
+      "escape_from_close_button": true,
+      "focus_restored": true,
+      "escape_from_nonempty_search": "First Escape clears the native search input."
+    }
+  },
+  "offline_uat_and_mutating_browser_scenarios": "NOT_RUN"
+}

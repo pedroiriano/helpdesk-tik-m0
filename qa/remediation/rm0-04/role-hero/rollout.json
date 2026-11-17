@@ -1,0 +1,63 @@
+{
+  "result": "PASS",
+  "checks": [
+    {
+      "command": [
+        "docker",
+        "compose",
+        "run",
+        "--rm",
+        "--no-deps",
+        "migrate"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "docker",
+        "compose",
+        "run",
+        "--rm",
+        "--no-deps",
+        "seed-lab",
+        "role-hero"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "docker",
+        "compose",
+        "up",
+        "-d",
+        "--no-deps",
+        "--no-build",
+        "--wait",
+        "--wait-timeout",
+        "85",
+        "app",
+        "web"
+      ],
+      "result": "PASS"
+    }
+  ],
+  "before": [
+    110,
+    20,
+    17,
+    33
+  ],
+  "after": [
+    110,
+    20,
+    17,
+    35
+  ],
+  "counts": [
+    "tickets",
+    "content",
+    "media",
+    "ledger"
+  ],
+  "lab_cleanup": "PASS"
+}

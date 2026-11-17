@@ -1,0 +1,211 @@
+{
+  "timestamp": "2026-11-13T00:19:53.564305+00:00",
+  "tool": "cua_repl, IAB",
+  "result": "PASS_REPRESENTATIVE",
+  "route_checks": {
+    "viewport": [
+      400,
+      498
+    ],
+    "routes": [
+      "/",
+      "/layanan.html",
+      "/detail-layanan.html",
+      "/panduan.html",
+      "/panduan/panduan-konfigurasi-email-depok-go-id",
+      "/faq.html",
+      "/kontak.html",
+      "/akses.html",
+      "/daftar.html",
+      "/lacak.html",
+      "/lapor.html",
+      "/tiket.html",
+      "/detail-tiket.html",
+      "/status.html",
+      "/404.html",
+      "/offline.html",
+      "/admin/",
+      "/admin/app/dashboard/index.html",
+      "/admin/app/tickets/index.html",
+      "/admin/app/helpdesk/index.html",
+      "/admin/auth/login.html",
+      "/admin/403.html",
+      "/admin/404.html",
+      "/admin/offline.html"
+    ],
+    "page_horizontal_overflow": 0,
+    "undersized_visible_primary_controls": 0,
+    "excluded_from_checks": [
+      "Visually hidden contact honeypot",
+      "Offscreen children inside explicitly scrollable rails/tables"
+    ]
+  },
+  "breakpoints": [
+    {
+      "width": 320,
+      "access_columns": 1,
+      "card_width": 272.67
+    },
+    {
+      "width": 390,
+      "access_columns": 1,
+      "card_width": 342.67
+    },
+    {
+      "width": 400,
+      "access_columns": 1,
+      "card_width": 352.67
+    },
+    {
+      "width": 768,
+      "access_columns": 2,
+      "card_width": 341.46
+    },
+    {
+      "width": 1280,
+      "access_columns": 3,
+      "card_width": 354.14
+    }
+  ],
+  "hero": [
+    {
+      "viewport": [
+        400,
+        498
+      ],
+      "hero_height": 498,
+      "stage_bottom": 440,
+      "navigation_bottom": 428,
+      "cta_bottom": 321.1875,
+      "navigation_top": 333.1875,
+      "five_thumbnails": true,
+      "minimum_touch_target": 44,
+      "stage_internal_overflow": false
+    },
+    {
+      "viewport": [
+        375,
+        667
+      ],
+      "hero_height": 667.3334,
+      "stage_bottom": 609.3334,
+      "navigation_bottom": 597.3334,
+      "cta_bottom": 475.28125,
+      "navigation_top": 487.28125,
+      "five_thumbnails": true,
+      "minimum_touch_target": 44,
+      "stage_internal_overflow": false
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "hero_height": 844,
+      "stage_bottom": 786,
+      "navigation_bottom": 774,
+      "cta_bottom": 646,
+      "navigation_top": 658,
+      "five_thumbnails": true,
+      "minimum_touch_target": 44,
+      "stage_internal_overflow": false
+    },
+    {
+      "viewport": [
+        320,
+        568
+      ],
+      "hero_height": 568,
+      "stage_bottom": 510,
+      "navigation_bottom": 498.0001,
+      "cta_bottom": 384.8854,
+      "navigation_top": 396.8854,
+      "five_thumbnails": true,
+      "minimum_touch_target": 44,
+      "stage_internal_overflow": false
+    },
+    {
+      "viewport": [
+        844,
+        390
+      ],
+      "hero_height": 390,
+      "stage_bottom": 332,
+      "navigation_bottom": 320,
+      "cta_bottom": 260.8334,
+      "navigation_top": 276,
+      "five_thumbnails": true,
+      "minimum_touch_target": 44,
+      "stage_internal_overflow": false
+    }
+  ],
+  "interactions": {
+    "public_menu_320": {
+      "single_caption": true,
+      "contact_and_menu_targets": [
+        44,
+        44
+      ],
+      "scrollable_panel": true,
+      "last_links_reachable_by_keyboard": true,
+      "focus_visible": true
+    },
+    "login_tabs_320": {
+      "arrow_right_selects_asn": true,
+      "panel_visibility_updates": true,
+      "tab_height": 45.0625,
+      "text_password_input_font_px": 16
+    },
+    "admin_login_320": {
+      "close_action_size": [
+        48,
+        48
+      ],
+      "close_button_closes_dialog": true
+    },
+    "ticket_create_390": {
+      "normal_entry": "Catalog first available synthetic service → Ajukan Laporan",
+      "dynamic_field_count": 2,
+      "input_font_px": 16,
+      "stepper_direction": "column",
+      "empty_submit_focus": "ticket-title",
+      "native_invalid_field_count": 4,
+      "ticket_submitted": false
+    },
+    "admin_queue_390": {
+      "actor": "Operator OPD A, synthetic lab",
+      "entry": "Admin login role picker → Dashboard → footer Antrean Tiket",
+      "rows": 10,
+      "row_display": "grid",
+      "visible_filter_heights": [
+        44,
+        44,
+        44
+      ],
+      "detail_ticket_no_page_overflow": true
+    },
+    "gallery_320": {
+      "dialog_size": [
+        304.67,
+        568
+      ],
+      "toolbar_width": 272.67,
+      "stage_height": 207.85,
+      "min_control_px": 44,
+      "arrow_right_counter": "2 / 14",
+      "escape_closes": true,
+      "focus_restored_to": "btn-open-gallery-lightbox"
+    },
+    "footer_390": {
+      "columns": 1,
+      "minimum_link_height": 44,
+      "page_horizontal_overflow": false
+    }
+  },
+  "screenshots": "Captured and visually inspected in CUA output. No screenshot file path was returned.",
+  "limits": [
+    "Responsive IAB viewports with synthetic lab sessions.",
+    "Full behavior across physical devices, browser engines, assistive technology and device keyboards remains outside this smoke.",
+    "Unavailable-ID detail routes cover empty/error presentation; populated ticket detail and report form were checked separately through normal UI navigation."
+  ]
+}

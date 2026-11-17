@@ -1,0 +1,1 @@
+PASS RM0-02 integration gate -> C:\Datas\Proyek\Aplikasi\helpdesk-monolith\qa\remediation\rm0-04\lifecycle-review\integration-lifecycle.json

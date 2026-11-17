@@ -1,0 +1,103 @@
+{
+  "result": "PARTIAL",
+  "observed_at": "2026-11-10T04:53:30.367722+00:00",
+  "gateway": "http://127.0.0.1:18080",
+  "tool": "Codex in-app Chromium browser",
+  "scope": "Smoke representatif UI sintetis pada stack lokal. Sesi lab dibuat, tiket tidak dimutasi melalui browser.",
+  "web_image": "sha256:a8ee7371163b9406c5c24e86ba1473f0bd4dfa416397d807bfc7602b04a5a104",
+  "built_bundle_sha256": "f7a4973c002f7baca3f21290d96dbcc5baf172acbc515c78dbcd314029253d51",
+  "checks": [
+    {
+      "id": "operator-desktop",
+      "viewport": [
+        1440,
+        900
+      ],
+      "route": "/admin/app/tickets/detail.html",
+      "result": "PASS",
+      "evidence": [
+        "Masuk sebagai operator sintetis dan membuka menu Antrean Tiket Petugas",
+        "Enter pada filter verifikasi dan link Buka tiket",
+        "Detail OPEN menampilkan klasifikasi usulan dan kolom kategori final",
+        "Pilihan Minta informasi dan Batalkan tiket tampil",
+        "ArrowDown memilih CANCEL, Tab memindah fokus ke lifecycle-reason",
+        "scrollWidth 1430 pada viewport 1440"
+      ]
+    },
+    {
+      "id": "legacy-dispatch-mobile",
+      "viewport": [
+        390,
+        844
+      ],
+      "route": "/admin/app/tickets/detail.html",
+      "result": "PASS",
+      "evidence": [
+        "Tiket historis OPEN+VERIFIED muncul pada Antrean Disposisi",
+        "Pilihan L1 dan L2 dan pesan manual saat roster tidak cocok",
+        "ArrowRight mengganti pilihan L1 ke L2",
+        "Tombol penugasan nonaktif tanpa kandidat, scrollWidth 380"
+      ]
+    },
+    {
+      "id": "technician-mobile",
+      "viewport": [
+        390,
+        844
+      ],
+      "route": "/admin/app/tickets/detail.html",
+      "result": "PASS",
+      "evidence": [
+        "Masuk sebagai Teknisi L1 OPD A",
+        "Enter pada panel navigasi, Antrean Tiket Petugas dan Tugas Saya",
+        "Detail ASSIGNED menampilkan Mulai penanganan",
+        "Panel verifikasi, disposisi, dan konfirmasi pemohon tidak tampil pada kasus ini",
+        "scrollWidth 380"
+      ]
+    }
+  ],
+  "fixed_during_smoke": "Inisialisasi detail memanggil refresh sebelum binding panel siap. Refresh awal dipindahkan setelah binding dan web di-deploy ulang, lalu pemeriksaan lulus.",
+  "limitations": [
+    "Tidak mengirim mutasi bisnis di browser",
+    "Alur pemohon dan commit penugasan dibuktikan oleh HTTP disposable",
+    "Smoke representatif pada satu engine browser, tanpa UAT lintas perangkat nyata"
+  ],
+  "status": "PASS_PREVIOUS_CANDIDATE",
+  "final_candidate_recheck": {
+    "result": "NOT_RUN",
+    "reason_code": "BLOCKED_BROWSER_AUTHORIZATION",
+    "observed_error": "Local browser use is disabled in Work settings",
+    "pending": [
+      "Restart application and recheck browser authorization",
+      "Complete representative final desktop/mobile/keyboard smoke including reopen_until"
+    ],
+    "previous_smoke_valid_for": "Alur operator, legacy OPEN+VERIFIED dan teknisi yang telah diamati. Hash image dan bundle lama disimpan secara eksplisit.",
+    "last_attempt": {
+      "timestamp": "2026-11-10T05:53:22.482376+00:00",
+      "attempts": 2,
+      "result": "NOT_RUN",
+      "message": "Local browser use is disabled in Work settings",
+      "user_report": "Saya aktifkan Local browser use"
+    },
+    "settings_activation": {
+      "timestamp": "2026-11-10T05:59:46.090806+00:00",
+      "setting_path": "Settings > Configuration > Work > Local browser use",
+      "previous_value": "Use default",
+      "observed_value": "On",
+      "verification": "Observed in native application screenshot after change",
+      "browser_connection_reset": true,
+      "browser_result": "NOT_RUN",
+      "browser_error": "Local browser use is disabled in Work settings"
+    },
+    "latest_diagnosis": {
+      "timestamp": "2026-11-10T06:09:24.060716+00:00",
+      "native_work_setting": "On, persisted after navigating away and returning",
+      "native_computer_use": "Any App and Google Chrome enabled",
+      "browser_plugin": "enabled",
+      "unified_computer_use_plugin": "enabled",
+      "browser_tool_result": "Local browser use is disabled in Work settings",
+      "diagnosis": "Setting is On but application-side browser authorization still denies. A fresh turn and tool connection reset did not recover access.",
+      "next_recovery": "Restart ChatGPT/Codex application, reopen the same chat and retry the final smoke."
+    }
+  }
+}

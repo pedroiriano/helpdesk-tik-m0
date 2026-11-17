@@ -1,0 +1,222 @@
+ Image helpdesk-m0-web:0.1.0 Building 
+ Image helpdesk-m0-app:0.1.0 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.05kB 0.0s done
+#1 DONE 0.0s
+
+#2 [app internal] load build definition from backend.Dockerfile
+#2 transferring dockerfile: 38B 0.0s
+#2 ...
+
+#3 [web internal] load build definition from web.Dockerfile
+#3 transferring dockerfile: 726B 0.1s done
+#3 DONE 0.2s
+
+#2 [app internal] load build definition from backend.Dockerfile
+#2 transferring dockerfile: 615B 0.1s done
+#2 DONE 0.3s
+
+#4 [app internal] load metadata for docker.io/library/golang:1.26.5-alpine@sha256:0178a641fbb4858c5f1b48e34bdaabe0350a330a1b1149aabd498d0699ff5fb2
+#4 ...
+
+#5 [web internal] load metadata for docker.io/library/node:24.11.1-alpine@sha256:682368d8253e0c3364b803956085c456a612d738bd635926d73fa24db3ce53d7
+#5 DONE 0.6s
+
+#4 [app internal] load metadata for docker.io/library/golang:1.26.5-alpine@sha256:0178a641fbb4858c5f1b48e34bdaabe0350a330a1b1149aabd498d0699ff5fb2
+#4 DONE 0.5s
+
+#6 [app internal] load .dockerignore
+#6 transferring context:
+#6 transferring context: 238B 0.1s done
+#6 DONE 0.2s
+
+#7 [web internal] load metadata for docker.io/library/nginx:1.30.6-alpine@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949
+#7 ...
+
+#8 [app source 1/6] FROM docker.io/library/golang:1.26.5-alpine@sha256:0178a641fbb4858c5f1b48e34bdaabe0350a330a1b1149aabd498d0699ff5fb2
+#8 resolve docker.io/library/golang:1.26.5-alpine@sha256:0178a641fbb4858c5f1b48e34bdaabe0350a330a1b1149aabd498d0699ff5fb2 0.3s done
+#8 DONE 0.3s
+
+#9 [app internal] load build context
+#9 transferring context: 14.16kB 0.1s done
+#9 DONE 0.1s
+
+#10 [app source 4/6] RUN go mod download
+#10 CACHED
+
+#11 [app source 5/6] COPY backend/ ./
+#11 CACHED
+
+#12 [app source 2/6] WORKDIR /src/backend
+#12 CACHED
+
+#13 [app source 3/6] COPY backend/go.mod backend/go.sum ./
+#13 CACHED
+
+#14 [app source 6/6] COPY configs/ /src/configs/
+#14 CACHED
+
+#15 [app build 1/1] RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/helpdesk ./cmd/helpdesk
+#15 ...
+
+#7 [web internal] load metadata for docker.io/library/nginx:1.30.6-alpine@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949
+#7 DONE 5.9s
+
+#6 [web internal] load .dockerignore
+#6 transferring context: 238B 0.1s done
+#6 DONE 0.2s
+
+#15 [app build 1/1] RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/helpdesk ./cmd/helpdesk
+#15 ...
+
+#16 [web internal] load build context
+#16 DONE 0.0s
+
+#17 [web build 1/9] FROM docker.io/library/node:24.11.1-alpine@sha256:682368d8253e0c3364b803956085c456a612d738bd635926d73fa24db3ce53d7
+#17 resolve docker.io/library/node:24.11.1-alpine@sha256:682368d8253e0c3364b803956085c456a612d738bd635926d73fa24db3ce53d7
+#17 resolve docker.io/library/node:24.11.1-alpine@sha256:682368d8253e0c3364b803956085c456a612d738bd635926d73fa24db3ce53d7 0.7s done
+#17 DONE 0.8s
+
+#18 [web stage-1 1/3] FROM docker.io/library/nginx:1.30.6-alpine@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949
+#18 resolve docker.io/library/nginx:1.30.6-alpine@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949
+#18 resolve docker.io/library/nginx:1.30.6-alpine@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949 0.7s done
+#18 DONE 0.9s
+
+#16 [web internal] load build context
+#16 transferring context:
+#16 transferring context: 363.07kB 1.6s done
+#16 DONE 1.8s
+
+#15 [app build 1/1] RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/helpdesk ./cmd/helpdesk
+#15 ...
+
+#19 [web build 2/9] WORKDIR /src/frontend
+#19 CACHED
+
+#20 [web build 3/9] COPY frontend/package.json frontend/package-lock.json ./
+#20 CACHED
+
+#21 [web build 4/9] RUN npm ci --ignore-scripts --no-audit --no-fund
+#21 CACHED
+
+#22 [web build 5/9] COPY frontend/ ./
+#22 DONE 0.8s
+
+#15 [app build 1/1] RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/helpdesk ./cmd/helpdesk
+#15 ...
+
+#23 [web build 6/9] COPY references/piui-modern/ /src/references/piui-modern/
+#23 DONE 0.8s
+
+#15 [app build 1/1] RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/helpdesk ./cmd/helpdesk
+#15 ...
+
+#24 [web build 7/9] COPY references/piui-zero/ /src/references/piui-zero/
+#24 DONE 0.5s
+
+#15 [app build 1/1] RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/helpdesk ./cmd/helpdesk
+#15 ...
+
+#25 [web build 8/9] COPY assets/ /src/assets/
+#25 DONE 1.1s
+
+#15 [app build 1/1] RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/helpdesk ./cmd/helpdesk
+#15 ...
+
+#26 [web build 9/9] RUN npm run build
+#26 6.012 
+#26 6.012 > helpdesk-web@0.1.0 build
+#26 6.012 > npm run typecheck && vite build && node build-templates.mjs
+#26 6.012 
+#26 6.976 
+#26 6.976 > helpdesk-web@0.1.0 typecheck
+#26 6.976 > tsc --noEmit
+#26 6.976 
+#26 10.29 vite v8.3.5 building client environment for production...
+#26 10.61 transforming...
+#26 11.03 ✓ 17 modules transformed.
+#26 11.22 rendering chunks...
+#26 11.45 computing gzip size...
+#26 11.46 dist/transport-CJVV_n_x.js    1.89 kB │ gzip:  1.04 kB
+#26 11.46 dist/helpdesk/m0-04.js       63.86 kB │ gzip: 17.77 kB
+#26 11.46 dist/helpdesk/m0-03.js       67.13 kB │ gzip: 19.70 kB
+#26 11.46 dist/helpdesk/health.js     298.73 kB │ gzip: 77.28 kB
+#26 11.46 
+#26 11.48 ✓ built in 1.15s
+#26 12.28 piui-modern: 63 source files published
+#26 12.72 piui-zero: 78 source files published
+#26 12.93 npm notice
+#26 12.93 npm notice New minor version of npm available! 11.6.2 -> 11.21.2
+#26 12.93 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.21.2
+#26 12.93 npm notice To update run: npm install -g npm@11.21.2
+#26 12.93 npm notice
+#26 DONE 13.7s
+
+#15 [app build 1/1] RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/helpdesk ./cmd/helpdesk
+#15 ...
+
+#27 [web stage-1 2/3] COPY infra/nginx/nginx.conf /etc/nginx/nginx.conf
+#27 CACHED
+
+#28 [web stage-1 3/3] COPY --from=build /src/frontend/dist/ /usr/share/nginx/html/
+#28 DONE 1.8s
+
+#15 [app build 1/1] RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/helpdesk ./cmd/helpdesk
+#15 ...
+
+#29 [web] exporting to image
+#29 exporting layers
+#29 exporting layers 5.9s done
+#29 exporting manifest sha256:af10d751625525f3372fe548824245060efd871649c7d1a5c77a4a60d6807d7b
+#29 exporting manifest sha256:af10d751625525f3372fe548824245060efd871649c7d1a5c77a4a60d6807d7b 0.4s done
+#29 exporting config sha256:203bc89bc941f09c7b4de70dda65a2c7e5084d615568ba1b2adec2097b1ccadc
+#29 exporting config sha256:203bc89bc941f09c7b4de70dda65a2c7e5084d615568ba1b2adec2097b1ccadc 0.3s done
+#29 exporting attestation manifest sha256:d31ca12eb897dce02267dedceddb3581dd56905804882b67ca7f91deae815d33
+#29 exporting attestation manifest sha256:d31ca12eb897dce02267dedceddb3581dd56905804882b67ca7f91deae815d33 0.6s done
+#29 exporting manifest list sha256:c0723a0cd0a86dc58b93fb80b216cfd931494c978fbfa5debbe4c79e65fb0869
+#29 exporting manifest list sha256:c0723a0cd0a86dc58b93fb80b216cfd931494c978fbfa5debbe4c79e65fb0869 0.5s done
+#29 naming to docker.io/library/helpdesk-m0-web:0.1.0
+#29 naming to docker.io/library/helpdesk-m0-web:0.1.0 0.1s done
+#29 unpacking to docker.io/library/helpdesk-m0-web:0.1.0
+#29 unpacking to docker.io/library/helpdesk-m0-web:0.1.0 1.3s done
+#29 DONE 9.6s
+
+#15 [app build 1/1] RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/helpdesk ./cmd/helpdesk
+#15 ...
+
+#30 [web] resolving provenance for metadata file
+#30 DONE 0.4s
+
+#15 [app build 1/1] RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/helpdesk ./cmd/helpdesk
+#15 DONE 56.1s
+
+#31 [app runtime 1/3] COPY --from=build /out/helpdesk /helpdesk
+#31 DONE 0.3s
+
+#32 [app runtime 2/3] COPY configs/M0.json /app/configs/M0.json
+#32 DONE 0.3s
+
+#33 [app runtime 3/3] WORKDIR /app
+#33 DONE 0.8s
+
+#34 [app] exporting to image
+#34 exporting layers
+#34 exporting layers 2.3s done
+#34 exporting manifest sha256:6207d8c8d768755535d13e00428bc70597913de7138fdb1b24e05a581a8aa933
+#34 exporting manifest sha256:6207d8c8d768755535d13e00428bc70597913de7138fdb1b24e05a581a8aa933 0.2s done
+#34 exporting config sha256:57f799401206115433ff44c1c5077199441f63a3cf6a1c1cc05165ec6900f04a
+#34 exporting config sha256:57f799401206115433ff44c1c5077199441f63a3cf6a1c1cc05165ec6900f04a 0.1s done
+#34 exporting attestation manifest sha256:4452ed49675d3133245ce78bc5db1606d949512b8416242fbd4b4a6579cbe99a
+#34 exporting attestation manifest sha256:4452ed49675d3133245ce78bc5db1606d949512b8416242fbd4b4a6579cbe99a 0.2s done
+#34 exporting manifest list sha256:9b369e976376192e5adec21e8dcae72c5412bb6afd0cc4507c509f521a77cc71
+#34 exporting manifest list sha256:9b369e976376192e5adec21e8dcae72c5412bb6afd0cc4507c509f521a77cc71 0.2s done
+#34 naming to docker.io/library/helpdesk-m0-app:0.1.0
+#34 naming to docker.io/library/helpdesk-m0-app:0.1.0 0.0s done
+#34 unpacking to docker.io/library/helpdesk-m0-app:0.1.0
+#34 unpacking to docker.io/library/helpdesk-m0-app:0.1.0 0.7s done
+#34 DONE 3.9s
+
+#35 [app] resolving provenance for metadata file
+#35 DONE 0.1s
+ Image helpdesk-m0-web:0.1.0 Built 
+ Image helpdesk-m0-app:0.1.0 Built 

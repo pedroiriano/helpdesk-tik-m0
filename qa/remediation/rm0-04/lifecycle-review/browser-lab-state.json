@@ -1,0 +1,13 @@
+{
+  "running": false,
+  "network": "helpdesk-m0-contract-06d973f969-ui-net",
+  "database": "helpdesk-m0-contract-06d973f969",
+  "app": "helpdesk-m0-contract-06d973f969-ui-app",
+  "web": "helpdesk-m0-contract-06d973f969-ui-web",
+  "edge": "helpdesk-m0-contract-06d973f969-ui-edge",
+  "host_binding": "127.0.0.1 only",
+  "persistent_volumes": [],
+  "url": "http://127.0.0.1:49997",
+  "readiness": 200,
+  "cleanup": "PASS"
+}

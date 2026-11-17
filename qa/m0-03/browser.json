@@ -1,0 +1,105 @@
+{
+  "timestamp": "2026-11-04T15:51:25.561Z",
+  "scope": "representative local native PIUI desktop/mobile/keyboard smoke; synthetic lab only",
+  "result": "PASS",
+  "checks": [
+    {
+      "check": "guest_catalog",
+      "result": "PASS",
+      "cards": 1,
+      "viewport": "1440x900"
+    },
+    {
+      "check": "mobile_detail",
+      "result": "PASS",
+      "fields": 2,
+      "horizontalOverflow": false,
+      "viewport": "390x844"
+    },
+    {
+      "check": "keyboard_login_asn",
+      "result": "PASS",
+      "focusBeforeEnter": "Masuk"
+    },
+    {
+      "check": "asn_scoped_catalog",
+      "result": "PASS",
+      "cards": [
+        "Bantuan TIK Lab 1",
+        "Bantuan TIK Lab 2",
+        "Bantuan TIK Lab 3"
+      ],
+      "horizontalOverflow": false
+    },
+    {
+      "check": "asn_master_ui_denied",
+      "result": "PASS",
+      "message": "Akun ini tidak memiliki hak pengelolaan master"
+    },
+    {
+      "check": "logout_ui",
+      "result": "PASS",
+      "guestCardsAfterLogout": 1
+    },
+    {
+      "check": "native_login_dialog_keyboard_escape_focus_return",
+      "result": "PASS"
+    },
+    {
+      "check": "master_create_refresh",
+      "result": "PASS",
+      "fixture": "LAB-BROWSER-M003",
+      "active": false,
+      "version": 1
+    },
+    {
+      "check": "master_native_required_validation",
+      "result": "PASS"
+    },
+    {
+      "check": "master_form_policy_refresh",
+      "result": "PASS",
+      "form_version": 2,
+      "policy_version": 2,
+      "upload_limit": 2097152
+    },
+    {
+      "check": "master_mobile_layout",
+      "result": "PASS",
+      "viewport": "390x844",
+      "horizontal_overflow": false
+    },
+    {
+      "check": "app_restart_session_master_persistence",
+      "result": "PASS",
+      "service_version": 3,
+      "form_version": 2,
+      "policy_version": 2
+    },
+    {
+      "check": "console_current_workspace",
+      "result": "PASS",
+      "errors": 0
+    }
+  ],
+  "screenshots": [
+    "catalog-guest-desktop.jpg",
+    "detail-mobile.jpg",
+    "catalog-asn-mobile.jpg",
+    "master-desktop.jpg",
+    "master-desktop-full.jpg",
+    "master-mobile.jpg"
+  ],
+  "limits": [
+    "Not domain UAT, production SSO, full accessibility audit or Cartesian browser testing",
+    "Other owner masters and negative auth scenarios verified in isolated Go/PostgreSQL integration; browser representative service slice only"
+  ],
+  "fixture": {
+    "code": "LAB-BROWSER-M003",
+    "active": false,
+    "service_version": 3,
+    "form_version": 2,
+    "policy_version": 2
+  },
+  "viewport_override_reset": true
+}

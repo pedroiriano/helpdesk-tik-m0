@@ -1,0 +1,5 @@
+Command: go test ./internal/modules/m1/internal/domain ./internal/modules/m1/api
+Cwd: backend
+Observed exit: 0
+ok helpdesk.local/m0/internal/modules/m1/internal/domain 3.688s
+ok helpdesk.local/m0/internal/modules/m1/api 2.190s

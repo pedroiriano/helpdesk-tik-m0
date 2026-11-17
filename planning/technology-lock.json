@@ -1,0 +1,113 @@
+{
+  "status": "PINNED_LOCAL_STACK_DEC_M11",
+  "go": "1.27.4",
+  "node": "26.13.1",
+  "react": "19.3.1",
+  "react_dom": "19.3.1",
+  "typescript": "7.0.2",
+  "vite": "8.3.5",
+  "pgx": "5.12.0",
+  "postgresql": "18.7",
+  "nginx": "1.30.6",
+  "migration_tool": "psql 18.7 via migrations/apply.sh; per-migration transaction, advisory lock and checksum ledger",
+  "test_tools": [
+    "Go testing 1.27.4",
+    "Python 3.13.7 unittest/urllib",
+    "Python isolated OpenAPI validator 0.9.0; tests/contract/openapi-requirements.txt"
+  ],
+  "container_base_digest": {
+    "go_builder": "sha256:70bd7ddea8b6cbe5d6943cde279d6b67feb10cc924fb9100d1d8757c1575b280",
+    "web_builder": "sha256:6bd9ab43c0ec0190ca7b2d193906cb8b7edf6e7f4afa43ddeccd6452710bffb5",
+    "database": "sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015",
+    "app_runtime": "scratch (empty filesystem)"
+  },
+  "gateway_digest": "sha256:901e593c95dc85f5a729f5765516321366ef4ac401821431d408897e95287d0a",
+  "scanner": {
+    "product": "ClamAV",
+    "version": "1.5.4",
+    "image": "clamav/clamav:1.5.4@sha256:7054e3f34308c384ea43cd786ea17abf899bd44af40af9f1b099853d7a5c214e",
+    "scope": "M0-04 private ticket uploads; real INSTREAM scan; no public port; freshclam disabled in isolated lab; current signature/age recorded in QA",
+    "cpu_m": 1000,
+    "memory_mib": 3072,
+    "source": "https://blog.clamav.net/2026/08/"
+  },
+  "storage_adapter": {
+    "scope": "M0-04 private ticket blobs",
+    "type": "Docker named volume",
+    "name": "helpdesk-m0_private-uploads",
+    "runtime_path": "/private/uploads",
+    "owner_uid": 65532,
+    "file_mode": "0600",
+    "directory_mode": "0700",
+    "public_mapping": false,
+    "orphan_grace_hours": 24
+  },
+  "operating_system": "Docker Desktop 4.99.0 (245822) Linux x86_64",
+  "container_runtime": "Docker Engine 29.9.3 (API 1.56) / Docker Compose v5.7.0",
+  "upgrade_plan": {
+    "status": "APPLIED_IN_LOCAL_STACK",
+    "decision": "DEC-M11",
+    "adr": "docs/adr/0010-technology-stack-upgrade-and-pinning-dec-m11.md",
+    "target_host_runtime": "Docker Desktop 4.99.0+ / Docker Engine 29.10.0 / Docker Compose v5.7.1 (pending host Docker Desktop installer update)",
+    "database_volume_active": "helpdesk-m0_postgres18-data (/var/lib/postgresql -> PGDATA=/var/lib/postgresql/18/docker, data_checksums=on)",
+    "database_volume_rollback_preserved": "helpdesk-m0_postgres-data (PG 16.14 untouched)",
+    "evidence": [
+      "qa/upgrades/dec-m11/baseline-pg16.json",
+      "qa/upgrades/dec-m11/phase1-report.json",
+      "qa/upgrades/dec-m11/phase2-pg18-report.json",
+      "qa/upgrades/dec-m11/phase3-cutover-report.json"
+    ]
+  },
+  "lockfiles": [
+    "backend/go.sum",
+    "frontend/package-lock.json",
+    "tests/contract/requirements.txt",
+    "tests/contract/openapi-requirements.txt",
+    "migrations/checksums.sha256"
+  ],
+  "notes": "Pin runtime yang diuji untuk fondasi lokal. Exporter, beban uji riset, scanner media dan storage privat mengikuti slice terkait. M0-04 adds scanner and private storage infrastructure, accounted separately from Go budget; no architecture benchmark.",
+  "resource_observation": {
+    "status": "DECIDED_TWO_TIER_LAB_ENVELOPE",
+    "decision": "DEC-M10",
+    "adr": "docs/adr/0009-resource-envelope-and-rpo-rto-dec-m10.md",
+    "research_core_profile": {
+      "cpu_m": 4000,
+      "memory_mib": 8192,
+      "includes": "app (2500m/4608MiB), db (1000m/2560MiB), web (400m/768MiB), exporter (100m/256MiB)"
+    },
+    "operational_compose_profile": {
+      "cpu_m": 4900,
+      "memory_mib": 11008,
+      "includes": "app (2500m/4608MiB), db (1000m/2560MiB), web (400m/768MiB), scanner ClamAV (1000m/3072MiB)"
+    },
+    "research_source": {
+      "cpu_m": 4000,
+      "memory_mib": 8192,
+      "includes": "app, db, gateway, exporter"
+    },
+    "local_steady": {
+      "cpu_m": 4900,
+      "memory_mib": 11008,
+      "includes": "app, db, web, scanner"
+    },
+    "temporary": {
+      "migrate": {
+        "cpu_m": 250,
+        "memory_mib": 128
+      },
+      "upload-init": {
+        "cpu_m": 100,
+        "memory_mib": 32
+      },
+      "seed": {
+        "cpu_m": 250,
+        "memory_mib": 128
+      },
+      "test": {
+        "cpu_m": 1000,
+        "memory_mib": 1024
+      }
+    },
+    "evidence": "qa/remediation/rm0-03/runtime-limits.txt"
+  }
+}

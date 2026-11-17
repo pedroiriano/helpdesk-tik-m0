@@ -1,0 +1,252 @@
+{
+  "application_commands": [
+    {
+      "id": "backend_format_vet",
+      "status": "IMPLEMENTED",
+      "command": "go vet ./...",
+      "working_directory": "backend",
+      "container_image": "golang:1.27.4-alpine@sha256:70bd7ddea8b6cbe5d6943cde279d6b67feb10cc924fb9100d1d8757c1575b280",
+      "last_execution": "PASS"
+    },
+    {
+      "id": "backend_unit",
+      "status": "IMPLEMENTED",
+      "command": "go test ./...",
+      "working_directory": "backend",
+      "container_image": "golang:1.27.4-alpine@sha256:70bd7ddea8b6cbe5d6943cde279d6b67feb10cc924fb9100d1d8757c1575b280",
+      "last_execution": "PASS"
+    },
+    {
+      "id": "module_boundary",
+      "status": "IMPLEMENTED",
+      "command": "python scripts/check_boundaries.py",
+      "working_directory": ".",
+      "last_execution": "PASS"
+    },
+    {
+      "id": "boundary_negative",
+      "status": "IMPLEMENTED",
+      "command": "python scripts/test_boundaries.py",
+      "working_directory": ".",
+      "last_execution": "PASS"
+    },
+    {
+      "id": "database_integration",
+      "status": "IMPLEMENTED",
+      "command": "docker compose --profile test run --rm --build db-test",
+      "working_directory": "."
+    },
+    {
+      "id": "migration_roles",
+      "status": "IMPLEMENTED",
+      "command": "python -X utf8 scripts/test_owner_migrations.py --report qa/upgrades/dec-m11/pg18-migrations.json",
+      "working_directory": ".",
+      "scope": "disposable_PostgreSQL_18.7_owner_DDL_ledger_and_role_checks",
+      "last_execution": "PASS"
+    },
+    {
+      "id": "api_contract",
+      "status": "IMPLEMENTED",
+      "command": "python scripts/verify_m0_04.py",
+      "working_directory": ".",
+      "scope": "executable_contract_regressions; runtime_HTTP_is_separate"
+    },
+    {
+      "id": "business_contracts_check",
+      "status": "IMPLEMENTED",
+      "command": "python scripts/build_business_contracts.py --check",
+      "working_directory": ".",
+      "last_execution": "PASS"
+    },
+    {
+      "id": "business_contracts_unittest",
+      "status": "IMPLEMENTED",
+      "command": "python -X utf8 -m unittest tests/contract/test_business_contracts.py",
+      "working_directory": ".",
+      "last_execution": "PASS"
+    },
+    {
+      "id": "frontend_lint_typecheck",
+      "status": "IMPLEMENTED",
+      "command": "npm.cmd run typecheck",
+      "working_directory": "frontend",
+      "container_image": "node:26.13.1-alpine@sha256:6bd9ab43c0ec0190ca7b2d193906cb8b7edf6e7f4afa43ddeccd6452710bffb5",
+      "last_execution": "PASS"
+    },
+    {
+      "id": "frontend_typecheck",
+      "status": "IMPLEMENTED",
+      "command": "npm.cmd run typecheck",
+      "working_directory": "frontend",
+      "last_execution": "PASS"
+    },
+    {
+      "id": "frontend_unit",
+      "status": "IMPLEMENTED",
+      "command": "node scripts/test_admin_navigation.mjs && node scripts/test_admin_profiles.mjs && node scripts/test_ticket_actions.mjs && node scripts/test_ux_flow.mjs && node scripts/test_business_intent.mjs && node scripts/test_public_cache.mjs",
+      "working_directory": ".",
+      "container_image": "node:26.13.1-alpine@sha256:6bd9ab43c0ec0190ca7b2d193906cb8b7edf6e7f4afa43ddeccd6452710bffb5",
+      "scope": "Node 26.13.1 LTS frontend logic & ESM unit tests",
+      "last_execution": "PASS"
+    },
+    {
+      "id": "frontend_build",
+      "status": "IMPLEMENTED",
+      "command": "docker compose build --pull=false web",
+      "working_directory": ".",
+      "scope": "npm ci --ignore-scripts + tsc --noEmit + vite build + build-templates.mjs inside node:26.13.1-alpine",
+      "last_execution": "PASS"
+    },
+    {
+      "id": "frontend_audit",
+      "status": "IMPLEMENTED",
+      "command": "npm.cmd audit",
+      "working_directory": "frontend"
+    },
+    {
+      "id": "piui_build_contract",
+      "status": "IMPLEMENTED",
+      "command": "python scripts/test_piui_build.py",
+      "working_directory": ".",
+      "scope": "native PIUI output and canonical public shell",
+      "last_execution": "PASS"
+    },
+    {
+      "id": "public_cache_regression",
+      "status": "IMPLEMENTED",
+      "command": "node scripts/test_public_cache.mjs",
+      "working_directory": ".",
+      "scope": "published public worker/client stale-image, cleanup, offline fallback and private-route bypass",
+      "last_execution": "PASS"
+    },
+    {
+      "id": "link_audit",
+      "status": "IMPLEMENTED",
+      "command": "python -X utf8 scripts/test_m0_13_links.py",
+      "working_directory": ".",
+      "scope": "semantic slugs, navigation, zero broken links on 127.0.0.1:18090",
+      "last_execution": "PASS"
+    },
+    {
+      "id": "modal_mobile_audit",
+      "status": "IMPLEMENTED",
+      "command": "python -X utf8 scripts/test_modal_and_mobile.py",
+      "working_directory": ".",
+      "scope": "canonical modal CSS & 27 active routes Mobile First checks",
+      "last_execution": "PASS"
+    },
+    {
+      "id": "browser_smoke",
+      "status": "IMPLEMENTED",
+      "command": "node scripts/test_rm0_04_browser.mjs",
+      "working_directory": ".",
+      "scope": "Automated Edge Headless CDP 11/11 suites across R4-B..I, Nov 13 candidates, and BACKUP_MANIFEST UI on http://127.0.0.1:18090",
+      "last_execution": "PASS"
+    },
+    {
+      "id": "rm0_02_integration",
+      "status": "IMPLEMENTED",
+      "command": "python -X utf8 scripts/test_rm0_02.py --report qa/upgrades/dec-m11/pg18-rm0-02.json",
+      "working_directory": ".",
+      "scope": "disposable PG 18.7 catalog, lifecycle, Smart Dispatch & projection integration",
+      "last_execution": "PASS"
+    },
+    {
+      "id": "rm0_03_integration",
+      "status": "IMPLEMENTED",
+      "command": "python -X utf8 scripts/test_rm0_03.py --report qa/upgrades/dec-m11/pg18-rm0-03.json",
+      "working_directory": ".",
+      "scope": "disposable PG 18.7 SLA, scheduler, reporting, BACKUP_MANIFEST & audit receipts",
+      "last_execution": "PASS"
+    },
+    {
+      "id": "rm0_04_editorial",
+      "status": "IMPLEMENTED",
+      "command": "python -X utf8 scripts/test_rm0_04_editorial.py",
+      "working_directory": ".",
+      "scope": "disposable PG 18.7 M8 ARTICLE/PAGE editorial & media HTTP integration",
+      "last_execution": "PASS"
+    },
+    {
+      "id": "recovery_drill",
+      "status": "IMPLEMENTED",
+      "command": "python -X utf8 scripts/drill_rm0_03_restore.py",
+      "working_directory": ".",
+      "scope": "Dual tmpfs PG 18.7 backup/restore + fresh Go 1.27.4 HTTP probes; complement: python -X utf8 scripts/drill_m0_11_restore.py",
+      "last_execution": "PASS"
+    },
+    {
+      "id": "security_candidate",
+      "status": "NOT_IMPLEMENTED",
+      "command": null,
+      "working_directory": null,
+      "scope": "External container/SAST/SBOM scanner (Trivy/Syft/Grype) deferred to protected remote CI; app ACL/CSP/ClamAV 1.5.4 checks run in rm0-04/contracts/ci_local"
+    },
+    {
+      "id": "local_setup",
+      "status": "IMPLEMENTED",
+      "command": "python scripts/prepare_local.py",
+      "working_directory": "."
+    },
+    {
+      "id": "local_start",
+      "status": "IMPLEMENTED",
+      "command": "docker compose up -d --build --wait --wait-timeout 180",
+      "working_directory": "."
+    },
+    {
+      "id": "gateway_smoke",
+      "status": "IMPLEMENTED",
+      "command": "python scripts/smoke_local.py",
+      "working_directory": "."
+    },
+    {
+      "id": "identity_catalog_integration",
+      "status": "IMPLEMENTED",
+      "command": "python scripts/test_m0_03.py",
+      "working_directory": ".",
+      "scope": "isolated real Go HTTP PostgreSQL M1/M2"
+    },
+    {
+      "id": "identity_role_snapshot",
+      "status": "IMPLEMENTED",
+      "command": "python scripts/sync_identity_roles.py",
+      "working_directory": ".",
+      "scope": "canonical role ceiling drift check; no DB grant writes"
+    },
+    {
+      "id": "ticket_runtime_integration",
+      "status": "IMPLEMENTED",
+      "command": "python -X utf8 scripts/test_m0_04.py",
+      "working_directory": ".",
+      "scope": "historical M0-04 script omits seeds/rm0-03-sla.sql (6/7 PASS on PG 18.7 + ClamAV 1.5.4; full runtime SLA coverage superseded by rm0_02_integration & rm0_03_integration)",
+      "last_execution": "PARTIAL_HISTORICAL_6_OF_7"
+    },
+    {
+      "id": "ticket_intent_regression",
+      "status": "IMPLEMENTED",
+      "command": "node scripts/test_business_intent.mjs",
+      "working_directory": ".",
+      "scope": "unknown-commit original key/payload/version",
+      "last_execution": "PASS"
+    },
+    {
+      "id": "ticket_local_http_restart",
+      "status": "IMPLEMENTED",
+      "command": "python scripts/smoke_m0_04_local.py --allow-lab-writes --restart-proof",
+      "working_directory": ".",
+      "scope": "synthetic fixture and local app restart; opt-in writes"
+    },
+    {
+      "id": "local_ci",
+      "status": "IMPLEMENTED",
+      "command": "python -X utf8 scripts/ci_local.py --with-live-browser",
+      "working_directory": ".",
+      "scope": "Full reproducible local CI pipeline bound to Git HEAD SHA -> qa/remediation/rm0-05/local-ci.json"
+    }
+  ],
+  "package_check": {
+    "command": "python scripts/verify_package.py",
+    "scope": "documentation_and_manifest_only"
+  }
+}

@@ -1,0 +1,16 @@
+# ADR 0011 — Kategori laporan, direktori instansi dan routing
+
+Status: **DECIDED (Lab Candidate M2/M1/M3/M4/M5 — Direkonsiliasi dari duplikasi nomor ADR 0007 pada 17 November 2026)**  
+Catatan penomoran: Dokumen ini sebelumnya terbit dengan nomor ganda `0007` pada kandidat 13 November 2026 (`0007-reporting-directory-and-category-routing.md`). Karena `ADR 0007` sudah digunakan lebih dahulu oleh [0007-rm002-lifecycle-assignment.md](0007-rm002-lifecycle-assignment.md) (RM0-02, 10 November 2026), nomor kanonis dokumen ini direkonsiliasi menjadi **ADR 0011** tanpa mengubah isi keputusan teknis maupun hash manifest historis pada `qa/remediation/rm0-04/{catalog-routing,role-hero}`.
+
+Rancangan M0 membedakan organisasi pelapor, pemilik layanan dan tim penanganan. Implementasi awal hanya memakai layanan dan tingkat L1/L2 sebagai kunci routing. Formulir lama Helpdesk Aptika memperlihatkan 15 kategori serta pilihan OPD. Kategori tersebut dipertahankan sebagai pilihan yang setara dengan kategori lain dan namanya dinormalisasi.
+
+M1 memiliki direktori OPD/unit kerja, Bidang dan hubungan Tim–Bidang. Pilihan tamu mengambil nama dan ID yang ditandai tampil. Pilihan akun ASN berasal dari mandat aktif dengan izin membuat tiket. Admin berwenang atas organisasinya. Pada lab, referensi OPD yang diimpor dapat ditata oleh administrator berizin membuat organisasi. Hak ini khusus master OPD/Bidang. Keanggotaan, tim, tiket dan routing tetap diperiksa menurut mandat masing-masing.
+
+M2 memiliki kategori dan kategori bawaan layanan. M3 menyimpan salinan pilihan kategori, organisasi dan Bidang saat pengajuan. Pilihan organisasi tamu dianggap pernyataan pelapor dan tidak menjadi organisasi pemberi hak akses. Laporan umum menerima tamu. Layanan khusus ASN tetap menerapkan otorisasi akun dan audience layanan. Pemohon dapat memilih kategori atau menyerahkan peninjauan kepada Operator.
+
+M4 menyarankan kategori dari judul dan deskripsi dengan aturan deterministik. Istilah spesifik didahulukan. Frasa yang cocok dengan beberapa kategori meminta peninjauan. Operator menyimpan kategori dan prioritas terverifikasi. M5 mendahulukan aturan layanan + kategori terverifikasi + tingkat teknisi, kemudian aturan bawaan layanan pada tingkat yang sama. Tim aktif menjadi tujuan dan Bidang tampil bila terhubung. Kandidat teknisi disaring menurut roster, kompetensi, mandat dan perkiraan beban.
+
+Aturan routing lintas OPD memerlukan mandat konfigurasi pada kedua OPD. Hasilnya adalah rekomendasi pelimpahan. Koordinator meninjau tujuan dan alasan, lalu OPD tujuan menerima melalui alur yang sudah ada. M3 menjadi satu-satunya penulis perubahan kepemilikan. Riwayat dan SLA tetap mengikuti episode yang sama.
+
+Migrasi 031–033 menambah data pada owner masing-masing tanpa FK lintas owner. Penamaan OPD merujuk daftar pada tangkapan layar dan [Renstra BKPSDM Kota Depok 2025–2029](https://bkpsdm.depok.go.id/aset/uploads/2026/04/BKPSDM_RANHIR-RENSTRA-BKPSDM-KOTA-DEPOK-2025-2029-final-cetak-1_compressed-1-1.pdf). Struktur Bidang dan mandat routing lab perlu pengesahan sebelum dipakai secara kedinasan. Prinsip pemisahan kategori, jenis permintaan dan prioritas mengikuti [FitSM](https://www.fitsm.eu/downloads/). Kontrak dan skenario bisnis ini berlaku setara untuk perbandingan arsitektur penelitian.

@@ -1,0 +1,6 @@
+ Container helpdesk-m0-nginx Recreate 
+ Container helpdesk-m0-nginx Recreated 
+ Container helpdesk-m0-nginx Starting 
+ Container helpdesk-m0-nginx Started 
+ Container helpdesk-m0-nginx Waiting 
+ Container helpdesk-m0-nginx Healthy 

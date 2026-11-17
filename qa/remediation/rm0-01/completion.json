@@ -1,0 +1,262 @@
+{
+  "timestamp": "2026-11-10T04:07:26.256884+00:00",
+  "task_id": "RM0-01",
+  "status": "DONE_VERIFIED",
+  "scope": "application / controlled synthetic lab",
+  "requirements": [
+    "AC02",
+    "AC06",
+    "AC07",
+    "AC11",
+    "AC18",
+    "AC23"
+  ],
+  "acceptance": {
+    "R1-A": {
+      "status": "PASS",
+      "scope": "Login lab dan password dipisah, password kosong/salah ditolak, akun nonaktif dan sesi expired/revoked ditolak. Upgrade verifier lama dibuktikan pada disposable.",
+      "evidence": [
+        "qa/remediation/rm0-01/integration.json",
+        "qa/remediation/rm0-01/go-affected.txt"
+      ]
+    },
+    "R1-B": {
+      "status": "PASS",
+      "scope": "Validasi dan normalisasi NIK/email/telepon/password. Retry, request bersamaan, perubahan payload, duplicate dan replay setelah revoke dibuktikan. Satu principal tersimpan.",
+      "evidence": [
+        "qa/remediation/rm0-01/integration.json"
+      ]
+    },
+    "R1-C": {
+      "status": "PASS",
+      "scope": "Upload privat terikat owner dan OPD. Ditolak tanpa sesi/CSRF, dari pengguna lain satu OPD atau OPD berbeda, saat ukuran/nama/signature/hash salah, serta scanner gagal. Rekonsiliasi menjaga blob M8 yang masih direferensikan.",
+      "evidence": [
+        "qa/remediation/rm0-01/integration.json",
+        "qa/remediation/rm0-01/go-affected.txt"
+      ]
+    },
+    "R1-D": {
+      "status": "PASS",
+      "scope": "Sumber M3 dan M8 memerlukan salinan berbeda serta approval berwenang. Approval kosong/palsu/expired/revoked, perubahan versi/target, referensi historis tanpa approval dan akses ke sumber privat ditolak.",
+      "evidence": [
+        "qa/remediation/rm0-01/integration.json"
+      ]
+    },
+    "R1-E": {
+      "status": "PASS",
+      "scope": "Scope sebelum pagination pada katalog, konten, search dan media. Fixture publik, guest, ASN, editor dan staf membuktikan isolasi antar akun/OPD. Laporan/ekspor menolak scope asal setelah mandat dicabut.",
+      "evidence": [
+        "qa/remediation/rm0-01/integration.json"
+      ]
+    },
+    "R1-F": {
+      "status": "PASS",
+      "scope": "Ledger 019–020 ditambah, checksum 001–018 tidak berubah, role terpisah. Inventaris agregat dan referensi lokal terpelihara. Tidak ada sesi kandidat lama aktif saat cutover.",
+      "evidence": [
+        "qa/remediation/rm0-01/integration.json",
+        "qa/remediation/rm0-01/migration-roles.json",
+        "qa/remediation/rm0-01/local-before.json",
+        "qa/remediation/rm0-01/local-after.json",
+        "qa/remediation/rm0-01/local-cutover.txt"
+      ]
+    },
+    "R1-G": {
+      "status": "PASS",
+      "scope": "Sembilan operasi terpetakan ke handler. Kontrak, Go, PIUI dan smoke gateway representatif desktop 1440×900, mobile 390×844 dan keyboard lulus.",
+      "evidence": [
+        "qa/remediation/rm0-01/runtime-contract.json",
+        "qa/remediation/rm0-01/integration.json",
+        "qa/remediation/rm0-01/frontend-build.txt",
+        "qa/remediation/rm0-01/browser.json",
+        "qa/remediation/rm0-01/local-runtime.txt"
+      ]
+    },
+    "R1-H": {
+      "status": "PASS",
+      "scope": "Hash baseline dan kandidat, histori pengesahan, status acceptance terdampak, keputusan terbuka dan handoff diverifikasi.",
+      "evidence": [
+        "qa/remediation/rm0-01/baseline-source.json",
+        "qa/remediation/rm0-01/historical-release-authorization.md",
+        "qa/remediation/rm0-01/source-manifest.json",
+        "status/HANDOFF_RM0_01.md"
+      ]
+    }
+  },
+  "findings": {
+    "F01": "REMEDIATED_LAB",
+    "F02": "REMEDIATED_LAB",
+    "F03": "REMEDIATED_MANUAL_REDACTION",
+    "F04": "REMEDIATED_SCOPED_SURFACES",
+    "F13": "CLAIM_CORRECTED_PENDING_HUMAN_AUTHORIZATION",
+    "F14": "REPLACEMENT_EVIDENCE_SOURCE_BOUND"
+  },
+  "checks": [
+    {
+      "command": "python -X utf8 scripts/test_rm0_01.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-01/integration.json"
+    },
+    {
+      "command": "python -X utf8 scripts/test_owner_migrations.py --report qa/remediation/rm0-01/migration-roles.json",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-01/migration-roles.json"
+    },
+    {
+      "command": "go test ./internal/modules/m1/... ./internal/modules/m2/... ./internal/modules/m3/... ./internal/modules/m8/... ./internal/modules/m9/... ./internal/platform/blob/... ./internal/bootstrap",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith\\backend",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-01/go-affected.txt"
+    },
+    {
+      "command": "python -X utf8 scripts/build_business_contracts.py --check",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": null
+    },
+    {
+      "command": "python -X utf8 -m unittest tests/contract/test_business_contracts.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": null
+    },
+    {
+      "command": "python -X utf8 scripts/check_boundaries.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": null
+    },
+    {
+      "command": "python -X utf8 - (compare 9 explicit handler registrations with generated OpenAPI operationIds)",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-01/runtime-contract.json"
+    },
+    {
+      "command": "npm.cmd --prefix frontend run build",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-01/frontend-build.txt"
+    },
+    {
+      "command": "python -X utf8 scripts/test_piui_build.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": null
+    },
+    {
+      "command": "python -X utf8 scripts/verify_package.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": null
+    },
+    {
+      "command": "docker compose build app web",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-01/local-cutover.txt"
+    },
+    {
+      "command": "docker compose run --rm --no-deps migrate",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-01/local-cutover.txt"
+    },
+    {
+      "command": "docker compose up -d --no-deps --no-build --wait --wait-timeout 80 app web",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-01/local-cutover.txt"
+    },
+    {
+      "command": "docker compose build web; docker compose up -d --no-deps --no-build --wait --wait-timeout 60 web",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-01/local-runtime.txt"
+    }
+  ],
+  "browser_evidence": "qa/remediation/rm0-01/browser.json",
+  "integration_subtests": [
+    "R1-A-authentication-and-legacy",
+    "R1-B-registration-replay-concurrency",
+    "R1-C-upload-authorization-and-replay",
+    "R1-D-approved-redaction-publication",
+    "R1-E-scoped-M3-library-and-search",
+    "R1-E-content-scope-and-revocation",
+    "R1-E-ASN-catalog-search-matches-detail",
+    "R1-E-report-export-live-scope",
+    "R1-F-nonlab-and-migration-readiness",
+    "R1-G-audit-durable-and-contract-receipts"
+  ],
+  "source_manifest": {
+    "path": "qa/remediation/rm0-01/source-manifest.json",
+    "sha256": "30c959f49d93bfcdc474554d128f6f19a867ddf5b1ad4f9465a4dad6744336df"
+  },
+  "baseline": {
+    "path": "qa/remediation/rm0-01/baseline-source.json",
+    "sha256": "6d7f0cc407159543ee5729edc0071df6c5b3077b612a1926557399cebb2ab053"
+  },
+  "local_inventory": {
+    "before": {
+      "ledger": 18,
+      "subjects": 27,
+      "media": 17,
+      "content": 20,
+      "media_refs": 0,
+      "attachments": 26,
+      "legacy_raw": 9,
+      "media_private": 0,
+      "media_keys_digest": "60272730355318a3f1ed04c6a9a64685"
+    },
+    "after": {
+      "ledger": 20,
+      "subjects": 27,
+      "media": 17,
+      "content": 20,
+      "media_refs": 0,
+      "attachments": 26,
+      "legacy_tagged": 9,
+      "media_private": 17,
+      "media_keys_digest": "60272730355318a3f1ed04c6a9a64685"
+    }
+  },
+  "runtime": [
+    "/helpdesk-m0 sha256:b53a29b8bbfd93829f086b3ec868f024015dd85b729a522912403591cccb7f1c healthy",
+    "/helpdesk-m0-nginx sha256:26f640281645d68104d5eb8b857808bc62efb4efba41d0163c5e056be0f0cee9 healthy",
+    "/helpdesk-m0-db sha256:57c72fd2a128e416c7fcc499958864df5301e940bca0a56f58fddf30ffc07777 healthy",
+    "/helpdesk-m0-scanner sha256:8ad6197396974726c35d017e50aaaaf4b91745726a04faec8480c203edd98052 healthy"
+  ],
+  "open_decisions": [
+    "DEC-M02",
+    "DEC-M06",
+    "DEC-M08",
+    "UAT manusia",
+    "Otorisasi organisasi"
+  ],
+  "verification_limits": [
+    "Bukti RM0-01 untuk kandidat lab M0 dan fixture sintetis, bukan seluruh AC global, parity empat model, benchmark, audit keamanan menyeluruh atau kesiapan produksi.",
+    "Browser membuktikan interaksi representatif. Registrasi berhasil, upload byte dan approval ditest dengan DB disposable. Tidak menambah akun, tiket atau berkas kerja lewat browser.",
+    "Inventaris membandingkan hitungan dan digest referensi storage, bukan hash isi semua blob historis.",
+    "SSO, verifikasi identitas nyata, kanal nyata, UAT manusia dan persetujuan organisasi belum diaktifkan. Protected CI tidak dijalankan dan workspace tidak memiliki SHA Git.",
+    "Sanitasi memakai hasil redaksi manual yang direview. Otomasi redaksi tidak diimplementasikan."
+  ],
+  "next_phase": {
+    "id": "RM0-02",
+    "status": "NOT_STARTED"
+  }
+}

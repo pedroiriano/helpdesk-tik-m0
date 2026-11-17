@@ -1,0 +1,10 @@
+/* css/main.css - Master Cascading Layer Orchestrator */
+@layer tokens, base, layout, components, utilities;
+
+@import url('./01-tokens.css?v=4.3') layer(tokens);
+@import url('./02-base.css?v=4.3') layer(base);
+@import url('./03-layout.css?v=4.3') layer(layout);
+@import url('./04-components.css?v=4.3') layer(components);
+@import url('./06-reference-motion.css?v=4.3') layer(components);
+@import url('./07-detail-pages.css?v=4.3') layer(components);
+@import url('./05-utilities.css?v=4.3') layer(utilities);

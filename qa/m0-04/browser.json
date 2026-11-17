@@ -1,0 +1,95 @@
+{
+  "timestamp": "2026-11-05T06:20:30.697Z",
+  "result": "PASS",
+  "scope": "representative live localhost candidate BEFORE final form/cookie hardening; desktop/mobile/keyboard; synthetic identities only",
+  "checks": [
+    {
+      "check": "public_login_keyboard_catalog_detail",
+      "result": "PASS"
+    },
+    {
+      "check": "native_required_validation",
+      "result": "PASS"
+    },
+    {
+      "check": "public_create_detail_comment",
+      "result": "PASS",
+      "url": "http://127.0.0.1:18080/detail-tiket.html?id=5124b782-3f11-48fb-8435-af43b48b1099"
+    },
+    {
+      "check": "private_upload_pending_clean_download",
+      "result": "PASS",
+      "download": "C:/Users/pdzeu/Downloads/ui-upload.png"
+    },
+    {
+      "check": "detail_mobile_no_horizontal_overflow",
+      "result": "PASS",
+      "viewport": "390x844"
+    },
+    {
+      "check": "tracking_invalid_key_format_rejected",
+      "result": "PASS"
+    },
+    {
+      "check": "guest_create_copy_key_ack_tracking_logout_reentry_refresh",
+      "result": "PASS",
+      "urls": [
+        "http://127.0.0.1:18080/detail-tiket.html?id=d13dbe39-987c-4a19-a2ff-e154b142a1a5",
+        "http://127.0.0.1:18080/detail-tiket.html?id=1e176475-f687-4dbe-88a8-033c62e307ab"
+      ],
+      "secret_persisted": false
+    },
+    {
+      "check": "guest_other_ticket_denied",
+      "result": "PASS"
+    },
+    {
+      "check": "operator_queue_internal_note_and_attachment",
+      "result": "PASS",
+      "url": "http://127.0.0.1:18080/admin/app/tickets/detail.html?id=5124b782-3f11-48fb-8435-af43b48b1099"
+    },
+    {
+      "check": "requester_internal_note_and_file_hidden_after_account_switch",
+      "result": "PASS"
+    },
+    {
+      "check": "stale_version_conflict_shown_without_silent_overwrite",
+      "result": "PASS"
+    },
+    {
+      "check": "asn_login_scoped_catalog_create_detail_and_self_list_mobile",
+      "result": "PASS",
+      "url": "http://127.0.0.1:18080/detail-tiket.html?id=d64c4aa0-e376-473d-aa13-99b8160f073c",
+      "viewport": "390x844"
+    }
+  ],
+  "screenshots": [
+    "ticket-public-desktop.jpg",
+    "ticket-public-mobile.jpg",
+    "ticket-guest-mobile.jpg",
+    "ticket-operator-desktop.jpg",
+    "ticket-asn-list-mobile.jpg"
+  ],
+  "limits": [
+    "Refresh verified; full local app restart was not performed in browser smoke",
+    "No credentials or raw guest keys persisted in evidence; synthetic tickets and attachments retained",
+    "No production UAT or full accessibility/browser matrix",
+    "Final tracking form and cookie cleanup hardening was prepared after this smoke; deployed candidate must be rebuilt and targeted tracking/account-switch smoke repeated."
+  ],
+  "viewport_override_reset": true,
+  "artifact_hashes": {
+    "ticket-public-desktop.jpg": "50d53fd3050e077c3a8213745d9a6afbcd809c5c831d1c6236c26cfae22c4a35",
+    "ticket-public-mobile.jpg": "e1cd2a4f322174eb699895b11c1ca262cf49185265d472c196ada1d63530a2fe",
+    "ticket-guest-mobile.jpg": "fb17b068b8f7d067a8236c4939a2e1a08ce46de66b84e8611b6dde5eddea501d",
+    "ticket-operator-desktop.jpg": "bbf0ccb8a13d736e22e4e14cd483ceaea5d7347844fffa64a9e3c2d51f185257",
+    "ticket-asn-list-mobile.jpg": "42e281402cf25691a18a288c24e87b0494935a6314548de2e04a866823cb0844"
+  },
+  "authorized_download_matches_fixture_sha256": "8641e8d74ffd73ff00b1758c6a4d67f76df8cbd018997e4a02cede094a055893",
+  "pre_hardening_local_build_hashes": {
+    "lacak.html": "662d7cfe8441ada4b0db8bfdc49026aef1bf4e5be045bae0a29c9effcdff1925",
+    "helpdesk/m0-04.js": "8ca3972bef790ea8b84c04c0c0ede62b024434ee10b3fd497542874299241f25",
+    "helpdesk/m0-03.js": "df74326d93acfc09443fdcca17a959aca7852be2bdf999defdcabebcc3766397",
+    "admin/app/tickets/index.html": "5406818d678a038833428dd58d07e750ae1aae7e4e84f135736476820c4472ba",
+    "admin/app/tickets/detail.html": "9e32dfb49d2b63948f8905cbf73b92abdbad4d1b2a0a1c35ecab9c63eda0802a"
+  }
+}

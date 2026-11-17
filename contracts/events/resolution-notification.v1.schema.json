@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Resolution notification events v1",
+  "type": "object",
+  "required": [
+    "event_id",
+    "event_type",
+    "producer",
+    "schema_version",
+    "aggregate_id",
+    "aggregate_version",
+    "occurred_at",
+    "correlation_id",
+    "payload"
+  ],
+  "properties": {
+    "event_id": {
+      "$ref": "#/$defs/id"
+    },
+    "event_type": {
+      "type": "string"
+    },
+    "producer": {
+      "type": "string"
+    },
+    "schema_version": {
+      "const": 1,
+      "type": "integer"
+    },
+    "aggregate_id": {
+      "$ref": "#/$defs/id"
+    },
+    "aggregate_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "occurred_at": {
+      "$ref": "#/$defs/utc"
+    },
+    "correlation_id": {
+      "$ref": "#/$defs/id"
+    },
+    "payload": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "utc": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    }
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "event_type": {
+          "const": "ResolutionProposed"
+        },
+        "producer": {
+          "const": "M3"
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "attempt_id",
+            "confirmation_due_at"
+          ],
+          "properties": {
+            "attempt_id": {
+              "$ref": "#/$defs/id"
+            },
+            "confirmation_due_at": {
+              "$ref": "#/$defs/utc"
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    {
+      "properties": {
+        "event_type": {
+          "const": "NotificationStored"
+        },
+        "producer": {
+          "const": "M9"
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "ticket_id",
+            "attempt_id"
+          ],
+          "properties": {
+            "ticket_id": {
+              "$ref": "#/$defs/id"
+            },
+            "attempt_id": {
+              "$ref": "#/$defs/id"
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    }
+  ]
+}

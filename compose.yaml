@@ -1,0 +1,173 @@
+name: helpdesk-m0
+services:
+  db:
+    image: postgres:18.7-alpine@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015
+    container_name: helpdesk-m0-db
+    environment:
+      POSTGRES_DB: helpdesk
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
+    secrets: [postgres]
+    volumes: [postgres18-data:/var/lib/postgresql]
+    networks: [database]
+    cpus: 1.0
+    mem_limit: 2560m
+    pids_limit: 150
+    security_opt: [no-new-privileges:true]
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U postgres -d helpdesk']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  migrate:
+    image: postgres:18.7-alpine@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015
+    container_name: helpdesk-m0-migrate
+    entrypoint: [/bin/sh, /workspace/infra/postgres/migrate.sh]
+    depends_on:
+      db: {condition: service_healthy}
+    volumes: [./infra/postgres:/workspace/infra/postgres:ro, ./migrations:/workspace/migrations:ro]
+    secrets: [postgres, m1, m2, m3, m4, m5, m6, m7, m8, m9]
+    networks: [database]
+    user: '65532:65532'
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    cpus: 0.25
+    mem_limit: 128m
+    restart: 'no'
+  app:
+    build: {context: ., dockerfile: infra/docker/backend.Dockerfile}
+    image: helpdesk-m0-app:0.1.0
+    container_name: helpdesk-m0
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+      upload-init: {condition: service_completed_successfully}
+    secrets: [m1, m2, m3, m4, m5, m6, m7, m8, m9, session_key]
+    networks: [database, edge]
+    volumes: [private-uploads:/private/uploads]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    cpus: 2.5
+    mem_limit: 4608m
+    pids_limit: 150
+    environment:
+      GOMEMLIMIT: 4096MiB
+      HELPDESK_LAB_AUTH: '1'
+      HELPDESK_PUBLIC_ORIGIN: http://127.0.0.1:18090
+      HELPDESK_UPLOAD_ROOT: /private/uploads
+      HELPDESK_SCANNER: scanner:3310
+    healthcheck:
+      test: [CMD, /helpdesk, healthcheck]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+  upload-init:
+    image: postgres:18.7-alpine@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015
+    container_name: helpdesk-m0-upload-init
+    entrypoint: [/bin/sh, -ec, 'chown 65532:65532 /private/uploads; chmod 700 /private/uploads']
+    user: '0:0'
+    volumes: [private-uploads:/private/uploads]
+    network_mode: none
+    cpus: 0.1
+    mem_limit: 32m
+    restart: 'no'
+  scanner:
+    image: clamav/clamav:1.5.4@sha256:7054e3f34308c384ea43cd786ea17abf899bd44af40af9f1b099853d7a5c214e
+    container_name: helpdesk-m0-scanner
+    environment: {CLAMAV_NO_FRESHCLAMD: 'true'}
+    networks: [database]
+    volumes: [./infra/scanner/clamd.conf:/etc/clamav/clamd.conf:ro]
+    cpus: 1
+    mem_limit: 3072m
+    pids_limit: 100
+    security_opt: [no-new-privileges:true]
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD-SHELL, 'printf "zPING\000" | nc -w 2 127.0.0.1 3310 | grep -q PONG']
+      interval: 10s
+      timeout: 4s
+      start_period: 120s
+      retries: 6
+  web:
+    build: {context: ., dockerfile: infra/docker/web.Dockerfile}
+    image: helpdesk-m0-web:0.1.0
+    container_name: helpdesk-m0-nginx
+    depends_on:
+      app: {condition: service_healthy}
+    ports: ['127.0.0.1:18090:8080']
+    networks: [edge]
+    read_only: true
+    tmpfs: ['/tmp:size=32m,mode=1777']
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    cpus: 0.4
+    mem_limit: 768m
+    pids_limit: 50
+    healthcheck:
+      test: [CMD, wget, -q, -O, /dev/null, 'http://127.0.0.1:8080/api/v1/health/live']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+  seed-lab:
+    profiles: [lab]
+    image: postgres:18.7-alpine@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015
+    entrypoint: [/bin/sh, /seeds/lab.sh]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+    environment: {HELPDESK_LAB_AUTH: '1'}
+    volumes: [./seeds:/seeds:ro]
+    secrets: [postgres]
+    networks: [database]
+    user: '65532:65532'
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    cpus: 0.25
+    mem_limit: 128m
+    restart: 'no'
+  db-test:
+    profiles: [test]
+    image: helpdesk-m0-test:0.1.0
+    build: {context: ., dockerfile: infra/docker/backend.Dockerfile, target: source}
+    command: [go, test, ./internal/platform/database, -run, TestOwnerIsolation, -count=1, -v]
+    environment: {HELPDESK_DB_TEST: '1'}
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+    secrets: [m1, m2, m3, m4, m5, m6, m7, m8, m9]
+    networks: [database]
+    cpus: 1
+    mem_limit: 1024m
+networks:
+  database: {internal: true}
+  edge: {}
+volumes:
+  postgres-data: {}
+  postgres18-data: {}
+  private-uploads: {}
+secrets:
+  session_key:
+    file: ./.local/secrets/session_key
+  postgres:
+    file: ./.local/secrets/postgres
+  m1:
+    file: ./.local/secrets/m1
+  m2:
+    file: ./.local/secrets/m2
+  m3:
+    file: ./.local/secrets/m3
+  m4:
+    file: ./.local/secrets/m4
+  m5:
+    file: ./.local/secrets/m5
+  m6:
+    file: ./.local/secrets/m6
+  m7:
+    file: ./.local/secrets/m7
+  m8:
+    file: ./.local/secrets/m8
+  m9:
+    file: ./.local/secrets/m9

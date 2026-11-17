@@ -1,0 +1,457 @@
+{
+  "timestamp": "2026-11-10T06:21:30.214099+00:00",
+  "task_id": "RM0-02",
+  "status": "DONE_VERIFIED",
+  "result": "PASS",
+  "scope": "M0 application / controlled synthetic lab",
+  "requirements": [
+    "AC03",
+    "AC04",
+    "AC05",
+    "AC06",
+    "AC09",
+    "AC11",
+    "AC13"
+  ],
+  "acceptance": {
+    "R2-A": {
+      "status": "PASS_LAB",
+      "evidence": [
+        "catalog-validation.json",
+        "catalog-all-local.json",
+        "integration.json"
+      ],
+      "scope": "Seluruh 23 metadata termasuk 16 TIK, audience, form/policy revision, 409 pada submit lama, snapshot historis. Pengesahan persyaratan organisasi tetap terbuka."
+    },
+    "R2-B": {
+      "status": "PASS_LAB",
+      "evidence": [
+        "integration.json"
+      ],
+      "scope": "Matriks lima command lifecycle pada delapan state melalui HTTP. Setup state memakai command normal. Skenario terpisah membuktikan verify/dispatch/reassign/resolve/confirmation, actor, CAS, attempt dan episode."
+    },
+    "R2-C": {
+      "status": "PASS_LAB",
+      "evidence": [
+        "integration.json"
+      ],
+      "scope": "Request/supply info, start/cancel, resolve/accept/reject/feedback dan reopen. Reopen tujuh hari sintetis dan expired window. Delegasi menunggu DEC-M06."
+    },
+    "R2-D": {
+      "status": "PASS_LAB",
+      "evidence": [
+        "integration.json",
+        "go-affected.txt"
+      ],
+      "scope": "Usulan M4 tetap tersimpan terpisah dari keputusan operator, prioritas, confidence, rule version, reason dan digest fakta server."
+    },
+    "R2-E": {
+      "status": "PASS_LAB",
+      "evidence": [
+        "integration.json"
+      ],
+      "scope": "Dispatch sebelum verify dan dari RESOLVED/CLOSED, skill parsial, tier, roster future/expired, identitas nonaktif, OPD lain dan digest usang."
+    },
+    "R2-F": {
+      "status": "PASS_LAB",
+      "evidence": [
+        "integration.json",
+        "browser.json"
+      ],
+      "scope": "Kandidat, soft load balancing, override sah, provenance, reassign dan status manual. Browser kandidat final mengamati L1/L2, status manual dan watermark."
+    },
+    "R2-G": {
+      "status": "PASS_LAB",
+      "evidence": [
+        "integration.json"
+      ],
+      "scope": "Dua assignment dengan versi sama menghasilkan satu 200 dan satu 409. Receipt key/payload sama mengembalikan hasil tanpa efek ganda."
+    },
+    "R2-H": {
+      "status": "PASS_LAB",
+      "evidence": [
+        "integration.json"
+      ],
+      "scope": "Rollback history/fakta/outbox M3, rollback proposal/load/inbox M5, dua worker, restart/lost ACK, event duplicate dan digest konflik, replay versi lama, konsumsi M6/M9."
+    },
+    "R2-I": {
+      "status": "PASS_LAB",
+      "evidence": [
+        "contracts-and-ui.txt",
+        "go-affected.txt",
+        "migration-roles.json",
+        "browser.json"
+      ],
+      "scope": "Kontrak, generated consumers, PIUI, ACL dan kompatibilitas data lama lulus. Smoke browser kandidat final lulus pada desktop/mobile/keyboard untuk operator, teknisi dan pemohon, termasuk availability reopen dan penolakan antar pemohon."
+    }
+  },
+  "findings": {
+    "F05": "Implementation corrected and persistence/rollback/replay tests PASS on disposable",
+    "F06": "Lifecycle corrected; matrix/HTTP tests and final browser representative smoke PASS for synthetic lab",
+    "F07": "Deterministic M4 and scoped/versioned M5 proposals corrected; HTTP and final UI smoke PASS for synthetic lab; organizational decisions remain open"
+  },
+  "dependency": {
+    "RM0-01": {
+      "status_at_start": "DONE_VERIFIED",
+      "evidence": "qa/remediation/rm0-01/completion.json",
+      "source_baseline": "qa/remediation/rm0-01/source-manifest.json",
+      "files_verified_at_start": 570,
+      "initial_source_drift": 0,
+      "note": "Checkpoint checked before RM0-02 edits. Current source intentionally differs. Historical security fixtures were inspected, with affected scope/CSRF/owner regressions verified."
+    }
+  },
+  "source": {
+    "git": "NOT_INITIALIZED",
+    "dirty_state": "Hash comparison against RM0-01 baseline, without Git SHA",
+    "manifest": "qa/remediation/rm0-02/source-manifest.json",
+    "sha256": "d08c6f01543946935cb4d6a53c362105174aae370e459e38925b9c5f51d00b21",
+    "changed_files": [
+      "README.md",
+      "backend/internal/bootstrap/application.go",
+      "backend/internal/bootstrap/rm0_02_integration_test.go",
+      "backend/internal/modules/m1/api/identity.go",
+      "backend/internal/modules/m1/internal/app/identity.go",
+      "backend/internal/modules/m1/internal/store/identity.go",
+      "backend/internal/modules/m2/api/catalog.go",
+      "backend/internal/modules/m2/internal/app/snapshot.go",
+      "backend/internal/modules/m2/internal/store/catalog.go",
+      "backend/internal/modules/m3/api/tickets.go",
+      "backend/internal/modules/m3/internal/app/http.go",
+      "backend/internal/modules/m3/internal/app/lifecycle.go",
+      "backend/internal/modules/m3/internal/app/tickets.go",
+      "backend/internal/modules/m3/internal/domain/lifecycle.go",
+      "backend/internal/modules/m3/internal/domain/tickets.go",
+      "backend/internal/modules/m3/internal/store/events.go",
+      "backend/internal/modules/m3/internal/store/lifecycle.go",
+      "backend/internal/modules/m3/internal/store/replay.go",
+      "backend/internal/modules/m3/internal/store/tickets.go",
+      "backend/internal/modules/m4/api/classify.go",
+      "backend/internal/modules/m4/internal/domain/classify.go",
+      "backend/internal/modules/m5/api/assignment.go",
+      "backend/internal/modules/m5/internal/app/assignment.go",
+      "backend/internal/modules/m5/internal/app/routing.go",
+      "backend/internal/modules/m5/internal/store/assignment.go",
+      "backend/internal/modules/m5/module.go",
+      "backend/internal/platform/database/mutation.go",
+      "backend/internal/platform/database/pools.go",
+      "contracts/RM0_02_CATALOG_MATRIX.md",
+      "contracts/RM0_02_TRACEABILITY.md",
+      "contracts/business_traceability.csv",
+      "contracts/events/business.v1.schema.json",
+      "contracts/events/subscriptions.v1.json",
+      "contracts/openapi/business.json",
+      "docs/adr/0007-rm002-lifecycle-assignment.md",
+      "frontend/src/features/business-types.generated.ts",
+      "frontend/src/features/m0-04.ts",
+      "frontend/ticket-pages.mjs",
+      "migrations/checksums.sha256",
+      "migrations/m3/021-lifecycle.sql",
+      "migrations/m5/022-assignment-projection.sql",
+      "migrations/manifest.json",
+      "planning/remediation_backlog.csv",
+      "runbooks/rm0-02-lab.md",
+      "scripts/build_business_contracts.py",
+      "scripts/m0_05_contracts.py",
+      "scripts/m0_06_contracts.py",
+      "scripts/test_rm0_02.py",
+      "status/HANDOFF_RM0_02.md",
+      "status/PROJECT_STATE.md"
+    ],
+    "integration_source_match": "PASS"
+  },
+  "checks": [
+    {
+      "command": "python -X utf8 scripts/test_rm0_02.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-02/integration.json"
+    },
+    {
+      "command": "python -X utf8 scripts/test_owner_migrations.py --report qa/remediation/rm0-02/migration-roles.json",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-02/migration-roles.json"
+    },
+    {
+      "command": "go test ./internal/modules/m1/... ./internal/modules/m2/... ./internal/modules/m3/... ./internal/modules/m4/... ./internal/modules/m5/... ./internal/modules/m6/... ./internal/modules/m9/... ./internal/bootstrap",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith\\backend",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-02/go-affected.txt"
+    },
+    {
+      "command": "python -X utf8 scripts/build_business_contracts.py --check",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-02/contracts-and-ui.txt"
+    },
+    {
+      "command": "python -X utf8 -m unittest tests/contract/test_business_contracts.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-02/contracts-and-ui.txt"
+    },
+    {
+      "command": "python -X utf8 scripts/check_boundaries.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-02/contracts-and-ui.txt"
+    },
+    {
+      "command": "npm.cmd --prefix frontend run build",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-02/frontend-build.txt"
+    },
+    {
+      "command": "python -X utf8 scripts/test_piui_build.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-02/contracts-and-ui.txt"
+    },
+    {
+      "command": "docker compose build app web",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-02/build-final-images.txt"
+    },
+    {
+      "command": "docker compose run --rm --no-deps migrate",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-02/local-cutover.txt"
+    },
+    {
+      "command": "docker compose up -d --no-deps --no-build --wait --wait-timeout 80 app web",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-02/final-cutover.txt"
+    },
+    {
+      "command": "curl.exe -fsS http://127.0.0.1:18080/readyz",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-02/gateway-ready.json"
+    },
+    {
+      "command": "CUA browser desktop/mobile/keyboard on final candidate",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": null,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-02/browser.json",
+      "note": "UI automation smoke, not a shell process. Exact scenarios, viewports and candidate hashes recorded in browser.json."
+    }
+  ],
+  "migrations": {
+    "result": "PASS",
+    "ledger_ids": [
+      "001",
+      "002",
+      "003",
+      "004",
+      "005",
+      "006",
+      "007",
+      "008",
+      "009",
+      "010",
+      "011",
+      "012",
+      "013",
+      "014",
+      "015",
+      "016",
+      "017",
+      "018",
+      "019",
+      "020",
+      "021",
+      "022"
+    ],
+    "new_migrations": [
+      {
+        "id": "021",
+        "path": "migrations/m3/021-lifecycle.sql",
+        "owner": "M3",
+        "scope": "RM0-02 lifecycle and linked reopen episodes",
+        "sha256": "63fb1ef5a7088e0015466979badb8b68ecb906f7a2ee939c862840479562308f"
+      },
+      {
+        "id": "022",
+        "path": "migrations/m5/022-assignment-projection.sql",
+        "owner": "M5",
+        "scope": "RM0-02 scoped durable assignment projection",
+        "sha256": "86343b718729fe4020aa73533f9afebc9c5cd012149381106ac0d1072bbd7c07"
+      }
+    ],
+    "checksums_manifest": "migrations/checksums.sha256",
+    "local_applied": true,
+    "additive_and_replay_test": "qa/remediation/rm0-02/migration-roles.json"
+  },
+  "runtime": {
+    "gateway": "http://127.0.0.1:18080",
+    "ready": {
+      "status": "ready"
+    },
+    "identities": [
+      "/helpdesk-m0 b8b007bc3af01f63fbd025b0c205cd55edc1787c0055db3a1ef3fa4ce6ec209d sha256:d7594b254c3d4a24fcaaefdad3b47056641345c98766642e6afbbfe381c0a57e healthy",
+      "/helpdesk-m0-nginx 02ea9b7faea92dde4a02aa84603d7a48ce03c63e4e362f734c94856a6a0b684f sha256:735870556892ef1a8a1c7fce34e7d0202d04bb1d60a0a5722eedcb53aeebb284 healthy",
+      "/helpdesk-m0-db 3d11eec2291c511dbecd2e106bd3dbc628df1aca22bbb1aa628db5726bb8130b sha256:57c72fd2a128e416c7fcc499958864df5301e940bca0a56f58fddf30ffc07777 healthy",
+      "/helpdesk-m0-scanner 9dd958ccb93e69cdf1bc90b0df7e5ede23f491538c007a94ae80e0b381bcba16 sha256:8ad6197396974726c35d017e50aaaaf4b91745726a04faec8480c203edd98052 healthy"
+    ],
+    "runtime_code_note": "Final image includes current production source. Last integration additions affect Go test source only.",
+    "local_before": {
+      "ledger": [
+        "001",
+        "002",
+        "003",
+        "004",
+        "005",
+        "006",
+        "007",
+        "008",
+        "009",
+        "010",
+        "011",
+        "012",
+        "013",
+        "014",
+        "015",
+        "016",
+        "017",
+        "018",
+        "019",
+        "020"
+      ],
+      "tickets": 109,
+      "ticket_states": {
+        "ASSIGNED": 29,
+        "CLOSED": 27,
+        "OPEN": 45,
+        "RESOLVED": 8
+      },
+      "history": 429,
+      "open_verified_legacy": 1,
+      "catalog": 23,
+      "catalog_depok": 16,
+      "projection": 64,
+      "rosters": 3
+    },
+    "local_after": {
+      "ledger": [
+        "001",
+        "002",
+        "003",
+        "004",
+        "005",
+        "006",
+        "007",
+        "008",
+        "009",
+        "010",
+        "011",
+        "012",
+        "013",
+        "014",
+        "015",
+        "016",
+        "017",
+        "018",
+        "019",
+        "020",
+        "021",
+        "022"
+      ],
+      "tickets": 109,
+      "ticket_states": {
+        "ASSIGNED": 29,
+        "CLOSED": 28,
+        "OPEN": 45,
+        "RESOLVED": 7
+      },
+      "history": 430,
+      "open_verified_legacy": 1,
+      "catalog": 23,
+      "catalog_depok": 16,
+      "projection": 64,
+      "rosters": 3
+    },
+    "data_observation": "109 tickets and 23 catalog entries retained. One existing resolution auto-closed by the running scheduler, adding one history row; observed counts and outbox check recorded. No browser ticket mutations.",
+    "background": {
+      "pending_m5": 0,
+      "closed_auto_latest": 1
+    },
+    "final_smoke_identities": [
+      "/helpdesk-m0 b8b007bc3af01f63fbd025b0c205cd55edc1787c0055db3a1ef3fa4ce6ec209d sha256:d7594b254c3d4a24fcaaefdad3b47056641345c98766642e6afbbfe381c0a57e healthy",
+      "/helpdesk-m0-nginx 02ea9b7faea92dde4a02aa84603d7a48ce03c63e4e362f734c94856a6a0b684f sha256:735870556892ef1a8a1c7fce34e7d0202d04bb1d60a0a5722eedcb53aeebb284 healthy",
+      "/helpdesk-m0-db 3d11eec2291c511dbecd2e106bd3dbc628df1aca22bbb1aa628db5726bb8130b sha256:57c72fd2a128e416c7fcc499958864df5301e940bca0a56f58fddf30ffc07777 healthy",
+      "/helpdesk-m0-scanner 9dd958ccb93e69cdf1bc90b0df7e5ede23f491538c007a94ae80e0b381bcba16 sha256:8ad6197396974726c35d017e50aaaaf4b91745726a04faec8480c203edd98052 healthy"
+    ],
+    "gateway_bundle_evidence": "qa/remediation/rm0-02/gateway-bundle.json"
+  },
+  "security": {
+    "result": "PASS_TARGETED",
+    "scope": [
+      "Owner boundaries",
+      "CSRF and session transport compatibility through contract tests",
+      "Role/OPD and assignee guards",
+      "Versioned routing admin authorization",
+      "CAS/idempotency and atomic outbox/inbox"
+    ],
+    "broad_scans": "NOT_RUN; no dependency or infrastructure change in this phase"
+  },
+  "open_decisions": [
+    {
+      "id": "DEC-M01",
+      "status": "OPEN",
+      "scope": "Catalog and official document requirements"
+    },
+    {
+      "id": "DEC-M03",
+      "status": "OPEN",
+      "scope": "Service/calendar targets"
+    },
+    {
+      "id": "DEC-M04",
+      "status": "OPEN",
+      "scope": "Pause vendor dan escalation sesuai planning/decisions.csv"
+    },
+    {
+      "id": "DEC-M05",
+      "status": "OPEN",
+      "scope": "Official reopen policy; current seven-day synthetic lab fixture"
+    },
+    {
+      "id": "DEC-M06",
+      "status": "OPEN",
+      "scope": "Operational delegation; current start/resolve requires active assignee"
+    }
+  ],
+  "remaining_verification": [],
+  "limitations": [
+    "No UAT owner approval or production activation",
+    "No protected CI/PR/Git SHA, workspace is not a Git repository",
+    "No external AI or live notification integrations",
+    "Reclassification SLA recalculation belongs to RM0-03",
+    "Cross-owner eligibility is checked before M3 transaction; a short race interval remains documented in ADR 0007",
+    "Historical full phase scripts were inspected; changed lifecycle is verified by targeted replacement regression scenarios, without claiming all historical suites executed",
+    "No C3/F9/G-OPT implementation or benchmarking",
+    "Browser final smoke bersifat representatif dan tanpa mutasi bisnis. Commit lifecycle dibuktikan pada HTTP disposable."
+  ],
+  "next_phase": {
+    "id": "RM0-03",
+    "status": "NOT_STARTED"
+  },
+  "closure_scope": "Acceptance R2-A–R2-I for controlled synthetic lab. Open domain decisions remain recorded, with official UAT/production acceptance separate."
+}

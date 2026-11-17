@@ -1,0 +1,12 @@
+{
+  "project": "PIUI-ZERO-ADM",
+  "name": "PIUI Zero Admin Dashboard",
+  "version": "2.2.2",
+  "buildHash": "d7c9b5bd47d9",
+  "releasedAt": "2026-10-26",
+  "zeroDependency": true,
+  "trustedTypesPolicy": "piui-dom-policy",
+  "buildHashKind": "sha256-source-excluding-version-metadata",
+  "creator": "Ipi \"Pedro Iriano\"",
+  "trademarkStatus": "unverified"
+}

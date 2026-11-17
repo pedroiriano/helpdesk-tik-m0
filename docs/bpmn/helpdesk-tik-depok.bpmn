@@ -1,0 +1,999 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_HelpdeskDepok" targetNamespace="urn:helpdesk-depok:bpmn:2026-11-11" exporter="Helpdesk TIK Kota Depok">
+  <bpmn:message id="Msg_Laporan" name="Laporan awal"/>
+  <bpmn:message id="Msg_Reopen" name="Permintaan buka kembali"/>
+  <bpmn:message id="Msg_Info" name="Permintaan informasi"/>
+  <bpmn:message id="Msg_Pelengkap" name="Informasi pelengkap"/>
+  <bpmn:message id="Msg_Batal" name="Pembatalan oleh pemohon"/>
+  <bpmn:message id="Msg_Hasil" name="Pemberitahuan hasil"/>
+  <bpmn:message id="Msg_Tanggapan" name="Tanggapan atas upaya resolusi"/>
+  <bpmn:process id="Process_Helpdesk" name="Penanganan tiket Helpdesk TIK" isExecutable="false">
+    <bpmn:documentation>Scope layanan tiket sintetis. Penugasan dan penutupan memakai versi tiket dan scope yang diperiksa saat commit. Pemeriksaan SLA, vendor dan handoff diuraikan pada panduan pendamping.</bpmn:documentation>
+    <bpmn:laneSet id="LaneSet_Helpdesk">
+      <bpmn:lane id="Lane_Sistem" name="Portal dan Sistem Helpdesk">
+        <bpmn:flowNodeRef>Terima</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Validasi</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Valid</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Rekam</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>GagalValidasi</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>MintaReopen</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>CekReopen</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>BolehReopen</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EpisodeBaru</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>GagalReopen</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>MasukTriase</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TungguInfo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>InfoDatang</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>BatalDatang</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Lengkapi</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>BatalKlarifikasi</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AkhirBatalInfo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Notifikasi</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TungguHasil</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Respons</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Tenggat</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Hasil</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TerimaHasil</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AkhirSetuju</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TolakHasil</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Feedback</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>SyaratAuto</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Auto</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AkhirAuto</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Tahan</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>GabungTunggu</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TungguLanjut</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ResponsLanjut</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Pulih</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Usang</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Operator" name="Operator">
+        <bpmn:flowNodeRef>Tinjau</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Keputusan</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Verifikasi</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Klarifikasi</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Tolak</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AkhirBatal</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Koordinator" name="Koordinator / petugas berizin">
+        <bpmn:flowNodeRef>MasukDisposisi</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Saran</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Kandidat</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Tugaskan</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>TinjauRouting</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Teknisi" name="Teknisi L1 / L2">
+        <bpmn:flowNodeRef>Mulai</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>GabungKerja</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Kerjakan</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Resolusi</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Terima" name="Laporan masuk">
+      <bpmn:outgoing>F01</bpmn:outgoing>
+      <bpmn:messageEventDefinition messageRef="Msg_Laporan"/>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Validasi" name="Validasi layanan, akses, dan formulir">
+      <bpmn:documentation>M1/M2 memeriksa audience dan scope. M3 memeriksa versi layanan/form/policy dan intent. Tamu memakai capability; lampiran mengikuti izin dan scan.</bpmn:documentation>
+      <bpmn:incoming>F01</bpmn:incoming>
+      <bpmn:outgoing>F02</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Valid" name="Valid?" default="F03" gatewayDirection="Diverging">
+      <bpmn:incoming>F02</bpmn:incoming>
+      <bpmn:outgoing>F03</bpmn:outgoing>
+      <bpmn:outgoing>F04</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="Rekam" name="Rekam tiket OPEN dan usulan M4">
+      <bpmn:documentation>M3 menyimpan OPEN/PENDING, snapshot, riwayat, receipt dan outbox. Usulan klasifikasi deterministik M4 terpisah dari keputusan operator.</bpmn:documentation>
+      <bpmn:incoming>F04</bpmn:incoming>
+      <bpmn:outgoing>F05</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="GagalValidasi" name="Pengajuan perlu diperbaiki">
+      <bpmn:incoming>F03</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:startEvent id="MintaReopen" name="Permintaan buka kembali">
+      <bpmn:outgoing>F06</bpmn:outgoing>
+      <bpmn:messageEventDefinition messageRef="Msg_Reopen"/>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="CekReopen" name="Periksa izin, alasan dan batas reopen">
+      <bpmn:documentation>Tiket CLOSED, bukan arsip, scope sah, attempt penutupan yang valid, versi cocok dan sebelum tenggat. Fixture lab tujuh hari sejak penutupan.</bpmn:documentation>
+      <bpmn:incoming>F06</bpmn:incoming>
+      <bpmn:outgoing>F07</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="BolehReopen" name="Memenuhi syarat?" default="F08" gatewayDirection="Diverging">
+      <bpmn:incoming>F07</bpmn:incoming>
+      <bpmn:outgoing>F08</bpmn:outgoing>
+      <bpmn:outgoing>F09</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="EpisodeBaru" name="Buka episode baru yang terhubung">
+      <bpmn:documentation>M3 membuat relasi episode, mengembalikan OPEN/PENDING dan mempertahankan waktu penerimaan awal serta histori sebelumnya.</bpmn:documentation>
+      <bpmn:incoming>F09</bpmn:incoming>
+      <bpmn:outgoing>F10</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="GagalReopen" name="Tetap CLOSED">
+      <bpmn:incoming>F08</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="MasukTriase" gatewayDirection="Converging">
+      <bpmn:incoming>F05</bpmn:incoming>
+      <bpmn:incoming>F10</bpmn:incoming>
+      <bpmn:incoming>F21</bpmn:incoming>
+      <bpmn:outgoing>F11</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="Tinjau" name="Tinjau laporan dan saran M4">
+      <bpmn:documentation>Operator meninjau kelengkapan, cakupan, duplikasi dan dampak.</bpmn:documentation>
+      <bpmn:incoming>F11</bpmn:incoming>
+      <bpmn:outgoing>F12</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Keputusan" name="Hasil telaah?" default="F14" gatewayDirection="Diverging">
+      <bpmn:incoming>F12</bpmn:incoming>
+      <bpmn:outgoing>F13</bpmn:outgoing>
+      <bpmn:outgoing>F14</bpmn:outgoing>
+      <bpmn:outgoing>F16</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="Verifikasi" name="Sahkan kategori dan prioritas">
+      <bpmn:documentation>Status TRIAGED dan verification VERIFIED. Perbedaan dari saran disertai alasan dan bukti audit.</bpmn:documentation>
+      <bpmn:incoming>F13</bpmn:incoming>
+      <bpmn:outgoing>F24</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sendTask id="Klarifikasi" name="Minta informasi tambahan" messageRef="Msg_Info">
+      <bpmn:documentation>M3 menandai NEEDS_INFORMATION. Permintaan informasi juga tersedia saat TRIAGED sesuai kewenangan.</bpmn:documentation>
+      <bpmn:incoming>F16</bpmn:incoming>
+      <bpmn:outgoing>F17</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:userTask id="Tolak" name="Tolak / batalkan dengan alasan">
+      <bpmn:documentation>Untuk laporan yang ditolak atau pembatalan berizin sebelum dispatch. Riwayat dipertahankan.</bpmn:documentation>
+      <bpmn:incoming>F14</bpmn:incoming>
+      <bpmn:outgoing>F15</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="AkhirBatal" name="CANCELLED">
+      <bpmn:incoming>F15</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:eventBasedGateway id="TungguInfo" name="Tunggu pemohon" gatewayDirection="Diverging" eventGatewayType="Exclusive" instantiate="false">
+      <bpmn:incoming>F17</bpmn:incoming>
+      <bpmn:outgoing>F18</bpmn:outgoing>
+      <bpmn:outgoing>F19</bpmn:outgoing>
+    </bpmn:eventBasedGateway>
+    <bpmn:intermediateCatchEvent id="InfoDatang" name="Informasi diterima">
+      <bpmn:incoming>F18</bpmn:incoming>
+      <bpmn:outgoing>F20</bpmn:outgoing>
+      <bpmn:messageEventDefinition messageRef="Msg_Pelengkap"/>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:intermediateCatchEvent id="BatalDatang" name="Pembatalan diterima">
+      <bpmn:incoming>F19</bpmn:incoming>
+      <bpmn:outgoing>F22</bpmn:outgoing>
+      <bpmn:messageEventDefinition messageRef="Msg_Batal"/>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:serviceTask id="Lengkapi" name="Simpan pelengkapan OPEN · PENDING">
+      <bpmn:incoming>F20</bpmn:incoming>
+      <bpmn:outgoing>F21</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="BatalKlarifikasi" name="Validasi dan catat pembatalan">
+      <bpmn:incoming>F22</bpmn:incoming>
+      <bpmn:outgoing>F23</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="AkhirBatalInfo" name="CANCELLED">
+      <bpmn:incoming>F23</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="MasukDisposisi" gatewayDirection="Converging">
+      <bpmn:incoming>F24</bpmn:incoming>
+      <bpmn:incoming>F29</bpmn:incoming>
+      <bpmn:outgoing>F25</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:businessRuleTask id="Saran" name="Susun usulan Smart Dispatch">
+      <bpmn:documentation>M5 menerapkan routing aktif, tier, tim, skill, identitas, waktu roster, mandat OPD dan beban proyeksi. Urutan deterministik.</bpmn:documentation>
+      <bpmn:incoming>F25</bpmn:incoming>
+      <bpmn:outgoing>F26</bpmn:outgoing>
+    </bpmn:businessRuleTask>
+    <bpmn:exclusiveGateway id="Kandidat" name="Ada kandidat?" default="F27" gatewayDirection="Diverging">
+      <bpmn:incoming>F26</bpmn:incoming>
+      <bpmn:outgoing>F27</bpmn:outgoing>
+      <bpmn:outgoing>F28</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="Tugaskan" name="Pilih dan tetapkan teknisi L1/L2">
+      <bpmn:documentation>Petugas berizin memilih kandidat sah, mencatat alasan dan mengirim versi serta digest. Commit M3 mengubah tiket menjadi ASSIGNED.</bpmn:documentation>
+      <bpmn:incoming>F28</bpmn:incoming>
+      <bpmn:outgoing>F30</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="TinjauRouting" name="Tinjau tier, routing dan roster">
+      <bpmn:documentation>Tetap menunggu disposisi. Perbaikan master hanya oleh admin berizin. Kandidat tidak dipilih di luar kelayakan.</bpmn:documentation>
+      <bpmn:incoming>F27</bpmn:incoming>
+      <bpmn:outgoing>F29</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Mulai" name="Mulai penanganan IN_PROGRESS">
+      <bpmn:documentation>Assignee aktif memulai tindakan pada versi yang sah.</bpmn:documentation>
+      <bpmn:incoming>F30</bpmn:incoming>
+      <bpmn:outgoing>F31</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="GabungKerja" gatewayDirection="Converging">
+      <bpmn:incoming>F31</bpmn:incoming>
+      <bpmn:incoming>F43</bpmn:incoming>
+      <bpmn:outgoing>F32</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="Kerjakan" name="Diagnosis, tindak dan catat pekerjaan">
+      <bpmn:documentation>Cabang vendor/handoff dan perhitungan SLA dirujuk ke panduan. Teknisi internal tetap bertanggung jawab dan memeriksa hasil.</bpmn:documentation>
+      <bpmn:incoming>F32</bpmn:incoming>
+      <bpmn:outgoing>F33</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Resolusi" name="Nyatakan selesai RESOLVED">
+      <bpmn:documentation>Upaya resolusi baru. Tenggat konfirmasi dihitung sejak resolved_at.</bpmn:documentation>
+      <bpmn:incoming>F33</bpmn:incoming>
+      <bpmn:outgoing>F34</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sendTask id="Notifikasi" name="Beritahu hasil dan tenggat" messageRef="Msg_Hasil">
+      <bpmn:documentation>Publikasikan pemberitahuan dalam aplikasi melalui outbox. Bukti durable diperiksa sebelum auto-close.</bpmn:documentation>
+      <bpmn:incoming>F34</bpmn:incoming>
+      <bpmn:outgoing>F35</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:eventBasedGateway id="TungguHasil" name="Tunggu respons" gatewayDirection="Diverging" eventGatewayType="Exclusive" instantiate="false">
+      <bpmn:incoming>F35</bpmn:incoming>
+      <bpmn:outgoing>F36</bpmn:outgoing>
+      <bpmn:outgoing>F37</bpmn:outgoing>
+    </bpmn:eventBasedGateway>
+    <bpmn:intermediateCatchEvent id="Respons" name="Tanggapan masuk">
+      <bpmn:incoming>F36</bpmn:incoming>
+      <bpmn:outgoing>F38</bpmn:outgoing>
+      <bpmn:messageEventDefinition messageRef="Msg_Tanggapan"/>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:intermediateCatchEvent id="Tenggat" name="24 jam kalender">
+      <bpmn:incoming>F37</bpmn:incoming>
+      <bpmn:outgoing>F44</bpmn:outgoing>
+      <bpmn:timerEventDefinition>
+        <bpmn:timeDate xsi:type="bpmn:tFormalExpression">confirmation_due_at</bpmn:timeDate>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:exclusiveGateway id="Hasil" name="Isi tanggapan?" default="F41" gatewayDirection="Converging">
+      <bpmn:incoming>F38</bpmn:incoming>
+      <bpmn:incoming>F53</bpmn:incoming>
+      <bpmn:outgoing>F39</bpmn:outgoing>
+      <bpmn:outgoing>F41</bpmn:outgoing>
+      <bpmn:outgoing>F42</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="TerimaHasil" name="Tutup dengan konfirmasi pemohon">
+      <bpmn:documentation>M3 memeriksa requester, attempt dan versi. Closure reason REQUESTER_CONFIRMED.</bpmn:documentation>
+      <bpmn:incoming>F39</bpmn:incoming>
+      <bpmn:outgoing>F40</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="AkhirSetuju" name="CLOSED · disetujui">
+      <bpmn:incoming>F40</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="TolakHasil" name="Catat penolakan sah pada episode yang sama">
+      <bpmn:documentation>Dalam kandidat lab kembali IN_PROGRESS. Blueprint mengatur peninjauan TRIAGED jika assignee sudah tidak sah.</bpmn:documentation>
+      <bpmn:incoming>F42</bpmn:incoming>
+      <bpmn:outgoing>F43</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Feedback" name="Catat feedback REVIEW_REQUIRED">
+      <bpmn:documentation>Feedback non-keputusan menahan penutupan otomatis. Kasus tetap RESOLVED sampai ada tanggapan sah.</bpmn:documentation>
+      <bpmn:incoming>F41</bpmn:incoming>
+      <bpmn:outgoing>F49</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="SyaratAuto" name="Guard terpenuhi?" default="F45" gatewayDirection="Converging">
+      <bpmn:documentation>Tenggat tercapai, masih RESOLVED, upaya aktif dan versi cocok, tidak ada feedback, bukti notifikasi dalam aplikasi sudah durable.</bpmn:documentation>
+      <bpmn:incoming>F44</bpmn:incoming>
+      <bpmn:incoming>F54</bpmn:incoming>
+      <bpmn:outgoing>F45</bpmn:outgoing>
+      <bpmn:outgoing>F46</bpmn:outgoing>
+      <bpmn:outgoing>F55</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="Auto" name="Tutup otomatis AUTO_NO_RESPONSE">
+      <bpmn:documentation>M3 melakukan commit bersyarat dengan CAS. Saat konflik, baca state/upaya terbaru sebelum tindakan berikutnya.</bpmn:documentation>
+      <bpmn:incoming>F46</bpmn:incoming>
+      <bpmn:outgoing>F47</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="AkhirAuto" name="CLOSED · tanpa tanggapan">
+      <bpmn:incoming>F47</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="Tahan" name="Tahan auto-close dan rekonsiliasi">
+      <bpmn:documentation>Ketika upaya masih RESOLVED dan syarat belum lengkap. Upaya usang atau sudah berubah diabaikan, tanpa mutasi tiket.</bpmn:documentation>
+      <bpmn:incoming>F45</bpmn:incoming>
+      <bpmn:outgoing>F48</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="GabungTunggu" gatewayDirection="Converging">
+      <bpmn:incoming>F48</bpmn:incoming>
+      <bpmn:incoming>F49</bpmn:incoming>
+      <bpmn:outgoing>F50</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:eventBasedGateway id="TungguLanjut" name="Tunggu tindak lanjut" gatewayDirection="Diverging" eventGatewayType="Exclusive" instantiate="false">
+      <bpmn:incoming>F50</bpmn:incoming>
+      <bpmn:outgoing>F51</bpmn:outgoing>
+      <bpmn:outgoing>F52</bpmn:outgoing>
+    </bpmn:eventBasedGateway>
+    <bpmn:intermediateCatchEvent id="ResponsLanjut" name="Tanggapan lanjutan">
+      <bpmn:incoming>F51</bpmn:incoming>
+      <bpmn:outgoing>F53</bpmn:outgoing>
+      <bpmn:messageEventDefinition messageRef="Msg_Tanggapan"/>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:intermediateCatchEvent id="Pulih" name="Bukti tersedia">
+      <bpmn:incoming>F52</bpmn:incoming>
+      <bpmn:outgoing>F54</bpmn:outgoing>
+      <bpmn:conditionalEventDefinition>
+        <bpmn:condition xsi:type="bpmn:tFormalExpression">Bukti durable tersedia setelah tenggat, upaya masih aktif, versi cocok dan tidak ada feedback.</bpmn:condition>
+      </bpmn:conditionalEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:endEvent id="Usang" name="Upaya berubah">
+      <bpmn:incoming>F55</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="F01" sourceRef="Terima" targetRef="Validasi"/>
+    <bpmn:sequenceFlow id="F02" sourceRef="Validasi" targetRef="Valid"/>
+    <bpmn:sequenceFlow id="F03" sourceRef="Valid" targetRef="GagalValidasi" name="Tidak"/>
+    <bpmn:sequenceFlow id="F04" sourceRef="Valid" targetRef="Rekam" name="Ya">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Layanan, audience, formulir dan intent sah</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F05" sourceRef="Rekam" targetRef="MasukTriase"/>
+    <bpmn:sequenceFlow id="F06" sourceRef="MintaReopen" targetRef="CekReopen"/>
+    <bpmn:sequenceFlow id="F07" sourceRef="CekReopen" targetRef="BolehReopen"/>
+    <bpmn:sequenceFlow id="F08" sourceRef="BolehReopen" targetRef="GagalReopen" name="Tidak"/>
+    <bpmn:sequenceFlow id="F09" sourceRef="BolehReopen" targetRef="EpisodeBaru" name="Ya">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Izin dan policy reopen terpenuhi</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F10" sourceRef="EpisodeBaru" targetRef="MasukTriase"/>
+    <bpmn:sequenceFlow id="F11" sourceRef="MasukTriase" targetRef="Tinjau"/>
+    <bpmn:sequenceFlow id="F12" sourceRef="Tinjau" targetRef="Keputusan"/>
+    <bpmn:sequenceFlow id="F13" sourceRef="Keputusan" targetRef="Verifikasi" name="Verifikasi">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Laporan lengkap dan dalam lingkup</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F14" sourceRef="Keputusan" targetRef="Tolak" name="Tolak / batal"/>
+    <bpmn:sequenceFlow id="F15" sourceRef="Tolak" targetRef="AkhirBatal"/>
+    <bpmn:sequenceFlow id="F16" sourceRef="Keputusan" targetRef="Klarifikasi" name="Perlu informasi">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Informasi perlu dilengkapi</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F17" sourceRef="Klarifikasi" targetRef="TungguInfo"/>
+    <bpmn:sequenceFlow id="F18" sourceRef="TungguInfo" targetRef="InfoDatang"/>
+    <bpmn:sequenceFlow id="F19" sourceRef="TungguInfo" targetRef="BatalDatang"/>
+    <bpmn:sequenceFlow id="F20" sourceRef="InfoDatang" targetRef="Lengkapi"/>
+    <bpmn:sequenceFlow id="F21" sourceRef="Lengkapi" targetRef="MasukTriase" name="Verifikasi ulang"/>
+    <bpmn:sequenceFlow id="F22" sourceRef="BatalDatang" targetRef="BatalKlarifikasi"/>
+    <bpmn:sequenceFlow id="F23" sourceRef="BatalKlarifikasi" targetRef="AkhirBatalInfo"/>
+    <bpmn:sequenceFlow id="F24" sourceRef="Verifikasi" targetRef="MasukDisposisi"/>
+    <bpmn:sequenceFlow id="F25" sourceRef="MasukDisposisi" targetRef="Saran"/>
+    <bpmn:sequenceFlow id="F26" sourceRef="Saran" targetRef="Kandidat"/>
+    <bpmn:sequenceFlow id="F27" sourceRef="Kandidat" targetRef="TinjauRouting" name="Tidak"/>
+    <bpmn:sequenceFlow id="F28" sourceRef="Kandidat" targetRef="Tugaskan" name="Ya">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Tersedia kandidat yang memenuhi aturan</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F29" sourceRef="TinjauRouting" targetRef="MasukDisposisi"/>
+    <bpmn:sequenceFlow id="F30" sourceRef="Tugaskan" targetRef="Mulai"/>
+    <bpmn:sequenceFlow id="F31" sourceRef="Mulai" targetRef="GabungKerja"/>
+    <bpmn:sequenceFlow id="F32" sourceRef="GabungKerja" targetRef="Kerjakan"/>
+    <bpmn:sequenceFlow id="F33" sourceRef="Kerjakan" targetRef="Resolusi"/>
+    <bpmn:sequenceFlow id="F34" sourceRef="Resolusi" targetRef="Notifikasi"/>
+    <bpmn:sequenceFlow id="F35" sourceRef="Notifikasi" targetRef="TungguHasil"/>
+    <bpmn:sequenceFlow id="F36" sourceRef="TungguHasil" targetRef="Respons"/>
+    <bpmn:sequenceFlow id="F37" sourceRef="TungguHasil" targetRef="Tenggat"/>
+    <bpmn:sequenceFlow id="F38" sourceRef="Respons" targetRef="Hasil"/>
+    <bpmn:sequenceFlow id="F39" sourceRef="Hasil" targetRef="TerimaHasil" name="Setuju">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Konfirmasi penerimaan</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F40" sourceRef="TerimaHasil" targetRef="AkhirSetuju"/>
+    <bpmn:sequenceFlow id="F41" sourceRef="Hasil" targetRef="Feedback" name="Feedback"/>
+    <bpmn:sequenceFlow id="F42" sourceRef="Hasil" targetRef="TolakHasil" name="Belum selesai">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Penolakan yang sah</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F43" sourceRef="TolakHasil" targetRef="GabungKerja" name="Lanjutkan penanganan"/>
+    <bpmn:sequenceFlow id="F44" sourceRef="Tenggat" targetRef="SyaratAuto"/>
+    <bpmn:sequenceFlow id="F45" sourceRef="SyaratAuto" targetRef="Tahan" name="Belum lengkap"/>
+    <bpmn:sequenceFlow id="F46" sourceRef="SyaratAuto" targetRef="Auto" name="Ya">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Tenggat dan seluruh guard terpenuhi</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F47" sourceRef="Auto" targetRef="AkhirAuto"/>
+    <bpmn:sequenceFlow id="F48" sourceRef="Tahan" targetRef="GabungTunggu"/>
+    <bpmn:sequenceFlow id="F49" sourceRef="Feedback" targetRef="GabungTunggu"/>
+    <bpmn:sequenceFlow id="F50" sourceRef="GabungTunggu" targetRef="TungguLanjut"/>
+    <bpmn:sequenceFlow id="F51" sourceRef="TungguLanjut" targetRef="ResponsLanjut"/>
+    <bpmn:sequenceFlow id="F52" sourceRef="TungguLanjut" targetRef="Pulih"/>
+    <bpmn:sequenceFlow id="F53" sourceRef="ResponsLanjut" targetRef="Hasil" name="Tinjau tanggapan lanjutan"/>
+    <bpmn:sequenceFlow id="F54" sourceRef="Pulih" targetRef="SyaratAuto" name="Periksa ulang guard"/>
+    <bpmn:sequenceFlow id="F55" sourceRef="SyaratAuto" targetRef="Usang" name="Sudah berubah">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Status, versi atau upaya tidak lagi aktif</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+  </bpmn:process>
+  <bpmn:collaboration id="Collaboration_Helpdesk" name="Helpdesk TIK Kota Depok">
+    <bpmn:participant id="Pool_Pemohon" name="Pemohon · Tamu, publik, ASN atau petugas sesuai kebijakan"/>
+    <bpmn:participant id="Pool_Helpdesk" name="Helpdesk TIK Kota Depok" processRef="Process_Helpdesk"/>
+    <bpmn:messageFlow id="M01" name="Laporan" messageRef="Msg_Laporan" sourceRef="Pool_Pemohon" targetRef="Terima"/>
+    <bpmn:messageFlow id="M02" name="Minta buka kembali" messageRef="Msg_Reopen" sourceRef="Pool_Pemohon" targetRef="MintaReopen"/>
+    <bpmn:messageFlow id="M03" name="Permintaan informasi" messageRef="Msg_Info" sourceRef="Klarifikasi" targetRef="Pool_Pemohon"/>
+    <bpmn:messageFlow id="M04" name="Pelengkapan" messageRef="Msg_Pelengkap" sourceRef="Pool_Pemohon" targetRef="InfoDatang"/>
+    <bpmn:messageFlow id="M05" name="Pembatalan" messageRef="Msg_Batal" sourceRef="Pool_Pemohon" targetRef="BatalDatang"/>
+    <bpmn:messageFlow id="M06" name="Hasil dan tenggat" messageRef="Msg_Hasil" sourceRef="Notifikasi" targetRef="Pool_Pemohon"/>
+    <bpmn:messageFlow id="M07" name="Tanggapan" messageRef="Msg_Tanggapan" sourceRef="Pool_Pemohon" targetRef="Respons"/>
+    <bpmn:messageFlow id="M08" name="Tanggapan lanjutan" messageRef="Msg_Tanggapan" sourceRef="Pool_Pemohon" targetRef="ResponsLanjut"/>
+  </bpmn:collaboration>
+  <bpmndi:BPMNDiagram id="Diagram_Helpdesk" name="Helpdesk TIK · dari laporan ke penutupan">
+    <bpmndi:BPMNPlane id="Plane_Helpdesk" bpmnElement="Collaboration_Helpdesk">
+      <bpmndi:BPMNShape id="Shape_Pool_Pemohon" bpmnElement="Pool_Pemohon" isHorizontal="true">
+        <dc:Bounds x="42" y="103" width="3738" height="58"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Pool_Helpdesk" bpmnElement="Pool_Helpdesk" isHorizontal="true">
+        <dc:Bounds x="42" y="205" width="3738" height="975"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Lane_Sistem" bpmnElement="Lane_Sistem" isHorizontal="true">
+        <dc:Bounds x="72" y="205" width="3708" height="445"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Lane_Operator" bpmnElement="Lane_Operator" isHorizontal="true">
+        <dc:Bounds x="72" y="650" width="3708" height="200"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Lane_Koordinator" bpmnElement="Lane_Koordinator" isHorizontal="true">
+        <dc:Bounds x="72" y="850" width="3708" height="185"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Lane_Teknisi" bpmnElement="Lane_Teknisi" isHorizontal="true">
+        <dc:Bounds x="72" y="1035" width="3708" height="145"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Terima" bpmnElement="Terima">
+        <dc:Bounds x="151.0" y="261.0" width="38" height="38"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="95" y="307" width="150" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Validasi" bpmnElement="Validasi">
+        <dc:Bounds x="253.0" y="249.0" width="144" height="62"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Valid" bpmnElement="Valid">
+        <dc:Bounds x="464.0" y="256.0" width="48" height="48"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="413" y="227" width="150" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Rekam" bpmnElement="Rekam">
+        <dc:Bounds x="578.0" y="249.0" width="144" height="62"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_GagalValidasi" bpmnElement="GagalValidasi">
+        <dc:Bounds x="469.0" y="346.0" width="38" height="38"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="413" y="392" width="150" height="32"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_MintaReopen" bpmnElement="MintaReopen">
+        <dc:Bounds x="151.0" y="501.0" width="38" height="38"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="95" y="547" width="150" height="32"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_CekReopen" bpmnElement="CekReopen">
+        <dc:Bounds x="253.0" y="489.0" width="144" height="62"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_BolehReopen" bpmnElement="BolehReopen">
+        <dc:Bounds x="464.0" y="496.0" width="48" height="48"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="413" y="466" width="150" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_EpisodeBaru" bpmnElement="EpisodeBaru">
+        <dc:Bounds x="578.0" y="489.0" width="144" height="62"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_GagalReopen" bpmnElement="GagalReopen">
+        <dc:Bounds x="469.0" y="586.0" width="38" height="38"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="413" y="632" width="150" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_MasukTriase" bpmnElement="MasukTriase">
+        <dc:Bounds x="746.0" y="586.0" width="48" height="48"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Tinjau" bpmnElement="Tinjau">
+        <dc:Bounds x="698.0" y="716.0" width="144" height="62"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Keputusan" bpmnElement="Keputusan">
+        <dc:Bounds x="926.0" y="723.0" width="48" height="48"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="825" y="690" width="150" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Verifikasi" bpmnElement="Verifikasi">
+        <dc:Bounds x="1048.0" y="716.0" width="144" height="62"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Klarifikasi" bpmnElement="Klarifikasi">
+        <dc:Bounds x="1058.0" y="661" width="144" height="48"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Tolak" bpmnElement="Tolak">
+        <dc:Bounds x="1018.0" y="792.0" width="144" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_AkhirBatal" bpmnElement="AkhirBatal">
+        <dc:Bounds x="1211.0" y="798.0" width="38" height="38"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1155" y="834" width="150" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_TungguInfo" bpmnElement="TungguInfo">
+        <dc:Bounds x="1286.0" y="492.0" width="48" height="48"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1235" y="466" width="150" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_InfoDatang" bpmnElement="InfoDatang">
+        <dc:Bounds x="1451.0" y="456.0" width="38" height="38"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1395" y="502" width="150" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_BatalDatang" bpmnElement="BatalDatang">
+        <dc:Bounds x="1451.0" y="561.0" width="38" height="38"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1325" y="598" width="150" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Lengkapi" bpmnElement="Lengkapi">
+        <dc:Bounds x="1558.0" y="444.0" width="144" height="62"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_BatalKlarifikasi" bpmnElement="BatalKlarifikasi">
+        <dc:Bounds x="1558.0" y="549.0" width="144" height="62"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_AkhirBatalInfo" bpmnElement="AkhirBatalInfo">
+        <dc:Bounds x="1771.0" y="561.0" width="38" height="38"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1715" y="607" width="150" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_MasukDisposisi" bpmnElement="MasukDisposisi">
+        <dc:Bounds x="1236.0" y="911.0" width="48" height="48"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Saran" bpmnElement="Saran">
+        <dc:Bounds x="1358.0" y="904.0" width="144" height="62"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Kandidat" bpmnElement="Kandidat">
+        <dc:Bounds x="1576.0" y="911.0" width="48" height="48"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1584" y="880" width="150" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Tugaskan" bpmnElement="Tugaskan">
+        <dc:Bounds x="1728.0" y="904.0" width="144" height="62"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_TinjauRouting" bpmnElement="TinjauRouting">
+        <dc:Bounds x="1728.0" y="974.0" width="144" height="48"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Mulai" bpmnElement="Mulai">
+        <dc:Bounds x="1858.0" y="1069.0" width="144" height="62"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_GabungKerja" bpmnElement="GabungKerja">
+        <dc:Bounds x="2046.0" y="1076.0" width="48" height="48"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Kerjakan" bpmnElement="Kerjakan">
+        <dc:Bounds x="2148.0" y="1069.0" width="144" height="62"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Resolusi" bpmnElement="Resolusi">
+        <dc:Bounds x="2318.0" y="1069.0" width="144" height="62"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Notifikasi" bpmnElement="Notifikasi">
+        <dc:Bounds x="2318.0" y="269.0" width="144" height="62"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_TungguHasil" bpmnElement="TungguHasil">
+        <dc:Bounds x="2536.0" y="276.0" width="48" height="48"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2485" y="253" width="150" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Respons" bpmnElement="Respons">
+        <dc:Bounds x="2691.0" y="251.0" width="38" height="38"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2635" y="297" width="150" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Tenggat" bpmnElement="Tenggat">
+        <dc:Bounds x="2691.0" y="461.0" width="38" height="38"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2615" y="514" width="150" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Hasil" bpmnElement="Hasil">
+        <dc:Bounds x="2836.0" y="246.0" width="48" height="48"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2725" y="224" width="150" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_TerimaHasil" bpmnElement="TerimaHasil">
+        <dc:Bounds x="2968.0" y="239.0" width="144" height="62"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_AkhirSetuju" bpmnElement="AkhirSetuju">
+        <dc:Bounds x="3201.0" y="251.0" width="38" height="38"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3145" y="297" width="150" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_TolakHasil" bpmnElement="TolakHasil">
+        <dc:Bounds x="2968.0" y="334.0" width="144" height="62"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Feedback" bpmnElement="Feedback">
+        <dc:Bounds x="3178.0" y="334.0" width="144" height="62"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_SyaratAuto" bpmnElement="SyaratAuto">
+        <dc:Bounds x="2836.0" y="456.0" width="48" height="48"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2790" y="431" width="150" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Auto" bpmnElement="Auto">
+        <dc:Bounds x="2978.0" y="449.0" width="144" height="62"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_AkhirAuto" bpmnElement="AkhirAuto">
+        <dc:Bounds x="3211.0" y="461.0" width="38" height="38"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3155" y="507" width="150" height="32"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Tahan" bpmnElement="Tahan">
+        <dc:Bounds x="2978.0" y="554.0" width="144" height="62"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_GabungTunggu" bpmnElement="GabungTunggu">
+        <dc:Bounds x="3306.0" y="561.0" width="48" height="48"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_TungguLanjut" bpmnElement="TungguLanjut">
+        <dc:Bounds x="3416.0" y="561.0" width="48" height="48"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3445" y="522" width="150" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_ResponsLanjut" bpmnElement="ResponsLanjut">
+        <dc:Bounds x="3571.0" y="361.0" width="38" height="38"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3515" y="407" width="150" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Pulih" bpmnElement="Pulih">
+        <dc:Bounds x="3571.0" y="591.0" width="38" height="38"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3595" y="608" width="150" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Usang" bpmnElement="Usang">
+        <dc:Bounds x="2786.0" y="586.0" width="38" height="38"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2730" y="632" width="150" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_F01" bpmnElement="F01">
+        <di:waypoint x="189.0" y="280"/>
+        <di:waypoint x="253.0" y="280"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F02" bpmnElement="F02">
+        <di:waypoint x="397.0" y="280"/>
+        <di:waypoint x="464.0" y="280"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F03" bpmnElement="F03">
+        <di:waypoint x="488" y="304.0"/>
+        <di:waypoint x="488" y="346.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="439" y="315" width="170" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F04" bpmnElement="F04">
+        <di:waypoint x="512.0" y="280"/>
+        <di:waypoint x="578.0" y="280"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="461" y="253" width="170" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F05" bpmnElement="F05">
+        <di:waypoint x="722.0" y="280"/>
+        <di:waypoint x="748" y="280"/>
+        <di:waypoint x="748" y="565"/>
+        <di:waypoint x="770" y="565"/>
+        <di:waypoint x="770" y="586.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F06" bpmnElement="F06">
+        <di:waypoint x="189.0" y="520"/>
+        <di:waypoint x="253.0" y="520"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F07" bpmnElement="F07">
+        <di:waypoint x="397.0" y="520"/>
+        <di:waypoint x="464.0" y="520"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F08" bpmnElement="F08">
+        <di:waypoint x="488" y="544.0"/>
+        <di:waypoint x="488" y="586.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="440" y="557" width="170" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F09" bpmnElement="F09">
+        <di:waypoint x="512.0" y="520"/>
+        <di:waypoint x="578.0" y="520"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="458" y="492" width="170" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F10" bpmnElement="F10">
+        <di:waypoint x="722.0" y="520"/>
+        <di:waypoint x="736" y="520"/>
+        <di:waypoint x="736" y="610"/>
+        <di:waypoint x="746.0" y="610"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F11" bpmnElement="F11">
+        <di:waypoint x="770" y="634.0"/>
+        <di:waypoint x="770" y="716.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F12" bpmnElement="F12">
+        <di:waypoint x="842.0" y="747"/>
+        <di:waypoint x="926.0" y="747"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F13" bpmnElement="F13">
+        <di:waypoint x="974.0" y="747"/>
+        <di:waypoint x="1048.0" y="747"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="922" y="717" width="170" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F14" bpmnElement="F14">
+        <di:waypoint x="950" y="771.0"/>
+        <di:waypoint x="950" y="817"/>
+        <di:waypoint x="1018.0" y="817"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="902" y="778" width="170" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F15" bpmnElement="F15">
+        <di:waypoint x="1162.0" y="817"/>
+        <di:waypoint x="1211.0" y="817"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F16" bpmnElement="F16">
+        <di:waypoint x="950" y="723"/><di:waypoint x="950" y="685"/><di:waypoint x="1058" y="685"/><bpmndi:BPMNLabel>
+          <dc:Bounds x="905" y="647" width="170" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F17" bpmnElement="F17">
+        <di:waypoint x="1202" y="685"/><di:waypoint x="1240" y="685"/><di:waypoint x="1240" y="516"/><di:waypoint x="1286" y="516"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F18" bpmnElement="F18">
+        <di:waypoint x="1334.0" y="516"/>
+        <di:waypoint x="1370" y="516"/>
+        <di:waypoint x="1370" y="475"/>
+        <di:waypoint x="1451.0" y="475"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F19" bpmnElement="F19">
+        <di:waypoint x="1310" y="540.0"/>
+        <di:waypoint x="1310" y="580"/>
+        <di:waypoint x="1451.0" y="580"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F20" bpmnElement="F20">
+        <di:waypoint x="1489.0" y="475"/>
+        <di:waypoint x="1558.0" y="475"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F21" bpmnElement="F21">
+        <di:waypoint x="1630" y="444"/><di:waypoint x="1630" y="414"/><di:waypoint x="815" y="414"/><di:waypoint x="815" y="610"/><di:waypoint x="794" y="610"/><bpmndi:BPMNLabel>
+          <dc:Bounds x="945" y="389" width="170" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F22" bpmnElement="F22">
+        <di:waypoint x="1489.0" y="580"/>
+        <di:waypoint x="1558.0" y="580"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F23" bpmnElement="F23">
+        <di:waypoint x="1702.0" y="580"/>
+        <di:waypoint x="1771.0" y="580"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F24" bpmnElement="F24">
+        <di:waypoint x="1192.0" y="747"/>
+        <di:waypoint x="1260" y="747"/>
+        <di:waypoint x="1260" y="911.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F25" bpmnElement="F25">
+        <di:waypoint x="1284.0" y="935"/>
+        <di:waypoint x="1358.0" y="935"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F26" bpmnElement="F26">
+        <di:waypoint x="1502.0" y="935"/>
+        <di:waypoint x="1576.0" y="935"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F27" bpmnElement="F27">
+        <di:waypoint x="1600" y="959.0"/>
+        <di:waypoint x="1600" y="998"/>
+        <di:waypoint x="1728.0" y="998"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1561" y="974" width="170" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F28" bpmnElement="F28">
+        <di:waypoint x="1624.0" y="935"/>
+        <di:waypoint x="1728.0" y="935"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1575" y="906" width="170" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F29" bpmnElement="F29">
+        <di:waypoint x="1800" y="1022.0"/>
+        <di:waypoint x="1800" y="1028"/>
+        <di:waypoint x="1260" y="1028"/>
+        <di:waypoint x="1260" y="959.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F30" bpmnElement="F30">
+        <di:waypoint x="1872.0" y="935"/>
+        <di:waypoint x="1880" y="935"/>
+        <di:waypoint x="1880" y="1100"/>
+        <di:waypoint x="1858.0" y="1100"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F31" bpmnElement="F31">
+        <di:waypoint x="2002.0" y="1100"/>
+        <di:waypoint x="2046.0" y="1100"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F32" bpmnElement="F32">
+        <di:waypoint x="2094.0" y="1100"/>
+        <di:waypoint x="2148.0" y="1100"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F33" bpmnElement="F33">
+        <di:waypoint x="2292.0" y="1100"/>
+        <di:waypoint x="2318.0" y="1100"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F34" bpmnElement="F34">
+        <di:waypoint x="2390" y="1069.0"/>
+        <di:waypoint x="2390" y="331.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F35" bpmnElement="F35">
+        <di:waypoint x="2462.0" y="300"/>
+        <di:waypoint x="2536.0" y="300"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F36" bpmnElement="F36">
+        <di:waypoint x="2584.0" y="300"/>
+        <di:waypoint x="2635" y="300"/>
+        <di:waypoint x="2635" y="270"/>
+        <di:waypoint x="2691.0" y="270"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F37" bpmnElement="F37">
+        <di:waypoint x="2560" y="324.0"/>
+        <di:waypoint x="2560" y="480"/>
+        <di:waypoint x="2691.0" y="480"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F38" bpmnElement="F38">
+        <di:waypoint x="2729.0" y="270"/>
+        <di:waypoint x="2836.0" y="270"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F39" bpmnElement="F39">
+        <di:waypoint x="2884.0" y="270"/>
+        <di:waypoint x="2968.0" y="270"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2851" y="240" width="170" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F40" bpmnElement="F40">
+        <di:waypoint x="3112.0" y="270"/>
+        <di:waypoint x="3201.0" y="270"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F41" bpmnElement="F41">
+        <di:waypoint x="2872" y="282"/><di:waypoint x="2914" y="324"/><di:waypoint x="3158" y="324"/><di:waypoint x="3158" y="365"/><di:waypoint x="3178" y="365"/><bpmndi:BPMNLabel>
+          <dc:Bounds x="3010" y="299" width="170" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F42" bpmnElement="F42">
+        <di:waypoint x="2860" y="294.0"/>
+        <di:waypoint x="2860" y="365"/>
+        <di:waypoint x="2968.0" y="365"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2833" y="335" width="170" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F43" bpmnElement="F43">
+        <di:waypoint x="3040" y="396.0"/>
+        <di:waypoint x="3040" y="430"/>
+        <di:waypoint x="2970" y="430"/>
+        <di:waypoint x="2970" y="654"/>
+        <di:waypoint x="2970" y="1162"/>
+        <di:waypoint x="2070" y="1162"/>
+        <di:waypoint x="2070" y="1124.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2485" y="1135" width="170" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F44" bpmnElement="F44">
+        <di:waypoint x="2729.0" y="480"/>
+        <di:waypoint x="2836.0" y="480"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F45" bpmnElement="F45">
+        <di:waypoint x="2860" y="504.0"/>
+        <di:waypoint x="2860" y="585"/>
+        <di:waypoint x="2978.0" y="585"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2805" y="539" width="170" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F46" bpmnElement="F46">
+        <di:waypoint x="2884.0" y="480"/>
+        <di:waypoint x="2978.0" y="480"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2834" y="454" width="170" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F47" bpmnElement="F47">
+        <di:waypoint x="3122.0" y="480"/>
+        <di:waypoint x="3211.0" y="480"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F48" bpmnElement="F48">
+        <di:waypoint x="3122.0" y="585"/>
+        <di:waypoint x="3306.0" y="585"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F49" bpmnElement="F49">
+        <di:waypoint x="3322.0" y="365"/>
+        <di:waypoint x="3330" y="365"/>
+        <di:waypoint x="3330" y="561.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F50" bpmnElement="F50">
+        <di:waypoint x="3354.0" y="585"/>
+        <di:waypoint x="3416.0" y="585"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F51" bpmnElement="F51">
+        <di:waypoint x="3440" y="561.0"/>
+        <di:waypoint x="3440" y="380"/>
+        <di:waypoint x="3571.0" y="380"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F52" bpmnElement="F52">
+        <di:waypoint x="3464.0" y="585"/>
+        <di:waypoint x="3520" y="585"/>
+        <di:waypoint x="3520" y="610"/>
+        <di:waypoint x="3571.0" y="610"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F53" bpmnElement="F53">
+        <di:waypoint x="3609.0" y="380"/>
+        <di:waypoint x="3712" y="380"/>
+        <di:waypoint x="3712" y="220"/>
+        <di:waypoint x="2860" y="220"/>
+        <di:waypoint x="2860" y="246.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3335" y="198" width="170" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F54" bpmnElement="F54">
+        <di:waypoint x="3590" y="629"/><di:waypoint x="3590" y="642"/><di:waypoint x="2930" y="642"/><di:waypoint x="2930" y="518"/><di:waypoint x="2898" y="518"/><di:waypoint x="2872" y="492"/><bpmndi:BPMNLabel>
+          <dc:Bounds x="3380" y="619" width="170" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F55" bpmnElement="F55">
+        <di:waypoint x="2848" y="492"/><di:waypoint x="2805" y="535"/><di:waypoint x="2805" y="586"/><bpmndi:BPMNLabel>
+          <dc:Bounds x="2684" y="540" width="170" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_M01" bpmnElement="M01">
+        <di:waypoint x="170" y="161"/>
+        <di:waypoint x="170" y="261.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="127" y="172" width="170" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_M02" bpmnElement="M02">
+        <di:waypoint x="104" y="161"/>
+        <di:waypoint x="104" y="520"/>
+        <di:waypoint x="151.0" y="520"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="81" y="381" width="170" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_M03" bpmnElement="M03">
+        <di:waypoint x="1130" y="661"/><di:waypoint x="1130" y="161"/><bpmndi:BPMNLabel>
+          <dc:Bounds x="985" y="172" width="170" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_M04" bpmnElement="M04">
+        <di:waypoint x="1465" y="161"/>
+        <di:waypoint x="1465" y="440"/>
+        <di:waypoint x="1470" y="440"/>
+        <di:waypoint x="1470" y="456.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1335" y="172" width="170" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_M05" bpmnElement="M05">
+        <di:waypoint x="1850" y="161"/><di:waypoint x="1850" y="641"/><di:waypoint x="1470" y="641"/><di:waypoint x="1470" y="599"/><bpmndi:BPMNLabel>
+          <dc:Bounds x="1723" y="172" width="170" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_M06" bpmnElement="M06">
+        <di:waypoint x="2390" y="269.0"/>
+        <di:waypoint x="2390" y="161"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2235" y="172" width="170" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_M07" bpmnElement="M07">
+        <di:waypoint x="2710" y="161"/>
+        <di:waypoint x="2710" y="251.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2585" y="172" width="170" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_M08" bpmnElement="M08">
+        <di:waypoint x="3560" y="161"/>
+        <di:waypoint x="3560" y="339"/>
+        <di:waypoint x="3590" y="339"/>
+        <di:waypoint x="3590" y="361.0"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3408" y="172" width="170" height="16"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

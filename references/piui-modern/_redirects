@@ -1,0 +1,5 @@
+/play.html?id=:id       /details/plays/:id.html       301!
+/pipeline.html?id=:id   /details/pipelines/:id.html   301!
+/plan.html?id=:id       /details/plans/:id.html       301!
+/principle.html?id=:id  /details/principles/:id.html  301!
+/brief.html?id=:id      /details/briefs/:id.html      301!

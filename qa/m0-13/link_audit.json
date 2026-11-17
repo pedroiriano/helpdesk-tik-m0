@@ -1,0 +1,158 @@
+{
+  "timestamp": "2026-11-17T04:59:53.734408+00:00",
+  "task_id": "M0-13",
+  "scope": "frontend_link_audit",
+  "result": "PASS",
+  "scanned_files_count": 26,
+  "total_links_checked": 579,
+  "broken_links_count": 0,
+  "broken_links": [],
+  "placeholder_matches_count": 0,
+  "placeholder_matches": [],
+  "semantic_routes_tested": 20,
+  "semantic_routes_ok": true,
+  "routes": [
+    {
+      "path": "/",
+      "url": "http://127.0.0.1:18090/",
+      "status": 200,
+      "size_bytes": 36217,
+      "ok": true
+    },
+    {
+      "path": "/layanan",
+      "url": "http://127.0.0.1:18090/layanan",
+      "status": 200,
+      "size_bytes": 10902,
+      "ok": true
+    },
+    {
+      "path": "/layanan/akses-internet-opd",
+      "url": "http://127.0.0.1:18090/layanan/akses-internet-opd",
+      "status": 200,
+      "size_bytes": 10122,
+      "ok": true
+    },
+    {
+      "path": "/layanan/email-dinas-depok",
+      "url": "http://127.0.0.1:18090/layanan/email-dinas-depok",
+      "status": 200,
+      "size_bytes": 10122,
+      "ok": true
+    },
+    {
+      "path": "/layanan/insiden-keamanan-csirt",
+      "url": "http://127.0.0.1:18090/layanan/insiden-keamanan-csirt",
+      "status": 200,
+      "size_bytes": 10122,
+      "ok": true
+    },
+    {
+      "path": "/tiket/baru",
+      "url": "http://127.0.0.1:18090/tiket/baru",
+      "status": 200,
+      "size_bytes": 21113,
+      "ok": true
+    },
+    {
+      "path": "/tiket/lacak",
+      "url": "http://127.0.0.1:18090/tiket/lacak",
+      "status": 200,
+      "size_bytes": 10263,
+      "ok": true
+    },
+    {
+      "path": "/tiket",
+      "url": "http://127.0.0.1:18090/tiket",
+      "status": 200,
+      "size_bytes": 10986,
+      "ok": true
+    },
+    {
+      "path": "/panduan",
+      "url": "http://127.0.0.1:18090/panduan",
+      "status": 200,
+      "size_bytes": 11048,
+      "ok": true
+    },
+    {
+      "path": "/panduan/konfigurasi-email-depok-go-id",
+      "url": "http://127.0.0.1:18090/panduan/konfigurasi-email-depok-go-id",
+      "status": 200,
+      "size_bytes": 11048,
+      "ok": true
+    },
+    {
+      "path": "/panduan/pengajuan-tte-bsre",
+      "url": "http://127.0.0.1:18090/panduan/pengajuan-tte-bsre",
+      "status": 200,
+      "size_bytes": 11048,
+      "ok": true
+    },
+    {
+      "path": "/panduan/penanganan-insiden-csirt",
+      "url": "http://127.0.0.1:18090/panduan/penanganan-insiden-csirt",
+      "status": 200,
+      "size_bytes": 11048,
+      "ok": true
+    },
+    {
+      "path": "/panduan/koneksi-wifi-balaikota",
+      "url": "http://127.0.0.1:18090/panduan/koneksi-wifi-balaikota",
+      "status": 200,
+      "size_bytes": 11048,
+      "ok": true
+    },
+    {
+      "path": "/faq",
+      "url": "http://127.0.0.1:18090/faq",
+      "status": 200,
+      "size_bytes": 11806,
+      "ok": true
+    },
+    {
+      "path": "/status",
+      "url": "http://127.0.0.1:18090/status",
+      "status": 200,
+      "size_bytes": 10844,
+      "ok": true
+    },
+    {
+      "path": "/kontak",
+      "url": "http://127.0.0.1:18090/kontak",
+      "status": 200,
+      "size_bytes": 13236,
+      "ok": true
+    },
+    {
+      "path": "/masuk",
+      "url": "http://127.0.0.1:18090/masuk",
+      "status": 200,
+      "size_bytes": 13481,
+      "ok": true
+    },
+    {
+      "path": "/admin/app/helpdesk/index.html",
+      "url": "http://127.0.0.1:18090/admin/app/helpdesk/index.html",
+      "status": 200,
+      "size_bytes": 68027,
+      "ok": true
+    },
+    {
+      "path": "/admin/app/tickets/index.html",
+      "url": "http://127.0.0.1:18090/admin/app/tickets/index.html",
+      "status": 200,
+      "size_bytes": 32105,
+      "ok": true
+    },
+    {
+      "path": "/admin/auth/login.html",
+      "url": "http://127.0.0.1:18090/admin/auth/login.html",
+      "status": 200,
+      "size_bytes": 19927,
+      "ok": true
+    }
+  ],
+  "portal_navigation_ok": true,
+  "portal_navigation_summary": "20 menu items verified"
+}

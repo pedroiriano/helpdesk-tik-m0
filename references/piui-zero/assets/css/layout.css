@@ -1,0 +1,417 @@
+@layer layout {
+  html,
+  body {
+    max-inline-size: 100%;
+    overflow-x: clip;
+  }
+
+  /* =========================================================================
+     1. ADAPTIVE ADMIN SHELL (MOBILE BASE 320px -> TABLET 768px -> DESKTOP 1024px)
+     ========================================================================= */
+  .piui-app-shell,
+  .piui-public-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: var(--piui-topbar-h) 1fr auto;
+    grid-template-areas:
+      "topbar"
+      "main"
+      "footer";
+    min-block-size: 100vh;
+    min-block-size: 100dvh;
+    max-inline-size: 100%;
+  }
+
+  /* WAJIB: Pencegahan Grid/Flex Blowout pada semua kontainer utama */
+  .piui-main,
+  .piui-card,
+  .piui-panel,
+  .piui-table-scroll,
+  .piui-filter-bar,
+  .piui-kpi-grid,
+  .piui-dashboard-split {
+    min-inline-size: 0;
+    max-inline-size: 100%;
+  }
+
+  /* =========================================================================
+     2. TOPBAR GLOBAL (PROGRESSIVE DISCLOSURE: 4 ELEMEN DI HP 320px-639px)
+     ========================================================================= */
+  .piui-topbar {
+    grid-area: topbar;
+    position: sticky;
+    inset-block-start: 0;
+    z-index: var(--piui-z-header);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--piui-space-2);
+    block-size: var(--piui-topbar-h);
+    padding-inline: max(var(--piui-space-3), env(safe-area-inset-left))
+                    max(var(--piui-space-3), env(safe-area-inset-right));
+    background-color: var(--piui-bg-surface);
+    background-image: var(--piui-gradient-surface);
+    border-block-end: 1px solid var(--piui-border-subtle);
+    box-shadow: var(--piui-shadow-sm);
+  }
+
+  .piui-topbar__start,
+  .piui-topbar__end {
+    display: flex;
+    align-items: center;
+    gap: var(--piui-space-2);
+    min-inline-size: 0;
+  }
+
+  .piui-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--piui-space-2);
+    font-weight: 800;
+    font-size: var(--piui-text-base);
+    color: var(--piui-text-primary);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .piui-topbar__start { flex: 1; }
+  .piui-topbar__end { flex-shrink: 1; }
+  .piui-topbar__end > .piui-btn { min-inline-size: 0; max-inline-size: 100%; }
+  .piui-topbar .piui-brand { min-inline-size: 0; max-inline-size: 100%; }
+  .piui-topbar .piui-brand__name { overflow: hidden; text-overflow: ellipsis; }
+  .piui-topbar .piui-brand > .piui-badge,
+  .piui-topbar:has([popovertarget="popover-profile"]) #btn-theme-toggle { display: none; }
+
+  /* Di HP (< 768px), sembunyikan teks panjang Topbar agar tidak berantakan */
+  .piui-topbar__desktop-only {
+    display: none;
+  }
+
+  /* =========================================================================
+     3. SIDEBAR NAVIGASI 3-TINGKAT (DRAWER HP -> RAIL 68px <-> FULL 256px)
+     ========================================================================= */
+  .piui-sidebar {
+    display: none;
+    background-color: var(--piui-bg-sidebar);
+    background-image: var(--piui-gradient-sidebar);
+    color: var(--piui-text-on-dark);
+    border-inline-end: 1px solid var(--piui-border-subtle);
+  }
+
+  /* =========================================================================
+     4. MAIN WORKSPACE DENGAN CONTAINER QUERY (@container workspace)
+     ========================================================================= */
+  .piui-main {
+    grid-area: main;
+    container-type: inline-size;
+    container-name: workspace;
+    width: 100%;
+    max-inline-size: var(--piui-container-max);
+    margin-inline: auto;
+    padding-block: var(--piui-space-5);
+    padding-inline: clamp(0.875rem, 2.5vw, 2rem);
+    display: flex;
+    flex-direction: column;
+    gap: var(--piui-space-5);
+  }
+
+  /* =========================================================================
+     5. PAGE HEADER (STACK-TO-ROW PATTERN)
+     ========================================================================= */
+  .piui-page-header {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--piui-space-3);
+    padding-block-end: var(--piui-space-3);
+    border-block-end: 1px solid var(--piui-border-subtle);
+  }
+
+  .piui-page-header__titles {
+    min-inline-size: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--piui-space-1);
+  }
+
+  .piui-page-title {
+    font-size: var(--piui-text-xl);
+  }
+
+  .piui-page-subtitle {
+    font-size: var(--piui-text-xs);
+    color: var(--piui-text-muted);
+  }
+
+  .piui-page-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--piui-space-2);
+    min-inline-size: 0;
+    max-inline-size: 100%;
+  }
+  .piui-page-actions > :is(.piui-btn, .piui-icon-btn) {
+    flex: 0 0 auto;
+    max-inline-size: 100%;
+  }
+
+  /* =========================================================================
+     6. CONTAINER QUERIES UNTUK GRID KARTU KPI & PANEL DASHBOARD
+     ========================================================================= */
+  .piui-kpi-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--piui-space-4);
+  }
+
+  @container workspace (min-width: 36rem) {
+    .piui-kpi-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @container workspace (min-width: 58rem) {
+    .piui-kpi-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .piui-dashboard-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--piui-space-5);
+  }
+
+  @container workspace (min-width: 62rem) {
+    .piui-dashboard-split {
+      grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+      align-items: start;
+    }
+  }
+
+  /* =========================================================================
+     7. FOOTER OPERASIONAL RESMI HELPDESK TIK KOTA DEPOK
+     ========================================================================= */
+  .piui-footer {
+    grid-area: footer;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px clamp(1rem, 2.5vw, 2rem) 14px;
+    padding-block-end: max(14px, env(safe-area-inset-bottom));
+    font-size: var(--piui-text-xs, 12px);
+    color: var(--piui-text-muted);
+    background-color: var(--piui-bg-surface);
+    background-image: var(--piui-gradient-surface);
+    border-block-start: 1px solid var(--piui-border-subtle);
+    margin-top: auto;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .hd-admin-footer-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    width: 100%;
+  }
+
+  .piui-footer__links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .piui-footer__links li {
+    margin: 0;
+    padding: 0;
+    display: inline-flex;
+  }
+
+  .piui-footer__links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 11px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #c9d1d9;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+  }
+
+  .piui-footer__links a:hover {
+    background: rgba(56, 139, 253, 0.15);
+    border-color: rgba(56, 139, 253, 0.4);
+    color: #58a6ff;
+  }
+
+  .hd-admin-footer-action {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .hd-admin-footer-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 13px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 6px;
+    background: rgba(56, 139, 253, 0.14);
+    border: 1px solid rgba(56, 139, 253, 0.35);
+    color: #58a6ff;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .hd-admin-footer-btn:hover {
+    background: #1f6feb;
+    border-color: #388bfd;
+    color: #ffffff;
+  }
+
+  .hd-admin-footer-sep {
+    width: 100%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.07);
+    margin: 2px 0;
+  }
+
+  .hd-admin-footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    width: 100%;
+  }
+
+  .hd-admin-footer-credit {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: #8b949e;
+  }
+
+  .hd-admin-footer-dot {
+    color: rgba(255, 255, 255, 0.25);
+    font-weight: bold;
+  }
+
+  .hd-admin-footer-credit a {
+    color: #c9d1d9;
+    text-decoration: none;
+  }
+
+  .hd-admin-footer-credit a:hover {
+    color: #58a6ff;
+    text-decoration: underline;
+  }
+
+  .piui-product-signature {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #ffffff;
+    font-weight: 700;
+  }
+
+  .piui-product-signature .piui-brand__mark {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    border-radius: 4px;
+  }
+
+  .hd-admin-footer-status-slot {
+    display: flex;
+    align-items: center;
+  }
+
+  .piui-footer [data-offline-status] {
+    margin: 0;
+    padding: 3px 9px;
+    border-radius: 6px;
+    background: rgba(46, 160, 67, 0.12);
+    border: 1px solid rgba(46, 160, 67, 0.28);
+    font-size: 11px;
+    color: #3fb950;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  /* =========================================================================
+     8. BREAKPOINT TABLET (>= 768px / 48rem): NAVIGATION RAIL 68px
+     ========================================================================= */
+  @media (min-width: 48rem) {
+    .piui-app-shell {
+      grid-template-columns: var(--piui-sidebar-rail-w) minmax(0, 1fr);
+      grid-template-areas:
+        "topbar topbar"
+        "sidebar main"
+        "sidebar footer";
+      transition: grid-template-columns var(--piui-duration-normal) var(--piui-ease-standard);
+    }
+
+    .piui-app-shell[data-sidebar="collapsed"] {
+      grid-template-columns: var(--piui-sidebar-rail-w) minmax(0, 1fr);
+    }
+
+    .piui-topbar__desktop-only {
+      display: inline-flex;
+    }
+
+    .piui-topbar:has([popovertarget="popover-profile"]) #btn-theme-toggle { display: inline-flex; }
+
+    .piui-sidebar {
+      grid-area: sidebar;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: sticky;
+      inset-block-start: var(--piui-topbar-h);
+      block-size: calc(100dvh - var(--piui-topbar-h));
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-block: var(--piui-space-3);
+    }
+
+    .piui-page-header {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  /* =========================================================================
+     9. BREAKPOINT DESKTOP (>= 1024px / 64rem): EXPANDED ATAU COLLAPSED RAIL
+     ========================================================================= */
+  @media (min-width: 64rem) {
+    .piui-topbar .piui-brand > .piui-badge { display: inline-flex; }
+    .piui-app-shell:not([data-sidebar="collapsed"]) {
+      grid-template-columns: var(--piui-sidebar-w) minmax(0, 1fr);
+    }
+
+    .piui-app-shell[data-sidebar="collapsed"] {
+      grid-template-columns: var(--piui-sidebar-rail-w) minmax(0, 1fr);
+    }
+  }
+}

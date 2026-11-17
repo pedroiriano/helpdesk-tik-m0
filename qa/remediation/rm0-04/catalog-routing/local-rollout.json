@@ -1,0 +1,61 @@
+{
+  "checks": [
+    {
+      "command": [
+        "docker",
+        "compose",
+        "run",
+        "--rm",
+        "--no-deps",
+        "migrate"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "docker",
+        "compose",
+        "run",
+        "--rm",
+        "--no-deps",
+        "seed-lab",
+        "reporting"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "docker",
+        "compose",
+        "up",
+        "-d",
+        "--no-deps",
+        "--no-build",
+        "--wait",
+        "--wait-timeout",
+        "85",
+        "app",
+        "web"
+      ],
+      "result": "PASS"
+    }
+  ],
+  "before": [
+    110,
+    20,
+    21,
+    30
+  ],
+  "after": [
+    110,
+    20,
+    21,
+    33
+  ],
+  "counts": [
+    "tickets",
+    "knowledge_content",
+    "portal_navigation",
+    "migration_ledger"
+  ]
+}

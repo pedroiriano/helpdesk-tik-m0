@@ -1,0 +1,62 @@
+{
+  "timestamp": "2026-11-12T06:43:51.588478+00:00",
+  "result": "PASS_SMOKE",
+  "gateway": "http://127.0.0.1:18080",
+  "runtime": {
+    "/helpdesk-m0": {
+      "image": "sha256:4275cd2af6e21a61c4fe5fe413eeb02a64c19fbc50593e7b0a432d77a26deeee",
+      "nano_cpus": 2500000000,
+      "memory_bytes": 4831838208,
+      "health": "healthy"
+    },
+    "/helpdesk-m0-db": {
+      "image": "sha256:57c72fd2a128e416c7fcc499958864df5301e940bca0a56f58fddf30ffc07777",
+      "nano_cpus": 1000000000,
+      "memory_bytes": 2684354560,
+      "health": "healthy"
+    },
+    "/helpdesk-m0-nginx": {
+      "image": "sha256:ca51d17f6798023d621fe920b1c8317fce5afcec48e4686864df88710ce34ef5",
+      "nano_cpus": 400000000,
+      "memory_bytes": 805306368,
+      "health": "healthy"
+    },
+    "/helpdesk-m0-scanner": {
+      "image": "sha256:8ad6197396974726c35d017e50aaaaf4b91745726a04faec8480c203edd98052",
+      "nano_cpus": 1000000000,
+      "memory_bytes": 3221225472,
+      "health": "healthy"
+    }
+  },
+  "scenarios": [
+    {
+      "viewport": [
+        1366,
+        900
+      ],
+      "role": "COORDINATOR",
+      "observed": {
+        "keyboard_login": "PASS",
+        "handoff_button_visible": true,
+        "escalation_button_visible": true,
+        "accept_button_visible_without_offer": false
+      }
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "role": "COORDINATOR",
+      "observed": {
+        "keyboard_report": "PASS",
+        "document_scroll_width": 380,
+        "accepted": 88,
+        "completed": 35,
+        "open": 53
+      }
+    }
+  ],
+  "viewport_override_reset": true,
+  "limit": "Read-only smoke in the working lab. Offer authorization, acceptance, idempotency and operation receipts exercised in disposable HTTP integration. No active inbound offer or escalation receipt fixture existed in the working lab."
+}

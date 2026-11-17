@@ -1,0 +1,40 @@
+[
+  {
+    "command": [
+      "docker",
+      "compose",
+      "build",
+      "web"
+    ],
+    "exit": 0,
+    "result": "PASS",
+    "output": "qa/remediation/rm0-04/access-profiles/build-web-resume.txt"
+  },
+  {
+    "command": [
+      "docker",
+      "compose",
+      "up",
+      "-d",
+      "--no-deps",
+      "--no-build",
+      "--wait",
+      "--wait-timeout",
+      "85",
+      "web"
+    ],
+    "exit": 0,
+    "result": "PASS",
+    "output": "qa/remediation/rm0-04/access-profiles/cutover-resume.txt"
+  },
+  {
+    "command": [
+      "python",
+      "-B",
+      "qa/remediation/rm0-04/access-profiles/verify_gateway.py"
+    ],
+    "exit": 0,
+    "result": "PASS",
+    "output": "qa/remediation/rm0-04/access-profiles/gateway-resume.txt"
+  }
+]

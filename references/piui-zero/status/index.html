@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Status Kesehatan Layanan — PIUI Zero</title>
+  <meta name="description" content="Halaman status kesehatan layanan publik berdasarkan data contoh, uptime 90 hari, latensi API gateway, dan riwayat insiden contoh PIUI Zero.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Status Kesehatan Layanan — PIUI Zero">
+  <meta property="og:description" content="Transparansi status operasional berdasarkan data contoh dan metrik SLA publik PIUI Zero.">
+  <meta property="og:type" content="website">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="stylesheet" href="/assets/css/main.css?v=2.2.2">
+  <script type="module" src="/assets/js/app.js?v=2.2.2"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Status Kesehatan Layanan — PIUI Zero",
+    "url": "/status/index.html",
+    "description": "Contoh tampilan status layanan, metrik ketersediaan dan riwayat pemeliharaan PIUI Zero.",
+    "inLanguage": "id-ID"
+  }
+  </script>
+<link rel="icon" href="/assets/icons/favicon.ico?v=2.2.2" sizes="16x16 32x32 48x48"><link rel="icon" href="/assets/icons/piui-favicon.svg?v=2.2.2" type="image/svg+xml" sizes="any"><link rel="apple-touch-icon" href="/assets/icons/piui-180.png?v=2.2.2" sizes="180x180">
+</head>
+<body>
+  <a class="piui-skip-link" href="#main-content">Langsung ke konten utama</a>
+  <div id="piui-live-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="piui-public-shell">
+    <!-- HEADER PUBLIK -->
+    <header class="piui-topbar">
+      <div class="piui-topbar__start">
+        <a href="/index.html" class="piui-brand"><img class="piui-brand__mark" src="/assets/icons/piui-mark.svg" alt="" width="32" height="32"><span class="piui-brand__name">PIUI Zero™</span><span class="piui-badge piui-badge--env">STATUS SLA</span></a>
+      </div>
+      <div class="piui-topbar__end">
+        <a href="/index.html" class="piui-btn piui-btn--secondary piui-btn--sm">Portal Arsitektur</a>
+        <a href="/app/dashboard/index.html" class="piui-btn piui-btn--primary piui-btn--sm">Buka Konsol Admin</a>
+        <button type="button" class="piui-icon-btn" id="btn-theme-toggle" aria-label="Ganti tema terang atau gelap">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-theme"></use></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- KONTEN UTAMA -->
+    <main id="main-content" class="piui-main">
+      <nav aria-label="Breadcrumb" class="piui-breadcrumb">
+        <ol>
+          <li><a href="/index.html">Panduan &amp; Dokumentasi</a></li>
+          <li><a href="/app/dashboard/index.html">Sistem &amp; Keamanan</a></li>
+          <li aria-current="page">Status Server</li>
+        </ol>
+      </nav>
+
+      <div class="piui-health-banner" role="status">
+        <div class="piui-health-banner__content">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-check-circle"></use></svg>
+          <span><strong>Data contoh status layanan</strong> • Snapshot sintetis; belum terhubung ke monitoring server.</span>
+        </div>
+        <span class="piui-badge" data-status="success">21 Okt 2026, 08:55 WIB</span>
+      </div>
+
+      <div class="piui-page-header">
+        <div class="piui-page-header__titles">
+          <h1 class="piui-page-title">Status Server &amp; Ketersediaan Layanan</h1>
+          <p class="piui-page-subtitle">Pantau kondisi server, waktu aktif (uptime), dan kecepatan respons layanan secara berdasarkan data contoh.</p>
+        </div>
+        <div class="piui-page-actions">
+          <a href="/auth/login.html" class="piui-btn piui-btn--secondary">Login Operator SRE</a>
+        </div>
+      </div>
+
+      <!-- 4 KARTU SLA PUBLIK -->
+      <section aria-label="Ringkasan Uptime 90 Hari" class="piui-kpi-grid">
+        <article class="piui-card">
+          <div class="piui-card__header">
+            <h2 class="piui-card__title">Core API &amp; Edge Gateway</h2>
+            <span class="piui-badge" data-status="success">Normal</span>
+          </div>
+          <div class="piui-card__value tabular-nums">99,998%</div>
+          <p class="piui-card__meta">Latensi p95 rata-rata: 42 ms</p>
+        </article>
+
+        <article class="piui-card">
+          <div class="piui-card__header">
+            <h2 class="piui-card__title">Otorisasi IAM &amp; WebAuthn</h2>
+            <span class="piui-badge" data-status="success">Normal</span>
+          </div>
+          <div class="piui-card__value tabular-nums">100,00%</div>
+          <p class="piui-card__meta">Verifikasi kunci FIDO2: 19 ms</p>
+        </article>
+
+        <article class="piui-card">
+          <div class="piui-card__header">
+            <h2 class="piui-card__title">Mesin Kliring &amp; Idempotensi</h2>
+            <span class="piui-badge" data-status="success">Normal</span>
+          </div>
+          <div class="piui-card__value tabular-nums">99,995%</div>
+          <p class="piui-card__meta">Antrean pesan tertunda: 0</p>
+        </article>
+
+        <article class="piui-card">
+          <div class="piui-card__header">
+            <h2 class="piui-card__title">Contoh layanan penyimpanan audit</h2>
+            <span class="piui-badge" data-status="success">Normal</span>
+          </div>
+          <div class="piui-card__value tabular-nums">100,00%</div>
+          <p class="piui-card__meta">Replikasi lintas 3 zona aktif</p>
+        </article>
+      </section>
+
+      <!-- TABEL KOMPONEN LAYANAN -->
+      <section class="piui-panel" aria-labelledby="heading-status-components">
+        <div class="piui-panel__header">
+          <div>
+            <h2 id="heading-status-components" class="piui-panel__title">Matriks Status Subsistem &amp; Riwayat Insiden 30 Hari</h2>
+            <p class="piui-page-subtitle">Diukur dari probe independen Jakarta, Surabaya, dan Singapura</p>
+          </div>
+        </div>
+
+        <div class="piui-table-scroll" role="region" aria-labelledby="heading-status-components" tabindex="0">
+          <table class="piui-table">
+            <thead>
+              <tr>
+                <th scope="col" class="is-sticky-col">Komponen Subsistem</th>
+                <th scope="col">Wilayah Operasional</th>
+                <th scope="col">Latensi Saat Ini</th>
+                <th scope="col">Uptime 30 Hari</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row" class="is-sticky-col">Admin Dashboard App Shell (Zero-Dep)</th>
+                <td>Multi-Region CDN &amp; Edge</td>
+                <td class="tabular-nums">14 ms</td>
+                <td class="tabular-nums">100,00%</td>
+                <td><span class="piui-badge" data-status="success">Beroperasi Normal</span></td>
+              </tr>
+              <tr>
+                <th scope="row" class="is-sticky-col">API Mutasi Transaksi (Idempotent)</th>
+                <td>Jakarta Primary (DC-1 &amp; DC-2)</td>
+                <td class="tabular-nums">38 ms</td>
+                <td class="tabular-nums">99,99%</td>
+                <td><span class="piui-badge" data-status="success">Beroperasi Normal</span></td>
+              </tr>
+              <tr>
+                <th scope="row" class="is-sticky-col">Contoh pipeline SIEM &amp; audit</th>
+                <td>Jakarta &amp; Surabaya DRC</td>
+                <td class="tabular-nums">45 ms</td>
+                <td class="tabular-nums">100,00%</td>
+                <td><span class="piui-badge" data-status="success">Beroperasi Normal</span></td>
+              </tr>
+              <tr>
+                <th scope="row" class="is-sticky-col">Webhook Rekonsiliasi Mitra Eksternal</th>
+                <td>Batam Edge Gateway</td>
+                <td class="tabular-nums">62 ms</td>
+                <td class="tabular-nums">99,98%</td>
+                <td><span class="piui-badge" data-status="success">Beroperasi Normal</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="piui-footer">
+      
+      <ul class="piui-footer__links">
+        <li><a href="/index.html">Portal Sistem</a></li>
+        <li><a href="/app/dashboard/index.html">Pusat Komando</a></li>
+        <li><a href="/auth/login.html">Autentikasi Admin</a></li>
+      </ul>
+    <p class="piui-product-credit"><span class="piui-product-signature"><img class="piui-brand__mark" src="/assets/icons/piui-mark.svg" alt="" width="24" height="24"><span>PIUI Zero™ v2.2.2</span></span> • Created by Ipi &quot;Pedro Iriano&quot; • © 2026 • <a href="/about/index.html">Tentang produk</a></p></footer>
+  </div>
+
+  <div id="piui-toast-region" class="piui-toast-region" aria-live="polite"></div>
+
+  <template id="tpl-toast">
+    <div class="piui-toast" role="status">
+      <span data-toast-text></span>
+      <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-toast-close>Tutup</button>
+    </div>
+  </template>
+</body>
+</html>

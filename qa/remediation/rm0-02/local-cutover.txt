@@ -1,0 +1,212 @@
+ Container helpdesk-m0 Stopping 
+ Container helpdesk-m0 Stopped 
+ Container helpdesk-m0-migrate-run-53fcc9f75ee8 Creating 
+ Container helpdesk-m0-migrate-run-53fcc9f75ee8 Created 
+NOTICE:  schema "migration_control" already exists, skipping
+CREATE SCHEMA
+REVOKE
+NOTICE:  relation "ledger" already exists, skipping
+CREATE TABLE
+REVOKE
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+ALTER TABLE
+CREATE TABLE
+GRANT
+CREATE INDEX
+UPDATE 65
+INSERT 0 1
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+CREATE INDEX
+INSERT 0 1
+COMMIT
+ Container helpdesk-m0 Recreate 
+ Container helpdesk-m0 Recreated 
+ Container helpdesk-m0-nginx Recreate 
+ Container helpdesk-m0-nginx Recreated 
+ Container helpdesk-m0 Starting 
+ Container helpdesk-m0 Started 
+ Container helpdesk-m0 Waiting 
+ Container helpdesk-m0 Healthy 
+ Container helpdesk-m0-nginx Starting 
+ Container helpdesk-m0-nginx Started 
+ Container helpdesk-m0 Waiting 
+ Container helpdesk-m0-nginx Waiting 
+ Container helpdesk-m0 Healthy 
+ Container helpdesk-m0-nginx Healthy 

@@ -1,0 +1,312 @@
+{
+  "timestamp": "2026-11-10T05:04:48.837605+00:00",
+  "scope": "Inventaris metadata seluruh katalog lokal menurut access mode canonical M2. Pengesahan pemilik domain tetap terbuka.",
+  "source": "qa/remediation/rm0-02/catalog-all-local.json",
+  "total": 23,
+  "tik": 16,
+  "checks": [
+    {
+      "code": "LAB-BROWSER-M003",
+      "active": false,
+      "result": "PASS",
+      "failures": [],
+      "form_version": 2,
+      "policy_version": 2,
+      "required_fields": [
+        "kronologi_lab"
+      ]
+    },
+    {
+      "code": "LAB-SVC-1",
+      "active": true,
+      "result": "PASS",
+      "failures": [],
+      "form_version": 1,
+      "policy_version": 1,
+      "required_fields": [
+        "ringkasan"
+      ]
+    },
+    {
+      "code": "LAB-SVC-2",
+      "active": true,
+      "result": "PASS",
+      "failures": [],
+      "form_version": 1,
+      "policy_version": 1,
+      "required_fields": [
+        "ringkasan"
+      ]
+    },
+    {
+      "code": "LAB-SVC-3",
+      "active": true,
+      "result": "PASS",
+      "failures": [],
+      "form_version": 1,
+      "policy_version": 1,
+      "required_fields": [
+        "ringkasan"
+      ]
+    },
+    {
+      "code": "LAB-SVC-4",
+      "active": true,
+      "result": "PASS",
+      "failures": [],
+      "form_version": 1,
+      "policy_version": 1,
+      "required_fields": [
+        "ringkasan"
+      ]
+    },
+    {
+      "code": "LAB-SVC-5",
+      "active": true,
+      "result": "PASS",
+      "failures": [],
+      "form_version": 1,
+      "policy_version": 1,
+      "required_fields": [
+        "ringkasan"
+      ]
+    },
+    {
+      "code": "LAB-SVC-6",
+      "active": true,
+      "result": "PASS",
+      "failures": [],
+      "form_version": 1,
+      "policy_version": 1,
+      "required_fields": [
+        "ringkasan"
+      ]
+    },
+    {
+      "code": "TIK-ACC-01",
+      "active": true,
+      "result": "PASS",
+      "failures": [],
+      "form_version": 1,
+      "policy_version": 1,
+      "required_fields": [
+        "nip_aparatur",
+        "akun_layanan",
+        "alasan_reset"
+      ]
+    },
+    {
+      "code": "TIK-CCT-01",
+      "active": true,
+      "result": "PASS",
+      "failures": [],
+      "form_version": 1,
+      "policy_version": 1,
+      "required_fields": [
+        "lokasi_titik_cctv",
+        "instansi_pelapor",
+        "gejala_kerusakan"
+      ]
+    },
+    {
+      "code": "TIK-DEV-01",
+      "active": true,
+      "result": "PASS",
+      "failures": [],
+      "form_version": 1,
+      "policy_version": 1,
+      "required_fields": [
+        "nama_usulan_sistem",
+        "target_pengguna",
+        "tujuan_inovasi",
+        "kesiapan_sop",
+        "landasan_regulasi"
+      ]
+    },
+    {
+      "code": "TIK-DOM-01",
+      "active": true,
+      "result": "PASS",
+      "failures": [],
+      "form_version": 1,
+      "policy_version": 1,
+      "required_fields": [
+        "nama_subdomain",
+        "tujuan_penggunaan",
+        "ip_server_hosting"
+      ]
+    },
+    {
+      "code": "TIK-DSW-01",
+      "active": true,
+      "result": "PASS",
+      "failures": [],
+      "form_version": 1,
+      "policy_version": 1,
+      "required_fields": [
+        "nik_pelapor",
+        "nomor_whatsapp",
+        "fitur_layanan",
+        "tipe_perangkat",
+        "kronologi_kendala"
+      ]
+    },
+    {
+      "code": "TIK-EML-01",
+      "active": true,
+      "result": "PASS",
+      "failures": [],
+      "form_version": 1,
+      "policy_version": 1,
+      "required_fields": [
+        "nip_asn",
+        "nama_lengkap",
+        "opd_asal",
+        "usulan_username"
+      ]
+    },
+    {
+      "code": "TIK-INT-01",
+      "active": true,
+      "result": "PASS",
+      "failures": [],
+      "form_version": 1,
+      "policy_version": 1,
+      "required_fields": [
+        "nama_aplikasi_asal",
+        "nama_aplikasi_tujuan",
+        "metode_integrasi",
+        "dasar_kebutuhan"
+      ]
+    },
+    {
+      "code": "TIK-KEU-01",
+      "active": true,
+      "result": "PASS",
+      "failures": [],
+      "form_version": 1,
+      "policy_version": 1,
+      "required_fields": [
+        "opd_pemohon",
+        "jenis_dokumen",
+        "jenis_kendala",
+        "pesan_kesalahan"
+      ]
+    },
+    {
+      "code": "TIK-LAN-01",
+      "active": true,
+      "result": "PASS",
+      "failures": [],
+      "form_version": 1,
+      "policy_version": 1,
+      "required_fields": [
+        "perangkat_daerah",
+        "ruang_kerja",
+        "jenis_pekerjaan",
+        "estimasi_titik",
+        "kebutuhan_teknis"
+      ]
+    },
+    {
+      "code": "TIK-NET-01",
+      "active": true,
+      "result": "PASS",
+      "failures": [],
+      "form_version": 1,
+      "policy_version": 1,
+      "required_fields": [
+        "lokasi_gedung",
+        "jenis_koneksi",
+        "gejala_kendala",
+        "nomor_kontak"
+      ]
+    },
+    {
+      "code": "TIK-PUB-01",
+      "active": true,
+      "result": "PASS",
+      "failures": [],
+      "form_version": 1,
+      "policy_version": 1,
+      "required_fields": [
+        "nama_taman_alunalun",
+        "ssid_wifi",
+        "kendala_koneksi"
+      ]
+    },
+    {
+      "code": "TIK-SEC-01",
+      "active": true,
+      "result": "PASS",
+      "failures": [],
+      "form_version": 1,
+      "policy_version": 1,
+      "required_fields": [
+        "indikasi_insiden",
+        "target_sistem",
+        "waktu_terdeteksi",
+        "kontak_pelapor"
+      ]
+    },
+    {
+      "code": "TIK-SIM-01",
+      "active": true,
+      "result": "PASS",
+      "failures": [],
+      "form_version": 1,
+      "policy_version": 1,
+      "required_fields": [
+        "nip_asn",
+        "modul_aplikasi",
+        "uraian_masalah"
+      ]
+    },
+    {
+      "code": "TIK-SRV-01",
+      "active": true,
+      "result": "PASS",
+      "failures": [],
+      "form_version": 1,
+      "policy_version": 1,
+      "required_fields": [
+        "nama_server",
+        "lingkungan_server",
+        "jenis_penyesuaian",
+        "alasan_kebutuhan"
+      ]
+    },
+    {
+      "code": "TIK-TTE-01",
+      "active": true,
+      "result": "PASS",
+      "failures": [],
+      "form_version": 1,
+      "policy_version": 1,
+      "required_fields": [
+        "nik_pegawai",
+        "nip_pegawai",
+        "nama_lengkap",
+        "jabatan_resmi",
+        "email_dinas",
+        "tujuan_tte"
+      ]
+    },
+    {
+      "code": "TIK-VIC-01",
+      "active": true,
+      "result": "PASS",
+      "failures": [],
+      "form_version": 1,
+      "policy_version": 1,
+      "required_fields": [
+        "nama_acara",
+        "waktu_pelaksanaan",
+        "lokasi_vicon",
+        "platform_vicon",
+        "jumlah_peserta"
+      ]
+    }
+  ],
+  "result": "PASS"
+}

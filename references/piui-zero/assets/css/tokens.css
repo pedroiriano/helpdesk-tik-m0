@@ -1,0 +1,275 @@
+@layer tokens {
+  :root,
+  [data-theme="light"] {
+    color-scheme: light;
+    --piui-palette-059669: #059669;
+    --piui-palette-09090b: #09090B;
+    --piui-palette-18181b: #18181B;
+    --piui-palette-2563eb: #2563EB;
+    --piui-palette-27272a: #27272A;
+    --piui-palette-3f3f46: #3F3F46;
+    --piui-palette-52525b: #52525B;
+    --piui-palette-7c3aed: #7C3AED;
+    --piui-palette-d4d4d8: #D4D4D8;
+    --piui-palette-d97706: #D97706;
+    --piui-palette-fafafa: #FAFAFA;
+
+    /* =========================================================================
+       MONOKROM HALUS: ABU-ABU TUA KE GRADASI ABU-ABU MUDA (LIGHT MODE)
+       ========================================================================= */
+    --piui-bg-canvas: #E4E4E7;
+    --piui-bg-surface: #F4F4F5;
+    --piui-bg-elevated: #EAEAEF;
+    --piui-bg-subtle: #EDEDF0;
+    --piui-bg-sidebar: #18181B;
+    --piui-bg-sidebar-hover: #27272A;
+    --piui-bg-sidebar-active: #3F3F46;
+
+    /* Gradasi Monokrom Halus (Abu-abu Tua -> Abu-abu Muda) */
+    --piui-gradient-canvas: linear-gradient(180deg, #D4D4D8 0%, #E4E4E7 45%, #F4F4F5 100%);
+    --piui-gradient-surface: linear-gradient(145deg, #FAFAFA 0%, #ECECEF 100%);
+    --piui-gradient-card: linear-gradient(160deg, #FFFFFF 0%, #F4F4F6 60%, #E8E8ED 100%);
+    --piui-gradient-topbar: linear-gradient(90deg, #18181B 0%, #27272A 55%, #3F3F46 100%);
+    --piui-gradient-sidebar: linear-gradient(180deg, #18181B 0%, #232329 55%, #2E2E36 100%);
+    --piui-gradient-btn-primary: linear-gradient(135deg, #18181B 0%, #3F3F46 100%);
+    --piui-gradient-btn-secondary: linear-gradient(135deg, #FAFAFA 0%, #E4E4E7 100%);
+    --piui-gradient-badge: linear-gradient(135deg, #E4E4E7 0%, #D4D4D8 100%);
+
+    /* Text & Border Tokens (WCAG 2.2 AA Compliant Monochrome) */
+    --piui-text-primary: #18181B;
+    --piui-text-secondary: #3F3F46;
+    --piui-text-muted: #52525B;
+    --piui-text-on-dark: #F4F4F5;
+    --piui-text-on-dark-muted: #A1A1AA;
+    --piui-border-subtle: #D4D4D8;
+    --piui-border-strong: #A1A1AA;
+    --piui-scrim: rgba(24, 24, 27, 0.62);
+
+    /* Accent & Focus Tokens (Monochrome Charcoal) */
+    --piui-accent-primary: #27272A;
+    --piui-accent-hover: #18181B;
+    --piui-accent-soft: #E4E4E7;
+    --piui-focus-ring: #3F3F46;
+
+    /* Semantic Status Tokens (Harmonized Tonal Monochrome Gray) */
+    --piui-status-success-fg: #18181B;
+    --piui-status-success-bg: #E4E4E7;
+    --piui-status-success-border: #A1A1AA;
+
+    --piui-status-warning-fg: #27272A;
+    --piui-status-warning-bg: #DCDCE0;
+    --piui-status-warning-border: #71717A;
+
+    --piui-status-danger-fg: #FAFAFA;
+    --piui-status-danger-bg: #27272A;
+    --piui-status-danger-border: #18181B;
+
+    --piui-status-info-fg: #27272A;
+    --piui-status-info-bg: #EAEAEF;
+    --piui-status-info-border: #A1A1AA;
+
+    /* Typography System Stack */
+    --piui-font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, sans-serif;
+    --piui-font-mono: ui-monospace, "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+
+    --piui-text-xs: 0.75rem;
+    --piui-text-sm: 0.875rem;
+    --piui-text-base: 1rem;
+    --piui-text-lg: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+    --piui-text-xl: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+    --piui-text-2xl: clamp(1.25rem, 1.15rem + 0.55vw, 1.6rem);
+
+    /* Spacing Scale (4px Base) */
+    --piui-space-1: 0.25rem;
+    --piui-space-2: 0.5rem;
+    --piui-space-3: 0.75rem;
+    --piui-space-4: 1rem;
+    --piui-space-5: 1.25rem;
+    --piui-space-6: 1.5rem;
+    --piui-space-8: 2rem;
+    --piui-space-10: 2.5rem;
+
+    /* Table Density Tokens */
+    --piui-cell-py: 0.65rem;
+    --piui-cell-px: 0.875rem;
+    --piui-table-cell-min: 7rem;
+    --piui-table-action-min: 6rem;
+
+    /* Shape & Elevation Tokens */
+    --piui-radius-sm: 6px;
+    --piui-radius-md: 8px;
+    --piui-radius-lg: 12px;
+    --piui-radius-pill: 9999px;
+    --piui-border-width: 1px;
+    --piui-focus-width: 2px;
+    --piui-focus-offset: 2px;
+
+    --piui-shadow-sm: 0 1px 3px rgba(24, 24, 27, 0.08);
+    --piui-shadow-md: 0 6px 16px rgba(24, 24, 27, 0.12);
+    --piui-shadow-lg: -8px 0 32px rgba(24, 24, 27, 0.24);
+
+    /* Motion Tokens */
+    --piui-duration-fast: 140ms;
+    --piui-duration-normal: 220ms;
+    --piui-duration-slow: 300ms;
+    --piui-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+    --piui-ease-out: cubic-bezier(0, 0, 0.2, 1);
+
+    /* Shell & Z-Index Tokens */
+    --piui-topbar-h: 56px;
+    --piui-sidebar-w: 260px;
+    --piui-sidebar-rail-w: 64px;
+    --piui-container-max: 1600px;
+    --piui-touch-min: 48px;
+    --piui-touch-desktop: 38px;
+    --piui-editor-canvas-h: 22rem;
+
+    --piui-z-sticky: 10;
+    --piui-z-header: 20;
+    --piui-z-sidebar: 30;
+    --piui-z-drawer: 40;
+    --piui-z-modal: 50;
+    --piui-z-toast: 60;
+    --piui-z-skip: 100;
+  }
+
+  [data-theme="dark"] {
+    color-scheme: dark;
+
+    /* =========================================================================
+       MONOKROM HALUS: ABU-ABU TUA KE GRADASI ABU-ABU MUDA (DARK MODE)
+       ========================================================================= */
+    --piui-bg-canvas: #141417;
+    --piui-bg-surface: #1E1E22;
+    --piui-bg-elevated: #27272C;
+    --piui-bg-subtle: #18181C;
+    --piui-bg-sidebar: #121215;
+    --piui-bg-sidebar-hover: #27272C;
+    --piui-bg-sidebar-active: #3F3F46;
+
+    /* Gradasi Monokrom Halus (Abu-abu Tua -> Abu-abu Muda Lembut) */
+    --piui-gradient-canvas: linear-gradient(180deg, #121215 0%, #1A1A1F 55%, #232329 100%);
+    --piui-gradient-surface: linear-gradient(145deg, #242429 0%, #1B1B20 100%);
+    --piui-gradient-card: linear-gradient(160deg, #2A2A30 0%, #202025 65%, #19191D 100%);
+    --piui-gradient-topbar: linear-gradient(90deg, #141417 0%, #202025 55%, #2C2C33 100%);
+    --piui-gradient-sidebar: linear-gradient(180deg, #111114 0%, #1B1B20 60%, #25252C 100%);
+    --piui-gradient-btn-primary: linear-gradient(135deg, #52525B 0%, #3F3F46 100%);
+    --piui-gradient-btn-secondary: linear-gradient(135deg, #2C2C33 0%, #202025 100%);
+    --piui-gradient-badge: linear-gradient(135deg, #32323A 0%, #24242A 100%);
+
+    --piui-text-primary: #F4F4F5;
+    --piui-text-secondary: #D4D4D8;
+    --piui-text-muted: #A1A1AA;
+    --piui-text-on-dark: #F4F4F5;
+    --piui-text-on-dark-muted: #A1A1AA;
+    --piui-border-subtle: #2E2E36;
+    --piui-border-strong: #464652;
+    --piui-scrim: rgba(9, 9, 11, 0.72);
+
+    --piui-accent-primary: #E4E4E7;
+    --piui-accent-hover: #FAFAFA;
+    --piui-accent-soft: #2E2E36;
+    --piui-focus-ring: #A1A1AA;
+
+    /* Status Monokrom Halus (Abu-abu Tua -> Perak/Abu-abu Muda) */
+    --piui-status-success-fg: #F4F4F5;
+    --piui-status-success-bg: #27272C;
+    --piui-status-success-border: #52525B;
+
+    --piui-status-warning-fg: #E4E4E7;
+    --piui-status-warning-bg: #2E2E34;
+    --piui-status-warning-border: #71717A;
+
+    --piui-status-danger-fg: #FAFAFA;
+    --piui-status-danger-bg: #3A3A42;
+    --piui-status-danger-border: #A1A1AA;
+
+    --piui-status-info-fg: #D4D4D8;
+    --piui-status-info-bg: #232329;
+    --piui-status-info-border: #464652;
+
+    --piui-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.38);
+    --piui-shadow-md: 0 6px 18px rgba(0, 0, 0, 0.48);
+    --piui-shadow-lg: -10px 0 36px rgba(0, 0, 0, 0.68);
+  }
+
+  /* =========================================================================
+     PRESET AKSEN WARNA BRAND (BRAND ACCENT PRESETS)
+     ========================================================================= */
+  :root[data-accent="blue"],
+  [data-theme="light"][data-accent="blue"] {
+    --piui-accent-primary: #1D4ED8;
+    --piui-accent-hover: #1E40AF;
+    --piui-accent-soft: #DBEAFE;
+    --piui-focus-ring: #3B82F6;
+    --piui-gradient-btn-primary: linear-gradient(135deg, #1D4ED8 0%, #3B82F6 100%);
+  }
+  [data-theme="dark"][data-accent="blue"] {
+    --piui-accent-primary: #3B82F6;
+    --piui-accent-hover: #60A5FA;
+    --piui-accent-soft: #1E293B;
+    --piui-focus-ring: #60A5FA;
+    --piui-gradient-btn-primary: linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%);
+  }
+
+  :root[data-accent="emerald"],
+  [data-theme="light"][data-accent="emerald"] {
+    --piui-accent-primary: #047857;
+    --piui-accent-hover: #065F46;
+    --piui-accent-soft: #D1FAE5;
+    --piui-focus-ring: #10B981;
+    --piui-gradient-btn-primary: linear-gradient(135deg, #047857 0%, #10B981 100%);
+  }
+  [data-theme="dark"][data-accent="emerald"] {
+    --piui-accent-primary: #10B981;
+    --piui-accent-hover: #34D399;
+    --piui-accent-soft: #064E3B;
+    --piui-focus-ring: #34D399;
+    --piui-gradient-btn-primary: linear-gradient(135deg, #065F46 0%, #10B981 100%);
+  }
+
+  :root[data-accent="violet"],
+  [data-theme="light"][data-accent="violet"] {
+    --piui-accent-primary: #6D28D9;
+    --piui-accent-hover: #5B21B6;
+    --piui-accent-soft: #EDE9FE;
+    --piui-focus-ring: #8B5CF6;
+    --piui-gradient-btn-primary: linear-gradient(135deg, #6D28D9 0%, #8B5CF6 100%);
+  }
+  [data-theme="dark"][data-accent="violet"] {
+    --piui-accent-primary: #8B5CF6;
+    --piui-accent-hover: #A78BFA;
+    --piui-accent-soft: #2E1065;
+    --piui-focus-ring: #A78BFA;
+    --piui-gradient-btn-primary: linear-gradient(135deg, #5B21B6 0%, #8B5CF6 100%);
+  }
+
+  :root[data-accent="amber"],
+  [data-theme="light"][data-accent="amber"] {
+    --piui-accent-primary: #B45309;
+    --piui-accent-hover: #92400E;
+    --piui-accent-soft: #FEF3C7;
+    --piui-focus-ring: #F59E0B;
+    --piui-gradient-btn-primary: linear-gradient(135deg, #B45309 0%, #F59E0B 100%);
+  }
+  [data-theme="dark"][data-accent="amber"] {
+    --piui-accent-primary: #F59E0B;
+    --piui-accent-hover: #FBBF24;
+    --piui-accent-soft: #451A03;
+    --piui-focus-ring: #FBBF24;
+    --piui-gradient-btn-primary: linear-gradient(135deg, #92400E 0%, #F59E0B 100%);
+  }
+
+  [data-density="compact"] {
+    --piui-cell-py: 0.4rem;
+    --piui-cell-px: 0.65rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --piui-duration-fast: 0.01ms;
+      --piui-duration-normal: 0.01ms;
+      --piui-duration-slow: 0.01ms;
+    }
+  }
+}

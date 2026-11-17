@@ -1,0 +1,62 @@
+# Paket Penguncian Keputusan Domain (DEC-M01–DEC-M10) & UAT Manusia RM0-05
+
+Tanggal penyusunan: 17 November 2026.  
+Status fase: **`BLOCKED_HUMAN_UAT_AND_DOMAIN_DECISIONS`** *(teknis lab & CI lokal PASS; menunggu keterlibatan pemilik layanan Diskominfo/OPD serta penguji manusia)*.  
+Identitas kandidat beku: Tag Git **`rm0-05-rc1`** (rujuk SHA tepat dan hash seluruh berkas pada [source-manifest.json](../../qa/remediation/rm0-05/source-manifest.json) serta bukti CI pada [local-ci.json](../../qa/remediation/rm0-05/local-ci.json)).  
+Lingkungan uji lab lokal: **`http://127.0.0.1:18090`** (`Go 1.27.4`, `Node 26.13.1`, `Nginx 1.30.6` rebuild, `PostgreSQL 18.7`, `ClamAV 1.5.4`).
+
+> **Prinsip Kejujuran RM0-05:** Tidak satu pun nama penguji manusia, tanda tangan pejabat, atau persetujuan kebijakan organisasi boleh diisi oleh agen AI. Seluruh keputusan di bawah wajib ditetapkan langsung oleh pemilik mandat Diskominfo / Perangkat Daerah Kota Depok pada kandidat `rm0-05-rc1` sebelum otorisasi rilis produksi.
+
+---
+
+## 1. Lembar Penguncian Keputusan Domain (`DEC-M01` – `DEC-M10` & `DEC-M12`)
+
+| ID | Keputusan & Pemilik | Default Lab Aktif Saat Ini | Pilihan / Ketetapan yang Harus Dikunci OPD / Diskominfo | Keputusan Resmi | Penanggung Jawab (Nama & Jabatan) | Tanggal & Status |
+|---|---|---|---|---|---|---|
+| **DEC-M01** | **Katalog layanan dan scope OPD** (`Pemilik layanan`) | 16 layanan TIK Diskominfo (`seeds/m0-13-depok-services.sql`), 29 kategori, 37 OPD contoh, 4 bidang (`infra`, `app`, `security`, `spbe`), routing L1/L2 | Sahkan daftar final layanan aktif, kode layanan, status wajib-login ASN vs publik, daftar OPD resmi Pemkot Depok, struktur Bidang, serta aturan Smart Dispatch lintas-OPD | *Belum diisi* | *Menunggu Pemilik Layanan Diskominfo* | `PENDING_OPD_DECISION` |
+| **DEC-M02** | **SSO dan verifikasi guest** (`Pengelola identitas`) | Lab identity selector (`/auth/bootstrap`) + pendaftaran NIK 16 digit + guest capability key `X-Guest-Capability` | Sahkan integrasi SSO ASN Pemkot Depok / BSrE / Simpeg, masa kedaluwarsa sesi kedinasan & guest tracking, serta kebijakan penonaktifan total mode `HELPDESK_LAB_AUTH` sebelum produksi | *Belum diisi* | *Menunggu Pengelola Identitas / Bidang Aplikasi* | `PENDING_OPD_DECISION` |
+| **DEC-M03** | **SLA kalender dan target tahap** (`Pemilik layanan`) | Kalender `CAL-1` (jam kerja Pemkot Depok) & `CAL-247` (`24x7` untuk insiden CSIRT), priority `NORMAL/HIGH/CRITICAL`, jendela konfirmasi pemohon `24 jam kalender` | Sahkan jam kerja resmi Pemkot Depok, kalender hari libur nasional/daerah, batas respon/resolusi tiap kategori layanan, serta validitas jendela auto-close `24 jam` | *Belum diisi* | *Menunggu Pemilik Layanan & Koordinator Layanan* | `PENDING_OPD_DECISION` |
+| **DEC-M04** | **Pause vendor dan escalation** (`Koordinator & pengelola kontrak`) | Eskalasi tidak memutus tanggung jawab PIC internal; vendor case tidak otomatis menjeda SLA; jeda butuh alasan & approval berizin | Tetapkan kewenangan peran pembuat/penyetuju jeda SLA, daftar jenis kendala yang boleh memicu pause, batas SLA eskalasi ke Pimpinan/L2, dan ketentuan kontrak pihak ketiga/vendor | *Belum diisi* | *Menunggu Koordinator & Pengelola Kontrak TIK* | `PENDING_OPD_DECISION` |
+| **DEC-M05** | **Reopen feedback dan notification policy** (`Pemilik layanan`) | `REJECT` resolusi melanjutkan episode berjalan dalam jendela konfirmasi; komentar pemohon pada `RESOLVED` menahan auto-close; reopen pasca-`CLOSED` tersedia hingga `7 hari` pada mode lab | Sahkan syarat reopen tiket `CLOSED` (batas hari, pembuka hak, dampak terhadap metrik SLA/reopen rate), serta aturan notifikasi wajib sebelum auto-close | *Belum diisi* | *Menunggu Pemilik Layanan Diskominfo* | `PENDING_OPD_DECISION` |
+| **DEC-M06** | **Mandat pimpinan dan delegasi** (`Pemilik proses`) | 5 profil admin (`OPERATOR`, `TECHNICIAN`, `COORDINATOR`, `LEADERSHIP`, `ADMIN`) pada `admin-profiles.mjs` dengan `grant_ceiling` dan batas per OPD | Sahkan daftar pejabat/ASN penanggung jawab per OPD, hak baca lintas OPD untuk Pimpinan/Inspektorat/Auditor, batas delegasi `identity.grant`, dan SOP pencabutan mutasi jabatan | *Belum diisi* | *Menunggu Pemilik Proses & Kepegawaian OPD* | `PENDING_OPD_DECISION` |
+| **DEC-M07** | **Retensi purge dan hold** (`Penanggung jawab data`) | Non-Super Admin hanya arsip (`ARCHIVED`); purge keras (`PURGE_REQUEST`) sengaja **disabled** menunggu kebijakan retensi & legal hold (`AC22`) | Tetapkan masa retensi tiket `CLOSED`/`ARCHIVED` (mis. 5 tahun sesuai JRA/SPBE), syarat `legal hold` untuk kasus CSIRT/audit, dan pejabat penyetuju dual-control sebelum purge | *Belum diisi* | *Menunggu Penanggung Jawab Data / Kearsipan* | `PENDING_OPD_DECISION` |
+| **DEC-M08** | **Batas media dan draft** (`Pemilik data & keamanan`) | Maks. `10 MiB` per unggahan, PNG/JPEG/PDF, maks. 25 file/`50 MiB` per tiket, karantina wajib ClamAV `1.5.4`, larangan direct reuse media privat ke publik, draft bebas rahasia | Konfirmasi batas ukuran/MIME produksi, masa retensi berkas karantina/rejected sebelum rekonsiliasi orphan 24 jam, dan SOP pembaruan basis data tanda tangan virus `freshclam` di produksi | *Belum diisi* | *Menunggu Bidang Persandian & Keamanan Informasi* | `PENDING_OPD_DECISION` |
+| **DEC-M09** | **Telegram analytics dan retensi kanal** (`Pengelola layanan`) | Sink notifikasi deterministik lokal; token bot disensor (`TG-***`); binding salah scope ditolak | Tentukan apakah kanal Telegram operasional diaktifkan pada produksi, pemilik bot resmi, SOP rotasi secret token, kebijakan retensi log pengiriman/dead-letter, dan fallback email kedinasan | *Belum diisi* | *Menunggu Pengelola Layanan / Infrastruktur* | `PENDING_OPD_DECISION` |
+| **DEC-M10** | **RPO, RTO, dan kapasitas produksi** (`Infrastruktur`) | Lab sudah ditetapkan (`DECIDED_LAB_ENVELOPE`, ADR 0009): Profil R1 `4.000m/8.192 MiB`, R2 `4.900m/11.008 MiB` incl. ClamAV, RPO `0` & RTO `<=180s` lab | Sahkan spesifikasi host produksi permanen (vCPU/RAM untuk PostgreSQL 18.7, ClamAV >=3 GiB, backup terjadwal RPO/RTO harian, dan volume penyimpanan lampiran terenkripsi) | *Lab sudah diputus di ADR 0009; produksi menunggu pengesahan* | *Menunggu Bidang Infrastruktur / Pengelola Server* | `PENDING_PROD_SIGN_OFF` |
+| *(Ref)* **DEC-M11** | **Versi stack dan tools** (`Lead implementer`) | Go `1.27.4`, Node `26.13.1`, React `19.3.1`, PG `18.7`, Nginx `1.30.6`, ClamAV `1.5.4` (ADR 0010) | Pembaruan runtime host Windows ke Engine `29.10.0` / Compose `5.7.1` mengikuti installer Docker Desktop; untuk deployment server gunakan image digest terpin ADR 0010 | **Ditetapkan (Lab)** | Lead Implementer | `DECIDED_PINNED_STACK` |
+| **DEC-M12** | **Design system & lisensi library** (`Lead implementer & pemilik produk`) | PIUI Modern (publik) & PIUI Zero (admin), React `19.3.1`, aset resmi Helpdesk TIK Depok | Sahkan penggunaan akhir visual/branding/aset logo resmi Pemerintah Kota Depok & persetujuan publikasi antarmuka oleh Pemilik Produk | *Belum diisi* | *Menunggu Pemilik Produk Diskominfo* | `PENDING_OPD_DECISION` |
+
+---
+
+## 2. Protokol Eksekusi UAT Manusia di Atas Kandidat Beku (`rm0-05-rc1`)
+
+### 2.1 Pra-syarat sebelum sesi UAT dimulai
+1. Pastikan kandidat kode tidak dimodifikasi selama sesi UAT berlangsung (`git checkout rm0-05-rc1`, verifikasi `python -X utf8 scripts/ci_local.py --with-live-browser` → **`PASS`**).
+2. Akses Portal Publik: `http://127.0.0.1:18090/` dan Portal Petugas/Admin: `http://127.0.0.1:18090/admin/auth/login.html`.
+3. Gunakan matriks CSV pelacakan hasil nyata di [uat-worksheets.csv](../../qa/remediation/rm0-05/uat-worksheets.csv) agar setiap penguji mencatat **Nama Penguji, OPD, Tanggal Uji, Hasil Aktual, dan ID Defect** secara terpisah.
+
+### 2.2 Skenario Wajib 9 Persona Manusia
+
+| ID | Persona Penguji Nyata | Rute Awal & Aksi Uji Utama | Bukti Penerimaan yang Diperiksa Manusia | Status |
+|---|---|---|---|---|
+| **UAT-01** | Pelapor Masyarakat (Tamu) | `/` → `/layanan.html` → `/lapor.html` (unggah PNG + simpan Kunci Tamu) → `/lacak.html` → `/detail-tiket.html` (ACCEPT/REJECT resolusi) | Formulir mudah dipahami, error per-field fokus jelas, kunci tamu tidak bocor di URL/draft, file terblokir saat karantina dan bisa diunduh setelah `CLEAN`, konfirmasi resolusi mengubah status ke `CLOSED` | `PENDING_HUMAN_UAT` |
+| **UAT-02** | Masyarakat Terdaftar | `/daftar.html` (NIK 16 digit) → `/masuk` → buat laporan & pantau daftar tiket di `/tiket.html` | Validasi NIK/email konsisten, daftar tiket hanya menampilkan tiket milik akun tersebut, logout langsung memblokir sesi | `PENDING_HUMAN_UAT` |
+| **UAT-03** | ASN Pemohon OPD | `/akses.html` (tab ASN) → `/layanan.html` (layanan khusus ASN) → uji autosave draft di `/lapor.html` & buka detail | Layanan khusus ASN terbuka bagi akun berizin & tertolak bagi tamu/OPD lain, draft pulih aman tanpa bocor saat ganti akun | `PENDING_HUMAN_UAT` |
+| **UAT-04** | Operator Meja Layanan | `/admin/auth/login.html` → `/admin/app/tickets/index.html` → Verifikasi tiket + override kategori beralasan → Dispatch | Guard menolak dispatch sebelum `VERIFIED`, override kategori menyimpan alasan & memicu aturan Smart Dispatch OPD/Bidang | `PENDING_HUMAN_UAT` |
+| **UAT-05** | Koordinator Layanan | `/admin/app/tickets/index.html` → Rekomendasi Smart Dispatch L1/L2, catat kasus vendor + jeda SLA berizin, ajukan/terima handoff lintas OPD | Gross vs net SLA terhitung akurat, overlap jeda tidak menggandakan pengurangan waktu, handoff memindahkan ownership & mencabut akses teknisi asal | `PENDING_HUMAN_UAT` |
+| **UAT-06** | Teknisi L1 / L2 | `/admin/app/tickets/index.html` → `Mulai Kerjakan`, tambah catatan `INTERNAL` vs komentar publik, unggah lampiran & `Selesaikan` (24 jam) | Catatan internal tidak muncul di halaman pemohon/tamu, konflik versi `409` terlihat saat tab bersaing, timer konfirmasi 24 jam tampil jelas | `PENDING_HUMAN_UAT` |
+| **UAT-07** | Editor & Penerbit Konten (M8) | `/admin/app/helpdesk/index.html?kind=media` & `?kind=knowledge` → unggah media, terbitkan `ARTICLE` & `PAGE`, kelola 5 slot Hero | Artikel & halaman terbit langsung muncul di `/panduan.html`, `/halaman/{slug}`, & pencarian; lampiran privat tiket ditolak untuk reuse langsung | `PENDING_HUMAN_UAT` |
+| **UAT-08** | Pimpinan & Auditor | `/admin/app/dashboard/index.html`, `?kind=reports`, `?kind=audit` → periksa KPI, ekspor CSV, jejak audit append-only | Angka SLA tepat waktu, watermark WIB, & pembagi (*denominator*) jelas; ekspor CSV terlindungi dari injeksi formula; riwayat audit tidak bisa diubah/dihapus | `PENDING_HUMAN_UAT` |
+| **UAT-09** | Admin OPD & Super Admin | `?kind=memberships`, `?kind=roles`, `?kind=maintenance` → atur profil akses berizin (`grant_ceiling`), kebijakan peran, & jalankan `BACKUP_MANIFEST` | Admin konfigurasi tidak otomatis bisa membaca isi tiket; purge keras oleh non-Super Admin ditolak `403`; job `BACKUP_MANIFEST` mengunduh manifes bertanda SHA-256 | `PENDING_HUMAN_UAT` |
+
+---
+
+## 3. Berita Acara Pengesahan RM0-05 (Diisi Oleh Pemangku Kepentingan Berwenang)
+
+| Peran Penanda Tangan | Nama Lengkap & NIP | Unit Kerja / OPD | Keputusan (`SETUJU` / `TUNDA` / `TOLAK`) | Tanggal & Paraf / TTE |
+|---|---|---|---|---|
+| Pemilik Layanan & Katalog (`DEC-M01, M03, M05`) | *Belum terisi* | *Diskominfo Kota Depok* | `PENDING_AUTHORIZATION` | — |
+| Koordinator Operasional & Kontrak (`DEC-M04, M06`) | *Belum terisi* | *Diskominfo Kota Depok* | `PENDING_AUTHORIZATION` | — |
+| Penanggung Jawab Data & Keamanan (`DEC-M02, M07, M08`) | *Belum terisi* | *Bidang Persandian / SPBE* | `PENDING_AUTHORIZATION` | — |
+| Infrastruktur & Operasi (`DEC-M09, M10`) | *Belum terisi* | *Bidang Infrastruktur TIK* | `PENDING_AUTHORIZATION` | — |
+| Perwakilan Penguji UAT Lintas OPD (`UAT-01..09`) | *Belum terisi* | *OPD Pilot Pemkot Depok* | `PENDING_HUMAN_UAT` | — |

@@ -1,0 +1,114 @@
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.03kB done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from web.Dockerfile
+#2 transferring dockerfile: 810B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:24.11.1-alpine@sha256:682368d8253e0c3364b803956085c456a612d738bd635926d73fa24db3ce53d7
+#3 DONE 0.1s
+
+#4 [internal] load metadata for docker.io/library/nginx:1.30.6-alpine@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949
+#4 ...
+
+#5 [auth] library/nginx:pull token for registry-1.docker.io
+#5 DONE 0.0s
+
+#4 [internal] load metadata for docker.io/library/nginx:1.30.6-alpine@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949
+#4 DONE 1.7s
+
+#6 [internal] load .dockerignore
+#6 transferring context: 238B done
+#6 DONE 0.0s
+
+#7 [internal] load build context
+#7 DONE 0.0s
+
+#8 [build  1/10] FROM docker.io/library/node:24.11.1-alpine@sha256:682368d8253e0c3364b803956085c456a612d738bd635926d73fa24db3ce53d7
+#8 resolve docker.io/library/node:24.11.1-alpine@sha256:682368d8253e0c3364b803956085c456a612d738bd635926d73fa24db3ce53d7 0.1s done
+#8 DONE 0.1s
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:1.30.6-alpine@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949
+#9 resolve docker.io/library/nginx:1.30.6-alpine@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949 0.1s done
+#9 DONE 0.1s
+
+#7 [internal] load build context
+#7 transferring context: 29.25MB 1.8s done
+#7 DONE 1.8s
+
+#10 [build  3/10] COPY frontend/package.json frontend/package-lock.json ./
+#10 CACHED
+
+#11 [build  2/10] WORKDIR /src/frontend
+#11 CACHED
+
+#12 [build  4/10] RUN npm ci --ignore-scripts --no-audit --no-fund
+#12 CACHED
+
+#13 [build  5/10] COPY frontend/ ./
+#13 DONE 0.2s
+
+#14 [build  6/10] COPY references/piui-modern/ /src/references/piui-modern/
+#14 DONE 0.2s
+
+#15 [build  7/10] COPY references/piui-zero/ /src/references/piui-zero/
+#15 DONE 0.1s
+
+#16 [build  8/10] COPY assets/ /src/assets/
+#16 DONE 0.2s
+
+#17 [build  9/10] COPY contracts/policy/permissions.v1.json /src/contracts/policy/permissions.v1.json
+#17 DONE 0.1s
+
+#18 [build 10/10] RUN npm run build
+#18 0.645 
+#18 0.645 > helpdesk-web@0.1.0 build
+#18 0.645 > npm run typecheck && vite build && node build-templates.mjs
+#18 0.645 
+#18 0.828 
+#18 0.828 > helpdesk-web@0.1.0 typecheck
+#18 0.828 > tsc --noEmit
+#18 0.828 
+#18 1.332 vite v8.3.5 building client environment for production...
+#18 1.344 transforming...
+#18 1.402 ✓ 27 modules transformed.
+#18 1.433 rendering chunks...
+#18 1.486 computing gzip size...
+#18 1.492 dist/journey-B1rZED4W.js   23.95 kB │ gzip:  7.19 kB
+#18 1.492 dist/helpdesk/m0-04.js     70.29 kB │ gzip: 20.12 kB
+#18 1.492 dist/helpdesk/m0-03.js     79.26 kB │ gzip: 23.43 kB
+#18 1.492 dist/helpdesk/health.js   298.73 kB │ gzip: 77.28 kB
+#18 1.492 
+#18 1.493 ✓ built in 159ms
+#18 1.633 piui-modern: 63 source files published
+#18 1.700 piui-zero: 78 source files published
+#18 1.777 npm notice
+#18 1.777 npm notice New minor version of npm available! 11.6.2 -> 11.21.2
+#18 1.777 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.21.2
+#18 1.777 npm notice To update run: npm install -g npm@11.21.2
+#18 1.777 npm notice
+#18 DONE 1.9s
+
+#19 [stage-1 2/3] COPY infra/nginx/nginx.conf /etc/nginx/nginx.conf
+#19 CACHED
+
+#20 [stage-1 3/3] COPY --from=build /src/frontend/dist/ /usr/share/nginx/html/
+#20 DONE 0.2s
+
+#21 exporting to image
+#21 exporting layers
+#21 exporting layers 0.7s done
+#21 exporting manifest sha256:0251bc4de7adcf7a99c1930ca390e1f6bb5612102cfc0482a5734cf8fe1c69a3 0.0s done
+#21 exporting config sha256:458a9c1be3c90a731e7e3c350038123af28589a1b0a94dfedafff9ed778c059b 0.0s done
+#21 exporting attestation manifest sha256:d54c340328aa42c4857b0888c1965fc9dc5db7409dd52c4e04ca0d2fcc531f17
+#21 exporting attestation manifest sha256:d54c340328aa42c4857b0888c1965fc9dc5db7409dd52c4e04ca0d2fcc531f17 0.0s done
+#21 exporting manifest list sha256:99cc10ae5def8dca8917c56284f72d30dec8b279847f631f2a8b472f2b35fee6 0.0s done
+#21 naming to docker.io/library/helpdesk-m0-web:0.1.0 done
+#21 unpacking to docker.io/library/helpdesk-m0-web:0.1.0 0.1s done
+#21 DONE 1.1s
+
+#22 resolving provenance for metadata file
+#22 DONE 0.0s
+ Image helpdesk-m0-web:0.1.0 Building 
+ Image helpdesk-m0-web:0.1.0 Built 

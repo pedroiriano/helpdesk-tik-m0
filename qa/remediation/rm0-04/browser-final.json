@@ -1,0 +1,170 @@
+{
+  "timestamp": "2026-11-17T04:58:23.255Z",
+  "base_url": "http://127.0.0.1:18090",
+  "browser": "Microsoft Edge Headless (CDP)",
+  "suites": {
+    "R4-B_csp_routes_overflow_faq": {
+      "status": "PASS",
+      "checked": 25,
+      "homeFaqCheck": {
+        "count": 4,
+        "afterFirst": "true",
+        "firstAfterSecond": "false",
+        "secondExpanded": "true"
+      },
+      "pageFaqCheck": {
+        "count": 5,
+        "afterFirst": true,
+        "firstAfterSecond": false,
+        "secondOpen": true
+      }
+    },
+    "candidate_access_profiles": {
+      "status": "PASS",
+      "profileCount": 5,
+      "ceilingWarn": "7 izin berada di luar kebijakan atau mandat delegasi saat ini. Sesuaikan pilihan sebelum menyimpan.",
+      "editInfo": "Operator OPD A · OperatorDinas Komunikasi dan Informatika Ko",
+      "saveMsg": "Tersimpan pada server. Versi 18.",
+      "editorTitleAfterSave": "Ubah akses pengguna"
+    },
+    "candidate_catalog_routing": {
+      "status": "PASS",
+      "catCount": 25,
+      "opdCount": 37,
+      "routeSaveTrigger": true,
+      "routeStatus": "Aturan tersimpan. Versi 17.",
+      "reloadedVersion": "Aturan versi 17."
+    },
+    "candidate_role_hero": {
+      "status": "PASS",
+      "superAdminLocked": "Hak inti Super Admin dilindungi.",
+      "roleFeedback": "Kebijakan tersimpan. Versi 16. Berlaku pada permintaan akun berikutnya.",
+      "slotCount": 5,
+      "heroDraftMsg": "Draf tersimpan. Versi 61.",
+      "heroPubMsg": "Banner terbit. Versi 62.",
+      "heroFit": {
+        "desktop_1280x720": {
+          "height": 720,
+          "vh": 720,
+          "overflow": 0,
+          "html": true
+        },
+        "mobile_390x844": {
+          "height": 844,
+          "vh": 844,
+          "overflow": 0,
+          "html": true
+        },
+        "mobile_375x667": {
+          "height": 667,
+          "vh": 667,
+          "overflow": 0,
+          "html": true
+        }
+      }
+    },
+    "RM0_03_R3_H_backup_manifest_ui": {
+      "status": "PASS",
+      "jobId": "7c5ab7e1-fdeb-4bc1-8391-ce42c285ec6a",
+      "execStatus": "Status pekerjaan SUCCEEDED.",
+      "artifactVerify": {
+        "status": 200,
+        "headerSha": "11169bb655f75cdb3b20d735a5d9c6df3e95d653cb4838d363a017f98f403018",
+        "computedSha": "11169bb655f75cdb3b20d735a5d9c6df3e95d653cb4838d363a017f98f403018",
+        "shaMatch": true,
+        "ownersCount": 9,
+        "migrationCount": 35,
+        "configShaLen": 64,
+        "jobId": "7c5ab7e1-fdeb-4bc1-8391-ce42c285ec6a"
+      }
+    },
+    "R4-D_form_lost_response_draft_tracking": {
+      "status": "PASS",
+      "valSummary": {
+        "visible": true,
+        "count": 4,
+        "focusedId": "ticket-description"
+      },
+      "retryPrompt": {
+        "retryVisible": true,
+        "href": "http://127.0.0.1:18090/detail-tiket.html?id=744455f5-7597-4da7-a43d-d4e89a8c901c"
+      },
+      "uploadRecovered": true,
+      "sameIdemKey": true,
+      "guestTrackingChecked": true,
+      "draftSavedText": "Draft tersimpan (v10 pada 11.59)",
+      "testTicketId": "744455f5-7597-4da7-a43d-d4e89a8c901c"
+    },
+    "R4-E_queue_lifecycle_conflict": {
+      "status": "PASS",
+      "desktopOv": 0,
+      "mobOv": 0,
+      "concurrentDispatchCode": 200,
+      "conflictUiShown": true,
+      "dispatchedAssigneeId": "20000000-0000-4000-8000-000000000009",
+      "resolveStatus": "Hasil penanganan tersimpan dan menunggu konfirmasi pemohon."
+    },
+    "R4-F_m9_reports_export": {
+      "status": "PASS",
+      "reportSummary": {
+        "measure": "100% tepat waktu",
+        "watermark": "17/11/2026, 11.02.28"
+      },
+      "dlCheck": {
+        "status": 200,
+        "type": "text/csv; charset=utf-8"
+      },
+      "crossOrgStatus": 404,
+      "postLogoutExportStatus": 401
+    },
+    "R4-G_m8_page_editorial_search_reader": {
+      "status": "PASS",
+      "slug": "rm004-e2e-halaman-1794891572288",
+      "rendered": true,
+      "searchHitFound": true,
+      "archivedUnavailable": true
+    },
+    "R4-H_lightbox_and_media": {
+      "status": "PASS",
+      "lbOpen": true,
+      "countBefore": "1 / 14",
+      "countAfterRight": "2 / 14",
+      "zoomInfo": "125%",
+      "afterEsc": {
+        "closed": true,
+        "activeId": "btn-open-gallery-lightbox"
+      },
+      "m3Loaded": true,
+      "previewClicked": {
+        "open": true,
+        "hidden": false
+      },
+      "attImgLoaded": true,
+      "attLightboxEsc": {
+        "closed": true,
+        "focusRestored": true
+      },
+      "revokedMediaCode": 404
+    },
+    "R4-I_footer_zoom_reduced_motion": {
+      "status": "PASS",
+      "zoomChecks": {
+        "/": 0,
+        "/lapor.html": 0,
+        "/admin/app/dashboard/index.html": 0
+      },
+      "reducedMotion": true,
+      "footerInfo": {
+        "exists": true,
+        "hasDepok": true,
+        "hasDiskominfo": true,
+        "noPedro": true,
+        "height": 131
+      }
+    }
+  },
+  "csp_violations": [],
+  "console_errors": [],
+  "exceptions": [],
+  "result": "PASS"
+}

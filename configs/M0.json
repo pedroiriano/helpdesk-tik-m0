@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "status": "DESIGN_NOT_DEPLOYED",
+  "variant": "M0",
+  "application_processes": 1,
+  "replicas_per_group": 1,
+  "hpa": false,
+  "internal_transport": "in_process_ports",
+  "external_transport": "http_json",
+  "module_ids": [
+    "M1",
+    "M2",
+    "M3",
+    "M4",
+    "M5",
+    "M6",
+    "M7",
+    "M8",
+    "M9"
+  ],
+  "groups": {
+    "G1": [
+      "M1",
+      "M2",
+      "M3",
+      "M4",
+      "M5",
+      "M6",
+      "M7",
+      "M8",
+      "M9"
+    ]
+  },
+  "app_budget": {
+    "cpu_m": 2500,
+    "memory_mib": 4608
+  },
+  "db_pool_max_per_owner": 4,
+  "db_pool_total_max": 36,
+  "environment": "synthetic_lab",
+  "integrations_real_enabled": false
+}

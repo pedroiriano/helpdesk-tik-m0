@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-11-13T07:47:31.578710+00:00",
+  "result": "PASS",
+  "scope": "HTTP against disposable PostgreSQL, same standardAccess function as the UI",
+  "cases": [
+    "out-of-role permission 403",
+    "out-of-scope organization 404",
+    "technician grant attempt 404",
+    "standard grant 201 and GET readback",
+    "technician session sees authorized binding",
+    "update 200 and GET readback",
+    "stale version 409",
+    "revocation effective on next session read"
+  ],
+  "standard_permission_count": 10,
+  "working_database_writes": false
+}

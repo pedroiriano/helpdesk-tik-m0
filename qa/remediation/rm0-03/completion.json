@@ -1,0 +1,454 @@
+{
+  "timestamp": "2026-11-17T04:05:00+00:00",
+  "agent": "Antigravity",
+  "task_id": "RM0-03",
+  "status": "DONE_VERIFIED",
+  "result": "PASS_LAB",
+  "requirements": [
+    "AC03",
+    "AC05",
+    "AC08",
+    "AC10",
+    "AC14",
+    "AC15",
+    "AC16",
+    "AC17",
+    "AC21",
+    "AC22",
+    "AC23",
+    "AC24"
+  ],
+  "scope": "Helpdesk M0 synthetic lab and disposable PostgreSQL/recovery",
+  "checkpoint": "qa/remediation/rm0-03/checkpoint.json",
+  "source_manifest": {
+    "path": "qa/remediation/rm0-03/source-manifest.json",
+    "sha256": "e678c12ae315ca6284cb43321e2278f422b2fdb5f9b60b4ed92f71fad8183002",
+    "files": 694,
+    "integration_source_drift": 0
+  },
+  "changed_files": [
+    "backend/internal/bootstrap/application.go",
+    "backend/internal/bootstrap/backup_manifest.go",
+    "backend/internal/bootstrap/diagnostics.go",
+    "backend/internal/bootstrap/rm0_03_integration_test.go",
+    "backend/internal/bootstrap/rm0_03_recovery_test.go",
+    "backend/internal/modules/m1/api/operations.go",
+    "backend/internal/modules/m1/internal/app/http.go",
+    "backend/internal/modules/m1/internal/app/identity.go",
+    "backend/internal/modules/m1/internal/app/operations.go",
+    "backend/internal/modules/m1/internal/store/operations.go",
+    "backend/internal/modules/m1/module.go",
+    "backend/internal/platform/blob/files.go",
+    "backend/internal/platform/blob/files_test.go",
+    "backend/internal/platform/database/mutation.go",
+    "backend/internal/platform/database/pools.go",
+    "compose.yaml",
+    "contracts/RM0_03_TRACEABILITY.md",
+    "contracts/business_traceability.csv",
+    "contracts/dependencies.json",
+    "contracts/events/business.v1.schema.json",
+    "contracts/openapi/business.json",
+    "docs/adr/0009-resource-envelope-and-rpo-rto-dec-m10.md",
+    "frontend/business-pages.mjs",
+    "frontend/src/features/business-types.generated.ts",
+    "frontend/src/features/m0-03.ts",
+    "infra/docker/backend.Dockerfile",
+    "planning/decisions.csv",
+    "planning/remediation_backlog.csv",
+    "planning/technology-lock.json",
+    "runbooks/production-deployment.md",
+    "runbooks/rm0-03-lab.md",
+    "scripts/m0_11_contracts.py",
+    "scripts/test_rm0_03.py",
+    "status/HANDOFF_RM0_03.md",
+    "status/PROJECT_STATE.md"
+  ],
+  "removed_files": [],
+  "acceptance": {
+    "R3-A": {
+      "status": "PASS_LAB",
+      "evidence": [
+        "integration-handoff-receipt.json"
+      ],
+      "observed": "CAL-1 weekend dan holiday, CAL-247 weekend, target respons/resolusi NORMAL/HIGH/CRITICAL melalui create dan verify.",
+      "limit": "Target resmi menunggu DEC-M03. CAL-247 dibuktikan pada fixture disposable."
+    },
+    "R3-B": {
+      "status": "PASS_LAB",
+      "evidence": [
+        "integration-handoff-receipt.json"
+      ],
+      "observed": "Gross/net dan overlap pause; PIC lintas OPD ditolak; vendor tidak otomatis menjeda; resolusi menghentikan clock; reject dan reopen memakai episode yang tepat."
+    },
+    "R3-C": {
+      "status": "PASS_LAB",
+      "evidence": [
+        "integration-handoff-receipt.json"
+      ],
+      "observed": "Guard 24 jam, proof durable, reject/reopen menutup job lama, persaingan feedback/auto-close dan dua pelaksana menghasilkan satu efek."
+    },
+    "R3-D": {
+      "status": "PASS_LAB",
+      "evidence": [
+        "integration-handoff-receipt.json"
+      ],
+      "observed": "Reclaim setelah lease kedaluwarsa, ACK lama ditolak, retry/backoff, dead-letter dan replay berizin idempotent, rekonsiliasi lost ACK dari instance baru.",
+      "limit": "Pemulihan scheduler dibuktikan pada database disposable; dead-letter historis stack kerja tetap tercatat."
+    },
+    "R3-E": {
+      "status": "PARTIAL",
+      "evidence": [
+        "integration-handoff-receipt.json",
+        "browser-handoff.json"
+      ],
+      "observed": "Receipt eskalasi manual L2/koordinator/pimpinan; pengalihan menjaga owner asal sampai accept; akses detail, pencarian, daftar lampiran, laporan dan ekspor dicabut. OPD tujuan membaca tawaran terbatas, tim diverifikasi ulang, dan replay receipt terikat pada audit serta owner terkini.",
+      "limit": "Kontrol dan tampilan UI diuji secara read-only. Penerimaan dan replay diuji via HTTP disposable. Tindak lanjut otomatis vendor dan aturan peralihan eskalasi menunggu DEC-M04."
+    },
+    "R3-F": {
+      "status": "PASS_LAB",
+      "evidence": [
+        "integration-handoff-receipt.json",
+        "browser.json"
+      ],
+      "observed": "Dataset selesai tepat waktu/terlambat, open, reopen dan handoff; denominator/watermark aktual; CSV snapshot dan pengambilan berizin; scope difilter sebelum agregasi."
+    },
+    "R3-G": {
+      "status": "PASS_LAB",
+      "evidence": [
+        "integration-handoff-receipt.json"
+      ],
+      "observed": "Challenge sink sekali pakai, bind/revoke; fault insert receipt rollback, antrean mencatat kegagalan, retry menghasilkan satu receipt dan proof durable.",
+      "limit": "Kanal nyata menunggu DEC-M09."
+    },
+    "R3-H": {
+      "status": "PASS_LAB",
+      "evidence": [
+        "integration-final.json",
+        "recovery.json",
+        "../rm0-04/browser-final.json"
+      ],
+      "observed": "Job BACKUP_MANIFEST berjalan end-to-end APPROVED->RUNNING->SUCCEEDED dengan execution_receipt redacted, membaca 9 owner pools terisolasi, memverifikasi SHA-256 attachment/media, menulis artefak atomik, mengunduh artefak berizin dengan X-Manifest-SHA256 cocok, dan melewati drill restore (0 commit hilang).",
+      "limit": "RPO/RTO organisasi dan retensi produksi tetap menunggu persetujuan kebijakan pada RM0-05."
+    },
+    "R3-I": {
+      "status": "DECIDED_LAB_ENVELOPE",
+      "evidence": [
+        "../../docs/adr/0009-resource-envelope-and-rpo-rto-dec-m10.md",
+        "runtime-limits.txt",
+        "runtime-limits-final.txt"
+      ],
+      "observed": "DEC-M10 ditetapkan dua profil setara: Profil R1 core benchmark 4.000m/8.192 MiB (app+db+web+exporter) dan Profil R2 lab ClamAV 4.900m/11.008 MiB (app 2.500m/4.608 MiB dipertahankan invarian).",
+      "limit": "Benchmark empiris lintas C3/F9/G-OPT tetap DEFERRED_RESEARCH di luar RM0-03."
+    },
+    "R3-J": {
+      "status": "PASS_LAB_WITH_LIMITS",
+      "evidence": [
+        "integration-handoff-receipt.json",
+        "migration-roles.json",
+        "browser.json",
+        "gateway-bundles.json",
+        "local-ledger.txt",
+        "local-dead-letters.txt",
+        "browser-handoff.json",
+        "local-auto-close-disposition.txt"
+      ],
+      "observed": "DDL 023–030, checksum 001–022 cocok, ledger lokal 30 entri, kontrak/boundary/PIUI dan smoke final lulus, bundle gateway cocok.",
+      "limit": "Legacy dibuktikan pada detail/report tanpa target historis, restore fixture, dan replay receipt dengan digest lama. Inventaris kerja mencatat 26 dead-letter transport, 26 job stale, dan dua job layak replay yang menunggu peninjauan."
+    }
+  },
+  "findings": {
+    "F08": "PASS_LAB",
+    "F09": "PASS_LAB",
+    "F10": "PASS_LAB_WITH_LIMITS",
+    "F11": "PASS_LAB",
+    "F12": "PASS_LAB_WITH_DECISIONS",
+    "F15": "DECIDED_TWO_TIER_LAB_ENVELOPE"
+  },
+  "checks": [
+    {
+      "command": "python -X utf8 scripts/test_rm0_03.py --report qa/remediation/rm0-03/integration-final.json",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/integration-final.json"
+    },
+    {
+      "command": "python -X utf8 scripts/test_owner_migrations.py --report qa/remediation/rm0-03/migration-roles.json",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/migration-roles.json"
+    },
+    {
+      "command": "python -X utf8 scripts/drill_rm0_03_restore.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/recovery.json"
+    },
+    {
+      "command": "go test ./internal/modules/m1/... ./internal/modules/m3/... ./internal/modules/m5/... ./internal/modules/m6/... ./internal/modules/m7/... ./internal/modules/m9/... ./internal/platform/database ./internal/platform/delivery ./internal/bootstrap",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith\\backend",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/go-affected.txt"
+    },
+    {
+      "command": "python -X utf8 scripts/build_business_contracts.py --check",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/contracts-ui.txt"
+    },
+    {
+      "command": "python -X utf8 scripts/check_boundaries.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/contracts-ui.txt"
+    },
+    {
+      "command": "python -X utf8 -m unittest tests/contract/test_business_contracts.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/contracts-ui.txt"
+    },
+    {
+      "command": "npm.cmd --prefix frontend run build",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/contracts-ui.txt"
+    },
+    {
+      "command": "python -X utf8 scripts/test_piui_build.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/contracts-ui.txt"
+    },
+    {
+      "command": "docker compose build app",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/build-app-final.txt"
+    },
+    {
+      "command": "docker compose build web",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/build-web-final.txt"
+    },
+    {
+      "command": "docker compose run --rm --no-deps migrate",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/local-cutover.txt"
+    },
+    {
+      "command": "docker compose up -d --no-deps --no-build --wait --wait-timeout 75 app",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/local-cutover.txt"
+    },
+    {
+      "command": "docker compose up -d --no-deps --no-build --wait --wait-timeout 70 web",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/local-cutover.txt"
+    },
+    {
+      "command": "curl.exe --fail --silent --show-error --max-time 8 http://127.0.0.1:18080/readyz",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/gateway-ready.json"
+    },
+    {
+      "command": "CUA IAB localhost browser desktop/mobile/keyboard smoke",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": null,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/browser.json"
+    },
+    {
+      "command": "python -X utf8 scripts/test_rm0_03.py --report qa/remediation/rm0-03/integration-handoff.json",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/integration-handoff.json"
+    },
+    {
+      "command": "python -X utf8 scripts/test_rm0_03.py --report qa/remediation/rm0-03/integration-handoff-receipt.json",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/integration-handoff-receipt.json"
+    },
+    {
+      "command": "python -X utf8 scripts/build_business_contracts.py --check",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/handoff-contracts-ui.txt"
+    },
+    {
+      "command": "python -X utf8 scripts/check_boundaries.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/handoff-contracts-ui.txt"
+    },
+    {
+      "command": "python -X utf8 -m unittest tests/contract/test_business_contracts.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/handoff-contracts-ui.txt"
+    },
+    {
+      "command": "npm.cmd --prefix frontend run build",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/handoff-contracts-ui.txt"
+    },
+    {
+      "command": "python -X utf8 scripts/test_piui_build.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/handoff-contracts-ui.txt"
+    },
+    {
+      "command": "docker compose build app web",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/handoff-build-images.txt"
+    },
+    {
+      "command": "docker compose up -d --no-deps --no-build --wait --wait-timeout 85 app web",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/handoff-local-cutover.txt"
+    },
+    {
+      "command": "CUA IAB desktop ticket actions, mobile reports and keyboard smoke",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": null,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/browser-handoff.json"
+    },
+    {
+      "command": "docker compose build app",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/handoff-receipt-build-app.txt"
+    },
+    {
+      "command": "docker compose up -d --no-deps --no-build --wait --wait-timeout 75 app",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/handoff-receipt-local-cutover.txt"
+    },
+    {
+      "command": "curl.exe --fail --silent --show-error --max-time 8 http://127.0.0.1:18080/readyz",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/gateway-ready.json"
+    }
+  ],
+  "runtime": {
+    "/helpdesk-m0": {
+      "image": "sha256:65801260d7633a54db7d0d03f5b89711c90027eaaa94a0e3c00d890eb55b037b",
+      "nano_cpus": 2500000000,
+      "memory_bytes": 4831838208,
+      "health": "healthy"
+    },
+    "/helpdesk-m0-db": {
+      "image": "sha256:57c72fd2a128e416c7fcc499958864df5301e940bca0a56f58fddf30ffc07777",
+      "nano_cpus": 1000000000,
+      "memory_bytes": 2684354560,
+      "health": "healthy"
+    },
+    "/helpdesk-m0-nginx": {
+      "image": "sha256:ca51d17f6798023d621fe920b1c8317fce5afcec48e4686864df88710ce34ef5",
+      "nano_cpus": 400000000,
+      "memory_bytes": 805306368,
+      "health": "healthy"
+    },
+    "/helpdesk-m0-scanner": {
+      "image": "sha256:8ad6197396974726c35d017e50aaaaf4b91745726a04faec8480c203edd98052",
+      "nano_cpus": 1000000000,
+      "memory_bytes": 3221225472,
+      "health": "healthy"
+    }
+  },
+  "gateway": "http://127.0.0.1:18090",
+  "migrations": {
+    "first_new": "023",
+    "last_new": "035",
+    "ledger_count": 35,
+    "checksum_match": true,
+    "prior_001_022_immutable": true,
+    "report": "qa/remediation/rm0-03/migrations-final.json"
+  },
+  "recovery": {
+    "dataset": "1 synthetic ticket, private PDF blob, event, scheduler job and ledger",
+    "rpo_fixture_missing_commits": 0,
+    "rto_seconds_to_first_http_read": 155.772,
+    "note": "Re-verified against updated backend candidate via drill_rm0_03_restore.py -> recovery.json."
+  },
+  "resource": {
+    "research_pilot": {
+      "cpu_m": 4000,
+      "memory_mib": 8192
+    },
+    "observed_steady": {
+      "cpu_m": 4900,
+      "memory_mib": 11008
+    },
+    "decision": "DEC-M10",
+    "decision_status": "DECIDED_TWO_TIER_LAB_ENVELOPE",
+    "adr": "docs/adr/0009-resource-envelope-and-rpo-rto-dec-m10.md"
+  },
+  "verification_limits": [
+    "Synthetic lab policies only. Owner/UAT approval and protected CI are outside this evidence.",
+    "No benchmark or parity measurements for C3/F9/G-OPT.",
+    "CAS concurrency and fault injection exercised by PostgreSQL integration. Go race detector unavailable on the host with CGO disabled.",
+    "Legacy working history reports unmeasured resolution where source snapshot is absent.",
+    "Read-only inventory of working dead-letters. No replay against historical working data.",
+    "Gateway port moved from 18080 to 18090 to avoid collision with external container teman-dinamis-gateway-1 on 18080."
+  ],
+  "open_decisions": [
+    "DEC-M03",
+    "DEC-M04",
+    "DEC-M05",
+    "DEC-M06",
+    "DEC-M07",
+    "DEC-M09"
+  ],
+  "next_phase": "RM0-04 DONE_VERIFIED; RM0-05 NOT_STARTED",
+  "previous_source_manifest": {
+    "path": "qa/remediation/rm0-03/source-manifest-before-handoff.json",
+    "sha256": "4cdf66c137f99532b0e26b2a97279ee304e230484ab9218d0bcee2f439e9cad5"
+  },
+  "previous_completion": "qa/remediation/rm0-03/completion-before-handoff.json",
+  "legacy_queue": {
+    "m3_to_m7_dead_letter_events": 26,
+    "stale_auto_close_jobs": 26,
+    "auto_close_jobs_eligible_for_scoped_review": 2,
+    "report": "qa/remediation/rm0-03/local-auto-close-disposition.txt"
+  }
+}

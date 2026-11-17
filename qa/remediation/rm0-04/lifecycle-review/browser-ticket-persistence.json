@@ -1,0 +1,76 @@
+{
+  "id": "4c41da9e-f66e-48db-b30b-6ca31f1752c4",
+  "state": "CLOSED",
+  "verification": "VERIFIED",
+  "accepted_at": "2026-11-13T04:53:36.521787+00:00",
+  "first_response_at": "2026-11-13T05:28:16.003352+00:00",
+  "active_attempt_id": "5c41814c-27e3-4fe1-94f8-aea1a1eb2902",
+  "version": 11,
+  "history": [
+    {
+      "action": "CreateTicket",
+      "version": 1
+    },
+    {
+      "action": "REQUEST_INFORMATION",
+      "version": 2
+    },
+    {
+      "action": "SUPPLY_INFORMATION",
+      "version": 3
+    },
+    {
+      "action": "VerifyTicket",
+      "version": 4
+    },
+    {
+      "action": "EscalateTicket",
+      "version": 5
+    },
+    {
+      "action": "DispatchTicket",
+      "version": 6
+    },
+    {
+      "action": "START",
+      "version": 7
+    },
+    {
+      "action": "ResolveTicket",
+      "version": 8
+    },
+    {
+      "action": "RejectResolution",
+      "version": 9
+    },
+    {
+      "action": "ResolveTicket",
+      "version": 10
+    },
+    {
+      "action": "ConfirmResolution",
+      "version": 11
+    }
+  ],
+  "attempts": [
+    {
+      "id": "493787ab-3aac-4d37-87aa-2dcb1eda9bee",
+      "outcome": "REJECTED",
+      "resolved_at": "2026-11-13T05:29:38.005064+00:00",
+      "confirmation_due_at": "2026-11-14T05:29:38.005064+00:00",
+      "confirmation_seconds": 86400.0
+    },
+    {
+      "id": "5c41814c-27e3-4fe1-94f8-aea1a1eb2902",
+      "outcome": "ACCEPTED",
+      "resolved_at": "2026-11-13T05:30:14.761025+00:00",
+      "confirmation_due_at": "2026-11-14T05:30:14.761025+00:00",
+      "confirmation_seconds": 86400.0
+    }
+  ],
+  "decisions": [
+    "REJECT",
+    "ACCEPT"
+  ],
+  "escalation_marks": 1
+}

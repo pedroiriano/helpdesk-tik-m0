@@ -1,0 +1,100 @@
+{
+  "timestamp": "2026-11-12T08:08:25.349852+00:00",
+  "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+  "base_url": "http://127.0.0.1:18080",
+  "ready_status": 200,
+  "bundles": {
+    "index.html": {
+      "sha256": "59764ae37b176e3d2c7332ca57b7d36d73c1c8ab6c297042600af9f105d6d5f6",
+      "match": true,
+      "cache_control": "no-store"
+    },
+    "panduan.html": {
+      "sha256": "c595ea91ac3fb9b9b83366babe766dee3c867ad07eac39ddc808d9a4b1b348f9",
+      "match": true,
+      "cache_control": "no-store"
+    },
+    "lapor.html": {
+      "sha256": "0b64c66e6a1b47a7621520e4da25dc54ba2b4e90a8f7bfa9eef1fe0a753e0997",
+      "match": true,
+      "cache_control": "no-store"
+    },
+    "layanan.html": {
+      "sha256": "cc7b5fb16c54bfc868b2ade6b319366b0d9bf766948ae339eb83e6ddd14c8216",
+      "match": true,
+      "cache_control": "no-store"
+    },
+    "admin/app/dashboard/index.html": {
+      "sha256": "d2ba2e1a5b2afe74b35a7807f86965b1bfa11f24f857f2b496c5c557406440a9",
+      "match": true,
+      "cache_control": "no-store"
+    },
+    "admin/app/tickets/index.html": {
+      "sha256": "2d185d74ce935271897af6a3a0f9c4d6118f84f79eac6e188e9bafe1706edc7e",
+      "match": true,
+      "cache_control": "no-store"
+    },
+    "helpdesk/m0-03.js": {
+      "sha256": "7bb96d32ca322e38acce8e6139a5a9cfbc3b3d05d2c826ab40a78956a0f3e403",
+      "match": true,
+      "cache_control": "no-store"
+    },
+    "helpdesk/m0-04.js": {
+      "sha256": "6fbf64b6941ec60d906f5cc3fcbbbcb7d63a1af33295bbb272c28f96f6d8aacd",
+      "match": true,
+      "cache_control": "no-store"
+    },
+    "helpdesk/public-ui.css": {
+      "sha256": "532050c0eacf76224fc8741d14045c1d323a9e02820d49400793000a82467f1d",
+      "match": true,
+      "cache_control": "no-store"
+    },
+    "js/modules/hero-switcher.js": {
+      "sha256": "8b56028289fabd34523652cd555259b8e9ae4ab1a952c3ed72850a99fe9bd2dc",
+      "match": true,
+      "cache_control": "no-store"
+    },
+    "helpdesk/public-pages.css": {
+      "sha256": "ec458afc5113d48aca582ade113fee7d653c510f64a1f7d38db96819678e98f8",
+      "match": true,
+      "cache_control": "no-store"
+    },
+    "helpdesk/business.css": {
+      "sha256": "3c19225ece63942254b13926c7800c2630544894960e21a44fe85ab7cc1daddb",
+      "match": true,
+      "cache_control": "no-store"
+    }
+  },
+  "images": {
+    "app": "sha256:57d76532f5330face54eaef4f53c357753ef0bcf83046c289cf9017f9ccf89e2",
+    "web": "sha256:d0f06548a5e7d56e429ff85d01f59989192b4d0585074c83febaa8b670eb342c"
+  },
+  "missing_api_objects": [
+    {
+      "path": "/api/v1/knowledge/articles/rm004-detail-tidak-ada?view=published",
+      "status": 404
+    },
+    {
+      "path": "/api/v1/portal/pages/rm004-detail-tidak-ada?view=published",
+      "status": 404
+    }
+  ],
+  "result": "PASS",
+  "content_security_policy": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'",
+  "compose_health": [
+    "app running healthy",
+    "db running healthy",
+    "web running healthy",
+    "scanner running healthy"
+  ],
+  "inline_style_attributes_html": {
+    "index.html": 29,
+    "panduan.html": 0,
+    "lapor.html": 18,
+    "layanan.html": 0,
+    "admin/app/dashboard/index.html": 1,
+    "admin/app/helpdesk/index.html": 50,
+    "admin/app/tickets/index.html": 4,
+    "admin/app/tickets/detail.html": 40
+  }
+}

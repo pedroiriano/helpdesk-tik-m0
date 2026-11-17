@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Koneksi Terputus (Mode Offline) — PIUI Zero</title>
+  <meta name="description" content="Halaman cadangan App Shell offline PIUI Zero saat jaringan terputus. Tidak ada data sensitif (PII) yang disimpan di cache lokal.">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="stylesheet" href="/assets/css/main.css?v=2.2.2">
+  <script type="module" src="/assets/js/app.js?v=2.2.2"></script>
+<link rel="icon" href="/assets/icons/favicon.ico?v=2.2.2" sizes="16x16 32x32 48x48"><link rel="icon" href="/assets/icons/piui-favicon.svg?v=2.2.2" type="image/svg+xml" sizes="any"><link rel="apple-touch-icon" href="/assets/icons/piui-180.png?v=2.2.2" sizes="180x180">
+</head>
+<body>
+  <a class="piui-skip-link" href="#main-content">Langsung ke konten utama</a>
+  <div id="piui-live-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="piui-public-shell">
+    <header class="piui-topbar">
+      <div class="piui-topbar__start">
+        <a href="/app/dashboard/index.html" class="piui-brand"><img class="piui-brand__mark" src="/assets/icons/piui-mark.svg" alt="" width="32" height="32"><span class="piui-brand__name">PIUI Zero™</span></a>
+      </div>
+      <div class="piui-topbar__end">
+        <a href="/app/dashboard/index.html" class="piui-btn piui-btn--primary piui-btn--sm">Coba Hubungkan Ulang</a>
+        <button type="button" class="piui-icon-btn" id="btn-theme-toggle" aria-label="Ganti tema terang atau gelap">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-theme"></use></svg>
+        </button>
+      </div>
+    </header>
+
+    <main id="main-content" class="piui-main">
+      <section class="piui-panel" aria-labelledby="heading-offline">
+        <div class="piui-panel__header">
+          <div>
+            <h1 id="heading-offline" class="piui-page-title">Koneksi Jaringan Terputus — Mode Proteksi App Shell</h1>
+            <p class="piui-page-subtitle">Perangkat Anda sedang tidak terhubung ke klaster internal PIUI Zero.</p>
+          </div>
+          <span class="piui-badge" data-status="info">Zero-PII Cache Policy</span>
+        </div>
+
+        <div class="piui-panel__body">
+          <div class="piui-card">
+            <h2 class="piui-card__title">Jaminan Isolasi Privasi Saat Offline</h2>
+            <p class="piui-page-subtitle">
+              Sesuai kontrak keamanan <strong>PIUI Zero</strong>, Service Worker (<code>/sw.js</code>) hanya menyimpan kerangka statis (HTML App Shell, CSS, JS, dan SVG Sprite) dan <strong>tidak pernah menyimpan respons API atau data PII</strong> di dalam <code>CacheStorage</code>.
+            </p>
+            <div class="piui-page-actions">
+              <a href="/app/dashboard/index.html" class="piui-btn piui-btn--primary">Muat Ulang Pusat Komando</a>
+              <a href="/status/index.html" class="piui-btn piui-btn--secondary">Periksa Status Layanan</a>
+              <a href="/index.html" class="piui-btn piui-btn--secondary">Buka Portal Dokumentasi</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="piui-footer">
+      
+      <ul class="piui-footer__links">
+        <li><a href="/index.html">Portal Sistem</a></li>
+        <li><a href="/status/index.html">Status Layanan</a></li>
+      </ul>
+    <p class="piui-product-credit"><span class="piui-product-signature"><img class="piui-brand__mark" src="/assets/icons/piui-mark.svg" alt="" width="24" height="24"><span>PIUI Zero™ v2.2.2</span></span> • Created by Ipi &quot;Pedro Iriano&quot; • © 2026 • <a href="/about/index.html">Tentang produk</a></p></footer>
+  </div>
+</body>
+</html>

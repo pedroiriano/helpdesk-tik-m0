@@ -1,0 +1,339 @@
+{
+  "timestamp": "2026-11-13T07:07:43.258008+00:00",
+  "task_id": "RM0-04",
+  "scope": "Admin UX/navigation consistency, role orientation, native PIUI mobile/keyboard and real session interactions requested 13 November 2026",
+  "result": "PASS_LOCAL_ADMIN_UX",
+  "phase_status": "IN_PROGRESS",
+  "next_phase": "RM0-05 NOT_STARTED",
+  "acceptance": [
+    "AC07",
+    "AC11",
+    "AC18",
+    "AC23",
+    "AC24",
+    "F16",
+    "F17",
+    "UI_MATRIX"
+  ],
+  "changed_files": [
+    "AGENTS.md",
+    "frontend/build-templates.mjs",
+    "frontend/business-pages.mjs",
+    "frontend/business.css",
+    "frontend/src/features/journey.ts",
+    "frontend/src/features/m0-03.ts",
+    "frontend/src/features/m0-04.ts",
+    "frontend/ticket-pages.mjs",
+    "planning/remediation_backlog.csv",
+    "scripts/test_piui_build.py",
+    "status/HANDOFF_RM0_04.md",
+    "status/PROJECT_STATE.md",
+    "frontend/admin-navigation.mjs",
+    "frontend/admin-navigation.d.mts",
+    "frontend/src/features/admin-shell.ts",
+    "frontend/src/features/session-events.ts",
+    "scripts/test_admin_navigation.mjs",
+    "docs/06_ATURAN_UI_UX_WEB_ADMIN.md"
+  ],
+  "source_manifest": {
+    "path": "qa/remediation/rm0-04/admin-navigation/source-manifest.json",
+    "sha256": "0cb0d9bd7220a234eb2eebaab7b682b711ff5ec0292b9e9d699086cc2d00e16f",
+    "files": 709
+  },
+  "canonical_rule": "docs/06_ATURAN_UI_UX_WEB_ADMIN.md",
+  "analysis": "qa/remediation/rm0-04/admin-navigation/analysis.md",
+  "tests": [
+    {
+      "command": "npm.cmd --prefix frontend run build",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "scope": "TypeScript noEmit, Vite, original PIUI template integration",
+      "output": "qa/remediation/rm0-04/admin-navigation/build-frontend.txt"
+    },
+    {
+      "command": "node --disable-warning=ExperimentalWarning scripts/test_admin_navigation.mjs",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "scope": "Canonical menu surfaces, role/active scope, query/detail context, logout binder, staff lab picker, page picker, error handling, session channel and actual palette Escape handler",
+      "output": "qa/remediation/rm0-04/admin-navigation/test-admin-navigation.txt"
+    },
+    {
+      "command": "python scripts/test_piui_build.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "scope": "PIUI source identity, branding, routing, shared shell and parent active state",
+      "output": "qa/remediation/rm0-04/admin-navigation/test-piui.txt"
+    },
+    {
+      "command": "node --disable-warning=ExperimentalWarning scripts/test_ux_flow.mjs",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "scope": "Affected shared journey, review, tracking, fixed login destination and detail safety",
+      "output": "qa/remediation/rm0-04/admin-navigation/test-ux-flow.txt"
+    },
+    {
+      "command": "node --disable-warning=ExperimentalWarning scripts/test_ticket_actions.mjs",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "scope": "Unchanged role/state lifecycle helpers and original CAS retry behavior",
+      "output": "qa/remediation/rm0-04/admin-navigation/test-ticket-actions.txt"
+    },
+    {
+      "command": "docker compose build web",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "scope": "Current frontend candidate; no app/database build",
+      "output": "qa/remediation/rm0-04/admin-navigation/build-web.txt"
+    },
+    {
+      "command": "docker compose up -d --no-deps --no-build --wait --wait-timeout 85 web",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "scope": "Local gateway cutover only",
+      "output": "qa/remediation/rm0-04/admin-navigation/cutover.txt"
+    },
+    {
+      "command": "python qa/remediation/rm0-04/admin-navigation/verify_gateway.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "scope": "Readiness, app/web health and exact served asset comparison",
+      "output": "qa/remediation/rm0-04/admin-navigation/gateway.json"
+    }
+  ],
+  "browser": {
+    "result": "PASS_LOCAL_ADMIN_UI",
+    "surface": "CUA IAB, localhost 18080, native PIUI Zero",
+    "actors": [
+      "Operator OPD A",
+      "Admin Lab OPD A",
+      "Teknisi L1 OPD A",
+      "Guest after logout"
+    ],
+    "cases": [
+      {
+        "case": "Operator orientation and permissions",
+        "result": "PASS",
+        "checks": [
+          "Correct human role/profile",
+          "Only permitted menu groups/items",
+          "No empty menu groups",
+          "Verification queue title matches filter",
+          "Media selector shows only allowed option",
+          "Direct memberships route shows outside-task access state"
+        ]
+      },
+      {
+        "case": "Administrator consistency and browser history",
+        "result": "PASS",
+        "checks": [
+          "Services/category/membership titles match sidebar and selector",
+          "Configuration admin has no ticket menu without ticket.read",
+          "Sidebar categories then browser Back returns services URL",
+          "Akun search with ArrowDown/Enter opens memberships with correct active item"
+        ]
+      },
+      {
+        "case": "Mobile drawer and picker",
+        "result": "PASS",
+        "viewport_requested": "390x844",
+        "checks": [
+          "Desktop/mobile IDs matched for same Administrator session",
+          "Visible text restored despite desktop collapsed state",
+          "Context role and active item visible",
+          "Picker navigates services to categories after ready",
+          "No page horizontal overflow on inspected mobile pages"
+        ]
+      },
+      {
+        "case": "Technician work shortcut",
+        "result": "PASS",
+        "checks": [
+          "Tugas saya shortcut opens my-tasks filter",
+          "Heading and selected filter use Tugas saya",
+          "Antrean tiket remains active parent",
+          "Configuration menus unavailable"
+        ]
+      },
+      {
+        "case": "Real logout and two-tab sync",
+        "result": "PASS",
+        "report": "qa/remediation/rm0-04/admin-navigation/browser-logout.json",
+        "checks": [
+          "Server session ended",
+          "Sender tab reaches Admin login",
+          "Other tab reloads into unauthenticated access state",
+          "Temporary second tab closed"
+        ]
+      },
+      {
+        "case": "Final shell, detail and keyboard",
+        "result": "PASS",
+        "report": "qa/remediation/rm0-04/admin-navigation/browser-final-shell.json",
+        "checks": [
+          "Detail breadcrumb includes queue parent",
+          "Parent aria-current location",
+          "Collapsed rail tooltip retains menu name",
+          "Restricted Akun search has no result for Operator",
+          "Escape closes palette and returns focus to opener",
+          "No prototype notification-count relabeling on final dashboard",
+          "Final workspace readiness and bound picker observed"
+        ]
+      }
+    ],
+    "screenshots": [
+      {
+        "path": "qa/remediation/rm0-04/admin-navigation/operator-desktop.jpg",
+        "sha256": "e9165e6675876880877da763e8998d1dfda19901b81b291a2b191f2c6580fe4e",
+        "image_pixels": [
+          1270,
+          794
+        ],
+        "scope": "Operator dashboard; requested 1280x800"
+      },
+      {
+        "path": "qa/remediation/rm0-04/admin-navigation/admin-mobile-menu.jpg",
+        "sha256": "b1a80fa8b8ffd14e71ed0ab08c81283d33f56789c33596e4d8b7aea0bb891c0b",
+        "image_pixels": [
+          380,
+          822
+        ],
+        "scope": "Administrator drawer; requested 390x844"
+      }
+    ],
+    "viewport_override_reset": true,
+    "session_restored": "Operator OPD A",
+    "business_data_writes": false,
+    "session_test_actions": "Synthetic lab sign-in/switch and server logout only",
+    "candidate_note": "Representative navigation was exercised during refinement. Final candidate rechecked initialization, mobile drawer/picker, profile label, Escape/focus and Operator workspace. Logout logic was unchanged after its successful two-tab check."
+  },
+  "gateway": {
+    "timestamp": "2026-11-13T07:02:23.183924+00:00",
+    "base_url": "http://127.0.0.1:18080",
+    "assets": {
+      "index.html": {
+        "sha256": "cb3df2564422ccfd9f6218dc417114360e5aa8173683a197d6b5150bfec32847",
+        "status": 200,
+        "content_type": "text/html"
+      },
+      "layanan.html": {
+        "sha256": "7c8a0f44282cf6da4ab28818bb147b3cdc676eba91003d5a631868c9c3fa569c",
+        "status": 200,
+        "content_type": "text/html"
+      },
+      "akses.html": {
+        "sha256": "b18562e1ff67034b81bdee7c187c81c8dea1edaf73a91d83084cc74837712ea6",
+        "status": 200,
+        "content_type": "text/html"
+      },
+      "admin/index.html": {
+        "sha256": "e1414a28b88f609efc423bcfe70d9118b0c423c9dcf47d67a7ea14db52cdcc22",
+        "status": 200,
+        "content_type": "text/html"
+      },
+      "admin/auth/login.html": {
+        "sha256": "b769a7237db480a68db9828a56bd715c463a21c4855eb68646960dea28ebcbe7",
+        "status": 200,
+        "content_type": "text/html"
+      },
+      "admin/app/dashboard/index.html": {
+        "sha256": "e1414a28b88f609efc423bcfe70d9118b0c423c9dcf47d67a7ea14db52cdcc22",
+        "status": 200,
+        "content_type": "text/html"
+      },
+      "admin/app/helpdesk/index.html": {
+        "sha256": "927a2aff330fcb919916bbe8133c00cf3ffaf899d6d4dab561bd4a6f27f9787f",
+        "status": 200,
+        "content_type": "text/html"
+      },
+      "admin/app/tickets/index.html": {
+        "sha256": "3f5f5d9907b7e769aaeb61bdb804838412860cb2a3af99e68a07d42148a50fa6",
+        "status": 200,
+        "content_type": "text/html"
+      },
+      "admin/app/tickets/detail.html": {
+        "sha256": "95a906ff9e47700eeea747c28ad4c5241b9984a8d1adfe18d9eb3e3cae49ff80",
+        "status": 200,
+        "content_type": "text/html"
+      },
+      "helpdesk/business.css": {
+        "sha256": "5423f803cf9ab3ed9fa0f82a07fd04e037ab45d8c6051d86b071df6bb30b0e2c",
+        "status": 200,
+        "content_type": "text/css"
+      },
+      "helpdesk/m0-03.js": {
+        "sha256": "94944ce51e0749f0dd6d42426574657457892437470cfbefc4c5eb22236c13e0",
+        "status": 200,
+        "content_type": "application/javascript"
+      },
+      "helpdesk/m0-04.js": {
+        "sha256": "e8b3ed38403f8abc306e68cb10f68dab64b74010f9a757e37db9511e5c02d860",
+        "status": 200,
+        "content_type": "application/javascript"
+      },
+      "admin/assets/js/components/cmd-palette.js": {
+        "sha256": "5bd3e7cc720595dcd21e6d5fd3ec764b9f061496c97839bf618ddf40fcd1c100",
+        "status": 200,
+        "content_type": "application/javascript"
+      },
+      "admin/assets/js/components/feature-registry.js": {
+        "sha256": "21c7236c96711ae18e9b33437f12dd630171e96f3485e0860bec076e03dc7e0c",
+        "status": 200,
+        "content_type": "application/javascript"
+      },
+      "journey-B1eC29cH.js": {
+        "sha256": "76fbe7dfd7f7b79783eb05d972a0434da85b7e4fc3e74c295ebc26513955bf29",
+        "status": 200,
+        "content_type": "application/javascript"
+      }
+    },
+    "readiness": 200,
+    "web_image": "sha256:242ca70b26a6a4b3883ae0a21a67e8a80d7bafc61213e0b1bceb2aea84169b14",
+    "health": "healthy",
+    "app_image": "sha256:4dcfd5634ce45bb27724740adf77fa09b4d9dbe4036d9453e595c02e532c96c6",
+    "app_health": "healthy"
+  },
+  "artifact_hashes": {
+    "qa/remediation/rm0-04/admin-navigation/analysis.md": "5296f45e540337d17d670f1716361ee0c1c884681a6fc70812057653f8900f6c",
+    "qa/remediation/rm0-04/admin-navigation/browser.json": "f00797a12beb02d630324dc5784077c8a96f08a84aa6fe538be424b67c82d0b6",
+    "qa/remediation/rm0-04/admin-navigation/browser-final-shell.json": "ddce3edea63a028bd3b0313fc469c40a142ace801f47c21322fed3cb0de2709b",
+    "qa/remediation/rm0-04/admin-navigation/browser-logout.json": "4ccf43ae460e2d521321ab092649886a0060c1b5196bec100c1a77e8f7501baa",
+    "qa/remediation/rm0-04/admin-navigation/verify_gateway.py": "a6a3367a405cbb552fc6e13719749e2f5d7134ba483f34820fb3d331064e982e",
+    "qa/remediation/rm0-04/admin-navigation/gateway.json": "6bf1c6e481ea0bfb55e1d6f130444cf9364a2772db0c82ff7cbbbd28117e88b2",
+    "qa/remediation/rm0-04/admin-navigation/operator-desktop.jpg": "e9165e6675876880877da763e8998d1dfda19901b81b291a2b191f2c6580fe4e",
+    "qa/remediation/rm0-04/admin-navigation/admin-mobile-menu.jpg": "b1a80fa8b8ffd14e71ed0ab08c81283d33f56789c33596e4d8b7aea0bb891c0b"
+  },
+  "security": {
+    "server_authorization_changed": false,
+    "backend_app_image_unchanged": true,
+    "dependency_changed": false,
+    "schema_changed": false,
+    "business_data_test_mutations": false,
+    "identity_provider": "Existing synthetic lab adapter; no production credentials",
+    "logout": "Existing CSRF-protected server endpoint with expected session version and a shared single BroadcastChannel instance",
+    "navigation": "Fixed local routes; UI visibility follows active organization grants; server ACL remains authoritative",
+    "prototype_notifications": "Demo launcher suppressed on live app pages; no fabricated unread badge shown"
+  },
+  "protected_controls": {
+    "changed": [],
+    "reference_sources_preserved": true,
+    "fixed_port": 18080,
+    "historical_evidence_preserved": true
+  },
+  "verification_limits": [
+    "Browser coverage is representative for Operator, Administrator, Technician, guest, desktop and mobile; not every role/module/form/state combination.",
+    "No create/update/delete of business records or changes to permissions, master data, tickets, uploads or policies were performed in browser smoke.",
+    "Backend, API contracts and migration inputs are byte-identical to the preceding manifest; backend integration/security suites were not rerun for this frontend slice.",
+    "Network/session-service failure is covered by an isolated controller regression, not browser network manipulation.",
+    "Header demo unread badges are removed; real notification data continues through the permitted notification page. No new header count API was introduced.",
+    "Organizational UAT, real SSO, external notifications, operational/resource decisions and remaining RM0-04 acceptance remain separate.",
+    "No Git commit, PR, protected CI, production deployment or full-phase completion asserted. RM0-05 not started."
+  ]
+}

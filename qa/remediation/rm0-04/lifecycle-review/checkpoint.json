@@ -1,0 +1,10 @@
+{
+  "timestamp": "2026-11-13T04:37:46.292808+00:00",
+  "base_manifest": "qa/remediation/rm0-04/ux-flow/source-manifest.json",
+  "sources": {
+    "frontend/src/features/m0-04.ts": "e91bd3130acd7d0e77958e00969b956dabdc49f69eae68e5d0770fe7f1e81bef",
+    "frontend/ticket-pages.mjs": "e1979424888b298b87e286e94cdfd93cd3bd0f6e010280ee06717d78fff5a0ce",
+    "frontend/business.css": "d6b1ed10b963a905f146b499a6dbf8d94681641ffffcacfd23c3f5129e2c1d0b",
+    "frontend/src/features/journey.ts": "f9f5d463ea85e3b951169ff0b51563245cfb89bce619f34043225599c27e237b"
+  }
+}

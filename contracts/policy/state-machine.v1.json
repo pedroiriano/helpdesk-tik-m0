@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "confirmation_hours": 24,
+  "transitions": [
+    {"action":"CREATE", "from":["NONE"], "to":"OPEN", "permission":"ticket.create", "guards":["service_access"]},
+    {"action":"VERIFY", "from":["OPEN"], "to":"TRIAGED", "permission":"ticket.verify", "guards":["verification_evidence"]},
+    {"action":"REQUEST_INFORMATION", "from":["OPEN","TRIAGED"], "to":"NEEDS_INFORMATION", "permission":"ticket.transition", "guards":["operator"]},
+    {"action":"SUPPLY_INFORMATION", "from":["NEEDS_INFORMATION"], "to":"OPEN", "permission":"ticket.transition", "guards":["requester_or_operator"]},
+    {"action":"DISPATCH", "from":["TRIAGED"], "to":"ASSIGNED", "permission":"ticket.dispatch", "guards":["verified","valid_assignment"]},
+    {"action":"START", "from":["ASSIGNED"], "to":"IN_PROGRESS", "permission":"ticket.transition", "guards":["assignee"]},
+    {"action":"RESOLVE", "from":["IN_PROGRESS"], "to":"RESOLVED", "permission":"ticket.resolve", "guards":["assignee","resolution_evidence"]},
+    {"action":"ACCEPT", "from":["RESOLVED"], "to":"CLOSED", "permission":"ticket.confirm", "guards":["requester","active_attempt"]},
+    {"action":"AUTO_CLOSE", "from":["RESOLVED"], "to":"CLOSED", "permission":"ticket.auto_close", "guards":["active_attempt","deadline","notification_proof","no_feedback"]},
+    {"action":"REJECT", "from":["RESOLVED"], "to":"RETURN_TO_WORK", "permission":"ticket.confirm", "guards":["requester","active_attempt","within_confirmation_window"]},
+    {"action":"FEEDBACK", "from":["RESOLVED"], "to":"RESOLVED", "permission":"ticket.confirm", "guards":["requester","active_attempt"]},
+    {"action":"REOPEN", "from":["CLOSED"], "to":"OPEN", "permission":"ticket.transition", "guards":["requester_or_operator","reopen_policy"]},
+    {"action":"CANCEL", "from":["OPEN","TRIAGED","NEEDS_INFORMATION"], "to":"CANCELLED", "permission":"ticket.transition", "guards":["requester_or_operator"]},
+    {"action":"REASSIGN", "from":["ASSIGNED","IN_PROGRESS"], "to":"SAME", "permission":"ticket.dispatch", "guards":["verified","valid_assignment"]},
+    {"action":"APPROVE_PAUSE", "from":["IN_PROGRESS"], "to":"SAME", "permission":"ticket.pause", "guards":["pause_policy"]},
+    {"action":"RECORD_VENDOR", "from":["IN_PROGRESS"], "to":"SAME", "permission":"ticket.vendor", "guards":["internal_pic"]},
+    {"action":"REQUEST_HANDOFF", "from":["TRIAGED","ASSIGNED","IN_PROGRESS"], "to":"SAME", "permission":"ticket.handoff", "guards":["handoff_target"]},
+    {"action":"ACCEPT_HANDOFF", "from":["TRIAGED","ASSIGNED","IN_PROGRESS"], "to":"SAME", "permission":"ticket.handoff.accept", "guards":["handoff_acceptance"]}
+  ]
+}

@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Konfigurasi Sistem &amp; Kebijakan — PIUI Zero Admin</title>
+  <meta name="description" content="Konfigurasi kebijakan keamanan Strict CSP, batas waktu sesi idle, kepatuhan MFA WebAuthn, dan preferensi antarmuka PIUI Zero.">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta property="og:title" content="Konfigurasi Sistem &amp; Kebijakan — PIUI Zero Admin">
+  <meta property="og:description" content="Modul konfigurasi kebijakan keamanan dan parameter operasional PIUI Zero.">
+  <meta property="og:type" content="website">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="stylesheet" href="/assets/css/main.css?v=2.2.2">
+  <script type="module" src="/assets/js/app.js?v=2.2.2"></script>
+<link rel="icon" href="/assets/icons/favicon.ico?v=2.2.2" sizes="16x16 32x32 48x48"><link rel="icon" href="/assets/icons/piui-favicon.svg?v=2.2.2" type="image/svg+xml" sizes="any"><link rel="apple-touch-icon" href="/assets/icons/piui-180.png?v=2.2.2" sizes="180x180">
+</head>
+<body>
+  <a class="piui-skip-link" href="#main-content">Langsung ke konten utama</a>
+  <div id="piui-live-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="piui-app-shell" data-sidebar="expanded">
+    <!-- TOPBAR -->
+    <header class="piui-topbar">
+      <div class="piui-topbar__start">
+        <button type="button" class="piui-icon-btn" id="btn-sidebar-toggle"
+                aria-label="Buka atau ciutkan panel navigasi" aria-expanded="true" aria-controls="piui-sidebar">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-menu"></use></svg>
+        </button>
+        <a href="/app/dashboard/index.html" class="piui-brand"><img class="piui-brand__mark" src="/assets/icons/piui-mark.svg" alt="" width="32" height="32"><span class="piui-brand__name">PIUI Zero™</span><span class="piui-badge piui-badge--env" title="Lingkungan demo lokal">DEMO</span></a>
+      </div>
+
+      <div class="piui-topbar__end">
+        <button type="button" class="piui-cmd-trigger" id="btn-open-cmd"
+                aria-label="Buka pencarian cepat dan palet perintah (Ctrl+K)">
+          <svg width="18" height="18" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-search"></use></svg>
+          <span class="piui-cmd-trigger__label">Cari rute, kebijakan, perintah...</span>
+          <kbd class="piui-cmd-trigger__kbd">Ctrl+K</kbd>
+        </button>
+        <button type="button" class="piui-icon-btn" id="btn-theme-toggle" aria-label="Ganti tema terang atau gelap">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-theme"></use></svg>
+        </button>
+        <button type="button" class="piui-icon-btn" popovertarget="popover-profile" aria-label="Buka menu profil dan sesi administrator">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-user"></use></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- POPOVER PROFIL -->
+    <div id="popover-profile" popover="auto" class="piui-popover" role="region" aria-label="Informasi Sesi Administrator">
+      <div class="piui-field">
+        <strong>budi.sec@piui-zero.internal</strong>
+        <span class="piui-page-subtitle">Peran: Super Admin &amp; AppSec Lead</span>
+        <span class="piui-badge" data-status="success">Mode prototipe</span>
+      </div>
+      <hr>
+      <div class="piui-page-actions">
+        <a href="/index.html" class="piui-btn piui-btn--secondary piui-btn--sm">Portal Dokumentasi</a>
+        <button type="button" class="piui-btn piui-btn--danger piui-btn--sm" id="btn-session-logout">
+          <svg width="16" height="16" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-logout"></use></svg>
+          <span>Akhiri Sesi (Logout)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="piui-sidebar" id="piui-sidebar" aria-label="Menu Navigasi Admin">
+      <nav aria-label="Menu Utama">
+        <div class="piui-sidebar__group-label">Menu Utama</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/app/dashboard/index.html" class="piui-nav-link" title="Beranda Dashboard">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-dashboard"></use></svg>
+              <span class="piui-nav-link__text">Beranda Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/analytics/index.html" class="piui-nav-link" title="Analitik &amp; Grafik">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-analytics"></use></svg>
+              <span class="piui-nav-link__text">Analitik &amp; Grafik</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/notifications/index.html" class="piui-nav-link" title="Pusat Notifikasi &amp; Peringatan">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-bell"></use></svg>
+              <span class="piui-nav-link__text">Pusat Notifikasi</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="piui-sidebar__group-label">Kelola Data &amp; Media</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/app/users/index.html" class="piui-nav-link" title="Data Pengguna">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-users"></use></svg>
+              <span class="piui-nav-link__text">Data Pengguna</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/transactions/index.html" class="piui-nav-link" title="Data Transaksi">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-transactions"></use></svg>
+              <span class="piui-nav-link__text">Data Transaksi</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/gallery/index.html" class="piui-nav-link" title="Galeri Foto &amp; Video">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-gallery"></use></svg>
+              <span class="piui-nav-link__text">Galeri Foto &amp; Video</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="piui-sidebar__group-label">Komponen &amp; Tampilan</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/app/components/index.html" class="piui-nav-link" title="Katalog Komponen UI/UX">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-components"></use></svg>
+              <span class="piui-nav-link__text">Katalog Komponen</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="piui-sidebar__group-label">Sistem &amp; Keamanan</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/app/audit/index.html" class="piui-nav-link" title="Riwayat Aktivitas (Audit)">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-audit"></use></svg>
+              <span class="piui-nav-link__text">Riwayat Aktivitas</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/settings/index.html" class="piui-nav-link" aria-current="page" title="Pengaturan Sistem">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-settings"></use></svg>
+              <span class="piui-nav-link__text">Pengaturan Sistem</span>
+            </a>
+          </li>
+          <li>
+            <a href="/status/index.html" class="piui-nav-link" title="Status Server">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-status"></use></svg>
+              <span class="piui-nav-link__text">Status Server</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html" class="piui-nav-link" title="Panduan &amp; Dokumentasi">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-info"></use></svg>
+              <span class="piui-nav-link__text">Panduan &amp; Dokumentasi</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- MOBILE DRAWER -->
+    <dialog id="piui-mobile-drawer" class="piui-drawer-mobile" aria-labelledby="mobile-drawer-title">
+      <div class="piui-dialog__header">
+        <strong id="mobile-drawer-title">Menu Navigasi PIUI Zero</strong>
+        <button type="button" class="piui-icon-btn" id="btn-close-mobile-drawer" aria-label="Tutup menu navigasi">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-close"></use></svg>
+        </button>
+      </div>
+      <nav aria-label="Navigasi Mobile">
+        <div class="piui-sidebar__group-label">Menu Utama</div>
+        <ul class="piui-nav-list">
+          <li><a href="/app/dashboard/index.html" class="piui-nav-link">Beranda Dashboard</a></li>
+          <li><a href="/app/analytics/index.html" class="piui-nav-link">Analitik &amp; Grafik</a></li>
+        </ul>
+        <div class="piui-sidebar__group-label">Kelola Data &amp; Media</div>
+        <ul class="piui-nav-list">
+          <li><a href="/app/users/index.html" class="piui-nav-link">Data Pengguna</a></li>
+          <li><a href="/app/transactions/index.html" class="piui-nav-link">Data Transaksi</a></li>
+          <li><a href="/app/gallery/index.html" class="piui-nav-link">Galeri Foto &amp; Video</a></li>
+        </ul>
+        <div class="piui-sidebar__group-label">Komponen &amp; Tampilan</div>
+        <ul class="piui-nav-list">
+          <li><a href="/app/components/index.html" class="piui-nav-link">Katalog Komponen</a></li>
+        </ul>
+        <div class="piui-sidebar__group-label">Sistem &amp; Keamanan</div>
+        <ul class="piui-nav-list">
+          <li><a href="/app/audit/index.html" class="piui-nav-link">Riwayat Aktivitas</a></li>
+          <li><a href="/app/settings/index.html" class="piui-nav-link" aria-current="page">Pengaturan Sistem</a></li>
+          <li><a href="/status/index.html" class="piui-nav-link">Status Server</a></li>
+          <li><a href="/index.html" class="piui-nav-link">Panduan &amp; Dokumentasi</a></li>
+          <li><a href="/auth/login.html" class="piui-nav-link">Masuk Akun Admin</a></li>
+        </ul>
+      </nav>
+    </dialog>
+
+    <!-- AREA KERJA UTAMA -->
+    <main id="main-content" class="piui-main">
+      <nav aria-label="Breadcrumb" class="piui-breadcrumb">
+        <ol>
+          <li><a href="/app/dashboard/index.html">Beranda Dashboard</a></li>
+          <li><a href="/app/settings/index.html">Sistem &amp; Keamanan</a></li>
+          <li aria-current="page">Pengaturan Sistem</li>
+        </ol>
+      </nav>
+
+      <div class="piui-page-header">
+        <div class="piui-page-header__titles">
+          <h1 class="piui-page-title">Pengaturan Sistem &amp; Keamanan Aplikasi</h1>
+          <p class="piui-page-subtitle">Draf pengaturan sesi, kebijakan keamanan dan kunci API; penerapan memerlukan server • ID contoh: <code class="text-mono" data-last-idempotency-key>idem-ready-2026</code></p>
+        </div>
+        <div class="piui-page-actions">
+          <a href="/app/audit/detail.html?id=AUD-2026-0892" class="piui-btn piui-btn--secondary">
+            Lihat Riwayat Perubahan
+          </a>
+          <button type="button" class="piui-btn piui-btn--primary" data-open-dialog="dialog-settings-form">
+            <svg width="16" height="16" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-settings"></use></svg>
+            <span>Ubah Pengaturan (Modal Kanan)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 4 KARTU RINGKASAN KEBIJAKAN AKTIF -->
+      <section aria-label="Ringkasan Draf Parameter Kebijakan" class="piui-kpi-grid">
+        <article class="piui-card">
+          <div class="piui-card__header">
+            <h2 class="piui-card__title">Batas Sesi Idle</h2>
+            <span class="piui-badge" data-status="success">Draf • Ketat</span>
+          </div>
+          <div class="piui-card__value tabular-nums">900 Detik</div>
+          <div class="piui-card__meta">
+            <span>Contoh auto-lock 15 menit</span>
+            <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-open-dialog="dialog-settings-form">Ubah</button>
+          </div>
+        </article>
+
+        <article class="piui-card">
+          <div class="piui-card__header">
+            <h2 class="piui-card__title">Jaminan MFA Minimum</h2>
+            <span class="piui-badge" data-status="info">NIST AAL3</span>
+          </div>
+          <div class="piui-card__value tabular-nums">FIDO2 Key</div>
+          <div class="piui-card__meta">
+            <span>Passkey perangkat keras</span>
+            <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-open-dialog="dialog-settings-form">Ubah</button>
+          </div>
+        </article>
+
+        <article class="piui-card">
+          <div class="piui-card__header">
+            <h2 class="piui-card__title">Auto-Remask Data PII</h2>
+            <span class="piui-badge" data-status="warning">Zero-PII Leak</span>
+          </div>
+          <div class="piui-card__value tabular-nums">10 Detik</div>
+          <div class="piui-card__meta">
+            <span>Tutup otomatis ke ••••••••</span>
+            <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-open-dialog="dialog-settings-form">Ubah</button>
+          </div>
+        </article>
+
+        <article class="piui-card">
+          <div class="piui-card__header">
+            <h2 class="piui-card__title">Kebijakan Strict CSP</h2>
+            <span class="piui-badge" data-status="success">Enforce Mode</span>
+          </div>
+          <div class="piui-card__value tabular-nums">Trusted Types</div>
+          <div class="piui-card__meta">
+            <span>Policy: piui-dom-policy</span>
+            <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-open-dialog="dialog-settings-form">Ubah</button>
+          </div>
+        </article>
+      </section>
+
+      <!-- TABEL PARAMETER KONFIGURASI SISTEM -->
+      <section class="piui-panel" aria-labelledby="heading-settings-summary">
+        <div class="piui-panel__header">
+          <div>
+            <h2 id="heading-settings-summary" class="piui-panel__title">Matriks Parameter Keamanan Aplikasi, Sesi, &amp; Privasi PII</h2>
+            <p class="piui-page-subtitle">Klik tombol "Ubah Konfigurasi" untuk membuka formulir isian pada Modal Sisi Kanan browser</p>
+          </div>
+          <button type="button" class="piui-btn piui-btn--primary piui-btn--sm" data-open-dialog="dialog-settings-form">
+            Buka Form Konfigurasi
+          </button>
+        </div>
+
+        <div class="piui-table-scroll" role="region" aria-labelledby="heading-settings-summary" tabindex="0">
+          <table class="piui-table">
+            <thead>
+              <tr>
+                <th scope="col" class="is-sticky-col">Kunci Parameter</th>
+                <th scope="col">Nilai Aktif</th>
+                <th scope="col">Standar Referensi</th>
+                <th scope="col">Status Penegakan</th>
+                <th scope="col" data-table-column="actions">Tindakan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row" class="is-sticky-col text-mono">session.idleTimeoutSec</th>
+                <td class="tabular-nums"><strong>900 detik (15 menit)</strong></td>
+                <td>PCI-DSS 4.0 &amp; ISO 27001</td>
+                <td><span class="piui-badge" data-status="success">Enforced</span></td>
+                <td><button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-open-dialog="dialog-settings-form">Edit Parameter</button></td>
+              </tr>
+              <tr>
+                <th scope="row" class="is-sticky-col text-mono">auth.minAssuranceLevel</th>
+                <td><strong>AAL3 (FIDO2 Hardware Key)</strong></td>
+                <td>NIST SP 800-63B</td>
+                <td><span class="piui-badge" data-status="success">Enforced</span></td>
+                <td><button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-open-dialog="dialog-settings-form">Edit Parameter</button></td>
+              </tr>
+              <tr>
+                <th scope="row" class="is-sticky-col text-mono">privacy.piiAutoRemaskSec</th>
+                <td class="tabular-nums"><strong>10 detik</strong></td>
+                <td>UU PDP &amp; Zero-PII Cache</td>
+                <td><span class="piui-badge" data-status="success">Enforced</span></td>
+                <td><button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-open-dialog="dialog-settings-form">Edit Parameter</button></td>
+              </tr>
+              <tr>
+                <th scope="row" class="is-sticky-col text-mono">security.cspTrustedTypes</th>
+                <td class="text-mono"><strong>piui-dom-policy (Enforce)</strong></td>
+                <td>OWASP ASVS Level 3</td>
+                <td><span class="piui-badge" data-status="success">Enforced</span></td>
+                <td><button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-open-dialog="dialog-settings-form">Edit Parameter</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- MATRIKS POHON HAK AKSES (RBAC PERMISSION TREE VIEW) -->
+      <section class="piui-panel" aria-labelledby="heading-rbac-tree">
+        <div class="piui-panel__header">
+          <div>
+            <h2 id="heading-rbac-tree" class="piui-panel__title">Hierarki Pohon Matriks Hak Akses (RBAC Permission Tree View)</h2>
+            <p class="piui-page-subtitle">Mendukung checkbox induk-anak otomatis (Indeterminate State) dan lipatan cabang modul.</p>
+          </div>
+          <span class="piui-badge" data-status="success">RBAC Hierarchy Tree</span>
+        </div>
+        <div class="piui-tree" data-piui-rbac-tree></div>
+      </section>
+
+      <!-- API KEY SECRET MASKING BOX & MARKDOWN EDITOR RINGAN -->
+      <section class="piui-panel" aria-labelledby="heading-secret-md">
+        <div class="piui-panel__header">
+          <div>
+            <h2 id="heading-secret-md" class="piui-panel__title">Brankas Kunci API (Secret Masking) &amp; Editor Pengumuman Markdown</h2>
+            <p class="piui-page-subtitle">Kunci rahasia disamarkan secara default (otomatis tertutup kembali setelah 10 detik) dan pengumuman mendukung format Markdown aman.</p>
+          </div>
+          <span class="piui-badge" data-status="info">Zero-Trust KMS &amp; Editor</span>
+        </div>
+
+        <div class="piui-field">
+          <span class="piui-field__label">Kunci Rahasia Webhook &amp; API Gateway Produksi</span>
+          <div class="piui-secret-box" data-piui-secret-box>
+            <code data-secret-value>piui_demo_••••••••••••••••••••9f4a</code>
+            <div class="piui-page-actions">
+              <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-secret-toggle>Tampilkan 10d</button>
+              <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-secret-copy>Salin Kunci</button>
+              <button type="button" class="piui-btn piui-btn--primary piui-btn--sm" data-secret-rotate>Rotasi Kunci Baru</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="piui-field">
+          <label for="md-policy-notes" class="piui-field__label">Catatan kebijakan &amp; pemeliharaan</label>
+          <div class="piui-md-editor" data-piui-md-editor>
+            <textarea name="md-policy-notes" id="md-policy-notes" class="piui-textarea" rows="4">### Pengumuman Pemeliharaan Terjadwal Klaster DC-1
+Pemutakhiran rutin **Strict CSP v2.0** dan rotasi sertifikat _mTLS_ telah aktif tanpa jeda layanan (Zero Downtime).</textarea>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="piui-footer">
+      
+      <ul class="piui-footer__links">
+        <li><a href="/app/dashboard/index.html">Pusat Komando</a></li>
+        <li><a href="/app/audit/index.html">Jejak Audit</a></li>
+        <li><a href="/status/index.html">Status Layanan</a></li>
+      </ul>
+    <p class="piui-product-credit"><span class="piui-product-signature"><img class="piui-brand__mark" src="/assets/icons/piui-mark.svg" alt="" width="24" height="24"><span>PIUI Zero™ v2.2.2</span></span> • Created by Ipi &quot;Pedro Iriano&quot; • © 2026 • <a href="/about/index.html">Tentang produk</a></p></footer>
+  </div>
+
+  <!-- DIALOG 1: COMMAND PALETTE (MUNCUL DARI SISI KANAN BROWSER) -->
+  <dialog id="piui-cmd-palette" class="piui-dialog" aria-labelledby="cmd-palette-title">
+    <div class="piui-dialog__header">
+      <strong id="cmd-palette-title">Palet Perintah &amp; Navigasi Cepat (Ctrl+K)</strong>
+      <button type="button" class="piui-icon-btn" id="btn-close-cmd" aria-label="Tutup palet perintah (Escape)">
+        <svg width="18" height="18" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-close"></use></svg>
+      </button>
+    </div>
+    <div class="piui-dialog__body">
+      <div class="piui-field">
+        <label for="cmd-search-input" class="piui-field__label">Ketik nama halaman, modul, atau aksi cepat</label>
+        <input type="search" name="cmd-search-input" id="cmd-search-input" class="piui-input"
+               role="combobox" aria-expanded="true" aria-controls="cmd-results-list"
+               autocomplete="off" spellcheck="false"
+               placeholder="Contoh: Pengguna, Transaksi, Audit, Tema Gelap...">
+      </div>
+      <ul id="cmd-results-list" class="piui-cmd-list" role="listbox" aria-label="Daftar perintah yang tersedia"></ul>
+      <p id="cmd-empty-state" class="piui-page-subtitle" hidden>Tidak ada perintah yang cocok dengan kata kunci tersebut.</p>
+    </div>
+  </dialog>
+
+  <!-- DIALOG 2: FORM ISIAN KONFIGURASI SISTEM (SLIDE-OVER MODAL SISI KANAN BROWSER) -->
+  <dialog id="dialog-settings-form" class="piui-dialog" aria-labelledby="settings-modal-title">
+    <form data-adapter="settings.apply" data-settings-form action="/app/settings/index.html" method="dialog">
+      <div class="piui-dialog__header">
+        <div>
+          <strong id="settings-modal-title">Form Konfigurasi Sistem &amp; Kebijakan</strong>
+          <div class="piui-page-subtitle">Mutasi dilindungi dengan <code>Idempotency-Key</code></div>
+        </div>
+        <button type="button" class="piui-icon-btn" data-close-dialog aria-label="Tutup form konfigurasi">
+          <svg width="18" height="18" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-close"></use></svg>
+        </button>
+      </div>
+
+      <div class="piui-dialog__body">
+        <fieldset class="piui-fieldset">
+          <legend class="piui-legend">1. Kebijakan Sesi &amp; Autentikasi MFA</legend>
+
+          <div class="piui-field">
+            <label for="cfg-idle-timeout" class="piui-field__label">Batas Waktu Sesi Idle (Detik)</label>
+            <input type="number" id="cfg-idle-timeout" name="idleTimeout" class="piui-input tabular-nums"
+                   min="300" max="3600" value="900" required>
+            <span class="piui-field__hint">Rekomendasi standar keamanan: 900 detik (15 menit).</span>
+          </div>
+
+          <div class="piui-field">
+            <label for="cfg-mfa-level" class="piui-field__label">Tingkat Jaminan Autentikasi Minimum (NIST AAL)</label>
+            <select id="cfg-mfa-level" name="mfaLevel" class="piui-select">
+              <option value="aal3" selected>AAL3 — Wajib Kunci Perangkat Keras FIDO2 / Passkey</option>
+              <option value="aal2">AAL2 — TOTP Authenticator + Kredensial Korporat</option>
+            </select>
+          </div>
+
+          <div class="piui-field">
+            <label for="cfg-concurrent-sess" class="piui-field__label">Batas Maksimum Sesi Perangkat Bersamaan</label>
+            <input type="number" id="cfg-concurrent-sess" name="maxSessions" class="piui-input tabular-nums"
+                   min="1" max="5" value="2" required>
+          </div>
+        </fieldset>
+
+        <fieldset class="piui-fieldset">
+          <legend class="piui-legend">2. Penyamaran PII, Cache PWA, &amp; Strict CSP</legend>
+
+          <div class="piui-field">
+            <label for="cfg-pii-remask" class="piui-field__label">Durasi Buka Masking PII Sebelum Ditutup Otomatis (Detik)</label>
+            <input type="number" id="cfg-pii-remask" name="piiRemaskSec" class="piui-input tabular-nums"
+                   min="5" max="60" value="10" required>
+          </div>
+
+          <div class="piui-field">
+            <label for="cfg-csp-mode" class="piui-field__label">Mode Penegakan Content Security Policy (CSP)</label>
+            <select id="cfg-csp-mode" name="cspMode" class="piui-select">
+              <option value="enforce" selected>Enforce — Blokir Mutlak Script Inline &amp; DOM Sink Tidak Aman</option>
+              <option value="report">Report-Only — Hanya Kirim Telemetri Pelanggaran ke SIEM</option>
+            </select>
+          </div>
+
+          <div class="piui-field">
+            <label for="cfg-audit-note" class="piui-field__label">Catatan Audit Perubahan Konfigurasi (Wajib)</label>
+            <input type="text" id="cfg-audit-note" name="auditNote" class="piui-input"
+                   value="Pemeliharaan rutin kebijakan sesi kuartal IV 2026" required>
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="piui-dialog__footer">
+        <button type="button" class="piui-btn piui-btn--secondary" data-close-dialog>Batalkan</button>
+        <button type="submit" class="piui-btn piui-btn--primary">Simpan &amp; Terbitkan Kebijakan</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="piui-toast-region" class="piui-toast-region" aria-live="polite"></div>
+
+  <template id="tpl-cmd-item">
+    <li class="piui-cmd-item" role="option" tabindex="-1">
+      <div>
+        <strong data-cmd-title></strong>
+        <div class="piui-page-subtitle" data-cmd-category></div>
+      </div>
+      <kbd class="piui-cmd-trigger__kbd text-mono" data-cmd-shortcut></kbd>
+    </li>
+  </template>
+
+  <template id="tpl-toast">
+    <div class="piui-toast" role="status">
+      <span data-toast-text></span>
+      <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-toast-close>Tutup</button>
+    </div>
+  </template>
+</body>
+</html>

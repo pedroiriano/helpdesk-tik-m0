@@ -1,0 +1,10 @@
+ALTER TABLE notify_audit.report_facts ADD COLUMN episode_id uuid;
+ALTER TABLE notify_audit.report_facts ADD COLUMN resolution_due_at timestamptz;
+ALTER TABLE notify_audit.report_facts ADD COLUMN gross_seconds bigint;
+ALTER TABLE notify_audit.report_facts ADD COLUMN net_seconds bigint;
+ALTER TABLE notify_audit.report_facts ADD COLUMN fact_at timestamptz;
+ALTER TABLE notify_audit.export_jobs ADD COLUMN snapshot_payload bytea;
+ALTER TABLE notify_audit.export_jobs ADD COLUMN snapshot_tickets uuid[];
+ALTER TABLE notify_audit.export_jobs ADD COLUMN snapshot_watermark timestamptz;
+ALTER TABLE notify_audit.export_jobs ADD COLUMN snapshot_digest text;
+CREATE INDEX report_facts_resolved_cohort ON notify_audit.report_facts(org_id,resolved_at,id) WHERE resolved_at IS NOT NULL;

@@ -1,0 +1,58 @@
+{
+  "timestamp": "2026-11-17T04:56:08.025145+00:00",
+  "phase": "ADR-0010-Fase-2",
+  "scope": "Uji kompatibilitas disposable PostgreSQL 18.7-alpine + dry-run logical restore dari pre18.dump; nol perubahan pada helpdesk-m0-db (16.14) maupun volume postgres-data.",
+  "target_pg_image": "postgres:18.7-alpine@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015",
+  "checks": [
+    {
+      "name": "pg18_tmpfs_and_checksums",
+      "result": "PASS",
+      "detail": "server_version=18.7, data_directory=/var/lib/postgresql/18/docker, data_checksums=on, mount=tmpfs"
+    },
+    {
+      "name": "test_owner_migrations",
+      "result": "PASS",
+      "report": "qa/upgrades/dec-m11/pg18-migrations.json",
+      "detail": "9/9 checks (35 migrations, 9 owner roles, drift/rollback/out_of_order)"
+    },
+    {
+      "name": "test_rm0_02",
+      "result": "PASS",
+      "report": "qa/upgrades/dec-m11/pg18-rm0-02.json"
+    },
+    {
+      "name": "test_rm0_03",
+      "result": "PASS",
+      "report": "qa/upgrades/dec-m11/pg18-rm0-03.json"
+    },
+    {
+      "name": "test_rm0_04_editorial",
+      "result": "PASS",
+      "report": "qa/remediation/rm0-04/editorial-integration.json"
+    },
+    {
+      "name": "drill_rm0_03_restore",
+      "result": "PASS",
+      "report": "qa/remediation/rm0-03/recovery.json",
+      "detail": "0 lost commits, RTO 74.02s on two PG 18.7 containers + Go 1.27.4"
+    },
+    {
+      "name": "drill_m0_11_restore",
+      "result": "PASS",
+      "report": "qa/m0-11/restore_drill.json",
+      "detail": "9 schemas, 35 ledger entries, RTO 0.884s"
+    },
+    {
+      "name": "test_m0_04_subset",
+      "result": "PARTIAL_6_OF_7",
+      "detail": "6/7 subtests incl. real_stream_scan_download_quarantine_ACL_and_missing_blob PASS on PG 18.7 + ClamAV 1.5.4; subtest catalog_change_between_snapshot_and_commit_is_rejected hit 503 Kebijakan SLA layanan belum tersedia karena skrip historis pra-RM0-03 test_m0_04.py tidak memuat seeds/rm0-03-sla.sql (m0_04_integration_test.go:515-520 / tickets.go:221-223)."
+    },
+    {
+      "name": "dry_run_pre18_dump_restore",
+      "result": "PASS",
+      "detail": "Restored pre18-globals.sql (9 non-superuser SCRAM-SHA-256 roles) + pre18.dump via pg_restore --exit-on-error (rc=0) into PG 18.7 (data_checksums=on); 125/125 tables & 16019 rows matched baseline-pg16.json with 0 diffs."
+    }
+  ],
+  "live_db_status": "postgres:16.14-alpine@sha256:57c72fd2a128e416c7fcc499958864df5301e940bca0a56f58fddf30ffc07777|healthy",
+  "result": "PASS_READY_FOR_FASE_3_CUTOVER"
+}

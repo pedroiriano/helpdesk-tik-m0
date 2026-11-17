@@ -1,0 +1,112 @@
+/* ============================================================================
+ * css/01-tokens.css — Vayra Precision Design Tokens
+ * Dark Obsidian Studio aesthetic, OKLCH/Hex derivatives, strict 4px radius.
+ * ============================================================================ */
+
+@layer tokens {
+  :root {
+    /* ── Palette: Basketball Obsidian & Arena Lights ──────────────────────── */
+    --vy-bg-primary: #0A0A0C;
+    --vy-bg-secondary: #121316;
+    --vy-bg-surface: #18191E;
+    --vy-bg-surface-elevated: #212228;
+    --vy-text-primary: #F4F4F5;
+    --vy-text-secondary: #8E8E96;
+
+    /* Basketball Signature Accents: Electric Cyan & Velocity Lime */
+    --court-cyan: #22D3EE;
+    --court-cyan-hover: #67E8F9;
+    --court-lime: #A3E635;
+    --court-glow: rgba(34, 211, 238, 0.22);
+    --court-tint: rgba(34, 211, 238, 0.08);
+    --court-hardwood: #11151A;
+    --court-chalk: rgba(255, 255, 255, 0.9);
+    --vy-accent: #22D3EE;
+
+    /* Alpha derivatives & hairline court lines */
+    --vy-line: rgba(244, 244, 245, 0.12);
+    --vy-line-soft: rgba(244, 244, 245, 0.06);
+    --vy-ink-55: rgba(244, 244, 245, 0.55);
+    --vy-scrim: rgba(10, 10, 12, 0.82);
+    --vy-glow: rgba(34, 211, 238, 0.15);
+
+    /* ── Typography Families ─────────────────────────────────────────────────── */
+    --font-display: system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: ui-monospace, "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+
+    /* ── Type Scale (Steps: 12, 14, 16, 20, 28, 40, 64, 96) ─────────────────── */
+    --vy-t-12: 0.75rem;     /* 12px */
+    --vy-t-14: 0.875rem;    /* 14px */
+    --vy-t-16: 1rem;        /* 16px */
+    --vy-t-20: 1.25rem;     /* 20px */
+    --vy-t-28: 1.75rem;     /* 28px */
+    --vy-t-40: 2.5rem;      /* 40px */
+    --vy-t-64: 4rem;        /* 64px */
+    --vy-t-96: 6rem;        /* 96px */
+
+    /* ── Fluid Typography Scales ─────────────────────────────────────────────── */
+    --vy-fluid-body: clamp(0.875rem, 0.6vw + 0.75rem, 1rem);
+    --vy-fluid-lede: clamp(1.25rem, 2.4vw, 2.25rem);
+    --vy-fluid-title: clamp(2rem, 5.4vw, 5.25rem);
+    --vy-fluid-giant: clamp(2.75rem, 9vw, 9rem);
+
+    /* ── Tracking & Leading ──────────────────────────────────────────────────── */
+    --leading-tight: 1;
+    --leading-display: 0.95;
+    --leading-body: 1.65;
+    --tracking-tight: -0.035em;
+    --tracking-display: -0.02em;
+    --tracking-brand: 0.02em;
+    --tracking-label: 0.08em;
+    --tracking-mono: 0.05em;
+    --tracking-caps: 0.18em;
+
+    /* ── Precision Radius (0 or 4px only, no pills) ─────────────────────────── */
+    --radius-none: 0px;
+    --radius-sm: 0px;
+    --radius-md: 4px;
+    --radius-lg: 4px;
+    --vy-radius: 4px;
+
+    /* ── Motion Tokens (Signature Expo.out curve) ────────────────────────────── */
+    --vy-ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --vy-dur-hero: 1.2s;
+    --vy-dur-section: 0.8s;
+    --vy-dur-micro: 0.3s;
+    --vy-dur-snap: 0.18s;
+
+    /* ── Structural Dimensions & Ergonomics ──────────────────────────────────── */
+    --vy-container: 1440px;
+    --vy-col-gap: 24px;
+    --touch-target-min: 48px;
+    --nav-height: 64px;
+    --stroke-w: 1.5;
+
+    /* ── Z-Index Hierarchy ───────────────────────────────────────────────────── */
+    --layer-base: 1;
+    --layer-card: 2;
+    --layer-sticky: 100;
+    --layer-header: 500;
+    --layer-drawer: 900;
+    --layer-modal: 1000;
+    --layer-toast: 9999;
+
+    /* ── Semantic Aliases for Cross-Component Usage ──────────────────────────── */
+    --color-bg: var(--vy-bg-primary);
+    --color-bg-alt: var(--vy-bg-secondary);
+    --color-text: var(--vy-text-primary);
+    --color-text-dim: var(--vy-text-secondary);
+    --color-border: var(--vy-line);
+    --color-border-subtle: var(--vy-line-soft);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --vy-dur-hero: 0.01s;
+      --vy-dur-section: 0.01s;
+      --vy-dur-micro: 0.01s;
+      --vy-dur-snap: 0.01s;
+    }
+  }
+}

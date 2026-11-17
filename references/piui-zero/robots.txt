@@ -1,0 +1,9 @@
+# Kebijakan Hybrid SEO 2-Zona PIUI Zero (PIUI-ZERO-ADM)
+User-agent: *
+Allow: /index.html
+Allow: /status/
+Disallow: /app/
+Disallow: /auth/
+Disallow: /api/
+Disallow: /data/
+

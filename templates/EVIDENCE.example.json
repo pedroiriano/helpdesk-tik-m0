@@ -1,0 +1,18 @@
+{
+  "timestamp": null,
+  "agent": null,
+  "task_id": null,
+  "requirement_ids": [],
+  "scope": "application",
+  "source": {
+    "git_sha": null,
+    "dirty": null,
+    "file_hashes": {}
+  },
+  "working_directory": null,
+  "command": null,
+  "exit_code": null,
+  "result": "NOT_RUN",
+  "evidence_path": null,
+  "limitations": "Template only. Isi nilai aktual sesudah menjalankan verifikasi; jangan menyalin sebagai bukti PASS."
+}

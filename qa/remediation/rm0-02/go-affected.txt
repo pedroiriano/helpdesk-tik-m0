@@ -1,0 +1,36 @@
+?   	helpdesk.local/m0/internal/modules/m1	[no test files]
+ok  	helpdesk.local/m0/internal/modules/m1/api	2.281s
+?   	helpdesk.local/m0/internal/modules/m1/internal/app	[no test files]
+ok  	helpdesk.local/m0/internal/modules/m1/internal/domain	4.519s
+?   	helpdesk.local/m0/internal/modules/m1/internal/store	[no test files]
+?   	helpdesk.local/m0/internal/modules/m2	[no test files]
+?   	helpdesk.local/m0/internal/modules/m2/api	[no test files]
+?   	helpdesk.local/m0/internal/modules/m2/internal/app	[no test files]
+ok  	helpdesk.local/m0/internal/modules/m2/internal/domain	1.474s
+?   	helpdesk.local/m0/internal/modules/m2/internal/store	[no test files]
+?   	helpdesk.local/m0/internal/modules/m3	[no test files]
+?   	helpdesk.local/m0/internal/modules/m3/api	[no test files]
+?   	helpdesk.local/m0/internal/modules/m3/internal/app	[no test files]
+?   	helpdesk.local/m0/internal/modules/m3/internal/domain	[no test files]
+?   	helpdesk.local/m0/internal/modules/m3/internal/store	[no test files]
+?   	helpdesk.local/m0/internal/modules/m4	[no test files]
+?   	helpdesk.local/m0/internal/modules/m4/api	[no test files]
+?   	helpdesk.local/m0/internal/modules/m4/internal/app	[no test files]
+ok  	helpdesk.local/m0/internal/modules/m4/internal/domain	1.746s
+?   	helpdesk.local/m0/internal/modules/m4/internal/store	[no test files]
+?   	helpdesk.local/m0/internal/modules/m5	[no test files]
+?   	helpdesk.local/m0/internal/modules/m5/api	[no test files]
+?   	helpdesk.local/m0/internal/modules/m5/internal/app	[no test files]
+?   	helpdesk.local/m0/internal/modules/m5/internal/domain	[no test files]
+?   	helpdesk.local/m0/internal/modules/m5/internal/store	[no test files]
+?   	helpdesk.local/m0/internal/modules/m6	[no test files]
+?   	helpdesk.local/m0/internal/modules/m6/api	[no test files]
+?   	helpdesk.local/m0/internal/modules/m6/internal/app	[no test files]
+ok  	helpdesk.local/m0/internal/modules/m6/internal/domain	1.415s
+?   	helpdesk.local/m0/internal/modules/m6/internal/store	[no test files]
+?   	helpdesk.local/m0/internal/modules/m9	[no test files]
+?   	helpdesk.local/m0/internal/modules/m9/api	[no test files]
+?   	helpdesk.local/m0/internal/modules/m9/internal/app	[no test files]
+ok  	helpdesk.local/m0/internal/modules/m9/internal/domain	2.139s
+?   	helpdesk.local/m0/internal/modules/m9/internal/store	[no test files]
+ok  	helpdesk.local/m0/internal/bootstrap	2.068s

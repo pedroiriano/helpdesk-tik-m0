@@ -1,0 +1,319 @@
+ Container helpdesk-m0-migrate-run-f1bf3c12d46f Creating 
+ Container helpdesk-m0-migrate-run-f1bf3c12d46f Created 
+NOTICE:  schema "migration_control" already exists, skipping
+CREATE SCHEMA
+REVOKE
+CREATE TABLE
+NOTICE:  relation "ledger" already exists, skipping
+REVOKE
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+ALTER TABLE
+ALTER TABLE
+CREATE INDEX
+INSERT 0 1
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+ALTER TABLE
+CREATE INDEX
+INSERT 0 2
+INSERT 0 1
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+CREATE INDEX
+INSERT 0 1
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+ALTER TABLE
+INSERT 0 1
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+CREATE INDEX
+INSERT 0 1
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+INSERT 0 1
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+CREATE TABLE
+GRANT
+INSERT 0 1
+COMMIT
+BEGIN
+ pg_advisory_xact_lock 
+-----------------------
+ 
+(1 row)
+
+DO
+CREATE TABLE
+GRANT
+INSERT 0 1
+COMMIT
+ Container helpdesk-m0 Recreate 
+ Container helpdesk-m0 Recreated 
+ Container helpdesk-m0-nginx Recreate 
+ Container helpdesk-m0-nginx Recreated 
+ Container helpdesk-m0 Starting 
+ Container helpdesk-m0 Started 
+ Container helpdesk-m0 Waiting 
+ Container helpdesk-m0 Healthy 
+ Container helpdesk-m0-nginx Starting 
+ Container helpdesk-m0-nginx Started 
+ Container helpdesk-m0 Waiting 
+ Container helpdesk-m0-nginx Waiting 
+ Container helpdesk-m0 Healthy 
+ Container helpdesk-m0-nginx Healthy 
+ Container helpdesk-m0-nginx Recreate 
+ Container helpdesk-m0-nginx Recreated 
+ Container helpdesk-m0-nginx Starting 
+ Container helpdesk-m0-nginx Started 
+ Container helpdesk-m0-nginx Waiting 
+ Container helpdesk-m0-nginx Healthy 
+ Container helpdesk-m0-nginx Recreate 
+ Container helpdesk-m0-nginx Recreated 
+ Container helpdesk-m0-nginx Starting 
+ Container helpdesk-m0-nginx Started 
+ Container helpdesk-m0-nginx Waiting 
+ Container helpdesk-m0-nginx Healthy 
+ Container helpdesk-m0 Recreate 
+ Container helpdesk-m0 Recreated 
+ Container helpdesk-m0 Starting 
+ Container helpdesk-m0 Started 
+ Container helpdesk-m0 Waiting 
+ Container helpdesk-m0 Healthy 

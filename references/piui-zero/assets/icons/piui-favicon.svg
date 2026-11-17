@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="PIUI Zero — P/0 Interlock"><defs>
+<linearGradient id="tile" gradientUnits="userSpaceOnUse" x2="0" y2="128"><stop stop-color="#27272A"/><stop offset="1" stop-color="#09090B"/></linearGradient>
+<linearGradient id="edge" gradientUnits="userSpaceOnUse" x2="0" y2="128"><stop stop-color="#71717A"/><stop offset="1" stop-color="#27272A"/></linearGradient>
+<linearGradient id="ink" gradientUnits="userSpaceOnUse" x2="0" y2="128"><stop stop-color="#FAFAFA"/><stop offset="1" stop-color="#D4D4D8"/></linearGradient>
+<linearGradient id="loop" gradientUnits="userSpaceOnUse" x2="0" y2="128"><stop stop-color="#D4D4D8"/><stop offset="1" stop-color="#71717A"/></linearGradient>
+</defs><rect width="128" height="128" rx="30" fill="url(#edge)"/>
+<rect x="1" y="1" width="126" height="126" rx="29" fill="url(#tile)"/>
+<path d="M61,26 87,26 104,43 104,87 87,104 61,104 44,87 44,43ZM66,42 82,42 88,48 88,82 82,88 66,88 60,82 60,48Z" fill="url(#loop)" fill-rule="evenodd"/>
+<path d="M24,24 65,24 82,41 82,61 65,78 42,78 42,104 24,104ZM42,40 59,40 64,45 64,56 59,61 42,61Z" fill="url(#ink)" fill-rule="evenodd"/></svg>

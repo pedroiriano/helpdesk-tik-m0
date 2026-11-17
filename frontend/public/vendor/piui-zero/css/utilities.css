@@ -1,0 +1,43 @@
+@layer utilities {
+  /* Visibility belongs after components: icon/badge display must not override it. */
+  [hidden] { display: none !important; }
+  .piui-topbar #btn-theme-toggle,
+  .piui-topbar .piui-topbar-extra,
+  .piui-topbar .piui-brand > .piui-badge { display: none; }
+  .piui-topbar .piui-brand__name { display: inline; }
+  @media (min-width: 64rem) {
+    .piui-topbar #btn-theme-toggle { display: inline-flex; }
+    .piui-topbar .piui-brand > .piui-badge { display: inline-flex; }
+    .piui-topbar .piui-topbar-extra { display: inline-flex; }
+  }
+  .sr-only {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .text-mono {
+    font-family: var(--piui-font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .overflow-anywhere {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .is-hidden,
+  [hidden] {
+    display: none !important;
+  }
+}

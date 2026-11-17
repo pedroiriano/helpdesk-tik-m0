@@ -1,0 +1,20 @@
+{
+  "scope": "package_only",
+  "result": "PASS",
+  "modules": 9,
+  "tasks": 13,
+  "acceptance": 25,
+  "source_requirement_groups": 29,
+  "chapters": 21,
+  "application_tests_run": false,
+  "agent_runtime_loading_tested": false,
+  "docx_sha256": "704cbc6c8163e24974993ee68ab4398ecfaf9a8972aeebb9a12b2fa8f3d82bf8",
+  "pages": 17,
+  "paragraphs_and_cells_checked": 442,
+  "source_hashes_unchanged": true,
+  "visual_review": "PASS_ALL_17_PAGES_INSPECTED",
+  "render_engine": "Microsoft Word COM export and bundled Poppler",
+  "visual_review_scope": "Individual full-page PNGs at native 1400-pixel long edge; text tables headings and page flow checked",
+  "validator_tests": 6,
+  "validator_tests_result": "PASS"
+}

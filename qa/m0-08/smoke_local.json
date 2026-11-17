@@ -1,0 +1,78 @@
+{
+  "timestamp": "2026-11-06T08:06:54.030356+00:00",
+  "scope": "live loopback synthetic HTTP/API M0-08 two-owner media, attachment ACL, sanitized reuse, draft autosave, competing tabs 409 conflict, and isolation",
+  "command": "python scripts/smoke_m0_08_local.py --allow-lab-writes",
+  "checks": [
+    {
+      "name": "authenticated_lab_sessions",
+      "detail": "public=1, other=2, editor=14",
+      "result": "PASS"
+    },
+    {
+      "name": "draft_created",
+      "detail": "id=56b60cf0-e80e-42f5-b6df-ef024d8e1cff version=1",
+      "result": "PASS"
+    },
+    {
+      "name": "draft_read_verified",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "draft_updated",
+      "detail": "version=2",
+      "result": "PASS"
+    },
+    {
+      "name": "competing_tab_conflict_guarded_409",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "account_switch_draft_isolated",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "draft_deleted_cleanly",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "two_owner_media_listed",
+      "detail": "m3_count=2 m8_count=1",
+      "result": "PASS"
+    },
+    {
+      "name": "m8_media_metadata_created",
+      "detail": "id=a884b178-4e39-467f-99f5-9bd31ea55e99",
+      "result": "PASS"
+    },
+    {
+      "name": "m8_media_binary_stored",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "private_attachment_uploaded",
+      "detail": "ticket_id=f05f2878-558f-4719-8914-31599fb2c8f7 att_id=9a8ba87a-c70a-4431-80fb-20b482a4bbb9",
+      "result": "PASS"
+    },
+    {
+      "name": "attachment_acl_unauthorized_download_denied",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "illegal_direct_reuse_forbidden_403",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "sanitized_reuse_provenance_created",
+      "detail": "sanitized_id=926fa1c9-f6b4-41e3-a628-0709794470f2",
+      "result": "PASS"
+    }
+  ],
+  "result": "PASS"
+}

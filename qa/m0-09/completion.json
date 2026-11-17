@@ -1,0 +1,79 @@
+{
+  "timestamp": "2026-11-06T09:25:00.000000+00:00",
+  "task_id": "M0-09",
+  "status": "DONE_VERIFIED",
+  "result": "PASS",
+  "scope": "Portal content editorial transitions (DRAFT -> REVIEW -> PUBLISHED -> ARCHIVED -> RESTORE), server-side content XSS sanitization (AC12), ContentPublished outbox transactional delivery to M9, portal navigation configuration and invariant AC24 (menu does not grant permissions), scope-safe multi-owner search across M2, M3, and M8 with dynamic revocation anti-leakage (AC23), and keyboard-accessible search combobox with ARIA attributes and focus management (AC20).",
+  "requirements": [
+    "AC12",
+    "AC20",
+    "AC23",
+    "AC24"
+  ],
+  "global_acceptance": {
+    "AC12": "PARTIAL",
+    "AC20": "DONE_VERIFIED",
+    "AC23": "DONE_VERIFIED",
+    "AC24": "DONE_VERIFIED"
+  },
+  "counts": {
+    "integration_subtests": 7,
+    "live_smoke_checks": 20,
+    "go_packages_boundary": 53,
+    "contract_tests": 8
+  },
+  "commands_executed": [
+    "python scripts/build_business_contracts.py",
+    "python scripts/build_business_contracts.py --check",
+    "python -m unittest tests/contract/test_business_contracts.py",
+    "cmd /c \"cd frontend && npm run build\"",
+    "python scripts/test_piui_build.py",
+    "python scripts/check_boundaries.py",
+    "cmd /c \"cd backend && go test ./...\"",
+    "python scripts/test_m0_09.py",
+    "docker build -t helpdesk-m0-app:0.1.0 -f infra/docker/backend.Dockerfile .",
+    "docker compose up -d --no-deps app",
+    "python scripts/smoke_m0_09_local.py --allow-lab-writes",
+    "python scripts/verify_package.py"
+  ],
+  "changed_files": [
+    "backend/internal/bootstrap/application.go",
+    "backend/internal/bootstrap/m0_09_integration_test.go",
+    "backend/internal/modules/m1/internal/app/identity.go",
+    "backend/internal/modules/m2/api/catalog.go",
+    "backend/internal/modules/m2/internal/app/catalog.go",
+    "backend/internal/modules/m2/internal/app/http.go",
+    "backend/internal/modules/m2/internal/domain/catalog.go",
+    "backend/internal/modules/m2/internal/store/catalog.go",
+    "backend/internal/modules/m2/module.go",
+    "backend/internal/modules/m3/api/tickets.go",
+    "backend/internal/modules/m3/internal/store/tickets.go",
+    "backend/internal/modules/m3/module.go",
+    "backend/internal/modules/m8/api/content.go",
+    "backend/internal/modules/m8/internal/app/http.go",
+    "backend/internal/modules/m8/internal/app/service.go",
+    "backend/internal/modules/m8/internal/domain/content.go",
+    "backend/internal/modules/m8/internal/store/content.go",
+    "backend/internal/modules/m8/module.go",
+    "backend/internal/modules/m9/internal/store/consume.go",
+    "contracts/openapi/business.json",
+    "frontend/business-pages.mjs",
+    "frontend/src/features/m0-03.ts",
+    "frontend/src/features/search-combobox.ts",
+    "qa/m0-09/completion.json",
+    "qa/m0-09/integration.json",
+    "qa/m0-09/smoke_local.json",
+    "scripts/build_business_contracts.py",
+    "scripts/m0_09_contracts.py",
+    "scripts/smoke_m0_09_local.py",
+    "scripts/test_m0_09.py",
+    "seeds/m0-03-lab.sql",
+    "tests/contract/test_business_contracts.py"
+  ],
+  "verification_limits": [
+    "Tests executed on disposable isolated containers and synthetic loopback lab (:18080) with synthetic test subjects.",
+    "Real PostgreSQL schemas M1, M2, M3, M8, M9 exercised with strict owner isolation and zero cross-owner joins.",
+    "No external SMTP, Telegram bot token, or production identities used.",
+    "Production UAT, high load stress testing, and real production deployment remain NOT_RUN."
+  ]
+}

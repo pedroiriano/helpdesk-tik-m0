@@ -1,0 +1,10 @@
+{
+  "timestamp": "2026-11-13T00:21:40.375677+00:00",
+  "sources": {
+    "frontend/landing-page.mjs": "d1fa5fa770170807b555383d541bd81c42c61845b9f4754c94d9632314ff45df",
+    "frontend/public-ui.css": "be0110d7e6bdd1d27a50630ef1861ec77d76755eef761b59e59905f449dfa12b",
+    "frontend/helpdesk-content.mjs": "7928cec4ba97cdcc9c20e151fabbfd0f4f895114d88caac640d12d793efb0761",
+    "scripts/test_piui_build.py": "1bcbf89a2685be99eab500a0fe0bd8bbfb429d59fbcfda68b1a8fd686f90902e",
+    "docs/05_ATURAN_UI_UX_WEB_PUBLIK.md": "befed1618837df25c49e605032c698d09a0854a699b32dc8641ac8021e1db9c1"
+  }
+}

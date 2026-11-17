@@ -1,0 +1,4 @@
+PASS tracking normal input, header-only capability, error recovery, service-context routing and live mandate helpers
+PASS review validation, safe summary, edit focus, one confirmation dispatch and re-review
+PASS detail state, unspecified priority and safe text encoding
+PASS rendered ticket text/attribute escaping and server confirmation deadline

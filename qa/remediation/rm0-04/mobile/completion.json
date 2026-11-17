@@ -1,0 +1,83 @@
+{
+  "timestamp": "2026-11-13T00:19:53.564305+00:00",
+  "agent": "Codex",
+  "task_id": "RM0-04",
+  "scope": "Mobile UI regression correction",
+  "result": "PASS_LOCAL_MOBILE",
+  "phase_status": "IN_PROGRESS",
+  "requirements": [
+    "AC11",
+    "AC20",
+    "R4-B",
+    "R4-C",
+    "R4-H",
+    "R4-I"
+  ],
+  "changed_files": [
+    "frontend/public-ui.css",
+    "frontend/public-pages.css",
+    "frontend/business.css",
+    "frontend/business-pages.mjs",
+    "frontend/src/features/m0-03.ts",
+    "docs/05_ATURAN_UI_UX_WEB_PUBLIK.md",
+    "scripts/test_piui_build.py",
+    "status/PROJECT_STATE.md",
+    "status/HANDOFF_RM0_04.md",
+    "planning/remediation_backlog.csv"
+  ],
+  "source_manifest": {
+    "path": "qa/remediation/rm0-04/mobile/source-manifest.json",
+    "sha256": "a2993fe42dd1357d3f8aa38a7a2eaa752565a5dc2308ee110aeb8b549f87b16d",
+    "files": 699
+  },
+  "tests": [
+    {
+      "command": "npm.cmd --prefix frontend run build",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "python scripts/test_piui_build.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "node scripts/test_public_cache.mjs",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "docker compose build web",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "docker compose up -d --no-deps --no-build --wait --wait-timeout 85 web",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS"
+    }
+  ],
+  "browser_report": "qa/remediation/rm0-04/mobile/browser.json",
+  "gateway_report": "qa/remediation/rm0-04/mobile/gateway.json",
+  "fixed": [
+    "Removed desktop grid importance overriding access-card mobile/tablet breakpoints.",
+    "Sized public/admin touch controls through canonical source tokens.",
+    "Aligned the header as a 44 px / flexible brand / 44 px grid and removed duplicate menu captions.",
+    "Preserved all Hero controls and CTA within short portrait and landscape stage bounds.",
+    "Styled public login tabs in CSS, retained ARIA/keyboard behavior and readable text inputs.",
+    "Restored PIUI admin login close action and added a build regression assertion.",
+    "Wrapped gallery controls and verified image navigation plus focus restoration."
+  ],
+  "limits": [
+    "Responsive IAB viewports with synthetic lab sessions.",
+    "Full behavior across physical devices, browser engines, assistive technology and device keyboards remains outside this smoke.",
+    "Unavailable-ID detail routes cover empty/error presentation; populated ticket detail and report form were checked separately through normal UI navigation.",
+    "This report closes the tested mobile regression scope. Open phase acceptance is recorded in the phase completion report."
+  ],
+  "next_phase": "RM0-05 NOT_STARTED"
+}

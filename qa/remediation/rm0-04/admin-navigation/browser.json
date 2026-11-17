@@ -1,0 +1,106 @@
+{
+  "result": "PASS_LOCAL_ADMIN_UI",
+  "surface": "CUA IAB, localhost 18080, native PIUI Zero",
+  "actors": [
+    "Operator OPD A",
+    "Admin Lab OPD A",
+    "Teknisi L1 OPD A",
+    "Guest after logout"
+  ],
+  "cases": [
+    {
+      "case": "Operator orientation and permissions",
+      "result": "PASS",
+      "checks": [
+        "Correct human role/profile",
+        "Only permitted menu groups/items",
+        "No empty menu groups",
+        "Verification queue title matches filter",
+        "Media selector shows only allowed option",
+        "Direct memberships route shows outside-task access state"
+      ]
+    },
+    {
+      "case": "Administrator consistency and browser history",
+      "result": "PASS",
+      "checks": [
+        "Services/category/membership titles match sidebar and selector",
+        "Configuration admin has no ticket menu without ticket.read",
+        "Sidebar categories then browser Back returns services URL",
+        "Akun search with ArrowDown/Enter opens memberships with correct active item"
+      ]
+    },
+    {
+      "case": "Mobile drawer and picker",
+      "result": "PASS",
+      "viewport_requested": "390x844",
+      "checks": [
+        "Desktop/mobile IDs matched for same Administrator session",
+        "Visible text restored despite desktop collapsed state",
+        "Context role and active item visible",
+        "Picker navigates services to categories after ready",
+        "No page horizontal overflow on inspected mobile pages"
+      ]
+    },
+    {
+      "case": "Technician work shortcut",
+      "result": "PASS",
+      "checks": [
+        "Tugas saya shortcut opens my-tasks filter",
+        "Heading and selected filter use Tugas saya",
+        "Antrean tiket remains active parent",
+        "Configuration menus unavailable"
+      ]
+    },
+    {
+      "case": "Real logout and two-tab sync",
+      "result": "PASS",
+      "report": "qa/remediation/rm0-04/admin-navigation/browser-logout.json",
+      "checks": [
+        "Server session ended",
+        "Sender tab reaches Admin login",
+        "Other tab reloads into unauthenticated access state",
+        "Temporary second tab closed"
+      ]
+    },
+    {
+      "case": "Final shell, detail and keyboard",
+      "result": "PASS",
+      "report": "qa/remediation/rm0-04/admin-navigation/browser-final-shell.json",
+      "checks": [
+        "Detail breadcrumb includes queue parent",
+        "Parent aria-current location",
+        "Collapsed rail tooltip retains menu name",
+        "Restricted Akun search has no result for Operator",
+        "Escape closes palette and returns focus to opener",
+        "No prototype notification-count relabeling on final dashboard",
+        "Final workspace readiness and bound picker observed"
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "qa/remediation/rm0-04/admin-navigation/operator-desktop.jpg",
+      "sha256": "e9165e6675876880877da763e8998d1dfda19901b81b291a2b191f2c6580fe4e",
+      "image_pixels": [
+        1270,
+        794
+      ],
+      "scope": "Operator dashboard; requested 1280x800"
+    },
+    {
+      "path": "qa/remediation/rm0-04/admin-navigation/admin-mobile-menu.jpg",
+      "sha256": "b1a80fa8b8ffd14e71ed0ab08c81283d33f56789c33596e4d8b7aea0bb891c0b",
+      "image_pixels": [
+        380,
+        822
+      ],
+      "scope": "Administrator drawer; requested 390x844"
+    }
+  ],
+  "viewport_override_reset": true,
+  "session_restored": "Operator OPD A",
+  "business_data_writes": false,
+  "session_test_actions": "Synthetic lab sign-in/switch and server logout only",
+  "candidate_note": "Representative navigation was exercised during refinement. Final candidate rechecked initialization, mobile drawer/picker, profile label, Escape/focus and Operator workspace. Logout logic was unchanged after its successful two-tab check."
+}

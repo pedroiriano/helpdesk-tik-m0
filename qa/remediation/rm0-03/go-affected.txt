@@ -1,0 +1,33 @@
+?   	helpdesk.local/m0/internal/modules/m1	[no test files]
+ok  	helpdesk.local/m0/internal/modules/m1/api	2.723s
+?   	helpdesk.local/m0/internal/modules/m1/internal/app	[no test files]
+ok  	helpdesk.local/m0/internal/modules/m1/internal/domain	5.729s
+?   	helpdesk.local/m0/internal/modules/m1/internal/store	[no test files]
+?   	helpdesk.local/m0/internal/modules/m3	[no test files]
+?   	helpdesk.local/m0/internal/modules/m3/api	[no test files]
+?   	helpdesk.local/m0/internal/modules/m3/internal/app	[no test files]
+?   	helpdesk.local/m0/internal/modules/m3/internal/domain	[no test files]
+?   	helpdesk.local/m0/internal/modules/m3/internal/store	[no test files]
+?   	helpdesk.local/m0/internal/modules/m5	[no test files]
+?   	helpdesk.local/m0/internal/modules/m5/api	[no test files]
+?   	helpdesk.local/m0/internal/modules/m5/internal/app	[no test files]
+?   	helpdesk.local/m0/internal/modules/m5/internal/domain	[no test files]
+?   	helpdesk.local/m0/internal/modules/m5/internal/store	[no test files]
+?   	helpdesk.local/m0/internal/modules/m6	[no test files]
+?   	helpdesk.local/m0/internal/modules/m6/api	[no test files]
+?   	helpdesk.local/m0/internal/modules/m6/internal/app	[no test files]
+ok  	helpdesk.local/m0/internal/modules/m6/internal/domain	3.488s
+?   	helpdesk.local/m0/internal/modules/m6/internal/store	[no test files]
+?   	helpdesk.local/m0/internal/modules/m7	[no test files]
+?   	helpdesk.local/m0/internal/modules/m7/api	[no test files]
+?   	helpdesk.local/m0/internal/modules/m7/internal/app	[no test files]
+?   	helpdesk.local/m0/internal/modules/m7/internal/domain	[no test files]
+?   	helpdesk.local/m0/internal/modules/m7/internal/store	[no test files]
+?   	helpdesk.local/m0/internal/modules/m9	[no test files]
+?   	helpdesk.local/m0/internal/modules/m9/api	[no test files]
+?   	helpdesk.local/m0/internal/modules/m9/internal/app	[no test files]
+ok  	helpdesk.local/m0/internal/modules/m9/internal/domain	2.348s
+?   	helpdesk.local/m0/internal/modules/m9/internal/store	[no test files]
+ok  	helpdesk.local/m0/internal/platform/database	0.790s
+?   	helpdesk.local/m0/internal/platform/delivery	[no test files]
+ok  	helpdesk.local/m0/internal/bootstrap	2.634s

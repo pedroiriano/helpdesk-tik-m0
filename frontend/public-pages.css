@@ -1,0 +1,221 @@
+/* Page and detail consumers of the canonical public UI scale. */
+[data-helpdesk-public] .vy-hdr-flyout::before { content: none; }
+[data-helpdesk-public] .vy-hdr-panel-deck::before { content: 'HELPDESK TIK / MENU'; }
+[data-helpdesk-public] {
+  --touch-target-min: 44px;
+  --hd-card-padding: clamp(20px, 2.4vw, 28px);
+  --hd-content-gap: 16px;
+}
+
+[data-helpdesk-public] :is(.vy-leaf-head, .vy-detail-title) {
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.15;
+  letter-spacing: -.025em;
+  text-transform: none;
+  max-width: 22ch;
+  text-wrap: balance;
+}
+
+[data-helpdesk-public] .vy-leaf-banner {
+  padding-block: 128px var(--hd-section-space);
+}
+
+[data-helpdesk-public] :is(.vy-leaf-brief, .vy-detail-summary) {
+  font-size: var(--vy-fluid-lede);
+  line-height: 1.65;
+  max-width: 64ch;
+  margin: 20px 0 0;
+}
+
+[data-helpdesk-public] .vy-detail-main {
+  width: 100%;
+  max-width: var(--vy-container);
+  margin-inline: auto;
+  padding: 112px clamp(16px, 3.5vw, 48px) var(--hd-section-space);
+}
+
+[data-helpdesk-public] .vy-detail-breadcrumb {
+  margin-bottom: 24px;
+  font-size: .875rem;
+  line-height: 1.5;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+[data-helpdesk-public] .vy-detail-hero {
+  gap: 32px;
+  align-items: start;
+  min-height: 0;
+}
+
+[data-helpdesk-public] .vy-detail-hero__copy { padding: 0; }
+[data-helpdesk-public] .vy-detail-hero__index { margin-bottom: 16px; font-size: .75rem; line-height: 1.5; }
+[data-helpdesk-public] .vy-detail-actions { flex-direction: row; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+[data-helpdesk-public] .vy-detail-actions .btn { width: auto; }
+
+[data-helpdesk-public] .vy-detail-media {
+  min-height: 0;
+  aspect-ratio: 16 / 10;
+}
+
+[data-helpdesk-public] .vy-detail-media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  min-height: 0;
+  height: 100%;
+  padding: 24px 24px 80px;
+  object-fit: contain;
+  background: #e3ecf4;
+  filter: none;
+}
+
+[data-helpdesk-public] .vy-detail-media figcaption { font-size: .75rem; line-height: 1.5; padding: 12px; }
+[data-helpdesk-public] .vy-detail-stats { gap: 16px; margin-block: 32px; }
+[data-helpdesk-public] .vy-detail-stat { min-width: 0; min-height:0; padding: 20px; display: grid; gap: 8px; align-content:start; }
+[data-helpdesk-public] .vy-detail-stat :is(dt, span) { font-size: .8125rem; line-height: 1.5; }
+[data-helpdesk-public] .vy-detail-stat :is(dd, strong) { font-size: 1rem; line-height: 1.5; margin: 0; overflow-wrap: anywhere; }
+[data-helpdesk-public] .vy-detail-body { gap: 24px; margin-top: 32px; }
+
+[data-helpdesk-public] .vy-detail-panel {
+  padding: var(--hd-card-padding);
+  min-width: 0;
+}
+
+[data-helpdesk-public] .vy-detail-panel h2 {
+  font-size: clamp(1.375rem, 2vw, 1.75rem);
+  line-height: 1.3;
+  text-transform: none;
+  margin: 12px 0 16px;
+}
+
+[data-helpdesk-public] .vy-detail-prose p {
+  font-size: 1rem;
+  line-height: 1.7;
+  max-width: 72ch;
+  margin: 0 0 16px;
+}
+
+[data-helpdesk-public] .vy-detail-specs { margin: 0; }
+[data-helpdesk-public] .vy-detail-specs div { padding-block: 12px; gap: 12px; }
+[data-helpdesk-public] .vy-detail-specs :is(dt, dd) { font-size: .9375rem; line-height: 1.6; margin: 0; overflow-wrap: anywhere; }
+[data-helpdesk-public] .vy-detail-process { margin: 0; }
+[data-helpdesk-public] .vy-detail-process li { padding-block: 16px; font-size: 1rem; line-height: 1.65; gap: 12px; }
+[data-helpdesk-public] .vy-detail-sequence { margin-top: 32px; padding-top: 24px; }
+[data-helpdesk-public] .vy-detail-sequence__grid { gap: var(--hd-component-gap); }
+[data-helpdesk-public] .vy-detail-next { padding: 20px; gap: 12px; min-width: 0; }
+[data-helpdesk-public] .vy-detail-next strong { font-size: 1rem; line-height: 1.5; text-transform: none; overflow-wrap: anywhere; }
+
+[data-helpdesk-public] .vy-contact-form { padding: var(--hd-card-padding); }
+[data-helpdesk-public] :is(.vy-input-group, .vy-topic-fieldset) { margin: 0 0 24px; }
+[data-helpdesk-public] :is(.vy-chips, .vy-detail-actions) { gap: 12px; }
+[data-helpdesk-public] :is(.vy-input-group label, .vy-topic-fieldset legend) { font-size: .9375rem; line-height: 1.5; margin-bottom: 8px; }
+[data-helpdesk-public] :is(.vy-input, input[type="text"], input[type="email"], input[type="search"], input[type="password"], select, textarea) {
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  min-height: 44px;
+  padding: 12px;
+  max-width: 100%;
+}
+[data-helpdesk-public] textarea { min-height: 144px; resize: vertical; }
+[data-helpdesk-public] .vy-table-container { max-width: 100%; overflow-x: auto; }
+[data-helpdesk-public] .vy-table :is(th, td) { padding: 12px 16px; font-size: .9375rem; line-height: 1.6; }
+[data-helpdesk-public] .vy-chip { min-height: 44px; padding: 10px 16px; font-size: .875rem; line-height: 1.5; }
+
+@media (max-width: 639px) {
+  [data-helpdesk-public] .vy-detail-main { padding-top: 104px; }
+  [data-helpdesk-public] .vy-leaf-banner { padding-top: 112px; }
+  [data-helpdesk-public] .vy-detail-hero { grid-template-columns: 1fr; gap: 24px; }
+  [data-helpdesk-public] .vy-detail-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  [data-helpdesk-public] .vy-detail-sequence__grid { grid-template-columns: 1fr; }
+  [data-helpdesk-public] .vy-detail-next { padding: 20px; }
+}
+
+/* Shared M8 list and reader in the public shell. */
+[data-helpdesk-public] .hd-kb-query { display:flex; flex-wrap:wrap; gap:var(--hd-gap, 12px); align-items:end; }
+[data-helpdesk-public] .hd-kb-query input { flex:1 1 14rem; min-width:0; }
+[data-helpdesk-public] .hd-kb-metadata { font-size:.875rem; color:var(--vy-muted, #aab3bd); overflow-wrap:anywhere; }
+[data-helpdesk-public] .hd-kb-body { overflow-wrap:anywhere; line-height:1.65; white-space:pre-line; }
+[data-helpdesk-public] .hd-kb-body pre { overflow-x:auto; white-space:pre; }
+[data-helpdesk-public] .hd-kb-body table { display:block; max-width:100%; overflow-x:auto; }
+
+.hd-search-box { margin-block-end: 1.5rem; }
+.hd-search-input { position: relative; }
+.hd-suggestions-list {
+  position: absolute;
+  inset: 100% 0 auto;
+  z-index: 50;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-block-size: 15rem;
+  overflow: auto;
+  background: var(--vy-surface, Canvas);
+  color: var(--vy-text, CanvasText);
+  border: 1px solid var(--vy-line, currentColor);
+}
+.hd-suggestion-item { cursor: pointer; padding: .5rem .75rem; }
+.hd-suggestion-item + .hd-suggestion-item { border-block-start: 1px solid var(--vy-line); }
+.hd-suggestion-meta { display: block; font-size: .875em; }
+.hd-suggestion-item:is([aria-selected="true"], :hover) { outline: 2px solid currentColor; outline-offset: -2px; }
+
+/* Responsive consumers use the same controls and preserve the full reading width. */
+[data-helpdesk-public] :is(main, main section, .vy-path-card, .hd-catalog > *, .hd-kb-body) {
+  min-inline-size: 0;
+}
+[data-helpdesk-public] .vy-path-card { overflow-wrap: break-word; }
+[data-helpdesk-public] .vy-path-card__title { word-break: normal; }
+[data-helpdesk-public] :is(.vy-path-card, .vy-contact-form) .btn {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+[data-helpdesk-public] :is(section[id], div[id="akses"]) { scroll-margin-top: 112px; }
+.hd-auth-tabs {
+  display: flex;
+  gap: 8px;
+  margin-block-end: 24px;
+  border-block-end: 1px solid var(--vy-line);
+}
+.hd-auth-tab {
+  flex: 1 1 0;
+  min-inline-size: 0;
+  min-block-size: 44px;
+  padding: 10px 12px;
+  border: 0;
+  border-block-end: 3px solid transparent;
+  background: transparent;
+  color: var(--vy-muted);
+  font: inherit;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: normal;
+  cursor: pointer;
+}
+.hd-auth-tab[aria-selected="true"] { color: var(--vy-fg, #f4f4f5); border-block-end-color: currentColor; }
+.hd-auth-tab:focus-visible { outline: 2px solid currentColor; outline-offset: -3px; }
+
+@media (max-width: 639px) {
+  [data-helpdesk-public] { --hd-touch-control-min: 44px; }
+  [data-helpdesk-public] main :is(button, .btn, .vy-chip, .hd-ticket-nav):not([hidden]),
+  [data-helpdesk-public] .vy-tail-top button {
+    min-block-size: 44px;
+    min-inline-size: 44px;
+    line-height: 1.4;
+    white-space: normal;
+  }
+  [data-helpdesk-public] .vy-tail-paths a,
+  [data-helpdesk-public] .vy-tail-share a {
+    display: flex;
+    align-items: center;
+    min-block-size: 44px;
+    line-height: 1.5;
+  }
+  [data-helpdesk-public] :is(.hd-pager-nav, .hd-ticket-nav) { max-inline-size: 100%; }
+  [data-helpdesk-public] .hd-pager-nav > button { flex: 1 1 9rem; }
+  [data-helpdesk-public] :is(.hd-knowledge-card__title, [data-hd-kb-title]) {
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
+  [data-helpdesk-public] .hd-kb-body :is(p, li) { font-size: 1rem; line-height: 1.7; }
+}

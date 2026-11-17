@@ -1,0 +1,62 @@
+{
+  "timestamp": "2026-11-07T11:09:24.827135+00:00",
+  "phase": "M0-13",
+  "task_id": "M0-13",
+  "title": "Penyempurnaan Kesesuaian seluruh Alamat atau Slug, Halaman, Halaman Detail, Menu, Tautan dan lainnya dengan Layanan, Alur Proses Bisnis, dan Konten, UAT AI, serta Otorisasi Rilis",
+  "result": "PASS",
+  "summary": {
+    "services_catalog": "16 Katalog Layanan Resmi TIK Diskominfo Kota Depok aktif di database M2",
+    "knowledge_base": "5 Artikel Panduan Operasional Resmi TIK Depok berstatus PUBLISHED di M8",
+    "semantic_routes_and_slugs": "20 Rute semantik kanonikal (termasuk /layanan/:slug, /panduan/:slug, /tiket/:id, /faq, /status, /kontak, /masuk) terkonfigurasi pada Nginx dan frontend",
+    "link_audit": {
+      "status": "PASS",
+      "evidence": "qa/m0-13/link_audit.json",
+      "html_files_scanned": 80,
+      "total_links_checked": 1827,
+      "broken_links_count": 0,
+      "placeholder_text_count": 0
+    },
+    "uat_multi_persona": {
+      "status": "PASS",
+      "evidence": "qa/m0-13/uat_report.json",
+      "personas_tested": 9,
+      "all_personas_passed": true
+    },
+    "acceptance_criteria_closed": [
+      "AC11",
+      "AC25"
+    ],
+    "release_authorization": "docs/releases/M0_RELEASE_AUTHORIZATION.md",
+    "gates_status": {
+      "gate_1_contracts_sync": "PASS",
+      "gate_2_contracts_unittest": "PASS",
+      "gate_3_frontend_build": "PASS",
+      "gate_4_piui_build": "PASS",
+      "gate_5_boundaries": "PASS",
+      "gate_6_backend_unit": "PASS",
+      "gate_7_m0_12_integration": "PASS",
+      "gate_8_m0_13_links": "PASS",
+      "gate_9_m0_13_uat": "PASS",
+      "gate_10_m0_12_smoke": "PASS",
+      "gate_11_verify_package": "PASS"
+    }
+  },
+  "file_hashes": {
+    "seeds/m0-13-depok-services.sql": "2498427a19b761d0a181b2c78d551ed582b443f9469eda9369ce5890b927dfe4",
+    "seeds/m0-03-lab.sql": "f19c61fea53d4051bd1bf8be860c06c89e96096c16daecb90565dca7ef0f7dbb",
+    "frontend/business-pages.mjs": "e5ce7b33cffea6cff69053d2a1e21dd5a0880578e24efbc05c0ae76104f112dc",
+    "frontend/landing-page.mjs": "0dabef5a709723c8bcdc7a2f1cc545ec47e679219034d6d9f99695159b13351f",
+    "frontend/ticket-pages.mjs": "ce4cc4cb02596602c1061b9ef76e1de4b20b06996a7e000214165d4a08ab3ada",
+    "frontend/build-templates.mjs": "9ee056db4d6ed336d25a99b3c3321a8ebb81fa10f1db420766c1671babfb8fb3",
+    "frontend/src/features/m0-03.ts": "4b600a7cfb0a73c2a4ae02fca58ff5d3102c26b6c82079cd93de0f550ed25a1f",
+    "frontend/src/features/m0-04.ts": "61f159bbe9113ffd634918ab0320ca09fa4c1dc14b4b2ec57edcb84e5757a179",
+    "infra/nginx/nginx.conf": "175b95263853f1f5b4305a3a82591033a1676428c29562cc537af55310f0ed57",
+    "scripts/test_m0_13_links.py": "4ab9754a279f26fbcf789f565cdfa134fe76339ab7ad4a90d924817d35f20463",
+    "scripts/test_m0_13_uat.py": "afc5a9ffbc37f2a80dadbec0f0df8f9642856c44efc508afccf838dfcfb94c0c",
+    "contracts/acceptance.csv": "49be5487cfa6112326fe39d34d594085049c2d4d4dcae565da7bba8fb02190df",
+    "planning/backlog.csv": "fb2433b9fd6bed4bcd891d9724501b4130a8377aa3b3d77ee6d71ef25ab4a22e",
+    "status/PROJECT_STATE.md": "9870b8c2a36fde3a8ea2b69ba4b90c0fc294cc7f76369ec971fb48d7e3a860c6",
+    "status/evidence.jsonl": "ec679eb2409f8622f20dfc6a8060c35a782987f70496d598d3576780bdd67e6b",
+    "docs/releases/M0_RELEASE_AUTHORIZATION.md": "971be3ee5c62aa95a77b1d160b5b77e4834086562cbeb2b3fabc87d429f746a3"
+  }
+}

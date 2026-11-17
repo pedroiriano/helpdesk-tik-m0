@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-11-12T01:12:14.563880+00:00",
+  "task_id": "RM0-03",
+  "checkpoint": "RM0-02 DONE_VERIFIED",
+  "source_manifest": {
+    "path": "qa/remediation/rm0-02/source-manifest.json",
+    "sha256": "d08c6f01543946935cb4d6a53c362105174aae370e459e38925b9c5f51d00b21",
+    "files_checked": 671,
+    "drift": 0
+  },
+  "rm0_01_historical": {
+    "files_checked": 570,
+    "drift_from_current": 34
+  },
+  "runtime_before": {
+    "healthy": [
+      "db",
+      "app",
+      "web",
+      "scanner"
+    ],
+    "migrations_through": "022",
+    "sla_calendars": 0,
+    "sla_targets": 0,
+    "sla_holidays": 0
+  },
+  "rm0_04": "NOT_STARTED"
+}

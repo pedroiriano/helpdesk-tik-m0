@@ -1,0 +1,6 @@
+ Container helpdesk-m0 Recreate 
+ Container helpdesk-m0 Recreated 
+ Container helpdesk-m0 Starting 
+ Container helpdesk-m0 Started 
+ Container helpdesk-m0 Waiting 
+ Container helpdesk-m0 Healthy 

@@ -1,0 +1,71 @@
+{
+  "timestamp": "2026-11-07T10:25:00.000000+00:00",
+  "task_id": "M0-12",
+  "status": "DONE_VERIFIED",
+  "result": "PASS",
+  "scope": "M0-12 Candidate integration and final release verification drill across all 9 modules (M1-M9), guest ticket lifecycle, CAS concurrency collision, search & dynamic revocation, inter-OPD handoff & escalation, maintenance mode, scoped runner, purge protection, reports analytics & CSV sanitization, readiness & liveness probes (/livez, /readyz); real HTTP and PostgreSQL; zero working DB writes; zero data loss.",
+  "requirements": [
+    "AC04",
+    "AC06",
+    "AC07",
+    "AC15",
+    "AC16",
+    "AC17",
+    "AC18",
+    "AC19",
+    "AC20",
+    "AC22",
+    "AC23",
+    "AC24"
+  ],
+  "global_acceptance": {
+    "AC04": "DONE_VERIFIED",
+    "AC06": "DONE_VERIFIED",
+    "AC07": "DONE_VERIFIED",
+    "AC15": "DONE_VERIFIED",
+    "AC16": "DONE_VERIFIED",
+    "AC17": "DONE_VERIFIED",
+    "AC18": "DONE_VERIFIED",
+    "AC19": "DONE_VERIFIED",
+    "AC20": "DONE_VERIFIED",
+    "AC22": "DONE_VERIFIED",
+    "AC23": "DONE_VERIFIED",
+    "AC24": "DONE_VERIFIED"
+  },
+  "counts": {
+    "integration_subtests": 9,
+    "live_smoke_checks": 12,
+    "shutdown_probes_checks": 4,
+    "go_packages_boundary": 53,
+    "contract_tests": 8
+  },
+  "commands_executed": [
+    "python scripts/build_business_contracts.py --check",
+    "python -m unittest tests/contract/test_business_contracts.py",
+    "cmd /c \"cd frontend && npm run build\"",
+    "python scripts/test_piui_build.py",
+    "python scripts/check_boundaries.py",
+    "cmd /c \"cd backend && go test ./internal/platform/... ./internal/modules/...\"",
+    "python scripts/test_m0_12.py",
+    "python scripts/test_m0_12_shutdown.py",
+    "cmd /c \"docker compose build app web && docker compose up -d app web\"",
+    "python scripts/smoke_m0_12_local.py --allow-lab-writes",
+    "python scripts/verify_package.py"
+  ],
+  "changed_files": [
+    "backend/internal/bootstrap/application.go",
+    "backend/internal/bootstrap/m0_12_integration_test.go",
+    "backend/internal/modules/m8/internal/app/http.go",
+    "infra/nginx/nginx.conf",
+    "scripts/test_m0_12.py",
+    "scripts/test_m0_12_shutdown.py",
+    "scripts/smoke_m0_12_local.py",
+    "prompts/14_FASE_M0_13.md"
+  ],
+  "artifacts": [
+    "qa/m0-12/completion.json",
+    "qa/m0-12/integration.json",
+    "qa/m0-12/shutdown.json",
+    "qa/m0-12/smoke_local.json"
+  ]
+}

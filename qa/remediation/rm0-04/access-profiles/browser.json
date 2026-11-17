@@ -1,0 +1,119 @@
+{
+  "timestamp": "2026-11-13T07:38:21.199Z",
+  "result": "PASS_REPRESENTATIVE_BROWSER",
+  "cases": [
+    {
+      "case": "existing-binding-preserved",
+      "result": {
+        "accountLocked": true,
+        "advancedOpen": false,
+        "orgLocked": true,
+        "permissions": "identity.grant, catalog.write, rules.write, system.health",
+        "primaryOptions": [
+          "Operator",
+          "Teknisi",
+          "Koordinator",
+          "Pimpinan",
+          "Administrator"
+        ],
+        "profile": "administrator"
+      }
+    },
+    {
+      "case": "out-of-role-permission-warning-no-submit",
+      "message": "1 izin berada di luar mandat delegasi saat ini. Simpan ditolak sampai izin diperbaiki; data tersimpan belum diubah."
+    },
+    {
+      "case": "mobile-390",
+      "result": {
+        "account": "Teknisi OPD B · Teknisi",
+        "formOverflow": false,
+        "pageOverflow": false,
+        "profile": "technician",
+        "viewport": {
+          "height": 844,
+          "width": 390
+        }
+      }
+    },
+    {
+      "case": "legacy-requester-binding-special-profile",
+      "result": {
+        "account": "ASN OPD B · Pemohon ASN",
+        "permissions": "session.read, session.revoke, ticket.create, ticket.read, ticket.comment, ticket.attach, ticket.confirm, ticket.transition, draft.read, draft.write, media.read, media.write, notification.read, operation.read",
+        "primary": "",
+        "special": "requester-asn",
+        "specialOpen": true
+      }
+    },
+    {
+      "case": "final-initialized-editor-desktop",
+      "result": {
+        "pageOverflow": false,
+        "permissions": "ticket.read, ticket.verify, ticket.dispatch, ticket.comment, ticket.attach, ticket.transition, operation.read, media.read, ticket.bulk",
+        "profile": "operator",
+        "summary": "Operator · Operator OPD A · Dinas Kesehatan Kota Depok. 9 izin terpilih. Periksa kelengkapan laporan, verifikasi, lalu teruskan untuk ditangani.",
+        "viewport": {
+          "height": 900,
+          "width": 1280
+        },
+        "visibleFields": [
+          "access-profile",
+          "access-special",
+          "member-subject",
+          "org",
+          "team",
+          "expires",
+          "access-summary",
+          "permissions",
+          "reason",
+          "revoked"
+        ]
+      }
+    },
+    {
+      "case": "login-five-profiles",
+      "result": {
+        "profiles": [
+          "Operator",
+          "Teknisi",
+          "Koordinator",
+          "Pimpinan",
+          "Administrator"
+        ],
+        "specialCollapsed": true
+      }
+    },
+    {
+      "case": "technician-work-start",
+      "result": {
+        "configurationVisible": false,
+        "description": "Buka tugas yang diberikan, catat pekerjaan, lalu ajukan hasil penanganan. L1/L2 adalah tingkat kompetensi.",
+        "heading": "Mulai sebagai Teknisi",
+        "start": "/admin/app/tickets/index.html?filter=my-tasks"
+      }
+    },
+    {
+      "case": "technician-direct-membership-denied",
+      "heading": "Halaman di luar tugas Anda",
+      "formVisible": false
+    },
+    {
+      "case": "operator-work-start-session-restored",
+      "result": {
+        "configurationVisible": false,
+        "heading": "Mulai sebagai Operator",
+        "start": "/admin/app/tickets/index.html?filter=verification"
+      }
+    }
+  ],
+  "mutations": "Lab sign-in/session switches only; no membership, ticket or configuration submitted",
+  "limits": [
+    "No production SSO or human UAT",
+    "No full lifecycle retest or Cartesian role/browser matrix"
+  ],
+  "screenshots": [
+    "access-desktop.jpg",
+    "access-mobile.jpg"
+  ]
+}

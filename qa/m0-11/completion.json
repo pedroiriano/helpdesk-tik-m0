@@ -1,0 +1,72 @@
+{
+  "timestamp": "2026-11-07T09:12:30.000000+00:00",
+  "task_id": "M0-11",
+  "status": "DONE_VERIFIED",
+  "result": "PASS",
+  "scope": "M0-11 System administration, maintenance mode (AC24), scoped runner allowlist (AC24), redacted system health (AC24), archive and restore archive (AC22), purge dual-control and rejection for non-super-admin (AC22), isolated backup & restore drill; real HTTP and PostgreSQL; zero working DB data loss.",
+  "requirements": [
+    "AC20",
+    "AC22",
+    "AC24"
+  ],
+  "global_acceptance": {
+    "AC20": "DONE_VERIFIED",
+    "AC22": "DONE_VERIFIED",
+    "AC24": "DONE_VERIFIED"
+  },
+  "counts": {
+    "integration_subtests": 9,
+    "live_smoke_checks": 11,
+    "restore_drill_schemas": 9,
+    "go_packages_boundary": 53,
+    "contract_tests": 8
+  },
+  "commands_executed": [
+    "python scripts/build_business_contracts.py --check",
+    "python -m unittest tests/contract/test_business_contracts.py",
+    "cmd /c \"cd frontend && npm run build\"",
+    "python scripts/test_piui_build.py",
+    "python scripts/check_boundaries.py",
+    "cmd /c \"cd backend && go test ./internal/platform/... ./internal/modules/m1/... ./internal/modules/m3/...\"",
+    "python scripts/test_m0_11.py",
+    "python scripts/drill_m0_11_restore.py",
+    "docker compose build app",
+    "docker compose build web",
+    "docker compose up -d app web",
+    "python scripts/smoke_m0_11_local.py --allow-lab-writes",
+    "python scripts/verify_package.py"
+  ],
+  "changed_files": [
+    "backend/internal/bootstrap/application.go",
+    "backend/internal/bootstrap/m0_11_integration_test.go",
+    "backend/internal/modules/m1/api/operations.go",
+    "backend/internal/modules/m1/internal/app/http.go",
+    "backend/internal/modules/m1/internal/app/identity.go",
+    "backend/internal/modules/m1/internal/app/operations.go",
+    "backend/internal/modules/m1/internal/domain/operations.go",
+    "backend/internal/modules/m1/internal/domain/operations_test.go",
+    "backend/internal/modules/m1/internal/domain/permissions_generated.go",
+    "backend/internal/modules/m1/internal/store/operations.go",
+    "backend/internal/modules/m3/api/commands.go",
+    "backend/internal/modules/m3/internal/app/http.go",
+    "backend/internal/modules/m3/internal/app/service.go",
+    "backend/internal/modules/m3/internal/store/tickets.go",
+    "contracts/openapi/business.json",
+    "contracts/policy/permissions.v1.json",
+    "frontend/business-pages.mjs",
+    "frontend/ticket-pages.mjs",
+    "frontend/src/features/m0-03.ts",
+    "frontend/src/features/m0-04.ts",
+    "seeds/m0-03-lab.sql",
+    "scripts/m0_11_contracts.py",
+    "scripts/test_m0_11.py",
+    "scripts/drill_m0_11_restore.py",
+    "scripts/smoke_m0_11_local.py"
+  ],
+  "artifacts": [
+    "qa/m0-11/completion.json",
+    "qa/m0-11/integration.json",
+    "qa/m0-11/restore_drill.json",
+    "qa/m0-11/smoke_local.json"
+  ]
+}

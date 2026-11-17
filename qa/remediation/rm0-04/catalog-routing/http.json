@@ -1,0 +1,12 @@
+{
+  "result": "PASS",
+  "timestamp": "2026-11-13T08:19:31.592316+00:00",
+  "cases": [
+    "Public directory 37 entries; ASN scope and guest bypass denied",
+    "Reference division can be maintained without membership delegation; other OPD denied",
+    "Team references its active local division and rejects another organization\u2019s division",
+    "Guest context and ASN context persist with different trust; bad category, bad division and scope bypass denied",
+    "Verification guard, default/category ranking, dual mandate, cross-OPD suggestion and acceptance with revocation"
+  ],
+  "working_database_writes": false
+}

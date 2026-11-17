@@ -1,0 +1,45 @@
+{
+  "ready": {
+    "heading": "Layanan TIK",
+    "pickerBound": "true",
+    "pickerEnabled": true,
+    "workspaceVisible": true
+  },
+  "mobile": "Menu petugas\nAdministrator\nAdmin Lab OPD A\n1 organisasi aktif · Lab sintetis\nPEKERJAAN\nDasbor petugas\nLAYANAN DAN KONTEN\nLayanan TIK\nKategori layanan\nMenu portal publik\nORGANISASI DAN AKSES\nOrganisasi\nAkun dan hak akses\nTim teknis\nPENGAWASAN DAN SISTEM\nPemeliharaan sistem\nBANTUAN DAN PORTAL\nPanduan pengguna\nStatus layanan\nPortal publik",
+  "detail": {
+    "breadcrumb": "Dasbor petugasAntrean tiketDetail tiket",
+    "current": [
+      {
+        "current": "location",
+        "label": "Antrean tiket"
+      }
+    ],
+    "heading": "Detail tiket",
+    "noHorizontalOverflow": true
+  },
+  "rail": {
+    "queueTooltip": "Antrean tiket",
+    "state": "collapsed"
+  },
+  "search": {
+    "results": "",
+    "emptyMessage": "Tidak ada perintah yang cocok dengan kata kunci tersebut."
+  },
+  "final": {
+    "emptyGroups": 0,
+    "focus": "btn-open-cmd",
+    "heading": "Dasbor petugas",
+    "noHorizontalOverflow": true,
+    "paletteOpen": false,
+    "profileLabel": "Buka menu profil dan sesi petugas",
+    "title": "Dasbor petugas · Helpdesk TIK Kota Depok",
+    "visibleMenus": [
+      "Dasbor petugas",
+      "Antrean tiket",
+      "Pustaka media",
+      "Panduan pengguna",
+      "Status layanan",
+      "Portal publik"
+    ]
+  }
+}

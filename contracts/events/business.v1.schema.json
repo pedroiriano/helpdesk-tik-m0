@@ -1,0 +1,987 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "TicketCreated",
+        "TicketVerified",
+        "AssignmentChanged",
+        "TicketStateChanged",
+        "ResolutionProposed",
+        "NotificationStored",
+        "ConfirmationRecorded",
+        "VendorCaseRecorded",
+        "PauseChanged",
+        "HandoffAccepted",
+        "EscalationRequested",
+        "MediaScanCompleted",
+        "ContentPublished",
+        "AuditRecorded"
+      ]
+    },
+    "producer": {
+      "type": "string",
+      "enum": [
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5",
+        "M6",
+        "M7",
+        "M8",
+        "M9"
+      ]
+    },
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "aggregate_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "aggregate_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "correlation_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "payload": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "event_id",
+    "event_type",
+    "producer",
+    "schema_version",
+    "aggregate_id",
+    "aggregate_version",
+    "occurred_at",
+    "correlation_id",
+    "payload"
+  ],
+  "additionalProperties": false,
+  "oneOf": [
+    {
+      "properties": {
+        "event_type": {
+          "const": "TicketCreated"
+        },
+        "producer": {
+          "type": "string",
+          "enum": [
+            "M3"
+          ]
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "const": "OPEN"
+            },
+            "requester_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "service_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "service_owner_org_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "accepted_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            "resolution_due_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            "policy_version": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "episode_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "assignee_id": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "uuid"
+            },
+            "handling_team_id": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "uuid"
+            },
+            "resolution_endpoint": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "gross_seconds": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "net_seconds": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "sla_clock": {
+              "type": "object",
+              "properties": {
+                "ticket_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "episode_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "accepted_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "Z$"
+                },
+                "episode_started_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "Z$"
+                },
+                "resolution_due_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "Z$"
+                },
+                "due_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "Z$"
+                },
+                "resolution_endpoint": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                },
+                "gross_seconds": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "net_seconds": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "working_seconds": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "policy_version": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "calendar_version": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "as_of": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "Z$"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "ON_TRACK",
+                    "AT_RISK",
+                    "BREACHED",
+                    "PAUSED",
+                    "CANCELLED",
+                    "UNAVAILABLE"
+                  ]
+                },
+                "policy_source": {
+                  "type": "string",
+                  "enum": [
+                    "SERVICE_SNAPSHOT",
+                    "LAB_DEFAULT",
+                    "LEGACY"
+                  ]
+                },
+                "response_due_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "Z$"
+                },
+                "first_response_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "Z$"
+                }
+              },
+              "required": [
+                "ticket_id",
+                "episode_id",
+                "accepted_at",
+                "episode_started_at",
+                "resolution_due_at",
+                "due_at",
+                "resolution_endpoint",
+                "gross_seconds",
+                "net_seconds",
+                "policy_version",
+                "calendar_version",
+                "as_of",
+                "status",
+                "policy_source"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "state",
+            "requester_id",
+            "service_id",
+            "service_owner_org_id",
+            "accepted_at",
+            "resolution_due_at",
+            "policy_version",
+            "episode_id",
+            "assignee_id",
+            "handling_team_id",
+            "resolution_endpoint",
+            "gross_seconds",
+            "net_seconds"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    {
+      "properties": {
+        "event_type": {
+          "const": "TicketVerified"
+        },
+        "producer": {
+          "type": "string",
+          "enum": [
+            "M3"
+          ]
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "verification": {
+              "const": "VERIFIED"
+            },
+            "category_id": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "required": [
+            "verification",
+            "category_id"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    {
+      "properties": {
+        "event_type": {
+          "const": "AssignmentChanged"
+        },
+        "producer": {
+          "type": "string",
+          "enum": [
+            "M3"
+          ]
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "team_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "assignee_id": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "required": [
+            "team_id",
+            "assignee_id"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    {
+      "properties": {
+        "event_type": {
+          "const": "TicketStateChanged"
+        },
+        "producer": {
+          "type": "string",
+          "enum": [
+            "M3"
+          ]
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "type": "string",
+              "enum": [
+                "OPEN",
+                "TRIAGED",
+                "NEEDS_INFORMATION",
+                "ASSIGNED",
+                "IN_PROGRESS",
+                "RESOLVED",
+                "CLOSED",
+                "CANCELLED"
+              ]
+            },
+            "requester_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "service_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "service_owner_org_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "accepted_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            "resolution_due_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            "policy_version": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "episode_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "assignee_id": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "uuid"
+            },
+            "handling_team_id": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "uuid"
+            },
+            "resolution_endpoint": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "gross_seconds": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "net_seconds": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "sla_clock": {
+              "type": "object",
+              "properties": {
+                "ticket_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "episode_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "accepted_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "Z$"
+                },
+                "episode_started_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "Z$"
+                },
+                "resolution_due_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "Z$"
+                },
+                "due_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "Z$"
+                },
+                "resolution_endpoint": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                },
+                "gross_seconds": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "net_seconds": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "working_seconds": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "policy_version": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "calendar_version": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "as_of": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "Z$"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "ON_TRACK",
+                    "AT_RISK",
+                    "BREACHED",
+                    "PAUSED",
+                    "CANCELLED",
+                    "UNAVAILABLE"
+                  ]
+                },
+                "policy_source": {
+                  "type": "string",
+                  "enum": [
+                    "SERVICE_SNAPSHOT",
+                    "LAB_DEFAULT",
+                    "LEGACY"
+                  ]
+                },
+                "response_due_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "Z$"
+                },
+                "first_response_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "Z$"
+                }
+              },
+              "required": [
+                "ticket_id",
+                "episode_id",
+                "accepted_at",
+                "episode_started_at",
+                "resolution_due_at",
+                "due_at",
+                "resolution_endpoint",
+                "gross_seconds",
+                "net_seconds",
+                "policy_version",
+                "calendar_version",
+                "as_of",
+                "status",
+                "policy_source"
+              ],
+              "additionalProperties": false
+            },
+            "dispatch": {
+              "type": "object",
+              "properties": {
+                "team_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "assignee_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "explanation": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4000
+                },
+                "tier": {
+                  "type": "string",
+                  "enum": [
+                    "L1",
+                    "L2"
+                  ]
+                },
+                "proposal_digest": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                "recommended_assignee_id": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "required": [
+                "team_id",
+                "assignee_id",
+                "explanation",
+                "tier",
+                "proposal_digest",
+                "recommended_assignee_id"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "state",
+            "requester_id",
+            "service_id",
+            "service_owner_org_id",
+            "accepted_at",
+            "resolution_due_at",
+            "policy_version",
+            "episode_id",
+            "assignee_id",
+            "handling_team_id",
+            "resolution_endpoint",
+            "gross_seconds",
+            "net_seconds"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    {
+      "properties": {
+        "event_type": {
+          "const": "ResolutionProposed"
+        },
+        "producer": {
+          "type": "string",
+          "enum": [
+            "M3"
+          ]
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "attempt_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "confirmation_due_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            "requester_id": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "required": [
+            "attempt_id",
+            "confirmation_due_at"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    {
+      "properties": {
+        "event_type": {
+          "const": "NotificationStored"
+        },
+        "producer": {
+          "type": "string",
+          "enum": [
+            "M9"
+          ]
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "ticket_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "attempt_id": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "required": [
+            "ticket_id",
+            "attempt_id"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    {
+      "properties": {
+        "event_type": {
+          "const": "ConfirmationRecorded"
+        },
+        "producer": {
+          "type": "string",
+          "enum": [
+            "M3"
+          ]
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "attempt_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "decision": {
+              "type": "string",
+              "enum": [
+                "ACCEPT",
+                "REJECT",
+                "FEEDBACK",
+                "AUTO_NO_RESPONSE"
+              ]
+            }
+          },
+          "required": [
+            "attempt_id",
+            "decision"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    {
+      "properties": {
+        "event_type": {
+          "const": "VendorCaseRecorded"
+        },
+        "producer": {
+          "type": "string",
+          "enum": [
+            "M3"
+          ]
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "case_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "internal_pic_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "next_followup_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            }
+          },
+          "required": [
+            "case_id",
+            "internal_pic_id",
+            "next_followup_at"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    {
+      "properties": {
+        "event_type": {
+          "const": "PauseChanged"
+        },
+        "producer": {
+          "type": "string",
+          "enum": [
+            "M3"
+          ]
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "pause_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "policy_version": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "required": [
+            "pause_id",
+            "policy_version"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    {
+      "properties": {
+        "event_type": {
+          "const": "HandoffAccepted"
+        },
+        "producer": {
+          "type": "string",
+          "enum": [
+            "M3"
+          ]
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "from_org_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "to_org_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "team_id": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "required": [
+            "from_org_id",
+            "to_org_id",
+            "team_id"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    {
+      "properties": {
+        "event_type": {
+          "const": "EscalationRequested"
+        },
+        "producer": {
+          "type": "string",
+          "enum": [
+            "M3"
+          ]
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "operation_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "level": {
+              "type": "string",
+              "enum": [
+                "L2",
+                "COORDINATOR",
+                "LEADERSHIP"
+              ]
+            }
+          },
+          "required": [
+            "operation_id",
+            "level"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    {
+      "properties": {
+        "event_type": {
+          "const": "MediaScanCompleted"
+        },
+        "producer": {
+          "type": "string",
+          "enum": [
+            "M3",
+            "M8"
+          ]
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "CLEAN",
+                "REJECTED"
+              ]
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          },
+          "required": [
+            "status",
+            "sha256"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    {
+      "properties": {
+        "event_type": {
+          "const": "ContentPublished"
+        },
+        "producer": {
+          "type": "string",
+          "enum": [
+            "M8"
+          ]
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "revision_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "audience": {
+              "type": "string",
+              "enum": [
+                "PUBLIC_GUEST",
+                "PUBLIC_AUTH",
+                "ASN_AUTH",
+                "STAFF_ONLY"
+              ]
+            }
+          },
+          "required": [
+            "revision_id",
+            "audience"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    {
+      "properties": {
+        "event_type": {
+          "const": "AuditRecorded"
+        },
+        "producer": {
+          "type": "string",
+          "enum": [
+            "M1",
+            "M2",
+            "M3",
+            "M4",
+            "M5",
+            "M6",
+            "M7",
+            "M8",
+            "M9"
+          ]
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "actor_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "action": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4000
+            },
+            "object_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "scope": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4000
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4000
+            },
+            "outcome": {
+              "type": "string",
+              "enum": [
+                "SUCCESS",
+                "DENIED",
+                "FAILED"
+              ]
+            }
+          },
+          "required": [
+            "actor_id",
+            "action",
+            "object_id",
+            "scope",
+            "reason",
+            "outcome"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  ]
+}

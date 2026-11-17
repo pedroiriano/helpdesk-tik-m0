@@ -1,0 +1,88 @@
+{
+  "timestamp": "2026-11-04T06:25:49.399526+00:00",
+  "task_id": "M0-01",
+  "scope": "hero_guide_footer_regressions",
+  "git_sha": null,
+  "result": "PASS",
+  "source_hashes": {
+    "frontend/landing.css": "c0be1896972b22bfc6a908568174b879eb564e312e5a6c0cc69fa14941881ed4",
+    "frontend/landing-page.mjs": "74b325d0b1554d82d52ac914f07ffeba7116aa91eb2c19ae9c69ec6027e8a3f8",
+    "frontend/src/components/ServiceStatus.tsx": "938eb9ca88639861db7ac01655fb54305c4e29fa4d241cef5722e102a50c8bc6"
+  },
+  "commands": [
+    "npm.cmd run build (frontend)",
+    "docker compose up -d --no-deps --build --pull never web",
+    "python scripts/test_piui_build.py",
+    "python scripts/smoke_local.py"
+  ],
+  "hero_checks": [
+    {
+      "viewport": [
+        1920,
+        880
+      ],
+      "hero": 880,
+      "cta_controls_gap": 99.96,
+      "horizontal_overflow": false
+    },
+    {
+      "viewport": [
+        1280,
+        600
+      ],
+      "hero": 600,
+      "cta_controls_gap": 25.53,
+      "horizontal_overflow": false
+    },
+    {
+      "viewport": [
+        768,
+        1024
+      ],
+      "hero": 1024,
+      "cta_controls_gap": 212.51,
+      "horizontal_overflow": false
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "hero": 844,
+      "cta_controls_gap": 54.25,
+      "horizontal_overflow": false
+    },
+    {
+      "viewport": [
+        375,
+        667
+      ],
+      "hero": 667.3334,
+      "cta_controls_gap": 28,
+      "horizontal_overflow": false
+    }
+  ],
+  "guide_checks": {
+    "step_padding": "24px on all sides",
+    "step_content_gap": "12px",
+    "assurance_padding": "24px",
+    "assurance_gap": "16px",
+    "assurance_justify": "flex-start"
+  },
+  "footer_checks": {
+    "desktop_height": 449.5,
+    "brand_font_px": 20,
+    "desktop_columns": 3,
+    "mobile_columns": 1,
+    "health_mounts": 1,
+    "status_after_retry": "Layanan pengembangan terhubung",
+    "mobile_horizontal_overflow": false
+  },
+  "screenshots": {
+    "qa/bootstrap/landing-fixes-hero.png": "dbaf961cc90a0bd4434be826b5aaecf4916e52399890f754385b94de312ba74e",
+    "qa/bootstrap/landing-fixes-guide.png": "30e7cb641258e32a31fa635752c6bc193ca7e882cdd7958a9bd7f089168e563a",
+    "qa/bootstrap/landing-fixes-footer.png": "87a19bcdd4d00b3d2567f6498d143e4d49c7e4eea9562e15d65315963d568050",
+    "qa/bootstrap/landing-fixes-footer-mobile.png": "217d7676ec76fcd076ce9d3243fb41058a2ac1509b69629a3b5ac204df7c7214"
+  },
+  "limits": "Representative local browser checks. UAT not run."
+}

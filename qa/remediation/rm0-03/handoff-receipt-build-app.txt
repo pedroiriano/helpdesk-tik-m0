@@ -1,0 +1,67 @@
+ Image helpdesk-m0-app:0.1.0 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 570B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from backend.Dockerfile
+#2 transferring dockerfile: 615B 0.0s done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/golang:1.26.5-alpine@sha256:0178a641fbb4858c5f1b48e34bdaabe0350a330a1b1149aabd498d0699ff5fb2
+#3 DONE 0.1s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 238B 0.0s done
+#4 DONE 0.1s
+
+#5 [source 1/6] FROM docker.io/library/golang:1.26.5-alpine@sha256:0178a641fbb4858c5f1b48e34bdaabe0350a330a1b1149aabd498d0699ff5fb2
+#5 resolve docker.io/library/golang:1.26.5-alpine@sha256:0178a641fbb4858c5f1b48e34bdaabe0350a330a1b1149aabd498d0699ff5fb2 0.1s done
+#5 DONE 0.1s
+
+#6 [internal] load build context
+#6 transferring context: 79.42kB 0.0s done
+#6 DONE 0.1s
+
+#7 [source 2/6] WORKDIR /src/backend
+#7 CACHED
+
+#8 [source 3/6] COPY backend/go.mod backend/go.sum ./
+#8 CACHED
+
+#9 [source 4/6] RUN go mod download
+#9 CACHED
+
+#10 [source 5/6] COPY backend/ ./
+#10 DONE 0.1s
+
+#11 [source 6/6] COPY configs/ /src/configs/
+#11 DONE 0.1s
+
+#12 [build 1/1] RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/helpdesk ./cmd/helpdesk
+#12 DONE 14.7s
+
+#13 [runtime 1/3] COPY --from=build /out/helpdesk /helpdesk
+#13 DONE 0.1s
+
+#14 [runtime 2/3] COPY configs/M0.json /app/configs/M0.json
+#14 DONE 0.1s
+
+#15 [runtime 3/3] WORKDIR /app
+#15 DONE 0.1s
+
+#16 exporting to image
+#16 exporting layers
+#16 exporting layers 0.6s done
+#16 exporting manifest sha256:1419a5d7721cb5c2855bf4f7da284ad7e3e3108dc3db40c3a8e87eb2b2946ad4 0.0s done
+#16 exporting config sha256:450162c46675bee8dd9b91dd7798c3ad9ca5c47c1d2bc4c560983188d6c1e3e1 0.0s done
+#16 exporting attestation manifest sha256:c7045763ccc66805506d18465052d959ac6eaf3bf98fed847b0b53bf80c4a569
+#16 exporting attestation manifest sha256:c7045763ccc66805506d18465052d959ac6eaf3bf98fed847b0b53bf80c4a569 0.0s done
+#16 exporting manifest list sha256:65801260d7633a54db7d0d03f5b89711c90027eaaa94a0e3c00d890eb55b037b 0.0s done
+#16 naming to docker.io/library/helpdesk-m0-app:0.1.0 done
+#16 unpacking to docker.io/library/helpdesk-m0-app:0.1.0
+#16 unpacking to docker.io/library/helpdesk-m0-app:0.1.0 0.2s done
+#16 DONE 1.0s
+
+#17 resolving provenance for metadata file
+#17 DONE 0.0s
+ Image helpdesk-m0-app:0.1.0 Built 

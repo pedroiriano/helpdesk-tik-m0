@@ -1,0 +1,2 @@
+/* Compatibility URL. Canonical public UI lives in public-ui.css. */
+@import url("./public-ui.css");

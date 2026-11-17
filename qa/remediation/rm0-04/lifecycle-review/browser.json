@@ -1,0 +1,50 @@
+{
+  "result": "PASS_LOCAL_BROWSER_LIFECYCLE",
+  "environment": "Disposable database, tmpfs uploads, own labeled networks and random loopback port; synthetic identities only",
+  "ticket_id": "4c41da9e-f66e-48db-b30b-6ca31f1752c4",
+  "entry_actor": "Publik A",
+  "roles": [
+    "OPERATOR",
+    "LEADERSHIP",
+    "COORDINATOR",
+    "TECHNICIAN",
+    "PUBLIC"
+  ],
+  "transitions": [
+    "OPEN/PENDING",
+    "NEEDS_INFORMATION",
+    "OPEN",
+    "TRIAGED/VERIFIED",
+    "ASSIGNED",
+    "IN_PROGRESS",
+    "RESOLVED",
+    "IN_PROGRESS after REJECT",
+    "RESOLVED second attempt",
+    "CLOSED after ACCEPT"
+  ],
+  "steps": [
+    "Real catalog/form, review and create receipt",
+    "Operator request for information and requester supply",
+    "Operator category/priority verification",
+    "Leadership escalation request and persistent escalation mark",
+    "Coordinator proposal and L1 assignment",
+    "Assigned technician START and resolution",
+    "Requester reasoned objection on mobile",
+    "Technician second resolution",
+    "Requester active-attempt review and ACCEPT",
+    "Closed result retained and reloaded on final served UI"
+  ],
+  "viewport_mobile": "390x844",
+  "viewport_desktop": "default browser viewport",
+  "viewport_override_reset": true,
+  "persistence_report": "qa/remediation/rm0-04/lifecycle-review/browser-ticket-persistence.json",
+  "final_ui_report": "qa/remediation/rm0-04/lifecycle-review/browser-final-closed.json",
+  "screenshot": {
+    "path": "qa/remediation/rm0-04/lifecycle-review/closed-mobile.jpg",
+    "sha256": "06d5ecff78c31862dc0556436be3558884532a7d6408611760cdead43328671e"
+  },
+  "working_gateway_smoke": "After cutover, Operator lab session restored at 18080; dashboard and verification/dispatch shortcuts visible",
+  "cleanup": "PASS",
+  "candidate_note": "Final UI reloaded at CLOSED and final helper/intent changes passed targeted regressions. Full mutating flow was not repeated after the fingerprint-only and typography refinements.",
+  "lab_bootstrap_note": "Initial harness startup failures were corrected with a separate loopback edge network and newline-normalized ephemeral secret initialization. Final lab readiness and cleanup passed."
+}

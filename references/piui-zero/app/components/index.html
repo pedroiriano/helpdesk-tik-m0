@@ -1,0 +1,826 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Katalog Komponen (UI Kit) — PIUI Zero Admin</title>
+  <meta name="description" content="Katalog lengkap seluruh komponen UI/UX PIUI Zero: Tombol, Badges, Kartu Ringkasan, Formulir, Pilihan Cari Select2, Rich-Text Editor, Tabel Pagination, Grafik Interaktif, dan Papan Kanban.">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta property="og:title" content="Katalog Komponen (UI Kit) — PIUI Zero Admin">
+  <meta property="og:description" content="Katalog interaktif seluruh komponen UI/UX Zero Dependency PIUI Zero siap pakai.">
+  <meta property="og:type" content="website">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="stylesheet" href="/assets/css/main.css?v=2.2.2">
+  <script type="module" src="/assets/js/app.js?v=2.2.2"></script>
+<link rel="icon" href="/assets/icons/favicon.ico?v=2.2.2" sizes="16x16 32x32 48x48"><link rel="icon" href="/assets/icons/piui-favicon.svg?v=2.2.2" type="image/svg+xml" sizes="any"><link rel="apple-touch-icon" href="/assets/icons/piui-180.png?v=2.2.2" sizes="180x180">
+</head>
+<body data-component-catalog>
+  <a class="piui-skip-link" href="#main-content">Langsung ke konten utama</a>
+  <div id="piui-live-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="piui-app-shell" data-sidebar="expanded" id="piui-dashboard-workspace">
+    <!-- TOPBAR -->
+    <header class="piui-topbar">
+      <div class="piui-topbar__start">
+        <button type="button" class="piui-icon-btn" id="btn-sidebar-toggle"
+                aria-label="Buka atau ciutkan panel navigasi" aria-expanded="true" aria-controls="piui-sidebar">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-menu"></use></svg>
+        </button>
+        <a href="/app/dashboard/index.html" class="piui-brand"><img class="piui-brand__mark" src="/assets/icons/piui-mark.svg" alt="" width="32" height="32"><span class="piui-brand__name">PIUI Zero™</span><span class="piui-badge piui-badge--env" title="Katalog Komponen UI Kit">UI KIT</span></a>
+      </div>
+
+      <div class="piui-topbar__end">
+        <button type="button" class="piui-cmd-trigger" id="btn-open-cmd"
+                aria-label="Buka pencarian cepat dan palet perintah (Ctrl+K)">
+          <svg width="18" height="18" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-search"></use></svg>
+          <span class="piui-cmd-trigger__label">Cari komponen, menu, perintah...</span>
+          <kbd class="piui-cmd-trigger__kbd">Ctrl+K</kbd>
+        </button>
+        <button type="button" class="piui-icon-btn" id="btn-theme-toggle" aria-label="Ganti tema terang atau gelap">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-theme"></use></svg>
+        </button>
+        <button type="button" class="piui-icon-btn" popovertarget="popover-profile" aria-label="Buka menu profil dan sesi administrator">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-user"></use></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- POPOVER PROFIL -->
+    <div id="popover-profile" popover="auto" class="piui-popover" role="region" aria-label="Informasi Sesi Administrator">
+      <div class="piui-field">
+        <strong>budi.sec@piui-zero.internal</strong>
+        <span class="piui-page-subtitle">Peran: Super Admin Utama</span>
+        <span class="piui-badge" data-status="success">Mode prototipe Aman</span>
+      </div>
+      <hr>
+      <div class="piui-page-actions">
+        <a href="/index.html" class="piui-btn piui-btn--secondary piui-btn--sm">Panduan &amp; Dokumentasi</a>
+        <button type="button" class="piui-btn piui-btn--danger piui-btn--sm" id="btn-session-logout">
+          <svg width="16" height="16" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-logout"></use></svg>
+          <span>Keluar (Logout)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- SIDEBAR (4 KELOMPOK RAPI & MUDAH DIPAHAMI) -->
+    <aside class="piui-sidebar" id="piui-sidebar" aria-label="Navigasi Modul Admin">
+      <nav aria-label="Navigasi Utama">
+        <div class="piui-sidebar__group-label">Menu Utama</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/app/dashboard/index.html" class="piui-nav-link" title="Beranda Dashboard Utama">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-dashboard"></use></svg>
+              <span class="piui-nav-link__text">Beranda Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/analytics/index.html" class="piui-nav-link" title="Analitik &amp; Grafik Kinerja">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-analytics"></use></svg>
+              <span class="piui-nav-link__text">Analitik &amp; Grafik</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/notifications/index.html" class="piui-nav-link" title="Pusat Notifikasi &amp; Peringatan">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-bell"></use></svg>
+              <span class="piui-nav-link__text">Pusat Notifikasi</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="piui-sidebar__group-label">Kelola Data &amp; Media</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/app/users/index.html" class="piui-nav-link" title="Kelola Data Pengguna &amp; Hak Akses">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-users"></use></svg>
+              <span class="piui-nav-link__text">Data Pengguna</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/transactions/index.html" class="piui-nav-link" title="Kelola Data Transaksi Keuangan">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-transactions"></use></svg>
+              <span class="piui-nav-link__text">Data Transaksi</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/gallery/index.html" class="piui-nav-link" title="Galeri Foto &amp; Video (Masonry &amp; Lightbox)">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-gallery"></use></svg>
+              <span class="piui-nav-link__text">Galeri Foto &amp; Video</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="piui-sidebar__group-label">Komponen &amp; Tampilan</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/app/components/index.html" class="piui-nav-link" aria-current="page" title="Katalog Komponen UI/UX (UI Kit)">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-components"></use></svg>
+              <span class="piui-nav-link__text">Katalog Komponen</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="piui-sidebar__group-label">Sistem &amp; Keamanan</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/app/audit/index.html" class="piui-nav-link" title="Riwayat Aktivitas &amp; Log Audit">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-audit"></use></svg>
+              <span class="piui-nav-link__text">Riwayat Aktivitas</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/settings/index.html" class="piui-nav-link" title="Pengaturan Sistem &amp; Keamanan">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-settings"></use></svg>
+              <span class="piui-nav-link__text">Pengaturan Sistem</span>
+            </a>
+          </li>
+          <li>
+            <a href="/status/index.html" class="piui-nav-link" title="Status Server &amp; Layanan">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-status"></use></svg>
+              <span class="piui-nav-link__text">Status Server</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html" class="piui-nav-link" title="Panduan &amp; Dokumentasi Sistem">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-info"></use></svg>
+              <span class="piui-nav-link__text">Panduan &amp; Dokumentasi</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- MOBILE DRAWER -->
+    <dialog id="piui-mobile-drawer" class="piui-drawer-mobile" aria-labelledby="mobile-drawer-title">
+      <div class="piui-dialog__header">
+        <strong id="mobile-drawer-title">Menu Navigasi PIUI Zero</strong>
+        <button type="button" class="piui-icon-btn" id="btn-close-mobile-drawer" aria-label="Tutup menu navigasi">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-close"></use></svg>
+        </button>
+      </div>
+      <nav aria-label="Navigasi Mobile">
+        <ul class="piui-nav-list">
+          <li><a href="/app/dashboard/index.html" class="piui-nav-link">Beranda Dashboard</a></li>
+          <li><a href="/app/analytics/index.html" class="piui-nav-link">Analitik &amp; Grafik</a></li>
+          <li><a href="/app/users/index.html" class="piui-nav-link">Data Pengguna</a></li>
+          <li><a href="/app/transactions/index.html" class="piui-nav-link">Data Transaksi</a></li>
+          <li><a href="/app/gallery/index.html" class="piui-nav-link">Galeri Foto &amp; Video</a></li>
+          <li><a href="/app/components/index.html" class="piui-nav-link" aria-current="page">Katalog Komponen (UI Kit)</a></li>
+          <li><a href="/app/audit/index.html" class="piui-nav-link">Riwayat Aktivitas (Audit)</a></li>
+          <li><a href="/app/settings/index.html" class="piui-nav-link">Pengaturan Sistem</a></li>
+          <li><a href="/status/index.html" class="piui-nav-link">Status Server</a></li>
+          <li><a href="/index.html" class="piui-nav-link">Panduan &amp; Dokumentasi</a></li>
+          <li><a href="/auth/login.html" class="piui-nav-link">Masuk Akun Admin</a></li>
+        </ul>
+      </nav>
+    </dialog>
+
+    <!-- AREA KERJA UTAMA -->
+    <main id="main-content" class="piui-main">
+      <nav aria-label="Breadcrumb" class="piui-breadcrumb">
+        <ol>
+          <li><a href="/app/dashboard/index.html">Beranda Dashboard</a></li>
+          <li>Komponen &amp; Tampilan</li>
+          <li aria-current="page">Katalog Komponen (UI Kit)</li>
+        </ol>
+      </nav>
+
+      <div class="piui-page-header">
+        <div class="piui-page-header__titles">
+          <h1 class="piui-page-title">Katalog Komponen UI/UX (Siap Pakai)</h1>
+          <p class="piui-page-subtitle">Kumpulan Lengkap Komponen Tampilan, Formulir, Tabel, Grafik, &amp; Editor • Klik "Salin Kode HTML" untuk Langsung Memakai Komponen</p>
+        </div>
+        <div class="piui-page-actions">
+          <button type="button" class="piui-btn piui-btn--secondary" data-wow-replay>
+            <span>Putar Ulang Animasi Halus</span>
+          </button>
+          <button type="button" class="piui-btn piui-btn--secondary" data-open-dialog="dialog-uikit-quick">
+            <span>Coba Form Pop-up Cepat</span>
+          </button>
+          <button type="button" class="piui-btn piui-btn--primary" data-open-dialog="dialog-uikit-wizard">
+            <span>Coba Form Pop-up Kanan (3 Langkah)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- FILTER KATEGORI KOMPONEN CEPAT (DIURUTKAN DARI DASAR KE LANJUTAN) -->
+      <section class="piui-panel" aria-label="Pilih Kategori Komponen">
+        <div class="piui-panel__header">
+          <div>
+            <h2 class="piui-card__title">Pilih Kelompok Komponen</h2>
+            <p class="piui-page-subtitle">Diurutkan secara terstruktur mulai dari komponen dasar hingga komponen interaktif lanjutan.</p>
+          </div>
+          <span class="piui-badge" data-status="success">6 Kelompok Utama</span>
+        </div>
+        <div class="piui-segmented" role="group" aria-label="Pilih kategori komponen UI Kit">
+          <button type="button" class="piui-segmented__btn" data-uikit-filter="all" aria-pressed="true">Tampilkan Semua</button>
+          <button type="button" class="piui-segmented__btn" data-uikit-filter="badges" aria-pressed="false">1. Lencana &amp; Kartu Angka</button>
+          <button type="button" class="piui-segmented__btn" data-uikit-filter="forms" aria-pressed="false">2. Form Isian &amp; Select2</button>
+          <button type="button" class="piui-segmented__btn" data-uikit-filter="editor" aria-pressed="false">3. Editor Teks &amp; Kunci API</button>
+          <button type="button" class="piui-segmented__btn" data-uikit-filter="tables" aria-pressed="false">4. Tabel &amp; Nomor Halaman</button>
+          <button type="button" class="piui-segmented__btn" data-uikit-filter="charts" aria-pressed="false">5. Grafik Interaktif</button>
+          <button type="button" class="piui-segmented__btn" data-uikit-filter="navigation" aria-pressed="false">6. Tab, Pohon Akses &amp; Kanban</button>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           URUTAN 1: LENCANA STATUS (BADGES) & KARTU RINGKASAN ANGKA (KPI CARDS)
+           =================================================================== -->
+      <section class="piui-panel" data-uikit-section="badges" aria-labelledby="heading-kit-badges">
+        <div class="piui-panel__header">
+          <div>
+            <h2 id="heading-kit-badges" class="piui-panel__title">1. Lencana Status (Badges) &amp; Kartu Ringkasan Angka (KPI Cards)</h2>
+            <p class="piui-page-subtitle">Lencana status otomatis tersusun rapi tanpa bertumpuk di layar HP maupun Desktop, dilengkapi animasi hitung angka.</p>
+          </div>
+        </div>
+
+        <div class="piui-page-actions">
+          <span class="piui-badge" data-status="success">● Berhasil / Aktif</span>
+          <span class="piui-badge" data-status="info">◆ Informasi / Terjadwal</span>
+          <span class="piui-badge" data-status="warning">▲ Peringatan / Menunggu</span>
+          <span class="piui-badge" data-status="danger">■ Gagal / Ditolak</span>
+          <span class="piui-badge piui-badge--env">MODE: KATALOG</span>
+        </div>
+
+        <div class="piui-kpi-grid">
+          <article class="piui-card" data-wow="fade-up">
+            <div class="piui-card__header">
+              <h3 class="piui-card__title">Total Komponen Siap Pakai</h3>
+              <span class="piui-badge" data-status="success">Tinggal Salin</span>
+            </div>
+            <div class="piui-card__value tabular-nums">24 Komponen</div>
+            <p class="piui-card__meta">Tanpa perlu menginstal plugin tambahan</p>
+          </article>
+          <article class="piui-card" data-wow="fade-up">
+            <div class="piui-card__header">
+              <h3 class="piui-card__title">Kecepatan Buka Halaman</h3>
+              <span class="piui-badge" data-status="info">Sangat Cepat</span>
+            </div>
+            <div class="piui-card__value tabular-nums">0,68 Detik</div>
+            <p class="piui-card__meta">Ringan di koneksi seluler maupun Wi-Fi</p>
+          </article>
+          <article class="piui-card" data-wow="fade-up">
+            <div class="piui-card__header">
+              <h3 class="piui-card__title">Dukungan Ukuran Layar</h3>
+              <span class="piui-badge" data-status="success">Anti-Berantakan</span>
+            </div>
+            <div class="piui-card__value tabular-nums">320px – 4K</div>
+            <p class="piui-card__meta">Otomatis menyesuaikan layar HP, Tablet, &amp; PC</p>
+          </article>
+          <article class="piui-card" data-wow="fade-up">
+            <div class="piui-card__header">
+              <h3 class="piui-card__title">Skor Pengujian Kualitas</h3>
+              <span class="piui-badge" data-status="success">Lulus Penuh</span>
+            </div>
+            <div class="piui-card__value tabular-nums">100% Valid</div>
+            <p class="piui-card__meta">Aman, aksesibel, &amp; bebas tautan rusak</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           URUTAN 2: FORMULIR ISIAN, PILIHAN CARI (SELECT2) & MODAL KANAN
+           =================================================================== -->
+      <section class="piui-panel" data-uikit-section="forms" aria-labelledby="heading-kit-forms">
+        <div class="piui-panel__header">
+          <div>
+            <h2 id="heading-kit-forms" class="piui-panel__title">2. Formulir Isian, Kotak Pilihan Cari (Select2), &amp; Form Pop-up Kanan</h2>
+            <p class="piui-page-subtitle">Semua kotak pilihan otomatis memiliki kolom pencarian cepat seperti Select2, dilengkapi 3 variasi Form Pop-up Kanan siap pakai.</p>
+          </div>
+          <div class="piui-page-actions">
+            <span class="piui-badge" data-status="info" data-last-saved-summary>Status Form: Siap Diuji</span>
+            <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-copy-target="code-snippet-forms">
+              Salin Kode HTML
+            </button>
+          </div>
+        </div>
+
+        <div class="piui-page-actions">
+          <button type="button" class="piui-btn piui-btn--primary piui-btn--sm" data-open-dialog="dialog-uikit-wizard">
+            1. Coba Form Pop-up Kanan (3 Langkah)
+          </button>
+          <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-open-dialog="dialog-uikit-quick">
+            2. Coba Form Pop-up Cepat (Tambah Data)
+          </button>
+          <button type="button" class="piui-btn piui-btn--danger piui-btn--sm" data-open-dialog="dialog-uikit-delete">
+            3. Coba Form Pop-up Konfirmasi Hapus
+          </button>
+        </div>
+
+        <div class="piui-diff-grid">
+          <div class="piui-fieldset">
+            <div class="piui-field">
+              <label for="kit-input-text" class="piui-field__label">Kotak Isian Teks (Nyaman Diketik di HP &amp; Laptop)</label>
+              <input type="text" name="kit-input-text" id="kit-input-text" class="piui-input" value="PT Nusantara Digital Mandiri" placeholder="Ketik nama perusahaan...">
+              <span class="piui-field__hint">Ukuran huruf nyaman dibaca dan tidak membuat layar HP membesar sendiri.</span>
+            </div>
+
+            <div class="piui-field">
+              <label for="kit-input-nominal" class="piui-field__label">Kotak Isian Angka / Nominal Rupiah</label>
+              <input type="number" name="kit-input-nominal" id="kit-input-nominal" class="piui-input tabular-nums" value="842500000" min="0" step="1000">
+            </div>
+
+            <div class="piui-field">
+              <label for="kit-textarea-desc" class="piui-field__label">Kotak Catatan Panjang (Textarea)</label>
+              <textarea name="kit-textarea-desc" id="kit-textarea-desc" class="piui-textarea" rows="2">Catatan persetujuan transaksi operasional cabang utama.</textarea>
+            </div>
+          </div>
+
+          <div class="piui-fieldset">
+            <div class="piui-field">
+              <label for="kit-select-role" class="piui-field__label">Kotak Pilihan Jabatan / Peran (Dengan Pencarian Select2)</label>
+              <select name="kit-select-role" id="kit-select-role" class="piui-select">
+                <option value="super-admin">Administrator Utama (Akses Penuh)</option>
+                <option value="appsec-lead">Kepala Keamanan Sistem</option>
+                <option value="finops-manager">Manajer Keuangan &amp; Transaksi</option>
+                <option value="internal-auditor">Pemeriksa Riwayat (Hanya Lihat)</option>
+                <option value="sre-oncall">Petugas Teknis Server</option>
+              </select>
+              <span class="piui-field__hint">Klik kotak di atas lalu ketik kata untuk mencari pilihan secara instan.</span>
+            </div>
+
+            <div class="piui-field">
+              <label for="kit-select-region" class="piui-field__label">Kotak Pilihan Lokasi Cabang / Server (Select2)</label>
+              <select name="kit-select-region" id="kit-select-region" class="piui-select">
+                <option value="all">Semua Lokasi Cabang</option>
+                <option value="jkt-01">Jakarta Pusat — Server Utama</option>
+                <option value="jkt-02">Jakarta Selatan — Server Cadangan</option>
+                <option value="sby-01">Surabaya — Pusat Pemulihan Data</option>
+                <option value="bth-01">Batam — Gerbang Keamanan Jaringan</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <details class="piui-chart-details">
+          <summary>Lihat &amp; Salin Kode HTML Formulir &amp; Select2</summary>
+          <pre id="code-snippet-forms" class="piui-code-block">&lt;div class="piui-field"&gt;
+  &lt;label for="pilih-jabatan" class="piui-field__label"&gt;Pilih Jabatan (Otomatis Select2)&lt;/label&gt;
+  &lt;select id="pilih-jabatan" class="piui-select"&gt;
+    &lt;option value="admin"&gt;Administrator Utama&lt;/option&gt;
+    &lt;option value="staff"&gt;Staf Operasional&lt;/option&gt;
+  &lt;/select&gt;
+&lt;/div&gt;</pre>
+        </details>
+      </section>
+
+      <!-- ===================================================================
+           URUTAN 3: EDITOR TEKS LENGKAP (RICH-TEXT) & KOTAK KUNCI API RAHASIA
+           =================================================================== -->
+      <section class="piui-panel" data-uikit-section="editor" aria-labelledby="heading-kit-editor">
+        <div class="piui-panel__header">
+          <div>
+            <h2 id="heading-kit-editor" class="piui-panel__title">3. Editor Teks Lengkap (Rich-Text / Markdown) &amp; Kotak Kunci API Rahasia</h2>
+            <p class="piui-page-subtitle">Memudahkan penulisan pengumuman berformat rapi serta menyembunyikan kode rahasia agar aman dari intipan layar.</p>
+          </div>
+          <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-copy-target="code-snippet-editor">
+            Salin Kode HTML
+          </button>
+        </div>
+
+        <div class="piui-field">
+          <span class="piui-field__label">Kotak Kunci API Rahasia (Otomatis Tertutup Kembali Setelah 10 Detik)</span>
+          <div class="piui-secret-box" data-piui-secret-box>
+            <code data-secret-value>piui_demo_••••••••••••••••••••9f4a</code>
+            <div class="piui-page-actions">
+              <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-secret-toggle>Tampilkan 10d</button>
+              <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-secret-copy>Salin Kunci</button>
+              <button type="button" class="piui-btn piui-btn--primary piui-btn--sm" data-secret-rotate>Buat Kunci Baru</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="piui-field">
+          <label for="kit-md-editor-input" class="piui-field__label">Contoh editor dokumen</label>
+          <div class="piui-md-editor" data-piui-md-editor>
+            <textarea name="kit-md-editor-input" id="kit-md-editor-input" class="piui-textarea" rows="4">### Contoh Pengumuman Sistem
+Gunakan **Editor Teks** ini untuk membuat _pengumuman operasional_, catatan pembaruan, atau panduan kerja dengan mudah.
+- Mendukung daftar poin otomatis dan `kode perintah`
+> Catatan penting akan otomatis ditampilkan dalam kotak kutipan.</textarea>
+          </div>
+        </div>
+
+        <details class="piui-chart-details">
+          <summary>Lihat &amp; Salin Kode HTML Editor Teks &amp; Kotak Kunci API</summary>
+          <pre id="code-snippet-editor" class="piui-code-block">&lt;label for="my-editor" class="piui-field__label"&gt;Catatan&lt;/label&gt;
+&lt;div class="piui-md-editor" data-piui-md-editor&gt;
+  &lt;textarea id="my-editor" name="notes" class="piui-textarea"&gt;### Judul Pengumuman&lt;/textarea&gt;
+&lt;/div&gt;
+Toolbar, mode Tulis / Dua panel / Pratinjau, statistik, dan aksi dokumen dibentuk otomatis oleh markdown-editor.js.
+Mode awal opsional: data-editor-mode="write|split|preview". API instance: getMarkdownEditor(host).setMode(mode).
+Pintasan: Ctrl/Command+B, Ctrl/Command+I, Ctrl/Command+Enter. Escape dari pratinjau kembali ke naskah.
+Untuk konten dinamis: initMarkdownEditors(container). Untuk integrasi: piui:editor-change dan piui:editor-save.</pre>
+        </details>
+      </section>
+
+      <!-- ===================================================================
+           URUTAN 4: TABEL DATA INTERAKTIF, KALENDER TANGGAL, & NOMOR HALAMAN
+           =================================================================== -->
+      <section class="piui-panel" data-uikit-section="tables" aria-labelledby="heading-kit-tables">
+        <div class="piui-panel__header">
+          <div>
+            <h2 id="heading-kit-tables" class="piui-panel__title">4. Tabel Data Interaktif, Pemilih Rentang Tanggal, &amp; Navigasi Halaman (Pagination)</h2>
+            <p class="piui-page-subtitle">Pencarian, kalender, sortir, dan paginasi seragam. Tampilan kartu mengikuti ruang yang tersedia; tombol tetap utuh dan mudah ditekan.</p>
+          </div>
+          <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-copy-target="code-snippet-tables">
+            Salin Kode HTML
+          </button>
+        </div>
+
+        <div class="piui-filter-bar">
+          <div class="piui-filter-bar__search">
+            <label for="kit-table-search" class="piui-field__label">Cari Nama atau Kode Komponen</label>
+            <input type="search" name="kit-table-search" id="kit-table-search" class="piui-input" data-table-search placeholder="Ketik mis. Select2, Grafik, Galeri...">
+          </div>
+          <div class="piui-field">
+            <label for="kit-table-status" class="piui-field__label">Saring Berdasarkan Status (Select2)</label>
+            <select name="kit-table-status" id="kit-table-status" class="piui-select" data-table-filter="status">
+              <option value="all">Semua Status</option>
+              <option value="stable">Siap Digunakan</option>
+              <option value="verified">Teruji Semua Layar</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="piui-table-scroll" role="region" aria-labelledby="heading-kit-tables" tabindex="0">
+          <table id="piui-primary-table" class="piui-table" data-piui-table="uikit-catalog">
+            <thead>
+              <tr>
+                <th scope="col" class="is-sticky-col" aria-sort="none">
+                  <button type="button" class="piui-table-sort" data-sort-col="0">Kode</button>
+                </th>
+                <th scope="col" aria-sort="none">
+                  <button type="button" class="piui-table-sort" data-sort-col="1">Nama Komponen</button>
+                </th>
+                <th scope="col">Fungsi Utama bagi Pengguna</th>
+                <th scope="col" class="tabular-nums">Beban Tambahan</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-row-id="CMP-01" data-status="stable">
+                <th scope="row" class="is-sticky-col text-mono">CMP-SELECT2</th>
+                <td>Kotak Pilihan dengan Pencarian (Select2)</td>
+                <td>Memudahkan memilih opsi dari daftar panjang</td>
+                <td class="tabular-nums">0 KB Plugin</td>
+                <td><span class="piui-badge" data-status="success">Siap Digunakan</span></td>
+              </tr>
+              <tr data-row-id="CMP-02" data-status="verified">
+                <th scope="row" class="is-sticky-col text-mono">CMP-PAGINATION</th>
+                <td>Navigasi Halaman Tabel &amp; Pilihan Jumlah Baris</td>
+                <td>Mengatur tampilan 3, 5, 10, 25, atau Semua Data</td>
+                <td class="tabular-nums">0 KB Plugin</td>
+                <td><span class="piui-badge" data-status="info">Teruji Semua Layar</span></td>
+              </tr>
+              <tr data-row-id="CMP-03" data-status="stable">
+                <th scope="row" class="is-sticky-col text-mono">CMP-APEX-CHART</th>
+                <td>Grafik Interaktif Bisa Diklik &amp; Disorot</td>
+                <td>Melihat detail angka grafik dan mengunci titik data</td>
+                <td class="tabular-nums">0 KB Plugin</td>
+                <td><span class="piui-badge" data-status="success">Siap Digunakan</span></td>
+              </tr>
+              <tr data-row-id="CMP-04" data-status="stable">
+                <th scope="row" class="is-sticky-col text-mono">CMP-GALLERY</th>
+                <td>Galeri Foto/Video Masonry, Dropzone &amp; Lightbox</td>
+                <td>Unggah file dengan validasi ukuran &amp; layar penuh</td>
+                <td class="tabular-nums">0 KB Plugin</td>
+                <td><span class="piui-badge" data-status="success">Siap Digunakan</span></td>
+              </tr>
+              <tr data-row-id="CMP-05" data-status="verified">
+                <th scope="row" class="is-sticky-col text-mono">CMP-LAZY-WOW</th>
+                <td>Pemuatan Gambar Hemat Kuota &amp; Animasi Halus</td>
+                <td>Efek kerangka shimmer &amp; animasi muncul berurutan</td>
+                <td class="tabular-nums">0 KB Plugin</td>
+                <td><span class="piui-badge" data-status="info">Teruji Semua Layar</span></td>
+              </tr>
+              <tr data-row-id="CMP-06" data-status="stable">
+                <th scope="row" class="is-sticky-col text-mono">CMP-WORKFLOW</th>
+                <td>Papan Tugas Kanban, Kalender, &amp; Pohon Hak Akses</td>
+                <td>Mengelola tugas harian &amp; izin pengguna secara visual</td>
+                <td class="tabular-nums">0 KB Plugin</td>
+                <td><span class="piui-badge" data-status="success">Siap Digunakan</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <details class="piui-chart-details">
+          <summary>Lihat &amp; Salin Kode HTML Tabel Data Interaktif</summary>
+          <pre id="code-snippet-tables" class="piui-code-block">&lt;div class="piui-table-scroll" role="region" aria-label="Daftar data" tabindex="0"&gt;
+  &lt;table class="piui-table" data-piui-table="tabel-data"&gt;
+    &lt;thead&gt;&lt;tr&gt;
+      &lt;th scope="col"&gt;Nama&lt;/th&gt;
+      &lt;th scope="col" data-table-column="actions"&gt;Aksi&lt;/th&gt;
+    &lt;/tr&gt;&lt;/thead&gt;
+    &lt;tbody&gt;...&lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;
+Kolom aksi ditata otomatis oleh enhancer bersama.
+Gunakan label tombol singkat; perilaku aksi tetap milik consumer.</pre>
+        </details>
+      </section>
+
+      <!-- ===================================================================
+           URUTAN 5: GRAFIK INTERAKTIF BISA DIKLIK & DISOROT (SETARA APEXCHARTS)
+           =================================================================== -->
+      <section class="piui-panel" data-uikit-section="charts" aria-labelledby="heading-kit-charts">
+        <div class="piui-panel__header">
+          <div>
+            <h2 id="heading-kit-charts" class="piui-panel__title">5. Grafik Data Interaktif (Bisa Diklik &amp; Disorot seperti ApexCharts)</h2>
+            <p class="piui-page-subtitle" id="chart-period-label">Arahkan kursor untuk melihat info detail, klik titik grafik untuk mengunci baris tabel, atau ganti bentuk grafik (Area / Batang / Gabungan)</p>
+          </div>
+          <div class="piui-segmented" role="group" aria-label="Pilih rentang waktu grafik demo">
+            <button type="button" class="piui-segmented__btn" data-range-select="today" aria-pressed="true">Hari Ini</button>
+            <button type="button" class="piui-segmented__btn" data-range-select="7d" aria-pressed="false">7 Hari</button>
+            <button type="button" class="piui-segmented__btn" data-range-select="30d" aria-pressed="false">30 Hari</button>
+          </div>
+        </div>
+
+        <figure class="piui-chart-box">
+          <svg id="piui-main-svg-chart" class="piui-svg-chart" viewBox="0 0 680 210"
+               role="img" aria-labelledby="kit-svg-title kit-svg-desc">
+            <title id="kit-svg-title">Grafik Demo Interaktif UI Kit</title>
+            <desc id="kit-svg-desc">Grafik SVG interaktif dengan garis bantu dan kotak info melayang.</desc>
+            <line x1="52" y1="22" x2="648" y2="22" stroke="var(--piui-border-subtle)" stroke-dasharray="4 4"></line>
+            <line x1="52" y1="99" x2="648" y2="99" stroke="var(--piui-border-subtle)" stroke-dasharray="4 4"></line>
+            <line x1="52" y1="176" x2="648" y2="176" stroke="var(--piui-border-strong)"></line>
+            <g id="svg-chart-plot"></g>
+          </svg>
+        </figure>
+
+        <details class="piui-chart-details" open>
+          <summary>Tabel Angka Pendamping Grafik (Klik baris tabel untuk menyorot titik pada grafik di atas)</summary>
+          <div class="piui-table-scroll" role="region" aria-label="Tabel Data Grafik UI Kit" tabindex="0">
+            <table class="piui-table tabular-nums">
+              <thead>
+                <tr>
+                  <th scope="col" class="is-sticky-col">Periode Waktu</th>
+                  <th scope="col">Jumlah Transaksi</th>
+                  <th scope="col">Kecepatan Respons (ms)</th>
+                  <th scope="col">Persentase Gagal (%)</th>
+                </tr>
+              </thead>
+              <tbody id="chart-data-tbody"></tbody>
+            </table>
+          </div>
+        </details>
+      </section>
+
+      <!-- ===================================================================
+           URUTAN 6: NAVIGASI TAB, PAPAN TUGAS KANBAN, POHON HAK AKSES & LINIMASA
+           =================================================================== -->
+      <section class="piui-panel" data-uikit-section="navigation" aria-labelledby="heading-kit-nav">
+        <div class="piui-panel__header">
+          <div>
+            <h2 id="heading-kit-nav" class="piui-panel__title">6. Navigasi Tab, Papan Tugas (Kanban Drag &amp; Drop), Pohon Hak Akses, &amp; Linimasa</h2>
+            <p class="piui-page-subtitle">Klik salah satu tab di bawah untuk mencoba papan kerja geser (Kanban), centang hak akses bertingkat, dan linimasa riwayat.</p>
+          </div>
+        </div>
+
+        <div class="piui-tablist" role="tablist" aria-label="Demo Komponen Navigasi dan Alur Kerja">
+          <button type="button" class="piui-tab" role="tab" id="kit-tab-kanban" aria-selected="true" aria-controls="kit-panel-kanban" tabindex="0">
+            Papan Tugas Kanban (Tarik &amp; Geser)
+          </button>
+          <button type="button" class="piui-tab" role="tab" id="kit-tab-tree" aria-selected="false" aria-controls="kit-panel-tree" tabindex="-1">
+            Daftar Pohon Hak Akses
+          </button>
+          <button type="button" class="piui-tab" role="tab" id="kit-tab-timeline" aria-selected="false" aria-controls="kit-panel-timeline" tabindex="-1">
+            Linimasa Riwayat Aktivitas
+          </button>
+        </div>
+
+        <div id="kit-panel-kanban" role="tabpanel" aria-labelledby="kit-tab-kanban" class="piui-panel__body">
+          <div class="piui-page-actions">
+            <button type="button" class="piui-btn piui-btn--primary piui-btn--sm" id="btn-add-kanban-task">+ Tambah Kartu Tugas Baru</button>
+          </div>
+          <div id="piui-kanban-board" class="piui-kanban" aria-live="polite"></div>
+        </div>
+
+        <div id="kit-panel-tree" role="tabpanel" aria-labelledby="kit-tab-tree" class="piui-panel__body" hidden>
+          <div class="piui-tree" data-piui-rbac-tree></div>
+        </div>
+
+        <div id="kit-panel-timeline" role="tabpanel" aria-labelledby="kit-tab-timeline" class="piui-panel__body" hidden>
+          <ol class="piui-timeline">
+            <li class="piui-timeline__item">
+              <div class="piui-notif-item__header">
+                <strong>Akun Pengguna Baru Berhasil Dibuat</strong>
+                <span class="piui-badge tabular-nums" data-status="success">Tahap 1 • Selesai</span>
+              </div>
+              <p class="piui-page-subtitle">Hak akses dasar telah diaktifkan dan diverifikasi oleh administrator.</p>
+            </li>
+            <li class="piui-timeline__item">
+              <div class="piui-notif-item__header">
+                <strong>Pembaruan Pengaturan Keamanan Sistem</strong>
+                <span class="piui-badge tabular-nums" data-status="info">Tahap 2 • Aktif</span>
+              </div>
+              <p class="piui-page-subtitle">Perlindungan keamanan halaman dan pembatasan ukuran unggah file telah diterapkan.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+    
+<!-- commercial-contract-examples -->
+<section class="piui-panel" aria-labelledby="heading-component-contracts">
+ <div class="piui-panel__body"><h2 class="piui-panel__title" id="heading-component-contracts">Kontrak API dan beberapa instance</h2>
+ <p class="piui-page-subtitle">Sumber kanonis: editor/table/popup. Inisialisasi berulang tidak menggandakan listener. Contoh di bawah terisolasi; filter tabel kedua/ketiga memakai namespace URL sendiri.</p>
+ <div class="piui-content-stack" data-spacing-example>
+  <h3 class="piui-panel__title">Grup aksi responsif</h3>
+  <p class="piui-page-subtitle">Konten memakai stack berjarak; tombol memakai grup aksi yang membungkus ke baris baru ketika ruang menyempit.</p>
+  <div class="piui-page-actions" aria-label="Contoh grup aksi">
+   <a href="/app/dashboard/index.html" class="piui-btn piui-btn--primary">Buka Dashboard</a>
+   <a href="/index.html" class="piui-btn piui-btn--secondary">Portal</a>
+  </div>
+ </div>
+ <details><summary>API dan state komponen</summary><p>Editor: createMarkdownEditor, getValue/setValue/setMode; piui:editor-change dan piui:editor-save cancelable. Tabel: initDataTables(root), data-table-scope, data-table-for. Popup: bindPopup, show/close/isOpen. Form: data-adapter, piui:form-submit. Kanban: initKanbanBoards(root), data-kanban dan data-add-kanban. State: loading/populated/empty/error/stale melalui createDataState.</p><p>Keyboard: Tab, Enter/Space, Escape, Ctrl/⌘+K. Editor: B/I, Z/Y, Ctrl+Enter. Browser harus mendukung dialog/popover native, CSS layers/container queries dan ES modules. Dokumentasi pembeli pada paket menjelaskan fallback dan batas integrasi.</p></details>
+ <section data-collection-scope aria-label="Contoh koleksi portofolio">
+  <h3 class="piui-panel__title">Portofolio — tata letak reusable</h3>
+  <p class="piui-page-subtitle">Koleksi A dan B memakai state URL terpisah. Mengubah tata letak tidak membuat ulang kartu.</p>
+  <div class="piui-collection-frame"><div id="catalog-collection-a" class="piui-collection" data-collection data-collection-view="masonry" aria-label="Portofolio contoh A">
+   <article class="piui-media-card"><div class="piui-media-card__preview" data-collection-preview><img src="/assets/icons/piui-512.png" width="512" height="512" alt="Simbol P dan Zero pada tile charcoal" loading="lazy"></div><div class="piui-media-card__body"><strong>Identitas PIUI Zero</strong><p class="piui-page-subtitle">Contoh kartu portofolio dengan sampul persegi.</p></div></article>
+   <article class="piui-media-card"><div class="piui-media-card__preview" data-collection-preview><img src="/assets/icons/piui-wordmark.svg" width="416" height="128" alt="Wordmark horizontal PIUI Zero" loading="lazy"></div><div class="piui-media-card__body"><strong>Sistem brand dan wordmark</strong><p class="piui-page-subtitle">Contoh rasio lebar untuk memperlihatkan perbedaan tiga tata letak.</p></div></article>
+  </div></div>
+ </section>
+ <section data-collection-scope aria-label="Contoh koleksi media kedua">
+  <h3 class="piui-panel__title">Koleksi B — state terisolasi</h3>
+  <div class="piui-collection-frame"><div id="catalog-collection-b" class="piui-collection" data-collection data-collection-view="masonry" aria-label="Koleksi contoh B">
+   <article class="piui-card"><h4 class="piui-card__title">Dokumentasi</h4><p>Komponen yang sama dapat dipakai untuk konten tanpa gambar.</p></article>
+   <article class="piui-card"><h4 class="piui-card__title">Studi kasus</h4><p>Pilihan tata letak koleksi ini tidak mengubah koleksi A. Urutan DOM, keyboard dan konten tetap dipertahankan.</p></article>
+  </div></div>
+ </section>
+ <div class="piui-kpi-grid">
+  <div class="piui-field"><label for="contract-editor-a">Editor kontrak A</label><div data-piui-md-editor><textarea id="contract-editor-a" name="contract-a">## Catatan A
+- [ ] Tugas A
+
+[Portal](/index.html)</textarea></div></div>
+  <div class="piui-field"><label for="contract-editor-b">Editor kontrak B — readonly</label><div data-piui-md-editor><textarea id="contract-editor-b" name="contract-b" readonly>## Catatan B
+Nilai ini tidak mengikuti editor A.</textarea></div></div>
+ </div></div>
+</section>
+<section class="piui-panel" data-table-scope aria-labelledby="heading-table-contract-a"><div class="piui-panel__body"><h2 class="piui-panel__title" id="heading-table-contract-a">Tabel instance A</h2><div class="piui-filter-bar"><div class="piui-field"><label for="contract-search-a">Cari di tabel A</label><input type="search" id="contract-search-a" name="q-a" class="piui-input" data-table-search></div><button type="button" class="piui-btn piui-btn--secondary" data-table-reset>Reset tabel A</button><span data-table-count></span></div><div class="piui-table-scroll" role="region" tabindex="0" aria-label="Tabel kontrak A"><table class="piui-table" id="contract-table-a" data-piui-table="contract-a"><caption>Contoh data terisolasi A</caption><thead><tr><th scope="col">ID</th><th scope="col">Nama</th></tr></thead><tbody><tr data-row-id="a-1"><th scope="row">a-1</th><td>Alpha</td></tr><tr data-row-id="a-2"><th scope="row">a-2</th><td>Beta</td></tr></tbody></table></div></div></section><section class="piui-panel" data-table-scope aria-labelledby="heading-table-contract-b"><div class="piui-panel__body"><h2 class="piui-panel__title" id="heading-table-contract-b">Tabel instance B</h2><div class="piui-filter-bar"><div class="piui-field"><label for="contract-search-b">Cari di tabel B</label><input type="search" id="contract-search-b" name="q-b" class="piui-input" data-table-search></div><button type="button" class="piui-btn piui-btn--secondary" data-table-reset>Reset tabel B</button><span data-table-count></span></div><div class="piui-table-scroll" role="region" tabindex="0" aria-label="Tabel kontrak B"><table class="piui-table" id="contract-table-b" data-piui-table="contract-b"><caption>Contoh data terisolasi B</caption><thead><tr><th scope="col">ID</th><th scope="col">Nama</th></tr></thead><tbody><tr data-row-id="b-1"><th scope="row">b-1</th><td>Alpha</td></tr><tr data-row-id="b-2"><th scope="row">b-2</th><td>Beta</td></tr></tbody></table></div></div></section>
+</main>
+
+    <!-- FOOTER -->
+    <footer class="piui-footer">
+      
+      <ul class="piui-footer__links">
+        <li><a href="/app/dashboard/index.html">Beranda Dashboard</a></li>
+        <li><a href="/app/gallery/index.html">Galeri Foto &amp; Video</a></li>
+        <li><a href="/app/settings/index.html">Pengaturan Sistem</a></li>
+      </ul>
+    <p class="piui-product-credit"><span class="piui-product-signature"><img class="piui-brand__mark" src="/assets/icons/piui-mark.svg" alt="" width="24" height="24"><span>PIUI Zero™ v2.2.2</span></span> • Created by Ipi &quot;Pedro Iriano&quot; • © 2026 • <a href="/about/index.html">Tentang produk</a></p></footer>
+  </div>
+
+  <!-- MODAL 1: FORM DRAWER KANAN DENGAN STEPPER WIZARD 3-LANGKAH -->
+  <dialog id="dialog-uikit-wizard" data-wizard class="piui-dialog" aria-labelledby="uikit-wizard-title">
+    <form action="/app/components/index.html" method="dialog">
+      <div class="piui-dialog__header">
+        <div>
+          <strong id="uikit-wizard-title">Contoh Form Pop-up Kanan (3 Tahap)</strong>
+          <div class="piui-page-subtitle">Muncul halus dari sisi kanan layar dengan penunjuk langkah 1–2–3</div>
+        </div>
+        <button type="button" class="piui-icon-btn" data-close-dialog aria-label="Tutup form pop-up">
+          <svg width="18" height="18" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-close"></use></svg>
+        </button>
+      </div>
+      <div class="piui-dialog__body">
+        <div class="piui-field" data-wizard-step="0">
+          <label for="kit-modal-name" class="piui-field__label">Tahap 1 — Nama Layanan / Data Baru</label>
+          <input type="text" name="kit-modal-name" id="kit-modal-name" class="piui-input" value="Layanan Pembayaran QRIS Nasional" required>
+          <span class="piui-field__hint">Masukkan nama layanan atau proyek yang akan didaftarkan.</span>
+        </div>
+        <div class="piui-field" data-wizard-step="1">
+          <label for="kit-modal-scope" class="piui-field__label">Tahap 2 — Tingkat Izin Akses (Pilihan Select2 di dalam Modal)</label>
+          <select name="kit-modal-scope" id="kit-modal-scope" class="piui-select">
+            <option value="read-write">Bisa Lihat &amp; Ubah Data</option>
+            <option value="read-only">Hanya Lihat Data</option>
+            <option value="full-admin">Administrator Penuh</option>
+          </select>
+        </div>
+        <div class="piui-field" data-wizard-step="2">
+          <label for="kit-modal-notes" class="piui-field__label">Tahap 3 — Catatan Pemeriksaan Akhir</label>
+          <textarea name="kit-modal-notes" id="kit-modal-notes" class="piui-textarea" rows="3">Data telah diperiksa dan siap diaktifkan sekarang.</textarea>
+        </div>
+      </div>
+      <div class="piui-dialog__footer">
+        <button type="button" class="piui-btn piui-btn--secondary" data-close-dialog>Batal</button>
+        <button type="submit" class="piui-btn piui-btn--primary">Simpan Data Sekarang</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- MODAL 2: FORM DRAWER KANAN CEPAT (1 LANGKAH / TAMBAH DATA INSTAN) -->
+  <dialog id="dialog-uikit-quick" class="piui-dialog" data-no-stepper aria-labelledby="uikit-quick-title">
+    <form action="/app/components/index.html" method="dialog">
+      <div class="piui-dialog__header">
+        <div>
+          <strong id="uikit-quick-title">Form Pop-up Cepat — Tambah Anggota Tim</strong>
+          <div class="piui-page-subtitle">Formulir satu langkah ringkas dari sisi kanan layar</div>
+        </div>
+        <button type="button" class="piui-icon-btn" data-close-dialog aria-label="Tutup form tambah anggota">
+          <svg width="18" height="18" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-close"></use></svg>
+        </button>
+      </div>
+      <div class="piui-dialog__body">
+        <div class="piui-field">
+          <label for="kit-quick-fullname" class="piui-field__label">Nama Lengkap Anggota</label>
+          <input type="text" name="kit-quick-fullname" id="kit-quick-fullname" class="piui-input" value="Dimas Prakoso" required>
+        </div>
+        <div class="piui-field">
+          <label for="kit-quick-email" class="piui-field__label">Alamat Email Kerja</label>
+          <input type="email" name="kit-quick-email" id="kit-quick-email" class="piui-input" value="dimas.prakoso@perusahaan.id" required>
+        </div>
+        <div class="piui-field">
+          <label for="kit-quick-division" class="piui-field__label">Divisi / Bagian (Select2)</label>
+          <select name="kit-quick-division" id="kit-quick-division" class="piui-select">
+            <option value="operasional">Divisi Operasional &amp; Layanan</option>
+            <option value="keuangan">Divisi Keuangan &amp; Akuntansi</option>
+            <option value="teknologi">Divisi Teknologi Informasi</option>
+          </select>
+        </div>
+      </div>
+      <div class="piui-dialog__footer">
+        <button type="button" class="piui-btn piui-btn--secondary" data-close-dialog>Batal</button>
+        <button type="submit" class="piui-btn piui-btn--primary">Tambahkan Anggota</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- MODAL 3: FORM DRAWER KANAN KONFIRMASI HAPUS DATA (KEAMANAN GANDA) -->
+  <dialog id="dialog-uikit-delete" class="piui-dialog" data-no-stepper aria-labelledby="uikit-delete-title">
+    <form action="/app/components/index.html" method="dialog" data-confirm-phrase="HAPUS-DATA">
+      <div class="piui-dialog__header">
+        <div>
+          <strong id="uikit-delete-title">Konfirmasi Penghapusan Data Penting</strong>
+          <div class="piui-page-subtitle">Tombol hapus baru aktif setelah alasan &amp; kode konfirmasi diisi</div>
+        </div>
+        <button type="button" class="piui-icon-btn" data-close-dialog aria-label="Tutup konfirmasi hapus">
+          <svg width="18" height="18" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-close"></use></svg>
+        </button>
+      </div>
+      <div class="piui-dialog__body">
+        <div class="piui-field">
+          <label for="kit-delete-reason" class="piui-field__label">Alasan Penghapusan Data (Minimal 8 Karakter)</label>
+          <textarea name="kit-delete-reason" id="kit-delete-reason" class="piui-textarea" rows="2" data-reason-input placeholder="Contoh: Data ganda sudah digabungkan ke akun utama..." required></textarea>
+        </div>
+        <div class="piui-field">
+          <label for="kit-delete-phrase" class="piui-field__label">Ketik Kode Konfirmasi: <code>HAPUS-DATA</code></label>
+          <input type="text" name="kit-delete-phrase" id="kit-delete-phrase" class="piui-input text-mono" data-phrase-input placeholder="Ketik HAPUS-DATA di sini..." autocomplete="off" required>
+        </div>
+      </div>
+      <div class="piui-dialog__footer">
+        <button type="button" class="piui-btn piui-btn--secondary" data-close-dialog>Batal</button>
+        <button type="submit" class="piui-btn piui-btn--danger" disabled>Hapus Data Permanen</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- COMMAND PALETTE DIALOG -->
+  <dialog id="piui-cmd-palette" class="piui-dialog" aria-labelledby="cmd-palette-title">
+    <div class="piui-dialog__header">
+      <strong id="cmd-palette-title">Pencarian Cepat &amp; Pintasan Menu (Ctrl+K)</strong>
+      <button type="button" class="piui-icon-btn" id="btn-close-cmd" aria-label="Tutup pencarian cepat (Escape)">
+        <svg width="18" height="18" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-close"></use></svg>
+      </button>
+    </div>
+    <div class="piui-dialog__body">
+      <div class="piui-field">
+        <label for="cmd-search-input" class="piui-field__label">Ketik nama menu, halaman, atau fitur yang dicari</label>
+        <input type="search" name="cmd-search-input" id="cmd-search-input" class="piui-input"
+               role="combobox" aria-expanded="true" aria-controls="cmd-results-list"
+               autocomplete="off" spellcheck="false"
+               placeholder="Contoh: Komponen, Galeri, Pengguna, Transaksi...">
+      </div>
+      <ul id="cmd-results-list" class="piui-cmd-list" role="listbox" aria-label="Daftar menu dan perintah"></ul>
+      <p id="cmd-empty-state" class="piui-page-subtitle" hidden>Tidak ada menu yang cocok dengan kata kunci tersebut.</p>
+    </div>
+  </dialog>
+
+  <div id="piui-toast-region" class="piui-toast-region" aria-live="polite"></div>
+
+  <template id="tpl-chart-data-row">
+    <tr>
+      <th scope="row" class="is-sticky-col" data-chart-col="period"></th>
+      <td data-chart-col="volume"></td>
+      <td data-chart-col="latency"></td>
+      <td data-chart-col="error"></td>
+    </tr>
+  </template>
+
+  <template id="tpl-cmd-item">
+    <li class="piui-cmd-item" role="option" tabindex="-1">
+      <div>
+        <strong data-cmd-title></strong>
+        <div class="piui-page-subtitle" data-cmd-category></div>
+      </div>
+      <kbd class="piui-cmd-trigger__kbd text-mono" data-cmd-shortcut></kbd>
+    </li>
+  </template>
+
+  <template id="tpl-toast">
+    <div class="piui-toast" role="status">
+      <span data-toast-text></span>
+      <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-toast-close>Tutup</button>
+    </div>
+  </template>
+</body>
+</html>

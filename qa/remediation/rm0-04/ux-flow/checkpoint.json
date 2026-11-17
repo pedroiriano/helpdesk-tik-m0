@@ -1,0 +1,12 @@
+{
+  "timestamp": "2026-11-13T00:28:11.137779+00:00",
+  "sources": {
+    "frontend/business-pages.mjs": "af2672afadb47c5ae556e81afbb20ea069565b61a40823bbca65bcf8aa8e9821",
+    "frontend/ticket-pages.mjs": "b0b2157d76fb21453429fb461bba1ea168fbb5b6c5aff03d0a59e976fc4fe4a3",
+    "frontend/business.css": "81fdae0f71824708f417968c5851e850b3f5c04a0016379e6a811cadd4a2ebd3",
+    "frontend/src/features/m0-03.ts": "66a73f8f7b3ab00456bf782b16122dd66b1f024014c159bccbc671de4aaa21d0",
+    "frontend/src/features/m0-04.ts": "b31b6c89fffaf76ffadbe0b0763f77c602f72fe784caaaf85c322a1b62526d1c",
+    "frontend/src/features/dashboard.ts": "e4bdb1afe3aaa8a5f7f6812389b3ded3b9d9d4fa0433da5402fa770a69d0018c",
+    "frontend/build-templates.mjs": "e6d6b74b6b13b86513cf1f14f68c8182fd6434075a6a827a3af14c304d11e8d9"
+  }
+}

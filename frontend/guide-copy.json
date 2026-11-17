@@ -1,0 +1,212 @@
+{
+  "alley-oop": {
+    "title": "Pemulihan akses aplikasi",
+    "category": "Akun",
+    "summary": "Catat pesan penolakan akses dan kapan terakhir berhasil masuk.",
+    "original": "Transition Alley-Oop Apex"
+  },
+  "apex-flush": {
+    "title": "Akun tidak dapat diakses",
+    "category": "Akun",
+    "summary": "Sebutkan nama layanan dan pesan saat masuk. Jangan sertakan kata sandi.",
+    "original": "Apex Tomahawk Flush"
+  },
+  "arena-three": {
+    "title": "Aplikasi menampilkan kesalahan",
+    "category": "Aplikasi",
+    "summary": "Sertakan langkah yang memunculkan kesalahan dan nama aplikasi terkait.",
+    "original": "Arena Catch &amp; Shoot 3PT"
+  },
+  "baseline-jam": {
+    "title": "Sesi berakhir saat bekerja",
+    "category": "Akun",
+    "summary": "Catat waktu sesi berakhir, perangkat, dan halaman terakhir.",
+    "original": "Baseline Two-Handed Jam"
+  },
+  "corner-three": {
+    "title": "Halaman gagal dimuat",
+    "category": "Aplikasi",
+    "summary": "Catat alamat halaman layanan dan kode kesalahan jika tersedia.",
+    "original": "Corner Pocket Deep Three"
+  },
+  "crossover-burst": {
+    "title": "Koneksi terputus",
+    "category": "Jaringan",
+    "summary": "Catat lokasi, waktu kejadian, dan siapa saja yang terdampak.",
+    "original": "Streetball Crossover Burst"
+  },
+  "curl-high-arc": {
+    "title": "Formulir tidak tersimpan",
+    "category": "Aplikasi",
+    "summary": "Jelaskan tahap pengisian yang gagal. Samarkan isi formulir pada tangkapan layar.",
+    "original": "Off-Screen Curl High Arc"
+  },
+  "defensive-slide": {
+    "title": "Layar tidak menampilkan gambar",
+    "category": "Perangkat",
+    "summary": "Sebutkan kondisi daya, indikator layar, dan kabel yang terpasang.",
+    "original": "Defensive Slide Adherence"
+  },
+  "elbow-pullup": {
+    "title": "Pencarian tidak menampilkan hasil",
+    "category": "Aplikasi",
+    "summary": "Catat menu pencarian, kriteria contoh, dan hasil yang diharapkan.",
+    "original": "Elbow Pull-Up Midrange"
+  },
+  "eurostep": {
+    "title": "Hak akses perlu ditinjau",
+    "category": "Akun",
+    "summary": "Sebutkan layanan dan peran yang dibutuhkan. Penambahan akses memerlukan verifikasi.",
+    "original": "Wide Eurostep Extension"
+  },
+  "hardwood-brake": {
+    "title": "Perangkat tidak merespons",
+    "category": "Perangkat",
+    "summary": "Jelaskan jenis perangkat dan gejala yang terlihat saat dinyalakan.",
+    "original": "Hardwood Brake Dynamics"
+  },
+  "hesitation-freeze": {
+    "title": "Koneksi sering terputus",
+    "category": "Jaringan",
+    "summary": "Catat frekuensi gangguan dan apakah perangkat lain mengalaminya.",
+    "original": "In-and-Out Hesitation Freeze"
+  },
+  "pivot-spin": {
+    "title": "Perangkat tambahan tidak terdeteksi",
+    "category": "Perangkat",
+    "summary": "Sebutkan port dan perangkat tambahan yang sudah diperiksa.",
+    "original": "Low Post Pivot Spin Torque"
+  },
+  "shammgod": {
+    "title": "Jaringan nirkabel tidak tersedia",
+    "category": "Jaringan",
+    "summary": "Sebutkan lokasi dan nama jaringan yang dicari tanpa mengirim kunci jaringan.",
+    "original": "Shammgod Elite Misdirection"
+  },
+  "sprint-decel": {
+    "title": "Perangkat bekerja lambat",
+    "category": "Perangkat",
+    "summary": "Jelaskan kapan gejala muncul dan pekerjaan yang sedang dilakukan.",
+    "original": "Elite Step Deceleration"
+  },
+  "stepback-dagger": {
+    "title": "Layanan jaringan lambat",
+    "category": "Jaringan",
+    "summary": "Catat lokasi, waktu, dan layanan yang terasa lambat.",
+    "original": "Step-Back Dagger Isolation"
+  },
+  "shooting": {
+    "title": "Akun dan akses",
+    "category": "Akun",
+    "summary": "Siapkan nama layanan dan gejala saat masuk. Rahasiakan kata sandi serta kode verifikasi.",
+    "original": "Shooting Lab"
+  },
+  "handles": {
+    "title": "Koneksi jaringan",
+    "category": "Jaringan",
+    "summary": "Tuliskan lokasi, waktu, dan jumlah pengguna yang mengalami kendala.",
+    "original": "Handle &amp; ISO"
+  },
+  "finishing": {
+    "title": "Gangguan aplikasi",
+    "category": "Aplikasi",
+    "summary": "Sebutkan aplikasi dan langkah yang menghasilkan pesan kesalahan.",
+    "original": "Rim Finish &amp; Dunk"
+  },
+  "vision": {
+    "title": "Perangkat kerja",
+    "category": "Perangkat",
+    "summary": "Sebutkan jenis perangkat dan gejalanya sebelum pemeriksaan oleh petugas.",
+    "original": "Court Vision &amp; IQ"
+  },
+  "starter": {
+    "title": "Beban ringan",
+    "category": "Simulasi",
+    "summary": "Skenario contoh untuk laporan berbobot dasar dengan batas ilustratif 2.000 unit per bulan.",
+    "original": "Amateur Hooper"
+  },
+  "studio": {
+    "title": "Beban sedang",
+    "category": "Simulasi",
+    "summary": "Skenario menengah membandingkan hingga 15.000 unit contoh per bulan.",
+    "original": "Collegiate Pro"
+  },
+  "scale": {
+    "title": "Beban tinggi",
+    "category": "Simulasi",
+    "summary": "Skenario besar memperlihatkan pengaruh volume dan tindak lanjut hingga 60.000 unit contoh per bulan.",
+    "original": "Franchise Apex"
+  },
+  "fidelity": {
+    "title": "Kejelasan laporan",
+    "category": "Panduan",
+    "summary": "Jelaskan gejala yang diamati dan bedakan dari dugaan penyebab.",
+    "original": "Calibrated Evidence"
+  },
+  "integrity": {
+    "title": "Ketepatan bukti",
+    "category": "Panduan",
+    "summary": "Simpan urutan kejadian dan samarkan informasi pribadi sebelum berbagi.",
+    "original": "Consent-Led Review"
+  },
+  "native": {
+    "title": "Aksesibilitas layanan",
+    "category": "Panduan",
+    "summary": "Gunakan judul yang jelas agar laporan dan tindak lanjut dapat dibaca dengan mudah.",
+    "original": "Zero-Bloat Delivery"
+  },
+  "provenance": {
+    "title": "Riwayat penanganan",
+    "category": "Panduan",
+    "summary": "Catat tindakan dan hasil yang sudah dicoba agar petugas dapat melanjutkan pemeriksaan.",
+    "original": "Repeatable Mechanics"
+  },
+  "accessibility": {
+    "title": "Kebutuhan aksesibilitas",
+    "category": "Bantuan",
+    "summary": "Sebutkan kendala navigasi, keyboard, pembacaan teks, atau teknologi bantu yang digunakan.",
+    "original": "Accessible Court Interface"
+  },
+  "calibration": {
+    "title": "Pemeriksaan awal",
+    "category": "Bantuan",
+    "summary": "Bandingkan gejala pada perangkat lain tanpa mengubah konfigurasi keamanan.",
+    "original": "Court Calibration"
+  },
+  "governance": {
+    "title": "Penanggung jawab laporan",
+    "category": "Panduan",
+    "summary": "Catat peran pemohon dan tim yang menangani agar tindak lanjut jelas.",
+    "original": "Data Governance"
+  },
+  "integration": {
+    "title": "Ketergantungan layanan",
+    "category": "Panduan",
+    "summary": "Sebutkan layanan lain yang ikut terdampak dan pesan kesalahan yang terlihat.",
+    "original": "Integration Scope"
+  },
+  "privacy": {
+    "title": "Melindungi informasi pribadi",
+    "category": "Panduan",
+    "summary": "Samarkan identitas dan informasi pribadi pada tangkapan layar.",
+    "original": "Athlete Data Privacy"
+  },
+  "readiness": {
+    "title": "Kesiapan membuat laporan",
+    "category": "Panduan",
+    "summary": "Siapkan nama layanan, uraian singkat, waktu, dampak, dan bukti yang aman dibagikan.",
+    "original": "Deployment Readiness"
+  },
+  "security": {
+    "title": "Pelaporan kendala keamanan",
+    "category": "Panduan",
+    "summary": "Jelaskan gejala tanpa menyertakan kredensial atau kode akses.",
+    "original": "Secure Native Delivery"
+  },
+  "terms": {
+    "title": "Lingkungan pengembangan",
+    "category": "Panduan",
+    "summary": "Gunakan data sintetis untuk mengeksplorasi tampilan. Penerimaan tiket operasional belum tersedia.",
+    "original": "Responsible Use Terms"
+  }
+}

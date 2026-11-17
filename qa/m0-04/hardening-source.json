@@ -1,0 +1,53 @@
+{
+  "timestamp": "2026-11-05T06:27:21.060214+00:00",
+  "scope": "final hardening source checks; DB/browser on this delta not run here",
+  "result": "PASS",
+  "commands": [
+    {
+      "argv": [
+        "go",
+        "vet",
+        "./internal/modules/m1/...",
+        "./internal/modules/m3/...",
+        "./internal/platform/blob",
+        "./internal/bootstrap"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith\\backend",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "argv": [
+        "go",
+        "test",
+        "./internal/modules/m1/...",
+        "./internal/modules/m3/...",
+        "./internal/platform/blob",
+        "./internal/bootstrap"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith\\backend",
+      "exit_code": 0,
+      "output": "?   \thelpdesk.local/m0/internal/modules/m1\t[no test files]\nok  \thelpdesk.local/m0/internal/modules/m1/api\t2.281s\n?   \thelpdesk.local/m0/internal/modules/m1/internal/app\t[no test files]\nok  \thelpdesk.local/m0/internal/modules/m1/internal/domain\t2.234s\n?   \thelpdesk.local/m0/internal/modules/m1/internal/store\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m3\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m3/api\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m3/internal/app\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m3/internal/domain\t[no test files]\n?   \thelpdesk.local/m0/internal/modules/m3/internal/store\t[no test files]\nok  \thelpdesk.local/m0/internal/platform/blob\t3.204s\nok  \thelpdesk.local/m0/internal/bootstrap\t2.564s\n"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "py_compile",
+        "scripts/smoke_m0_04_local.py"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/test_business_intent.mjs"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "output": "PASS unknown-commit intent holds key/payload/version across refresh, rejects changed intent, and resets after receipt or definite rejection\n"
+    }
+  ]
+}

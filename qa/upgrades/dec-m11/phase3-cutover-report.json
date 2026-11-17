@@ -1,0 +1,78 @@
+{
+  "timestamp": "2026-11-17T05:01:01.501076+00:00",
+  "phase": "ADR-0010-Fase-3",
+  "scope": "Cutover terkendali helpdesk-m0-db (PostgreSQL 16.14 -> 18.7-alpine) menggunakan volume baru helpdesk-m0_postgres18-data (/var/lib/postgresql), menjaga helpdesk-m0_postgres-data tetap utuh untuk rollback, serta regresi browser & kontrak penuh pada http://127.0.0.1:18090.",
+  "cutover": {
+    "source_db": "postgres:16.14-alpine (quiesced)",
+    "target_db": "postgres:18.7-alpine@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015",
+    "target_volume": "helpdesk-m0_postgres18-data",
+    "rollback_volume_preserved": "helpdesk-m0_postgres-data",
+    "pgdata": "/var/lib/postgresql/18/docker",
+    "data_checksums": "on",
+    "password_encryption": "scram-sha-256",
+    "scram_owner_roles": 9,
+    "tables_verified": 125,
+    "rows_restored": 16053,
+    "row_diffs": 0,
+    "pg16_final_dump": {
+      "bytes": 1579141,
+      "sha256": "1e3fe3e596a618efcc53f4529fbd5d77f61c21d0c59aa6220d329417bd6fea2b"
+    },
+    "migrate_exit_code": 0,
+    "sensitive_role_sql_removed": [
+      "../helpdesk-pg16-backup/pre18-globals.sql",
+      "../helpdesk-pg16-backup/pg16-roles.sql"
+    ]
+  },
+  "runtime_stats": {
+    "helpdesk-m0-db": "113.8MiB / 2.5GiB (4.44%)",
+    "helpdesk-m0": "12.33MiB / 4.5GiB (0.27%)",
+    "helpdesk-m0-nginx": "2.883MiB / 768MiB (0.38%)",
+    "helpdesk-m0-scanner": "1.042GiB / 3GiB (34.72%)"
+  },
+  "regression_gates": [
+    {
+      "name": "browser_edge_cdp",
+      "result": "PASS",
+      "suites_passed": 11,
+      "suites_total": 11,
+      "csp_violations": 0,
+      "exceptions": 0,
+      "report": "qa/remediation/rm0-04/browser-final.json"
+    },
+    {
+      "name": "backup_manifest_e2e",
+      "result": "PASS",
+      "jobId": "7c5ab7e1-fdeb-4bc1-8391-ce42c285ec6a",
+      "shaMatch": true
+    },
+    {
+      "name": "link_audit_m0_13",
+      "result": "PASS",
+      "report": "qa/m0-13/link_audit.json"
+    },
+    {
+      "name": "modal_and_mobile_27_routes",
+      "result": "PASS"
+    },
+    {
+      "name": "piui_build_parity",
+      "result": "PASS"
+    },
+    {
+      "name": "go_module_boundaries",
+      "result": "PASS",
+      "packages": 53
+    },
+    {
+      "name": "business_contracts_gen_check",
+      "result": "PASS"
+    },
+    {
+      "name": "business_contracts_unittest",
+      "result": "PASS",
+      "tests": 8
+    }
+  ],
+  "result": "PASS"
+}

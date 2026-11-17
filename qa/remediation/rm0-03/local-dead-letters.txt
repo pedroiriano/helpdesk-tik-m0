@@ -1,0 +1,5 @@
+M3|M7|TicketCreated|INTEGRITY_OR_ATTEMPTS|13
+M3|M7|TicketStateChanged|INTEGRITY_OR_ATTEMPTS|13
+AUTO_CLOSE|ACKED|-|9
+AUTO_CLOSE|DEAD_LETTER|EXECUTION_FAILED: Batas waktu konfirmasi 24 jam kalender belum terlampaui|2
+AUTO_CLOSE|DEAD_LETTER|EXECUTION_FAILED: Versi tiket berubah atau telah ditanggapi (CAS guard)|26

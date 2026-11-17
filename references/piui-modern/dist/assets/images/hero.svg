@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450" fill="none">
+  <defs>
+    <linearGradient id="courtWood" x1="0" y1="0" x2="800" y2="450" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0E0F12"/>
+      <stop offset="100%" stop-color="#070709"/>
+    </linearGradient>
+    <filter id="courtGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Court Background -->
+  <rect width="800" height="450" rx="4" fill="url(#courtWood)" stroke="rgba(244, 244, 245, 0.12)" stroke-width="1"/>
+
+  <!-- Basketball Half-Court Lines -->
+  <g stroke="rgba(244, 244, 245, 0.18)" stroke-width="2">
+    <!-- Center Court Half Circle -->
+    <path d="M 400 0 A 70 70 0 0 1 400 140" fill="none" stroke-dasharray="4 4"/>
+    <circle cx="400" cy="70" r="24" fill="none"/>
+    <line x1="100" y1="70" x2="700" y2="70"/>
+
+    <!-- Key / Paint Area -->
+    <rect x="320" y="240" width="160" height="210" fill="rgba(34, 211, 238, 0.04)" stroke="rgba(244, 244, 245, 0.25)"/>
+    <circle cx="400" cy="240" r="70" fill="none" stroke-dasharray="6 4"/>
+    <circle cx="400" cy="240" r="70" fill="none"/>
+
+    <!-- Restricted Area Arc -->
+    <path d="M 370 410 A 30 30 0 0 1 430 410" fill="none"/>
+
+    <!-- 3-Point Line Arc -->
+    <path d="M 170 450 L 170 380 A 250 250 0 0 1 630 380 L 630 450" fill="none" stroke="#22D3EE" stroke-width="2.5" filter="url(#courtGlow)"/>
+
+    <!-- Backboard & Hoop -->
+    <line x1="365" y1="426" x2="435" y2="426" stroke="#FFFFFF" stroke-width="4"/>
+    <circle cx="400" cy="412" r="14" fill="none" stroke="#22D3EE" stroke-width="3"/>
+  </g>
+
+  <!-- Telemetry Shot Vector Overlay -->
+  <g>
+    <!-- Shot Path Arc -->
+    <path d="M 240 360 Q 320 160 400 410" fill="none" stroke="#22D3EE" stroke-width="2" stroke-dasharray="5 3"/>
+    <!-- Launch Origin -->
+    <circle cx="240" cy="360" r="6" fill="#22D3EE"/>
+    <circle cx="240" cy="360" r="14" fill="none" stroke="#22D3EE" stroke-width="1" opacity="0.6"/>
+    <text x="240" y="390" fill="#F4F4F5" font-family="'JetBrains Mono', monospace" font-size="11" text-anchor="middle">LAUNCH: 45.2° · 2400 RPM</text>
+
+    <!-- Apex Point -->
+    <circle cx="320" cy="210" r="4" fill="#38BDF8"/>
+    <text x="320" y="196" fill="#38BDF8" font-family="'JetBrains Mono', monospace" font-size="11" text-anchor="middle">APEX: 16.4 FT</text>
+
+    <!-- Target Entry -->
+    <circle cx="400" cy="412" r="6" fill="#10B981"/>
+    <text x="400" y="442" fill="#10B981" font-family="'JetBrains Mono', monospace" font-size="11" text-anchor="middle">SWISH ENTRY · 44.8°</text>
+  </g>
+</svg>

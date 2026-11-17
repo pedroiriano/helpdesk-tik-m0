@@ -1,0 +1,64 @@
+name: Helpdesk M0 Local-Mirrored CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  governance-and-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13.7'
+      - name: Install OpenAPI & JSON Schema contract validators
+        run: |
+          python -m pip install -r tests/contract/requirements.txt -r tests/contract/openapi-requirements.txt
+      - name: Run ADR uniqueness, package consistency, and business contract checks
+        run: |
+          python -X utf8 scripts/ci_local.py --skip-docker
+
+  backend-go-127:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Go 1.27.4 test stage (go vet & unit tests) and runtime binary
+        run: |
+          docker build --target test -f infra/docker/backend.Dockerfile .
+          docker compose build app
+
+  frontend-node-26:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '26.13.1'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install dependencies safely, build frontend, and verify PIUI + ESM tests
+        run: |
+          npm --prefix frontend ci --ignore-scripts --no-audit --no-fund
+          npm --prefix frontend run build
+          python scripts/test_piui_build.py
+          node scripts/test_admin_navigation.mjs
+          node scripts/test_admin_profiles.mjs
+          node scripts/test_ticket_actions.mjs
+          node scripts/test_ux_flow.mjs
+          node scripts/test_business_intent.mjs
+          node scripts/test_public_cache.mjs
+
+  postgres-18-disposable-migrations:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13.7'
+      - name: Run isolated PostgreSQL 18.7 owner/DDL/ledger verification
+        run: |
+          docker pull postgres:18.7-alpine@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015
+          python -X utf8 scripts/test_owner_migrations.py --report qa/remediation/rm0-05/ci-migrations.json

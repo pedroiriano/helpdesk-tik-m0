@@ -1,0 +1,75 @@
+{
+  "timestamp": "2026-11-06T08:09:30.000000+00:00",
+  "task_id": "M0-08",
+  "status": "DONE_VERIFIED",
+  "result": "PASS",
+  "scope": "Two-owner media library separating M3 intake attachments and M8 knowledge media, strict attachment ACL anti-leakage with quarantine protection (AC07), absolute ban on direct private media publication with sanitized reuse and recorded provenance (AC18), debounced draft autosave with competing tabs CAS version conflict guard (AC19), offline draft recovery and account switch sanitization (AC19), and keyboard accessible media picker modal with focus trap and Escape handler (AC20).",
+  "requirements": [
+    "AC07",
+    "AC18",
+    "AC19",
+    "AC20"
+  ],
+  "global_acceptance": {
+    "AC07": "DONE_VERIFIED",
+    "AC18": "DONE_VERIFIED",
+    "AC19": "DONE_VERIFIED",
+    "AC20": "DONE_VERIFIED"
+  },
+  "counts": {
+    "integration_subtests": 7,
+    "live_smoke_checks": 14,
+    "go_packages_boundary": 53,
+    "contract_tests": 8
+  },
+  "commands_executed": [
+    "python scripts/build_business_contracts.py",
+    "python scripts/build_business_contracts.py --check",
+    "python -m unittest tests/contract/test_business_contracts.py",
+    "cmd /c \"cd frontend && npm run build\"",
+    "python scripts/test_piui_build.py",
+    "python scripts/check_boundaries.py",
+    "cd backend; go test ./...",
+    "python scripts/test_m0_08.py",
+    "docker build -t helpdesk-m0-app:0.1.0 -f infra/docker/backend.Dockerfile .",
+    "docker compose up -d --no-deps app",
+    "python scripts/smoke_m0_08_local.py --allow-lab-writes",
+    "python scripts/verify_package.py"
+  ],
+  "changed_files": [
+    "backend/internal/bootstrap/application.go",
+    "backend/internal/bootstrap/m0_03_integration_test.go",
+    "backend/internal/bootstrap/m0_08_integration_test.go",
+    "backend/internal/modules/m3/api/drafts.go",
+    "backend/internal/modules/m3/internal/app/drafts.go",
+    "backend/internal/modules/m3/internal/domain/drafts.go",
+    "backend/internal/modules/m3/internal/store/drafts.go",
+    "backend/internal/modules/m3/module.go",
+    "backend/internal/modules/m8/api/doc.go",
+    "backend/internal/modules/m8/api/media.go",
+    "backend/internal/modules/m8/internal/app/doc.go",
+    "backend/internal/modules/m8/internal/app/http.go",
+    "backend/internal/modules/m8/internal/app/service.go",
+    "backend/internal/modules/m8/internal/domain/doc.go",
+    "backend/internal/modules/m8/internal/domain/media.go",
+    "backend/internal/modules/m8/internal/store/doc.go",
+    "backend/internal/modules/m8/internal/store/media.go",
+    "backend/internal/modules/m8/module.go",
+    "frontend/src/features/m0-04.ts",
+    "frontend/ticket-pages.mjs",
+    "migrations/checksums.sha256",
+    "migrations/m3/018-draft-grants.sql",
+    "migrations/manifest.json",
+    "scripts/build_business_contracts.py",
+    "scripts/m0_08_contracts.py",
+    "scripts/smoke_m0_08_local.py",
+    "scripts/test_m0_08.py",
+    "scripts/test_piui_build.py"
+  ],
+  "verification_limits": [
+    "Tests executed on disposable isolated containers and synthetic loopback lab (:18080) with synthetic test subjects.",
+    "Real ClamAV engine integrated in test runner and local compose stack.",
+    "No external SMTP, Telegram bot token, or production data used.",
+    "Production UAT, high load stress testing, and deployment remain NOT_RUN."
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "timestamp": "2026-11-04T00:42:07.912817+00:00",
+  "task_id": "M0-01",
+  "scope": "landing_typography_spacing",
+  "result": "PASS",
+  "source": {
+    "git_sha": null,
+    "path": "frontend/landing.css",
+    "sha256": "501635cf346a8c7b1cf855b43de8a0c45f7e09450c2a7819ef8bd50ed162eef4"
+  },
+  "changes": {
+    "heading_section_px": [
+      28,
+      44
+    ],
+    "body_px": 16,
+    "card_heading_px": [
+      18,
+      22
+    ],
+    "section_padding_px": [
+      48,
+      88
+    ],
+    "component_gap_px": [
+      16,
+      24
+    ],
+    "card_padding_px": [
+      20,
+      28
+    ],
+    "controls_min_height_px": 44,
+    "gallery_columns": {
+      "desktop": 2,
+      "mobile": 1
+    }
+  },
+  "commands": [
+    "npm.cmd run build (frontend)",
+    "docker compose up -d --no-deps --build --pull never web",
+    "node frontend/build-templates.mjs",
+    "python scripts/test_piui_build.py",
+    "python scripts/verify_package.py",
+    "python scripts/smoke_local.py"
+  ],
+  "browser": [
+    {
+      "viewport": [
+        1440,
+        900
+      ],
+      "hero_height": 900,
+      "client": 1425,
+      "scroll": 1425,
+      "section_heading_px": 44
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "hero_height": 844,
+      "client": 375,
+      "scroll": 375,
+      "section_heading_px": 28
+    },
+    {
+      "viewport": [
+        768,
+        1024
+      ],
+      "hero_height": 1024,
+      "client": 753,
+      "scroll": 753
+    },
+    {
+      "viewport": [
+        375,
+        667
+      ],
+      "hero_height": 667.3334,
+      "client": 360,
+      "scroll": 360,
+      "tabs_bottom": 597.3334,
+      "quick_nav_top": 609.3334
+    }
+  ],
+  "interactions": [
+    "Jaringan filter -> 1/4",
+    "Enter on FAQ -> expanded=true",
+    "Visible hero thumbnails on final mobile build"
+  ],
+  "screenshots": {
+    "qa/bootstrap/landing-spacing-desktop.png": "2f63048a1f276d643cfc01f2d0819d0c992bccca17c9270791a33dc6354ae3f3",
+    "qa/bootstrap/landing-spacing-mobile.png": "70ae92b73ec31c6dcbb184b6dfddda7a375ba7bbb2112df7dcfee21f69799b01",
+    "qa/bootstrap/landing-spacing-faq-mobile.png": "e3ee21e408ec663efa245a568bcfebfd15cb2c4934744c8e67334d396cf95cc7",
+    "qa/bootstrap/landing-spacing-hero-mobile.png": "73bc106d17364516d974e8e52ef7d653b86b9574dbcc05776a9bf6d8dd864b0a",
+    "qa/bootstrap/landing-spacing-access-desktop.png": "a93ba498fce10488aedbfbc02f12cdba33b161a21f0f63c03ee2a1388937ab06"
+  },
+  "limits": "Representative UI checks. UAT not run."
+}

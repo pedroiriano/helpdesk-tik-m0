@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Tiket layanan ¬∑ Helpdesk TIK</title>
+  <meta name="description" content="Manajemen akun administrator, matriks kontrol akses berbasis peran (RBAC), status MFA, dan penyamaran data PII PIUI Zero.">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta property="og:title" content="Manajemen Pengguna &amp; RBAC ‚?? PIUI Zero Admin">
+  <meta property="og:description" content="Modul internal manajemen identitas dan hak akses PIUI Zero.">
+  <meta property="og:type" content="website">
+  <link rel="manifest" href="/admin/manifest.webmanifest">
+  <link rel="stylesheet" href="/admin/assets/css/main.css?v=2.2.2">
+  <script type="module" src="/admin/assets/js/app.js?v=2.2.2"></script>
+<link rel="icon" type="image/png" href="/assets/helpdesk/05_Brand/logo-favicon.png"><link rel="apple-touch-icon" href="/assets/helpdesk/05_Brand/logo-pastel-mark.png">
+<link rel="stylesheet" href="/helpdesk/business.css"><script type="module" src="/helpdesk/m0-03.js"></script><script type="module" src="/helpdesk/m0-04.js"></script></head>
+<body>
+  <a class="piui-skip-link" href="#main-content">Langsung ke konten utama</a>
+  <div id="piui-live-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="piui-app-shell" data-sidebar="expanded">
+    <!-- TOPBAR GLOBAL -->
+    <header class="piui-topbar">
+      <div class="piui-topbar__start">
+        <button type="button" class="piui-icon-btn" id="btn-sidebar-toggle"
+                aria-label="Buka atau ciutkan panel navigasi" aria-expanded="true" aria-controls="piui-sidebar">
+          <svg width="20" height="20" aria-hidden="true"><use href="/admin/assets/icons/piui-sprite.svg#icon-menu"></use></svg>
+        </button>
+        <a href="/admin/app/dashboard/index.html" class="piui-brand"><img class="piui-brand__mark" src="/assets/helpdesk/05_Brand/logo-pastel-mark.png" alt="" width="32" height="32"><span class="piui-brand__name">Helpdesk TIK Kota Depok</span><span class="piui-badge piui-badge--env" title="Lingkungan demo lokal">DEMO</span></a>
+      </div>
+
+      <div class="piui-topbar__end">
+        <button type="button" class="piui-cmd-trigger" id="btn-open-cmd"
+                aria-label="Buka pencarian cepat dan palet perintah (Ctrl+K)">
+          <svg width="18" height="18" aria-hidden="true"><use href="/admin/assets/icons/piui-sprite.svg#icon-search"></use></svg>
+          <span class="piui-cmd-trigger__label">Cari rute, audit ID, perintah...</span>
+          <kbd class="piui-cmd-trigger__kbd">Ctrl+K</kbd>
+        </button>
+
+        <button type="button" class="piui-icon-btn" id="btn-theme-toggle"
+                aria-label="Ganti tema terang atau gelap">
+          <svg width="20" height="20" aria-hidden="true"><use href="/admin/assets/icons/piui-sprite.svg#icon-theme"></use></svg>
+        </button>
+
+        <button type="button" class="piui-icon-btn" popovertarget="popover-profile"
+                aria-label="Buka menu profil dan sesi administrator">
+          <svg width="20" height="20" aria-hidden="true"><use href="/admin/assets/icons/piui-sprite.svg#icon-user"></use></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- POPOVER PROFIL -->
+    <div id="popover-profile" popover="auto" class="piui-popover" role="region" aria-label="Informasi Sesi Administrator">
+      <div class="piui-field">
+        <strong>Memeriksa sesi</strong>
+        <span class="piui-page-subtitle">Sesi ditentukan server</span>
+        <span class="piui-badge" data-status="success">Mode prototipe</span>
+      </div>
+      <hr>
+      <div class="piui-page-actions">
+        <a href="/admin/app/dashboard/index.html" class="piui-btn piui-btn--secondary piui-btn--sm">Portal Dokumentasi</a>
+        <button type="button" class="piui-btn piui-btn--danger piui-btn--sm" data-hd-logout>
+          <svg width="16" height="16" aria-hidden="true"><use href="/admin/assets/icons/piui-sprite.svg#icon-logout"></use></svg>
+          <span>Akhiri Sesi (Logout)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- SIDEBAR NAVIGASI -->
+    <aside class="piui-sidebar" id="piui-sidebar" aria-label="Navigasi Modul Admin">
+      <nav aria-label="Navigasi Utama">
+        <div class="piui-sidebar__group-label">Pelayanan &amp; Tiket</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/admin/app/dashboard/index.html" class="piui-nav-link" title="Dashboard Helpdesk TIK Kota Depok">
+              <svg width="20" height="20" aria-hidden="true"><use href="/admin/assets/icons/piui-sprite.svg#icon-dashboard"></use></svg>
+              <span class="piui-nav-link__text">Beranda Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="/admin/app/tickets/index.html" class="piui-nav-link" aria-current="page" title="Buka Antrean Tiket Petugas">
+              <svg width="20" height="20" aria-hidden="true"><use href="/admin/assets/icons/piui-sprite.svg#icon-transactions"></use></svg>
+              <span class="piui-nav-link__text">Antrean Tiket Petugas</span>
+            </a>
+          </li>
+        </ul>
+        <div class="piui-sidebar__group-label">Layanan &amp; Portal SPBE</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/admin/app/helpdesk/index.html?kind=services" class="piui-nav-link" title="Katalog 16 Layanan Resmi TIK Diskominfo">
+              <svg width="20" height="20" aria-hidden="true"><use href="/admin/assets/icons/piui-sprite.svg#icon-components"></use></svg>
+              <span class="piui-nav-link__text">Master 16 Layanan TIK</span>
+            </a>
+          </li>
+          <li>
+            <a href="/admin/app/helpdesk/index.html?kind=navigation" class="piui-nav-link" title="Pengelolaan Menu Portal &amp; Panduan M8">
+              <svg width="20" height="20" aria-hidden="true"><use href="/admin/assets/icons/piui-sprite.svg#icon-gallery"></use></svg>
+              <span class="piui-nav-link__text">Pengelolaan Portal (M8/M2)</span>
+            </a>
+          </li>
+          <li>
+            <a href="/admin/app/helpdesk/index.html?kind=media" class="piui-nav-link" title="Pustaka Media Terpadu Dua Owner M3/M8">
+              <svg width="20" height="20" aria-hidden="true"><use href="/admin/assets/icons/piui-sprite.svg#icon-gallery"></use></svg>
+              <span class="piui-nav-link__text">Pustaka Media (M3/M8)</span>
+            </a>
+          </li>
+        </ul>
+        <div class="piui-sidebar__group-label">Akun &amp; Organisasi (M1)</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/admin/app/helpdesk/index.html?kind=memberships" class="piui-nav-link" title="Pengelolaan Akun Pengguna, Role &amp; Izin">
+              <svg width="20" height="20" aria-hidden="true"><use href="/admin/assets/icons/piui-sprite.svg#icon-users"></use></svg>
+              <span class="piui-nav-link__text">Pengelolaan Akun &amp; Akses</span>
+            </a>
+          </li>
+          <li>
+            <a href="/admin/app/helpdesk/index.html?kind=teams" class="piui-nav-link" title="Tim Teknis &amp; Roster Penanganan">
+              <svg width="20" height="20" aria-hidden="true"><use href="/admin/assets/icons/piui-sprite.svg#icon-users"></use></svg>
+              <span class="piui-nav-link__text">Tim Teknis &amp; Roster</span>
+            </a>
+          </li>
+        </ul>
+        <div class="piui-sidebar__group-label">Kinerja &amp; Komunikasi (M9)</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/admin/app/helpdesk/index.html?kind=reports" class="piui-nav-link" title="Laporan Kinerja SLA &amp; Ekspor Data">
+              <svg width="20" height="20" aria-hidden="true"><use href="/admin/assets/icons/piui-sprite.svg#icon-analytics"></use></svg>
+              <span class="piui-nav-link__text">Laporan Kinerja SLA</span>
+            </a>
+          </li>
+          <li>
+            <a href="/admin/app/helpdesk/index.html?kind=notifications" class="piui-nav-link" title="Pusat Notifikasi &amp; Integrasi Telegram Bot">
+              <svg width="20" height="20" aria-hidden="true"><use href="/admin/assets/icons/piui-sprite.svg#icon-bell"></use></svg>
+              <span class="piui-nav-link__text">Pusat Notifikasi &amp; Bot</span>
+            </a>
+          </li>
+        </ul>
+        <div class="piui-sidebar__group-label">Audit &amp; Pemeliharaan</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/admin/app/helpdesk/index.html?kind=audit" class="piui-nav-link" title="Jejak Audit Append-Only Terlindungi">
+              <svg width="20" height="20" aria-hidden="true"><use href="/admin/assets/icons/piui-sprite.svg#icon-audit"></use></svg>
+              <span class="piui-nav-link__text">Jejak Audit (M9)</span>
+            </a>
+          </li>
+          <li>
+            <a href="/admin/app/helpdesk/index.html?kind=maintenance" class="piui-nav-link" title="Mode Pemeliharaan &amp; Scoped Runner">
+              <svg width="20" height="20" aria-hidden="true"><use href="/admin/assets/icons/piui-sprite.svg#icon-settings"></use></svg>
+              <span class="piui-nav-link__text">Pemeliharaan Sistem (M11)</span>
+            </a>
+          </li>
+        </ul>
+        <div class="piui-sidebar__group-label">Tautan Eksternal &amp; Portal</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/status.html" class="piui-nav-link" title="Status Layanan SPBE">
+              <svg width="20" height="20" aria-hidden="true"><use href="/admin/assets/icons/piui-sprite.svg#icon-status"></use></svg>
+              <span class="piui-nav-link__text">Status Layanan SPBE</span>
+            </a>
+          </li>
+          <li>
+            <a href="/" class="piui-nav-link" title="Buka Portal Publik">
+              <svg width="20" height="20" aria-hidden="true"><use href="/admin/assets/icons/piui-sprite.svg#icon-info"></use></svg>
+              <span class="piui-nav-link__text">Portal Publik</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- OFF-CANVAS MOBILE DRAWER -->
+    <dialog id="piui-mobile-drawer" class="piui-drawer-mobile" aria-labelledby="mobile-drawer-title">
+      <div class="piui-dialog__header">
+        <strong id="mobile-drawer-title">Menu Navigasi PIUI Zero</strong>
+        <button type="button" class="piui-icon-btn" id="btn-close-mobile-drawer" aria-label="Tutup menu navigasi">
+          <svg width="20" height="20" aria-hidden="true"><use href="/admin/assets/icons/piui-sprite.svg#icon-close"></use></svg>
+        </button>
+      </div>
+      <nav aria-label="Navigasi Mobile">
+        <ul class="piui-nav-list">
+          <li><a href="/admin/app/dashboard/index.html" class="piui-nav-link">Beranda Dashboard</a></li>
+          <li><a href="/admin/app/tickets/index.html" class="piui-nav-link" aria-current="page">Antrean Tiket Petugas</a></li>
+          <li><a href="/admin/app/helpdesk/index.html?kind=services" class="piui-nav-link">Master 16 Layanan TIK</a></li>
+          <li><a href="/admin/app/helpdesk/index.html?kind=navigation" class="piui-nav-link">Pengelolaan Portal (M8/M2)</a></li>
+          <li><a href="/admin/app/helpdesk/index.html?kind=media" class="piui-nav-link">Pustaka Media (M3/M8)</a></li>
+          <li><a href="/admin/app/helpdesk/index.html?kind=memberships" class="piui-nav-link">Pengelolaan Akun &amp; Akses (M1)</a></li>
+          <li><a href="/admin/app/helpdesk/index.html?kind=teams" class="piui-nav-link">Tim Teknis &amp; Roster</a></li>
+          <li><a href="/admin/app/helpdesk/index.html?kind=reports" class="piui-nav-link">Laporan Kinerja SLA (M9)</a></li>
+          <li><a href="/admin/app/helpdesk/index.html?kind=notifications" class="piui-nav-link">Pusat Notifikasi &amp; Telegram</a></li>
+          <li><a href="/admin/app/helpdesk/index.html?kind=audit" class="piui-nav-link">Jejak Audit (M9)</a></li>
+          <li><a href="/admin/app/helpdesk/index.html?kind=maintenance" class="piui-nav-link">Pemeliharaan Sistem (M11)</a></li>
+          <li><a href="/status.html" class="piui-nav-link">Status Layanan SPBE</a></li>
+          <li><a href="/" class="piui-nav-link">Portal Publik</a></li>
+          <li><a href="/admin/auth/login.html" class="piui-nav-link">Masuk Lab Petugas</a></li>
+        </ul>
+      </nav>
+    </dialog>
+
+    <!-- AREA KERJA UTAMA -->
+    <main id="main-content" class="piui-main" data-ticket-page="list"><section class="vy-leaf-banner"><p class="court-badge">Helpdesk TIK Kota Depok</p><h1 class="vy-leaf-head">Tiket layanan</h1><p>Data dan tindakan mengikuti izin server. Verifikasi, disposisi teknisi, dan pelacakan tiket aktif.</p></section><nav class="hd-actions hd-ticket-nav" aria-label="Navigasi tiket"><a class="piui-btn piui-btn--secondary hd-btn-nav" href="/layanan.html"><span class="hd-btn-icon">???</span> Katalog Layanan</a><a class="piui-btn piui-btn--secondary hd-btn-nav" href="/tiket.html"><span class="hd-btn-icon">???</span> Daftar Tiket</a><a class="piui-btn piui-btn--secondary hd-btn-nav" href="/lacak.html"><span class="hd-btn-icon">??ç</span> Lacak Tiket Tamu</a><a class="piui-btn piui-btn--secondary hd-btn-nav" href="/akses.html"><span class="hd-btn-icon">??ê</span> Masuk SSO ASN</a></nav><p data-ticket-status role="status" tabindex="-1">Memuat data layanan‚?¶</p><div class="hd-actions hd-queue-filters" data-queue-filters hidden style="margin-bottom:14px;gap:8px;flex-wrap:wrap;"><button class="piui-btn piui-btn--secondary hd-btn-filter is-active" data-queue-filter="all"><span class="hd-btn-icon">??Å</span> Semua Tiket</button><button class="piui-btn piui-btn--secondary hd-btn-filter" data-queue-filter="verification"><span class="hd-btn-icon">??ç</span> Antrean Verifikasi (Operator)</button><button class="piui-btn piui-btn--secondary hd-btn-filter" data-queue-filter="dispatch"><span class="hd-btn-icon">??∑</span> Antrean Disposisi (Pimpinan / Koordinator)</button><button class="piui-btn piui-btn--secondary hd-btn-filter" data-queue-filter="my-tasks"><span class="hd-btn-icon">??†Ô∏è</span> Tugas Saya (Teknisi)</button></div><div data-queue-role-guide style="margin-bottom:14px;padding:12px 16px;border-radius:6px;background:#f8f9fa;border:1px solid #dee2e6;font-size:13px;line-height:1.5;color:#495057;"><strong style="display:block;margin-bottom:4px;color:#212529;">Panduan Antrean Berdasarkan Peran:</strong><span data-queue-guide-text>Pilih filter di atas sesuai peran: Operator menelaah tiket baru (Verifikasi), Pimpinan mendisposisikan tiket terverifikasi ke teknisi (Disposisi), dan Teknisi menangani tiket penugasan (Tugas Saya).</span></div><div data-ticket-list class="hd-catalog"></div><nav class="hd-actions hd-pager-nav" aria-label="Halaman tiket"><button class="piui-btn piui-btn--secondary hd-btn-pager" data-ticket-prev="tiket" disabled><span aria-hidden="true">‚?ê</span> Sebelumnya</button><button class="piui-btn piui-btn--secondary hd-btn-pager" data-ticket-next="tiket" disabled>Berikutnya <span aria-hidden="true">‚??</span></button></nav></main>
+
+    <!-- FOOTER OPERASIONAL -->
+    <footer class="piui-footer" aria-label="Footer Operasional Helpdesk TIK Kota Depok">
+      <div class="hd-admin-footer-top">
+        <ul class="piui-footer__links">
+          <li><a href="/admin/app/dashboard/index.html"><span class="hd-btn-icon" aria-hidden="true">???</span> Pusat Komando</a></li>
+          <li><a href="/admin/app/tickets/index.html"><span class="hd-btn-icon" aria-hidden="true">??´</span> Antrean Tiket Petugas</a></li>
+          <li><a href="/admin/app/helpdesk/index.html?kind=audit"><span class="hd-btn-icon" aria-hidden="true">??ç</span> Jejak Audit (M9)</a></li>
+          <li><a href="/status.html"><span class="hd-btn-icon" aria-hidden="true">‚?°</span> Status Layanan SPBE</a></li>
+          <li><a href="/panduan.html"><span class="hd-btn-icon" aria-hidden="true">???</span> Basis Pengetahuan SPBE</a></li>
+        </ul>
+        <div class="hd-admin-footer-action">
+          <a class="piui-btn piui-btn--secondary piui-btn--sm hd-admin-footer-btn" href="/" target="_blank" rel="noopener">
+            <span class="hd-btn-icon" aria-hidden="true">??ê</span> Portal Publik <span class="hd-btn-arrow" aria-hidden="true">&rarr;</span>
+          </a>
+        </div>
+      </div>
+      <div class="hd-admin-footer-sep" aria-hidden="true"></div>
+      <div class="hd-admin-footer-bottom">
+        <div class="hd-admin-footer-credit">
+          <p class="piui-product-credit">
+            <span class="piui-product-signature">
+              <img class="piui-brand__mark" src="/assets/helpdesk/05_Brand/logo-pastel-mark.png" alt="Lambang Resmi Kota Depok" width="24" height="24">
+              <strong style="color:var(--piui-text-primary,#fafafa);">Helpdesk TIK Kota Depok</strong>
+            </span>
+            &middot; Diskominfo Kota Depok &middot; Pemerintah Kota Depok &middot; &copy; 2026 &middot; <a href="/status.html">Status Layanan SPBE</a>
+          </p>
+        </div>
+        <div class="hd-admin-footer-status-slot" id="hd-admin-offline-slot"></div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- DIALOG 1: COMMAND PALETTE -->
+  <dialog id="piui-cmd-palette" class="piui-dialog" aria-labelledby="cmd-palette-title">
+    <div class="piui-dialog__header">
+      <strong id="cmd-palette-title">Palet Perintah &amp; Navigasi Cepat (Ctrl+K)</strong>
+      <button type="button" class="piui-icon-btn" id="btn-close-cmd" aria-label="Tutup palet perintah (Escape)">
+        <svg width="18" height="18" aria-hidden="true"><use href="/admin/assets/icons/piui-sprite.svg#icon-close"></use></svg>
+      </button>
+    </div>
+    <div class="piui-dialog__body">
+      <div class="piui-field">
+        <label for="cmd-search-input" class="piui-field__label">Ketik nama halaman, modul, atau aksi cepat</label>
+        <input type="search" name="cmd-search-input" id="cmd-search-input" class="piui-input"
+               role="combobox" aria-expanded="true" aria-controls="cmd-results-list"
+               autocomplete="off" spellcheck="false"
+               placeholder="Contoh: Pengguna, Transaksi, Audit, Tema Gelap...">
+      </div>
+      <ul id="cmd-results-list" class="piui-cmd-list" role="listbox" aria-label="Daftar perintah yang tersedia"></ul>
+      <p id="cmd-empty-state" class="piui-page-subtitle" hidden>Tidak ada perintah yang cocok dengan kata kunci tersebut.</p>
+    </div>
+  </dialog>
+
+  <!-- DIALOG 2: KONFIRMASI PENCABUTAN AKSES DARURAT -->
+  <dialog id="dialog-revoke-user" class="piui-dialog" aria-labelledby="revoke-user-title" aria-describedby="revoke-user-desc">
+    <form method="dialog" data-confirm-phrase="CABUT-AKSES">
+      <div class="piui-dialog__header">
+        <strong id="revoke-user-title">Konfirmasi Pencabutan Hak Akses &amp; Token Sesi</strong>
+        <span class="piui-badge" data-status="danger">Aksi Destruktif</span>
+      </div>
+      <div class="piui-dialog__body">
+        <p id="revoke-user-desc">
+          Form ini meninjau rencana pencabutan akses. Pembatalan sesi, kunci WebAuthn dan penyimpanan audit memerlukan integrasi server.
+        </p>
+        <div class="piui-field">
+          <label for="revoke-reason-input" class="piui-field__label">Alasan Audit &amp; Referensi Tiket SOC (Wajib, min. 8 karakter)</label>
+          <textarea name="revoke-reason-input" id="revoke-reason-input" class="piui-textarea" rows="3" required minlength="8" data-reason-input
+                    placeholder="Contoh: SOC-2026-4412 Rotasi darurat kredensial dikarenakan mutasi divisi..."></textarea>
+        </div>
+        <div class="piui-field">
+          <label for="revoke-phrase-input" class="piui-field__label">Ketik ulang frasa <code>CABUT-AKSES</code> untuk mengonfirmasi</label>
+          <input type="text" name="revoke-phrase-input" id="revoke-phrase-input" class="piui-input text-mono" required autocomplete="off" data-phrase-input
+                 placeholder="CABUT-AKSES">
+        </div>
+      </div>
+      <div class="piui-dialog__footer">
+        <button type="button" class="piui-btn piui-btn--secondary" data-close-dialog>Batalkan</button>
+        <button type="submit" class="piui-btn piui-btn--danger" disabled>Eksekusi Pencabutan Akses</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- DIALOG 3: FORM ISIAN TAMBAH / EDIT PENGGUNA (SLIDE-OVER MODAL SISI KANAN) -->
+  <dialog id="dialog-user-form" class="piui-dialog" aria-labelledby="user-form-title">
+    <form data-settings-form action="/admin/app/users/index.html" method="dialog">
+      <div class="piui-dialog__header">
+        <div>
+          <strong id="user-form-title">Form Registrasi Identitas &amp; RBAC</strong>
+          <div class="piui-page-subtitle">Otorisasi Direktori IAM Internal</div>
+        </div>
+        <button type="button" class="piui-icon-btn" data-close-dialog aria-label="Tutup form pengguna">
+          <svg width="18" height="18" aria-hidden="true"><use href="/admin/assets/icons/piui-sprite.svg#icon-close"></use></svg>
+        </button>
+      </div>
+      <div class="piui-dialog__body">
+        <div class="piui-field">
+          <label for="new-user-name" class="piui-field__label">Nama Lengkap Administrator (Wajib)</label>
+          <input type="text" id="new-user-name" name="fullName" class="piui-input" required placeholder="Contoh: Pratama Putra">
+        </div>
+        <div class="piui-field">
+          <label for="new-user-email" class="piui-field__label">Email Korporat Internal (Wajib)</label>
+          <input type="email" id="new-user-email" name="email" class="piui-input" required placeholder="pratama.sec@piui-zero.internal">
+        </div>
+        <div class="piui-field">
+          <label for="new-user-role" class="piui-field__label">Peran Otorisasi RBAC</label>
+          <select id="new-user-role" name="role" class="piui-select">
+            <option value="appsec">AppSec Lead</option>
+            <option value="finops">FinOps Supervisor</option>
+            <option value="auditor">Compliance Auditor</option>
+            <option value="sre">Platform SRE</option>
+          </select>
+        </div>
+        <div class="piui-field">
+          <label for="new-user-mfa" class="piui-field__label">Kebijakan Kunci MFA</label>
+          <select id="new-user-mfa" name="mfaPolicy" class="piui-select">
+            <option value="fido2">Wajib FIDO2 Hardware Security Key (AAL3)</option>
+            <option value="passkey">Passkey Biometrik Korporat</option>
+          </select>
+        </div>
+      </div>
+      <div class="piui-dialog__footer">
+        <button type="button" class="piui-btn piui-btn--secondary" data-close-dialog>Batalkan</button>
+        <button type="submit" class="piui-btn piui-btn--primary">Simpan &amp; Aktifkan Akun</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="piui-toast-region" class="piui-toast-region" aria-live="polite"></div>
+
+  <template id="tpl-cmd-item">
+    <li class="piui-cmd-item" role="option" tabindex="-1">
+      <div>
+        <strong data-cmd-title></strong>
+        <div class="piui-page-subtitle" data-cmd-category></div>
+      </div>
+      <kbd class="piui-cmd-trigger__kbd text-mono" data-cmd-shortcut></kbd>
+    </li>
+  </template>
+
+  <template id="tpl-toast">
+    <div class="piui-toast" role="status">
+      <span data-toast-text></span>
+      <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-toast-close>Tutup</button>
+    </div>
+  </template>
+</body>
+</html>
+

@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Galeri Media Gambar &amp; Video — PIUI Zero Admin</title>
+  <meta name="description" content="Galeri gambar dan video bergaya Masonry dengan fitur Dropzone unggah berkas, validasi ukuran dan tipe MIME ketat, serta pratinjau Lightbox (Lighthouse) layar penuh.">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta property="og:title" content="Galeri Media Gambar &amp; Video — PIUI Zero Admin">
+  <meta property="og:description" content="Galeri media arsitektur dan bukti forensik PIUI Zero dengan Masonry Grid, Dropzone, dan Lightbox.">
+  <meta property="og:type" content="website">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="stylesheet" href="/assets/css/main.css?v=2.2.2">
+  <script type="module" src="/assets/js/app.js?v=2.2.2"></script>
+<link rel="icon" href="/assets/icons/favicon.ico?v=2.2.2" sizes="16x16 32x32 48x48"><link rel="icon" href="/assets/icons/piui-favicon.svg?v=2.2.2" type="image/svg+xml" sizes="any"><link rel="apple-touch-icon" href="/assets/icons/piui-180.png?v=2.2.2" sizes="180x180">
+</head>
+<body>
+  <a class="piui-skip-link" href="#main-content">Langsung ke konten utama</a>
+  <div id="piui-live-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="piui-app-shell" data-sidebar="expanded" id="piui-dashboard-workspace">
+    <!-- TOPBAR -->
+    <header class="piui-topbar">
+      <div class="piui-topbar__start">
+        <button type="button" class="piui-icon-btn" id="btn-sidebar-toggle"
+                aria-label="Buka atau ciutkan panel navigasi" aria-expanded="true" aria-controls="piui-sidebar">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-menu"></use></svg>
+        </button>
+        <a href="/app/dashboard/index.html" class="piui-brand"><img class="piui-brand__mark" src="/assets/icons/piui-mark.svg" alt="" width="32" height="32"><span class="piui-brand__name">PIUI Zero™</span><span class="piui-badge piui-badge--env" title="Lingkungan demo lokal">DEMO</span></a>
+      </div>
+
+      <div class="piui-topbar__end">
+        <button type="button" class="piui-cmd-trigger" id="btn-open-cmd"
+                aria-label="Buka pencarian cepat dan palet perintah (Ctrl+K)">
+          <svg width="18" height="18" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-search"></use></svg>
+          <span class="piui-cmd-trigger__label">Cari rute, media, perintah...</span>
+          <kbd class="piui-cmd-trigger__kbd">Ctrl+K</kbd>
+        </button>
+        <button type="button" class="piui-icon-btn" id="btn-theme-toggle" aria-label="Ganti tema terang atau gelap">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-theme"></use></svg>
+        </button>
+        <button type="button" class="piui-icon-btn" popovertarget="popover-profile" aria-label="Buka menu profil dan sesi administrator">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-user"></use></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- POPOVER PROFIL -->
+    <div id="popover-profile" popover="auto" class="piui-popover" role="region" aria-label="Informasi Sesi Administrator">
+      <div class="piui-field">
+        <strong>budi.sec@piui-zero.internal</strong>
+        <span class="piui-page-subtitle">Peran: Super Admin &amp; AppSec Lead</span>
+        <span class="piui-badge" data-status="success">Mode prototipe</span>
+      </div>
+      <hr>
+      <div class="piui-page-actions">
+        <a href="/index.html" class="piui-btn piui-btn--secondary piui-btn--sm">Portal Dokumentasi</a>
+        <button type="button" class="piui-btn piui-btn--danger piui-btn--sm" id="btn-session-logout">
+          <svg width="16" height="16" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-logout"></use></svg>
+          <span>Akhiri Sesi (Logout)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="piui-sidebar" id="piui-sidebar" aria-label="Navigasi Modul Admin">
+      <nav aria-label="Navigasi Utama">
+        <div class="piui-sidebar__group-label">Menu Utama</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/app/dashboard/index.html" class="piui-nav-link" title="Beranda Dashboard Utama">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-dashboard"></use></svg>
+              <span class="piui-nav-link__text">Beranda Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/analytics/index.html" class="piui-nav-link" title="Analitik &amp; Grafik Kinerja">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-analytics"></use></svg>
+              <span class="piui-nav-link__text">Analitik &amp; Grafik</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/notifications/index.html" class="piui-nav-link" title="Pusat Notifikasi &amp; Peringatan">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-bell"></use></svg>
+              <span class="piui-nav-link__text">Pusat Notifikasi</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="piui-sidebar__group-label">Kelola Data &amp; Media</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/app/users/index.html" class="piui-nav-link" title="Kelola Data Pengguna &amp; Hak Akses">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-users"></use></svg>
+              <span class="piui-nav-link__text">Data Pengguna</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/transactions/index.html" class="piui-nav-link" title="Kelola Data Transaksi Keuangan">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-transactions"></use></svg>
+              <span class="piui-nav-link__text">Data Transaksi</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/gallery/index.html" class="piui-nav-link" aria-current="page" title="Galeri Foto &amp; Video (Masonry &amp; Lightbox)">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-gallery"></use></svg>
+              <span class="piui-nav-link__text">Galeri Foto &amp; Video</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="piui-sidebar__group-label">Komponen &amp; Tampilan</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/app/components/index.html" class="piui-nav-link" title="Katalog Komponen UI/UX (UI Kit)">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-components"></use></svg>
+              <span class="piui-nav-link__text">Katalog Komponen</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="piui-sidebar__group-label">Sistem &amp; Keamanan</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/app/audit/index.html" class="piui-nav-link" title="Riwayat Aktivitas &amp; Log Audit">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-audit"></use></svg>
+              <span class="piui-nav-link__text">Riwayat Aktivitas</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/settings/index.html" class="piui-nav-link" title="Pengaturan Sistem &amp; Keamanan">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-settings"></use></svg>
+              <span class="piui-nav-link__text">Pengaturan Sistem</span>
+            </a>
+          </li>
+          <li>
+            <a href="/status/index.html" class="piui-nav-link" title="Status Server &amp; Layanan">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-status"></use></svg>
+              <span class="piui-nav-link__text">Status Server</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html" class="piui-nav-link" title="Panduan &amp; Dokumentasi Sistem">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-info"></use></svg>
+              <span class="piui-nav-link__text">Panduan &amp; Dokumentasi</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- MOBILE DRAWER -->
+    <dialog id="piui-mobile-drawer" class="piui-drawer-mobile" aria-labelledby="mobile-drawer-title">
+      <div class="piui-dialog__header">
+        <strong id="mobile-drawer-title">Menu Navigasi PIUI Zero</strong>
+        <button type="button" class="piui-icon-btn" id="btn-close-mobile-drawer" aria-label="Tutup menu navigasi">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-close"></use></svg>
+        </button>
+      </div>
+      <nav aria-label="Navigasi Mobile">
+        <ul class="piui-nav-list">
+          <li><a href="/app/dashboard/index.html" class="piui-nav-link">Beranda Dashboard</a></li>
+          <li><a href="/app/analytics/index.html" class="piui-nav-link">Analitik &amp; Grafik</a></li>
+          <li><a href="/app/users/index.html" class="piui-nav-link">Data Pengguna</a></li>
+          <li><a href="/app/transactions/index.html" class="piui-nav-link">Data Transaksi</a></li>
+          <li><a href="/app/gallery/index.html" class="piui-nav-link" aria-current="page">Galeri Foto &amp; Video</a></li>
+          <li><a href="/app/components/index.html" class="piui-nav-link">Katalog Komponen (UI Kit)</a></li>
+          <li><a href="/app/audit/index.html" class="piui-nav-link">Riwayat Aktivitas (Audit)</a></li>
+          <li><a href="/app/settings/index.html" class="piui-nav-link">Pengaturan Sistem</a></li>
+          <li><a href="/status/index.html" class="piui-nav-link">Status Server</a></li>
+          <li><a href="/index.html" class="piui-nav-link">Panduan &amp; Dokumentasi</a></li>
+          <li><a href="/auth/login.html" class="piui-nav-link">Masuk Akun Admin</a></li>
+        </ul>
+      </nav>
+    </dialog>
+
+    <!-- AREA KERJA UTAMA -->
+    <main id="main-content" class="piui-main">
+      <nav aria-label="Breadcrumb" class="piui-breadcrumb">
+        <ol>
+          <li><a href="/app/dashboard/index.html">Beranda Dashboard</a></li>
+          <li>Kelola Data &amp; Media</li>
+          <li aria-current="page">Galeri Foto &amp; Video</li>
+        </ol>
+      </nav>
+
+      <div class="piui-page-header">
+        <div class="piui-page-header__titles">
+          <h1 class="piui-page-title">Galeri Foto &amp; Video</h1>
+          <p class="piui-page-subtitle">Unggah Foto/Video dengan Tarik-Lepas (Dropzone), Pemeriksaan Ukuran File Otomatis, &amp; Tampilan Layar Penuh</p>
+        </div>
+        <div class="piui-page-actions">
+          
+          
+          
+          <button type="button" class="piui-btn piui-btn--primary" data-dialog-open="dialog-upload-media">
+            <svg width="16" height="16" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-upload"></use></svg>
+            <span>Unggah Media Baru</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 4 KPI GALERI MEDIA -->
+      <section aria-label="Ringkasan Repositori Media" class="piui-kpi-grid">
+        <article class="piui-card">
+          <div class="piui-card__header">
+            <h2 class="piui-card__title">Total Aset Media</h2>
+            <span class="piui-badge" data-status="success">Koleksi contoh lokal</span>
+          </div>
+          <div class="piui-card__value tabular-nums">6 Berkas</div>
+          <p class="piui-card__meta" id="gallery-count-badge">Menampilkan 6 dari 6 berkas media</p>
+        </article>
+
+        <article class="piui-card">
+          <div class="piui-card__header">
+            <h2 class="piui-card__title">Format Diizinkan</h2>
+            <span class="piui-badge" data-status="info">Allowlist MIME</span>
+          </div>
+          <div class="piui-card__value text-mono">IMG &amp; VID</div>
+          <p class="piui-card__meta">PNG, JPG, WEBP, SVG, MP4, WEBM</p>
+        </article>
+
+        <article class="piui-card">
+          <div class="piui-card__header">
+            <h2 class="piui-card__title">Batas Ukuran Maksimal</h2>
+            <span class="piui-badge" data-status="warning">Kuota Ketat</span>
+          </div>
+          <div class="piui-card__value tabular-nums">2 – 25 MB</div>
+          <p class="piui-card__meta">Dapat disesuaikan langsung pada filter</p>
+        </article>
+
+        <article class="piui-card">
+          <div class="piui-card__header">
+            <h2 class="piui-card__title">Mode Tampilan</h2>
+            <span class="piui-badge" data-status="success">Card · Masonry · Grid</span>
+          </div>
+          <div class="piui-card__value">1–4 Kolom</div>
+          <p class="piui-card__meta">Navigasi Keyboard Panah Kiri/Kanan</p>
+        </article>
+      </section>
+
+      <!-- DROPZONE INTERAKTIF & VALIDATOR BERKAS -->
+      <section aria-labelledby="heading-dropzone" class="piui-panel">
+        <div class="piui-panel__header">
+          <div>
+            <h2 id="heading-dropzone" class="piui-card__title">Dropzone Unggah Cepat &amp; Mesin Validasi Berkas (Ukuran + Tipe MIME)</h2>
+            <p class="piui-page-subtitle">Tarik dan lepaskan (Drag &amp; Drop) gambar atau video ke area di bawah, atau klik untuk memilih berkas dari perangkat Anda.</p>
+          </div>
+          <span class="piui-badge" data-status="info">Zero-Trust File Validator</span>
+        </div>
+
+        <div class="piui-dropzone" data-piui-dropzone role="button" tabindex="0" aria-label="Area Dropzone unggah gambar dan video">
+          <div class="piui-dropzone__icon">
+            <svg width="26" height="26" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-upload"></use></svg>
+          </div>
+          <div class="piui-dropzone__title">Tarik &amp; Lepaskan Gambar atau Video ke Sini, atau Klik untuk Memilih Berkas</div>
+          <p class="piui-dropzone__hint">
+            Tipe MIME yang diizinkan: <strong>image/png, image/jpeg, image/webp, image/svg+xml, video/mp4, video/webm</strong>.<br>
+            Berkas di luar daftar MIME atau melebihi batas ukuran MB yang dipilih akan langsung ditolak dan dicatat pada tabel log validasi.
+          </p>
+          <label for="gallery-file-input" class="piui-btn piui-btn--secondary piui-btn--sm">Pilih Berkas dari Perangkat</label>
+          <input type="file" name="gallery-file-input" id="gallery-file-input" data-dropzone-input multiple
+                 accept="image/png,image/jpeg,image/webp,image/svg+xml,video/mp4,video/webm" class="sr-only">
+        </div>
+      </section>
+
+      <!-- FILTER BAR (DENGAN SELECT2 COMBOBOX) & MASONRY GRID -->
+      <section aria-labelledby="heading-masonry" class="piui-panel" data-collection-scope>
+        <div class="piui-panel__header">
+          <div>
+            <h2 id="heading-masonry" class="piui-card__title">Koleksi Visual &amp; Pratinjau Media</h2>
+            <p class="piui-page-subtitle">Klik pada kartu gambar/video untuk membuka mode Lightbox layar penuh dengan navigasi Sebelumnya/Berikutnya.</p>
+          </div>
+          <span class="piui-badge" data-status="info" data-collection-label>Masonry</span>
+        </div>
+
+        <div class="piui-filter-bar">
+          <div class="piui-filter-bar__search">
+            <label for="gallery-search-input" class="piui-field__label">Cari Judul, Kode Media, atau Tipe MIME</label>
+            <input type="search" name="gallery-search-input" id="gallery-search-input" class="piui-input"
+                   placeholder="Ketik mis. Topologi, WAF, HSM, video/mp4...">
+          </div>
+
+          <div class="piui-field">
+            <label for="gallery-filter-type" class="piui-field__label">Filter Kategori Media</label>
+            <select name="gallery-filter-type" id="gallery-filter-type" class="piui-select">
+              <option value="all">Semua Media (Gambar &amp; Video)</option>
+              <option value="image">Hanya Gambar (PNG / WEBP / SVG)</option>
+              <option value="video">Hanya Rekaman Video (MP4 / WEBM)</option>
+            </select>
+          </div>
+
+          <div class="piui-field">
+            <label for="gallery-max-size" class="piui-field__label">Batas Maksimal Ukuran Unggah</label>
+            <select name="gallery-max-size" id="gallery-max-size" class="piui-select">
+              <option value="2">Maksimal 2 MB (Ketat)</option>
+              <option value="5">Maksimal 5 MB (Standar)</option>
+              <option value="10" selected>Maksimal 10 MB (Rekomendasi)</option>
+              <option value="25">Maksimal 25 MB (Video HD)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- MASONRY GRID CONTAINER -->
+        <div class="piui-collection-frame"><div id="piui-masonry-grid" class="piui-collection" data-collection data-collection-view="masonry" aria-label="Galeri foto dan video" aria-live="polite"></div></div>
+      </section>
+
+      <!-- TABEL LOG VALIDASI BERKAS (DENGAN MASTERPIECE PAGINATION) -->
+      <section aria-labelledby="heading-validation-log" class="piui-panel">
+        <div class="piui-panel__header">
+          <div>
+            <h2 id="heading-validation-log" class="piui-card__title">Jurnal Validasi Unggahan Berkas (Ukuran &amp; Tipe MIME)</h2>
+            <p class="piui-page-subtitle">Jurnal preview lokal. Pemeriksaan tipe, ukuran, dan dekode dilakukan di browser; berkas belum disimpan ke server.</p>
+          </div>
+          <span class="piui-badge" data-status="info">Real-Time Validator Log</span>
+        </div>
+
+        <div class="piui-table-scroll" role="region" aria-labelledby="heading-validation-log" tabindex="0">
+          <table class="piui-table" data-table-pagination>
+            <thead>
+              <tr>
+                <th scope="col" class="is-sticky-col">Nama Berkas</th>
+                <th scope="col">Tipe MIME Terdeteksi</th>
+                <th scope="col" class="tabular-nums">Ukuran Berkas</th>
+                <th scope="col">Status &amp; Hasil Validasi</th>
+              </tr>
+            </thead>
+            <tbody id="gallery-validation-tbody">
+              <tr>
+                <th scope="row" class="is-sticky-col text-mono">topologi-dc1-jakarta.svg</th>
+                <td class="text-mono">image/svg+xml</td>
+                <td class="tabular-nums">418.5 KB</td>
+                <td><span class="piui-badge" data-status="success">LOLOS VALIDASI ✓</span></td>
+              </tr>
+              <tr>
+                <th scope="row" class="is-sticky-col text-mono">rekaman-waf-ddos.webm</th>
+                <td class="text-mono">video/webm</td>
+                <td class="tabular-nums">3.66 MB</td>
+                <td><span class="piui-badge" data-status="success">LOLOS VALIDASI ✓</span></td>
+              </tr>
+              <tr>
+                <th scope="row" class="is-sticky-col text-mono">dump-database-mentah.sql</th>
+                <td class="text-mono">application/sql</td>
+                <td class="tabular-nums">1.20 MB</td>
+                <td><span class="piui-badge" data-status="danger">DITOLAK: Tipe application/sql dilarang</span></td>
+              </tr>
+              <tr>
+                <th scope="row" class="is-sticky-col text-mono">rekaman-mentah-4k-uncompressed.mp4</th>
+                <td class="text-mono">video/mp4</td>
+                <td class="tabular-nums">48.50 MB</td>
+                <td><span class="piui-badge" data-status="danger">DITOLAK: Ukuran 48.50 MB melebihi batas 10 MB</span></td>
+              </tr>
+              <tr>
+                <th scope="row" class="is-sticky-col text-mono">inspeksi-rak-hsm-fido2.png</th>
+                <td class="text-mono">image/png</td>
+                <td class="tabular-nums">1.23 MB</td>
+                <td><span class="piui-badge" data-status="success">LOLOS VALIDASI ✓</span></td>
+              </tr>
+              <tr>
+                <th scope="row" class="is-sticky-col text-mono">rantai-merkle-worm-48912.webp</th>
+                <td class="text-mono">image/webp</td>
+                <td class="tabular-nums">597.7 KB</td>
+                <td><span class="piui-badge" data-status="success">LOLOS VALIDASI ✓</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- MODAL DRAWER KANAN: UNGGAH MEDIA BARU -->
+  <dialog id="dialog-upload-media" class="piui-dialog" aria-labelledby="dialog-upload-title">
+    <div class="piui-dialog__header">
+      <strong id="dialog-upload-title">Unggah Gambar atau Video Baru ke Galeri</strong>
+      <button type="button" class="piui-icon-btn" data-dialog-close aria-label="Tutup panel unggah media">
+        <svg width="18" height="18" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-close"></use></svg>
+      </button>
+    </div>
+    <div class="piui-dialog__body">
+      <div class="piui-field">
+        <label for="modal-media-title" class="piui-field__label">Label / Judul Dokumentasi Media (Opsional)</label>
+        <input type="text" name="modal-media-title" id="modal-media-title" class="piui-input" placeholder="Mis: Bukti Audit Topologi Klaster Baru">
+      </div>
+      <div class="piui-field">
+        <label for="modal-media-category" class="piui-field__label">Klasifikasi Repositori</label>
+        <select name="modal-media-category" id="modal-media-category" class="piui-select">
+          <option value="architecture">Gambar Arsitektur &amp; Topologi</option>
+          <option value="forensic">Bukti Forensik &amp; Kepatuhan</option>
+          <option value="telemetry">Rekaman Video Telemetri</option>
+        </select>
+      </div>
+      <div class="piui-dropzone" data-piui-dropzone role="button" tabindex="0" aria-label="Dropzone modal unggah berkas">
+        <div class="piui-dropzone__icon">
+          <svg width="24" height="24" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-upload"></use></svg>
+        </div>
+        <div class="piui-dropzone__title">Klik atau Tarik Berkas ke Sini</div>
+        <p class="piui-dropzone__hint">Mendukung PNG, JPG, WEBP, SVG, MP4, dan WEBM sesuai batas kuota MB aktif.</p>
+        <label for="modal-gallery-file-input" class="piui-btn piui-btn--primary piui-btn--sm">Pilih Berkas Lokal</label>
+        <input type="file" name="modal-gallery-file-input" id="modal-gallery-file-input" data-dropzone-input multiple
+               accept="image/png,image/jpeg,image/webp,image/svg+xml,video/mp4,video/webm" class="sr-only">
+      </div>
+    </div>
+    <div class="piui-dialog__footer">
+      <button type="button" class="piui-btn piui-btn--secondary" data-dialog-close>Tutup</button>
+    </div>
+  </dialog>
+
+  <!-- MODAL LIGHTBOX ("LIGHTHOUSE") PRATINJAU MEDIA LAYAR PENUH -->
+  <dialog id="piui-lightbox" class="piui-lightbox" aria-labelledby="lightbox-title">
+    <div class="piui-lightbox__frame">
+      <div class="piui-lightbox__header">
+        <div>
+          <strong id="lightbox-title">Pratinjau Media</strong>
+          <div class="piui-page-subtitle" id="lightbox-meta">Detail dimensi dan ukuran berkas</div>
+        </div>
+        <button type="button" class="piui-icon-btn" id="btn-lightbox-close" aria-label="Tutup pratinjau Lightbox (Escape)">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-close"></use></svg>
+        </button>
+      </div>
+
+      <div id="lightbox-stage" class="piui-lightbox__stage"></div>
+
+      <div class="piui-lightbox__footer">
+        <div class="piui-page-actions">
+          <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" id="btn-lightbox-prev" aria-label="Media sebelumnya">
+            <svg width="16" height="16" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-chevron-left"></use></svg>
+            <span>Sebelumnya</span>
+          </button>
+          <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" id="btn-lightbox-next" aria-label="Media berikutnya">
+            <span>Berikutnya</span>
+            <svg width="16" height="16" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-chevron-right"></use></svg>
+          </button>
+        </div>
+        <span class="piui-badge tabular-nums" data-status="info" id="lightbox-counter">Media 1 dari 6</span>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- COMMAND PALETTE DIALOG -->
+  <dialog id="piui-cmd-palette" class="piui-dialog" aria-labelledby="cmd-palette-title">
+    <div class="piui-dialog__header">
+      <strong id="cmd-palette-title">Palet Perintah &amp; Navigasi Cepat (Ctrl+K)</strong>
+      <button type="button" class="piui-icon-btn" id="btn-close-cmd" aria-label="Tutup palet perintah (Escape)">
+        <svg width="18" height="18" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-close"></use></svg>
+      </button>
+    </div>
+    <div class="piui-dialog__body">
+      <div class="piui-field">
+        <label for="cmd-search-input" class="piui-field__label">Ketik nama halaman, modul, atau aksi cepat</label>
+        <input type="search" name="cmd-search-input" id="cmd-search-input" class="piui-input"
+               role="combobox" aria-expanded="true" aria-controls="cmd-results-list"
+               autocomplete="off" spellcheck="false"
+               placeholder="Contoh: Galeri, Pengguna, Transaksi, Audit...">
+      </div>
+      <ul id="cmd-results-list" class="piui-cmd-list" role="listbox" aria-label="Daftar perintah yang tersedia"></ul>
+      <p id="cmd-empty-state" class="piui-page-subtitle" hidden>Tidak ada perintah yang cocok dengan kata kunci tersebut.</p>
+    </div>
+  </dialog>
+
+  <div id="piui-toast-region" class="piui-toast-region" aria-live="polite"></div>
+
+  <!-- TEMPLATE KARTU MEDIA MASONRY -->
+  <template id="tpl-media-card">
+    <article class="piui-media-card">
+      <button type="button" class="piui-media-card__preview" data-media-preview data-collection-preview aria-label="Buka pratinjau ukuran penuh di Lightbox">
+        <img width="640" height="480" class="piui-media-card__img" data-media-img alt="" loading="lazy">
+        <span class="piui-badge piui-media-card__badge" data-media-badge></span>
+      </button>
+      <div class="piui-media-card__body">
+        <strong class="piui-media-card__title" data-media-title></strong>
+        <div class="piui-media-card__meta tabular-nums" data-media-meta></div>
+        <div class="piui-page-actions">
+          <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-media-open>
+            <svg width="15" height="15" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-zoom"></use></svg>
+            <span>Buka Lightbox</span>
+          </button>
+          <span class="piui-badge" data-status="success" data-lazy-badge>Lazy Pending</span>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <template id="tpl-cmd-item">
+    <li class="piui-cmd-item" role="option" tabindex="-1">
+      <div>
+        <strong data-cmd-title></strong>
+        <div class="piui-page-subtitle" data-cmd-category></div>
+      </div>
+      <kbd class="piui-cmd-trigger__kbd text-mono" data-cmd-shortcut></kbd>
+    </li>
+  </template>
+
+  <template id="tpl-toast">
+    <div class="piui-toast" role="status">
+      <span data-toast-text></span>
+      <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-toast-close>Tutup</button>
+    </div>
+  </template>
+</body>
+</html>

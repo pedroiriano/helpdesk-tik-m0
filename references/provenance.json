@@ -1,0 +1,17 @@
+{
+  "package_version": "M0 1.0",
+  "product_version": "3.2",
+  "created": "2026-11-03",
+  "sources": [
+    {
+      "path": "D:\\Jurnal\\Microservices\\Penyempurnaan\\sources\\02_Blueprint_Helpdesk.md",
+      "sha256": "d4c6f6c5b6f9da4e4b9305748c682cf031407e4f29a9d495a01cd4153945e345"
+    },
+    {
+      "path": "D:\\Jurnal\\Microservices\\Penyempurnaan\\02_Blueprint_Helpdesk.docx",
+      "sha256": "473352e854a295f3507061611ce4014ea5a0345714ca5aff977d20d8d7c7ffb7"
+    }
+  ],
+  "copied_source": "references/BLUEPRINT_SUMBER_v3.2.md",
+  "copied_source_sha256": "d4c6f6c5b6f9da4e4b9305748c682cf031407e4f29a9d495a01cd4153945e345"
+}

@@ -1,0 +1,236 @@
+{
+  "timestamp": "2026-11-13T08:47:03.226697+00:00",
+  "task_id": "RM0-04-ROLE-HERO",
+  "agent": "Codex",
+  "status": "RM0-04 IN_PROGRESS",
+  "next_phase": "RM0-05 NOT_STARTED",
+  "result": "PASS_LOCAL_ROLE_AND_HERO_HTTP",
+  "report": "qa/remediation/rm0-04/role-hero/completion.json",
+  "changed_files": [
+    "backend/internal/modules/m1/internal/app/http.go",
+    "backend/internal/modules/m1/internal/app/identity.go",
+    "backend/internal/modules/m1/internal/app/role_policy.go",
+    "backend/internal/modules/m1/internal/domain/permissions_generated.go",
+    "backend/internal/modules/m8/api/hero.go",
+    "backend/internal/modules/m8/api/media.go",
+    "backend/internal/modules/m8/api/scope.go",
+    "backend/internal/modules/m8/internal/app/access.go",
+    "backend/internal/modules/m8/internal/app/hero.go",
+    "backend/internal/modules/m8/internal/app/http.go",
+    "backend/internal/modules/m8/internal/app/service.go",
+    "backend/internal/modules/m8/internal/store/hero.go",
+    "backend/internal/modules/m8/internal/store/uploads.go",
+    "backend/internal/platform/database/pools.go",
+    "contracts/business_traceability.csv",
+    "contracts/openapi/business.json",
+    "contracts/policy/permissions.v1.json",
+    "docs/06_ATURAN_UI_UX_WEB_ADMIN.md",
+    "docs/adr/0008-role-module-policy-and-hero.md",
+    "frontend/admin-navigation.d.mts",
+    "frontend/admin-navigation.mjs",
+    "frontend/admin-profiles.d.mts",
+    "frontend/admin-profiles.mjs",
+    "frontend/build-templates.mjs",
+    "frontend/business-pages.mjs",
+    "frontend/business.css",
+    "frontend/hero-defaults.d.mts",
+    "frontend/hero-defaults.mjs",
+    "frontend/hero-public.js",
+    "frontend/landing-page.mjs",
+    "frontend/src/features/admin-access.ts",
+    "frontend/src/features/business-types.generated.ts",
+    "frontend/src/features/hero-editor.ts",
+    "frontend/src/features/m0-03.ts",
+    "frontend/src/features/role-policy-editor.ts",
+    "migrations/checksums.sha256",
+    "migrations/m1/034-role-module-policy.sql",
+    "migrations/m8/035-hero-publication.sql",
+    "migrations/manifest.json",
+    "planning/remediation_backlog.csv",
+    "scripts/build_business_contracts.py",
+    "scripts/role_hero_contracts.py",
+    "scripts/test_admin_navigation.mjs",
+    "seeds/lab.sh",
+    "seeds/role-hero-lab.sql",
+    "status/HANDOFF_RM0_04.md",
+    "status/PROJECT_STATE.md",
+    "tests/contract/test_business_contracts.py"
+  ],
+  "source_manifest": {
+    "path": "qa/remediation/rm0-04/role-hero/source-manifest.json",
+    "sha256": "0ff5537353ae3059cebea7953ead270d5eed21c3582098e6e87bc5b79b05110c"
+  },
+  "tests": [
+    {
+      "command": [
+        "npm.cmd",
+        "--prefix",
+        "frontend",
+        "run",
+        "build"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "go",
+        "test",
+        "./internal/modules/m1/...",
+        "./internal/modules/m8/...",
+        "./internal/platform/database"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "scripts/build_business_contracts.py",
+        "--check"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "scripts/sync_identity_roles.py"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/contract",
+        "-p",
+        "test_business_contracts.py"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "scripts/test_piui_build.py"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "node",
+        "--disable-warning=ExperimentalWarning",
+        "scripts/test_admin_navigation.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "node",
+        "--disable-warning=ExperimentalWarning",
+        "scripts/test_admin_profiles.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "node",
+        "scripts/test_public_cache.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "node",
+        "--check",
+        "frontend/hero-public.js"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "qa/remediation/rm0-04/role-hero/verify_http.py"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "docker",
+        "compose",
+        "build",
+        "app",
+        "web"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "qa/remediation/rm0-04/role-hero/verify_gateway.py"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "docker",
+        "compose",
+        "run",
+        "--rm",
+        "--no-deps",
+        "migrate"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "docker",
+        "compose",
+        "run",
+        "--rm",
+        "--no-deps",
+        "seed-lab",
+        "role-hero"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "docker",
+        "compose",
+        "up",
+        "-d",
+        "--no-deps",
+        "--no-build",
+        "--wait",
+        "--wait-timeout",
+        "85",
+        "app",
+        "web"
+      ],
+      "result": "PASS"
+    }
+  ],
+  "verification_limits": [
+    "Browser lokal tidak tersedia. Visual desktop/mobile dan navigasi keyboard kandidat final belum diperiksa.",
+    "Pemindaian unggah M8 mengikuti pipeline lama. Uji disposable menolak PENDING, lalu memakai file PNG fixture CLEAN agar publikasi dan perlindungan unduh dapat diverifikasi tanpa scanner.",
+    "Kebijakan dan publikasi diuji pada DB disposable. Aktivasi lokal hanya menerapkan migrasi dan seed peran sintetis. Lima banner bawaan tetap menjadi tampilan awal.",
+    "RM0-04 tetap berjalan. Bukti ini terbatas pada lab."
+  ],
+  "artifacts": {
+    "qa/remediation/rm0-04/role-hero/http.json": "0b0b14a539b05d4bd9c93139cc74c0b27e61452e847828f4053180f5842462e8",
+    "qa/remediation/rm0-04/role-hero/verify_http.py": "e9dfc454234ae96c5ddf50d17a2dba3c82a48011cbd7396d57c091845dc34b22",
+    "qa/remediation/rm0-04/role-hero/gateway.json": "c89b2ff418a6dee449678ff390e1a5b5d233b1eea5e5030d4be4fd01981e77a1",
+    "qa/remediation/rm0-04/role-hero/verify_gateway.py": "76b1ee9b044b747bd780d64cba697133b6a4f79a7074bcd52da8f9af0666eaf2",
+    "qa/remediation/rm0-04/role-hero/live.json": "98faa06dadb81ba22630028f81c4875a5785b8240364cc3147905cbc3d167403",
+    "qa/remediation/rm0-04/role-hero/rollout.json": "eed00b9acfc8a1d02ee0c2b1d0083a482d4e590ee54d8b08143a824703e1477f",
+    "qa/remediation/rm0-04/role-hero/browser-lab-state.json": "9a27bdcc5f610074ce77fef88c14a5ab9121f0e3e86e2058acaa0c21070f2a37",
+    "qa/remediation/rm0-04/role-hero/build-images.txt": "783a28a87a85401ad027d6bd2f879145923f0454a35094a1aaa4e3c8c08e2cf2"
+  }
+}

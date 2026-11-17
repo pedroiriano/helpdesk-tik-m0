@@ -1,0 +1,86 @@
+{
+  "timestamp": "2026-11-13T07:49:14.584658+00:00",
+  "base_url": "http://127.0.0.1:18080",
+  "assets": {
+    "index.html": {
+      "sha256": "cb3df2564422ccfd9f6218dc417114360e5aa8173683a197d6b5150bfec32847",
+      "status": 200,
+      "content_type": "text/html"
+    },
+    "layanan.html": {
+      "sha256": "7c8a0f44282cf6da4ab28818bb147b3cdc676eba91003d5a631868c9c3fa569c",
+      "status": 200,
+      "content_type": "text/html"
+    },
+    "akses.html": {
+      "sha256": "b18562e1ff67034b81bdee7c187c81c8dea1edaf73a91d83084cc74837712ea6",
+      "status": 200,
+      "content_type": "text/html"
+    },
+    "admin/index.html": {
+      "sha256": "54dbc5c59f0918f4523923e050d6e9cc100d5f37c8faafe3d0864edb57c46e30",
+      "status": 200,
+      "content_type": "text/html"
+    },
+    "admin/auth/login.html": {
+      "sha256": "96f20e5ddefc332834b2085b92e4c211f1bd90b9bcd16490d9d6ec3d0d7e0ba0",
+      "status": 200,
+      "content_type": "text/html"
+    },
+    "admin/app/dashboard/index.html": {
+      "sha256": "54dbc5c59f0918f4523923e050d6e9cc100d5f37c8faafe3d0864edb57c46e30",
+      "status": 200,
+      "content_type": "text/html"
+    },
+    "admin/app/helpdesk/index.html": {
+      "sha256": "174cc683d079a47bc0a8367ccf6d1e63058279051f832f943d67a1737c1cf52c",
+      "status": 200,
+      "content_type": "text/html"
+    },
+    "admin/app/tickets/index.html": {
+      "sha256": "3f5f5d9907b7e769aaeb61bdb804838412860cb2a3af99e68a07d42148a50fa6",
+      "status": 200,
+      "content_type": "text/html"
+    },
+    "admin/app/tickets/detail.html": {
+      "sha256": "95a906ff9e47700eeea747c28ad4c5241b9984a8d1adfe18d9eb3e3cae49ff80",
+      "status": 200,
+      "content_type": "text/html"
+    },
+    "helpdesk/business.css": {
+      "sha256": "68cd120ad095bb7f528134406eb696e8744ca598bd87e982510438ec863c0a68",
+      "status": 200,
+      "content_type": "text/css"
+    },
+    "helpdesk/m0-03.js": {
+      "sha256": "aa8d337493d1ca21848323d805003bccdc6474627e599b9f9fe3fae759852872",
+      "status": 200,
+      "content_type": "application/javascript"
+    },
+    "helpdesk/m0-04.js": {
+      "sha256": "a2730f483f977ec7bb0d82e27b027ea76bb43195937e44a1f1105dbaf51c0745",
+      "status": 200,
+      "content_type": "application/javascript"
+    },
+    "admin/assets/js/components/cmd-palette.js": {
+      "sha256": "5bd3e7cc720595dcd21e6d5fd3ec764b9f061496c97839bf618ddf40fcd1c100",
+      "status": 200,
+      "content_type": "application/javascript"
+    },
+    "admin/assets/js/components/feature-registry.js": {
+      "sha256": "21c7236c96711ae18e9b33437f12dd630171e96f3485e0860bec076e03dc7e0c",
+      "status": 200,
+      "content_type": "application/javascript"
+    },
+    "journey-B1rZED4W.js": {
+      "sha256": "17258b8f1ebcbf072f5e8afc8fabeb17f10c5d5e55c060550bf3066da1bbdc4d",
+      "status": 200,
+      "content_type": "application/javascript"
+    }
+  },
+  "readiness": 200,
+  "web_image": "sha256:99cc10ae5def8dca8917c56284f72d30dec8b279847f631f2a8b472f2b35fee6",
+  "health": "healthy",
+  "app_image": "sha256:4dcfd5634ce45bb27724740adf77fa09b4d9dbe4036d9453e595c02e532c96c6",
+  "app_health": "healthy"
+}

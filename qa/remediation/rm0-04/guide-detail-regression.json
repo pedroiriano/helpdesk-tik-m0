@@ -1,0 +1,96 @@
+{
+  "timestamp": "2026-11-12T08:15:10.780816+00:00",
+  "task_id": "RM0-04",
+  "result": "PASS_LOCAL_REGRESSION",
+  "requirements": [
+    "AC20",
+    "F16"
+  ],
+  "before": {
+    "resolved_css": "/panduan/css/main.css?v=4.3",
+    "status": 200,
+    "content_type": "text/html",
+    "cause": "Relative PIUI asset references in the shared shell resolved against the nested document URL."
+  },
+  "after": {
+    "detail": "/panduan/panduan-konfigurasi-email-depok-go-id",
+    "shell_sha256": "2cc6af45d1a053a53283b6dc7796ddd9cb74db4177c3a6e85f4796d2f8145f1c",
+    "web_image": "sha256:676bac1d05f92bcd817ad51d53857251303789bb61cdae59244505f8e6e1ea0b",
+    "assets": {
+      "/css/main.css": {
+        "content_type": "text/css",
+        "sha256": "ba61011f8a2b7aeabb80b6a72b899d4615c56012a6cb3e65fdfdd2784361e435"
+      },
+      "/js/modules/navigation.js": {
+        "content_type": "application/javascript",
+        "sha256": "fd271a5f3c91b17fe8c8782832020b106052b0bb33dbdb16b7fd0536c6598b85"
+      },
+      "/manifest.webmanifest": {
+        "content_type": "application/octet-stream",
+        "sha256": "7e86d6e2fc8ca6b9a2c9553f7281ca99f32f5cdd8b05924d85acb324940dea69"
+      },
+      "/helpdesk/public-ui.css": {
+        "content_type": "text/css",
+        "sha256": "515aa6089e94dfea91e3d574d875732fec4febd7baa4b4dd4b113fa9e1829bd0"
+      }
+    }
+  },
+  "sources": {
+    "frontend/public-ui.mjs": "bd0c5012cdc9e237d7c710d1c028e82d2ad5596ad72d68b9eeecdc20e3822853",
+    "frontend/public-ui.css": "515aa6089e94dfea91e3d574d875732fec4febd7baa4b4dd4b113fa9e1829bd0",
+    "scripts/test_piui_build.py": "1e63e00183ecd114e2404956af99204de1eae6f0af7e96144ce3f3784fc46641"
+  },
+  "commands": [
+    {
+      "command": "npm.cmd --prefix frontend run build",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0
+    },
+    {
+      "command": "python scripts/test_piui_build.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0
+    },
+    {
+      "command": "node scripts/test_public_cache.mjs",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0
+    },
+    {
+      "command": "docker compose build web",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0
+    },
+    {
+      "command": "docker compose up -d --no-deps --no-build --wait --wait-timeout 85 web",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0
+    }
+  ],
+  "browser": {
+    "desktop": {
+      "viewport": [
+        1280,
+        720
+      ],
+      "email_article_visible": true,
+      "native_css_loaded": true,
+      "pager_display": "none",
+      "flyout_initially_hidden": true,
+      "enter_opens_menu": true,
+      "escape_closes_menu_and_restores_focus": true
+    },
+    "mobile": {
+      "viewport": [
+        390,
+        844
+      ],
+      "page_scroll_width": 375,
+      "read_guide_button_opens_article": true,
+      "pager_display": "none",
+      "flyout_initially_hidden": true
+    },
+    "capture": "Public email article shown in browser tool output."
+  },
+  "phase_status": "IN_PROGRESS"
+}

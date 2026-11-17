@@ -1,0 +1,6 @@
+# robots.txt
+User-agent: *
+Allow: /
+
+Sitemap: https://courtspec.io/sitemap.xml
+Sitemap: https://courtspec.io/sitemap-details.xml

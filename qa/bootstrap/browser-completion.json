@@ -1,0 +1,52 @@
+{
+  "timestamp": "2026-11-03T03:34:17.452399+00:00",
+  "task_id": "M0-01",
+  "result": "PASS",
+  "scope": "local_foundation_browser",
+  "bootstrap_baseline": "qa/bootstrap/verification.json",
+  "base_url": "http://127.0.0.1:18080",
+  "source_hashes": {
+    "frontend/src/App.tsx": "eea9b0f67b02148101573d06c3c2691fc5dadf634ee4be0261cc0c34436fd050",
+    "qa/bootstrap/admin-desktop.png": "0d0117c2797efdbfc64d4d888b5a14a3dc71dfb1d0004ddc696bed516fdf1b96",
+    "qa/bootstrap/admin-mobile-open.png": "2d4ed23d67134ca0b85b8c241143b2bd58e87e7dd14376567e1419af12d930cc",
+    "qa/bootstrap/admin-mobile-closed.png": "7469957e74ec5efc70aa52a2d0fad4b03b587165f23b5bfebc6ecdbe389d36c5",
+    "qa/bootstrap/public-mobile.png": "4782389b0e5276e01535ba153991a1f28654c215fd916a8c0c4e84f59042bc28"
+  },
+  "build": "docker compose up -d --no-deps --build --pull never web",
+  "web_image_index": "sha256:efc92a850ef38e62317f7cbe84800d0d536a710584b8a21c60c63b94fe3e6ce6",
+  "cases": [
+    {
+      "route": "/admin/",
+      "viewport": [
+        1440,
+        900
+      ],
+      "client_width": 1440,
+      "scroll_width": 1430,
+      "observed": "Sidebar, heading, readiness and panel rendered."
+    },
+    {
+      "route": "/admin/",
+      "viewport": [
+        390,
+        844
+      ],
+      "client_width": 380,
+      "scroll_width": 380,
+      "keys": "Tab, Tab, Enter, Tab, Tab, Tab, Escape",
+      "observed": "Expanded Tutup navigasi; focus reached Beranda pengembangan; Escape hid navigation and returned focus to collapsed Buka navigasi. Space on toggle also closed menu in pre-fix check."
+    },
+    {
+      "route": "/",
+      "viewport": [
+        390,
+        844
+      ],
+      "client_width": 375,
+      "scroll_width": 375,
+      "keys": "Tab",
+      "observed": "Both navigation links present; skip link visibly focused."
+    }
+  ],
+  "uat": "NOT_RUN"
+}

@@ -1,0 +1,22 @@
+// js/modules/reveal.js — Native Scroll Entrance Reveal
+function initReveal() {
+  const elements = document.querySelectorAll('.vy-rise');
+  if (!elements.length) return;
+
+  // Arm document so CSS knows JS is running
+  document.documentElement.classList.add('vy-armed');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-in');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.12,
+    rootMargin: '0px 0px -40px 0px'
+  });
+
+  elements.forEach((el) => observer.observe(el));
+}

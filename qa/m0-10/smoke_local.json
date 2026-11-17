@@ -1,0 +1,73 @@
+{
+  "timestamp": "2026-11-07T08:15:58.652945+00:00",
+  "scope": "live loopback synthetic HTTP/API M0-10 notifications, AC21 telegram binding & secret masking, AC23 report analytics & CSV formula sanitization & dynamic revocation, FR20 audit, and AC20 keyboard dialogs",
+  "command": "python scripts/smoke_m0_10_local.py --allow-lab-writes",
+  "checks": [
+    {
+      "name": "authenticated_lab_sessions",
+      "detail": "admin=5, coord=11, coord2=12, operator=4, pub1=1, auditor=16",
+      "result": "PASS"
+    },
+    {
+      "name": "ac21_invalid_scope_binding_rejected",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "ac21_telegram_binding_created",
+      "detail": "id=16605f9d-0b53-4e3a-b21d-5e44a6a530da",
+      "result": "PASS"
+    },
+    {
+      "name": "ac21_telegram_binding_immediate_revoke_and_cas",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "notifications_list_retrieved",
+      "detail": "count=4",
+      "result": "PASS"
+    },
+    {
+      "name": "ac23_operator_report_forbidden_403",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "ac23_coord_cross_org_report_forbidden_403",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "ac23_report_analytics_honest_denominator",
+      "detail": "denominator=18 count=2",
+      "result": "PASS"
+    },
+    {
+      "name": "ac23_report_export_accepted_202",
+      "detail": "id=fef65299-1364-4bbf-9663-acb40051ef13",
+      "result": "PASS"
+    },
+    {
+      "name": "ac23_report_export_csv_downloaded",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "ac23_dynamic_revocation_live_gate_enforced",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "fr20_audit_entries_append_only_and_redacted",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "ac20_keyboard_accessibility_ui_verified",
+      "detail": "",
+      "result": "PASS"
+    }
+  ],
+  "result": "PASS"
+}

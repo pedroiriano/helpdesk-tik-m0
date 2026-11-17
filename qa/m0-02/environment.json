@@ -1,0 +1,12 @@
+{
+  "scope": "read_only_existing_local_environment",
+  "commands": [
+    "docker compose config --quiet",
+    "docker ps --filter 'name=helpdesk-m0' --format '{{.Names}}|{{.Status}}|{{.Ports}}'",
+    "docker exec helpdesk-m0-db psql -X -U postgres -d helpdesk -qAt -c \"SELECT to_regclass('intake.tickets') IS NULL AS working_domain_unapplied, to_regclass('migration_control.ledger') IS NULL AS working_ledger_unapplied;\""
+  ],
+  "exit_code": 0,
+  "result": "PASS",
+  "output": "helpdesk-m0-nginx|Up 47 minutes (healthy)|127.0.0.1:18080->8080/tcp\nhelpdesk-m0|Up 7 hours (healthy)|8080/tcp\nhelpdesk-m0-db|Up 7 hours (healthy)|5432/tcp\nt|t\n",
+  "interpretation": "Three existing services healthy; only host port 127.0.0.1:18080 published; both true values confirm domain tables and migration ledger remain unapplied in working DB."
+}

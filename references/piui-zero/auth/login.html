@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Autentikasi Administrator — PIUI Zero Admin</title>
+  <meta name="description" content="Gerbang masuk terproteksi untuk administrator sistem PIUI Zero.">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="stylesheet" href="/assets/css/main.css?v=2.2.2">
+  <script type="module" src="/assets/js/app.js?v=2.2.2"></script>
+<link rel="icon" href="/assets/icons/favicon.ico?v=2.2.2" sizes="16x16 32x32 48x48"><link rel="icon" href="/assets/icons/piui-favicon.svg?v=2.2.2" type="image/svg+xml" sizes="any"><link rel="apple-touch-icon" href="/assets/icons/piui-180.png?v=2.2.2" sizes="180x180">
+</head>
+<body>
+  <a class="piui-skip-link" href="#main-content">Langsung ke konten utama</a>
+  <div id="piui-live-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="piui-app-shell" data-sidebar="collapsed">
+    <header class="piui-topbar">
+      <div class="piui-topbar__start">
+        <button type="button" class="piui-icon-btn" id="btn-sidebar-toggle"
+                aria-label="Buka atau ciutkan panel navigasi" aria-expanded="false" aria-controls="piui-sidebar">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-menu"></use></svg>
+        </button>
+        <a href="/index.html" class="piui-brand"><img class="piui-brand__mark" src="/assets/icons/piui-mark.svg" alt="" width="32" height="32"><span class="piui-brand__name">PIUI Zero™</span><span class="piui-badge piui-badge--env">AUTH GATE</span></a>
+      </div>
+      <div class="piui-topbar__end">
+        <button type="button" class="piui-btn piui-btn--primary piui-btn--sm" data-open-dialog="dialog-login-form">
+          Buka Form Login (Modal Kanan)
+        </button>
+        <button type="button" class="piui-icon-btn" id="btn-theme-toggle" aria-label="Ganti tema terang atau gelap">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-theme"></use></svg>
+        </button>
+        <a href="/index.html" class="piui-btn piui-btn--secondary piui-btn--sm">Kembali ke Portal</a>
+      </div>
+    </header>
+
+    <aside class="piui-sidebar" id="piui-sidebar" aria-label="Navigasi Gerbang">
+      <nav aria-label="Navigasi Utama">
+        <div class="piui-sidebar__group-label">Akses Sistem</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/index.html" class="piui-nav-link" title="Panduan &amp; Dokumentasi">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-info"></use></svg>
+              <span class="piui-nav-link__text">Panduan &amp; Dokumentasi</span>
+            </a>
+          </li>
+          <li>
+            <a href="/auth/login.html" class="piui-nav-link" aria-current="page" title="Masuk Akun Admin">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-lock"></use></svg>
+              <span class="piui-nav-link__text">Masuk Akun Admin</span>
+            </a>
+          </li>
+          <li>
+            <a href="/status/index.html" class="piui-nav-link" title="Status Server">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-status"></use></svg>
+              <span class="piui-nav-link__text">Status Server</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main id="main-content" class="piui-main">
+      <nav aria-label="Breadcrumb" class="piui-breadcrumb">
+        <ol>
+          <li><a href="/index.html">Panduan &amp; Dokumentasi</a></li>
+          <li aria-current="page">Masuk Akun Admin</li>
+        </ol>
+      </nav>
+
+      <div class="piui-page-header">
+        <div class="piui-page-header__titles">
+          <p class="piui-demo-notice">Prototipe tanpa autentikasi server. Gunakan data contoh; jangan masukkan kredensial nyata.</p>
+      <h1 class="piui-page-title">Masuk ke Akun Administrator</h1>
+          <p class="piui-page-subtitle">Patuh WCAG 2.2 AA (3.3.8 Accessible Authentication) • Mendukung Password Manager, Passkey FIDO2, &amp; Paste OTP</p>
+        </div>
+        <div class="piui-page-actions">
+          <button type="button" class="piui-btn piui-btn--primary" data-open-dialog="dialog-login-form">
+            <svg width="16" height="16" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-lock"></use></svg>
+            <span>Buka Formulir Masuk &amp; MFA (Modal Kanan)</span>
+          </button>
+        </div>
+      </div>
+
+      <section aria-label="Standar Keamanan Sesi" class="piui-kpi-grid">
+        <article class="piui-card">
+          <div class="piui-card__header">
+            <h2 class="piui-card__title">Protokol Transportasi</h2>
+            <span class="piui-badge" data-status="success">Terenkripsi</span>
+          </div>
+          <div class="piui-card__value tabular-nums">TLS 1.3 + mTLS</div>
+          <p class="piui-card__meta">Cookie: HttpOnly; Secure; SameSite=Strict</p>
+        </article>
+
+        <article class="piui-card">
+          <div class="piui-card__header">
+            <h2 class="piui-card__title">Kepatuhan WCAG 2.2 AA</h2>
+            <span class="piui-badge" data-status="info">Kriteria 3.3.8</span>
+          </div>
+          <div class="piui-card__value tabular-nums">Paste Aktif</div>
+          <p class="piui-card__meta">Tanpa blokir tempel dari Password Manager</p>
+        </article>
+
+        <article class="piui-card">
+          <div class="piui-card__header">
+            <h2 class="piui-card__title">Verifikasi Multi-Faktor</h2>
+            <span class="piui-badge" data-status="success">NIST AAL3</span>
+          </div>
+          <div class="piui-card__value tabular-nums">FIDO2 / TOTP</div>
+          <p class="piui-card__meta">Kunci perangkat keras &amp; kode 6 digit</p>
+        </article>
+
+        <article class="piui-card">
+          <div class="piui-card__header">
+            <h2 class="piui-card__title">Kunci Sesi Otomatis</h2>
+            <span class="piui-badge" data-status="warning">Zero-Trust</span>
+          </div>
+          <div class="piui-card__value tabular-nums">15 Menit</div>
+          <p class="piui-card__meta">Sinkronisasi logout lintas tab</p>
+        </article>
+      </section>
+    </main>
+
+    <footer class="piui-footer">
+      <span>PIUI Zero Security Gate • Sesi dikunci otomatis setelah 15 menit tidak aktif</span>
+      <span>Zona Waktu: <strong class="tabular-nums">WIB (UTC+7)</strong></span>
+    <p class="piui-product-credit"><span class="piui-product-signature"><img class="piui-brand__mark" src="/assets/icons/piui-mark.svg" alt="" width="24" height="24"><span>PIUI Zero™ v2.2.2</span></span> • Created by Ipi &quot;Pedro Iriano&quot; • © 2026 • <a href="/about/index.html">Tentang produk</a></p></footer>
+  </div>
+
+  <!-- MODAL DRAWER SISI KANAN: FORM ISIAN LOGIN & MFA -->
+  <dialog id="dialog-login-form" class="piui-dialog" data-auto-open aria-labelledby="login-modal-title">
+    <form data-demo-login action="/app/dashboard/index.html" method="dialog">
+      <div class="piui-dialog__header">
+        <div>
+          <strong id="login-modal-title">Formulir Masuk &amp; Verifikasi MFA</strong>
+          <div class="piui-page-subtitle">Otorisasi Sesi Internal PIUI Zero</div>
+        </div>
+        <button type="button" class="piui-icon-btn" data-close-dialog aria-label="Tutup formulir masuk">
+          <svg width="18" height="18" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-close"></use></svg>
+        </button>
+      </div>
+
+      <div class="piui-dialog__body">
+        <p class="piui-demo-notice">Demo lokal tanpa autentikasi server. Jangan masukkan kredensial nyata.</p>
+        <div class="piui-field">
+          <label for="auth-email" class="piui-field__label">Email atau ID Administrator (Wajib)</label>
+          <input type="email" id="auth-email" name="user" class="piui-input"
+                 autocomplete="username" required
+                 value="budi.sec@piui-zero.internal"
+                 aria-describedby="auth-email-hint">
+          <small id="auth-email-hint" class="piui-field__hint">Gunakan email korporat internal yang terdaftar pada matriks RBAC.</small>
+        </div>
+
+        <div class="piui-field">
+          <label for="auth-password" class="piui-field__label">Kata Sandi Keamanan (Wajib)</label>
+          <input type="password" name="auth-password" id="auth-password" class="piui-input"
+                 autocomplete="current-password" required minlength="12"
+                 value="••••••••••••••"
+                 aria-describedby="auth-pass-hint">
+          <small id="auth-pass-hint" class="piui-field__hint">Minimal 12 karakter. Fitur tempel (Ctrl+V) dari pengelola kata sandi diizinkan penuh.</small>
+        </div>
+
+        <div class="piui-field">
+          <label for="auth-otp" class="piui-field__label">Kode Verifikasi MFA / TOTP (6 Digit)</label>
+          <input type="text" name="auth-otp" id="auth-otp" class="piui-input tabular-nums"
+                 inputmode="numeric" pattern="[0-9]{6}" maxlength="6"
+                 autocomplete="one-time-code" required value="849201"
+                 aria-describedby="auth-otp-hint">
+          <small id="auth-otp-hint" class="piui-field__hint">Masukkan 6 angka dari aplikasi autentikator perangkat keras Anda.</small>
+        </div>
+      </div>
+
+      <div class="piui-dialog__footer">
+        <button type="button" class="piui-btn piui-btn--secondary" data-close-dialog>Tutup</button>
+        <button type="submit" class="piui-btn piui-btn--primary">Verifikasi &amp; Masuk Dashboard</button>
+      </div>
+    </form>
+  </dialog>
+</body>
+</html>

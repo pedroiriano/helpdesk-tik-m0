@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "C:\Datas\Proyek\Aplikasi\helpdesk-monolith\scripts\test_piui_build.py", line 220, in <module>
+    verify()
+    ~~~~~~^^
+  File "C:\Datas\Proyek\Aplikasi\helpdesk-monolith\scripts\test_piui_build.py", line 171, in verify
+    assert 'Antrean Tiket Petugas' in label, file
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: admin/index.html

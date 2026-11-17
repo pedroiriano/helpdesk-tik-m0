@@ -1,0 +1,13 @@
+# Handoff M0-04 — DONE_VERIFIED untuk tiket lab
+
+5 November 2026. M0-04 menjalankan tiket M3, sesi tracking tamu, catatan internal, lampiran privat dan durable audit M9 pada satu proses Go M0. Migrasi additive 013–017 diterapkan ke DB lokal yang sama setelah gate disposable lulus. Ledger 17/checksum cocok dengan manifest; domain identity/catalog v3 dan intake/notify_audit v4. App, web, DB dan scanner sehat. M0-05 belum dimulai.
+
+[Completion](../qa/m0-04/completion.json) mencatat command, hasil, hash dan batas. Integrasi final Go/HTTP/PostgreSQL/ClamAV lulus tujuh subtest: lost response/concurrency, rollback, scope akun/capability per aksi, expiry/revocation, upload/scan/download, lease/ACK/inbox/ordering, dan perubahan snapshot. Regresi M0-03, 17 tes kontrak, migrasi/role, vet/unit, boundary, typecheck/build PIUI, cache dan intent lulus. Report `environment.json` membuktikan paket UI yang disajikan sama dengan build final, 17 ledger entries, scanner 1.4.6, audit M9 dan PENDING M5–M7.
+
+Browser menguji 12 skenario representatif desktop/mobile/keyboard pada kandidat sebelum hardening; empat retest form tracking dan pergantian akun lulus pada build final. Download browser cocok byte fixture. Kunci tidak terserialisasi oleh submit native; cookie tracking browser dilepas saat masuk/keluar akun, dan akses baru memerlukan pertukaran kunci lagi. Tidak ada raw capability atau credential di evidence. Data uji sintetis dipertahankan; logout browser selesai dan viewport dikembalikan.
+
+Smoke HTTP lokal membuat fixture sintetis, restart hanya app dan membuktikan sesi akun/guest, tiket, komentar serta blob tetap terbaca. Capability smoke API dicabut. Pemeriksaan sempat tidak dieksekusi karena review otomatis gagal akibat batas penggunaan; kemudian dijalankan melalui jalur review yang sama dan lulus. Browser lokal sempat dinonaktifkan, lalu tersedia setelah pengguna mengaktifkannya. Tidak ada reset, restore, rotasi secret atau perubahan kontainer/volume proyek lain.
+
+Batas: [traceability](../contracts/M0_04_TRACEABILITY.md) dan [runbook](../runbooks/m0-04-lab.md). AC03/05/06/07/11 global tetap PARTIAL. Baseline M4/M6 adalah proposal/kalkulasi lab, bukan workflow verifikasi/dispatch/SLA lengkap. Target M5/M6/M7 tetap PENDING; tidak ada ACK palsu, NotificationStored palsu atau real sends. Scanner/storage pendukung dicatat terpisah dari budget proses Go; signature dibaca dari image lab terpin, bukan kebijakan update produksi.
+
+Tidak ada CI, Git SHA, UAT, produksi, benchmark atau hasil parity. Keputusan organisasi OPEN; C3/F9/G-OPT DEFERRED_RESEARCH. Fase berikut yang direncanakan M0-05, hanya setelah instruksi tersendiri.

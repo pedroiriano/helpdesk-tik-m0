@@ -1,0 +1,2689 @@
+@layer components {
+  .piui-content-stack { display:flex; flex-direction:column; gap:var(--piui-space-3); min-inline-size:0; max-inline-size:100%; }
+  .piui-workflow-toolbar,.piui-table-tools { display:flex; flex-wrap:wrap; gap:var(--piui-space-3); align-items:end; margin-block:var(--piui-space-4); min-inline-size:0; }
+  .piui-workflow-toolbar > .piui-field { flex:1 1 12rem; min-inline-size:0; }
+  .piui-table-tools { padding:var(--piui-space-3); border:1px solid var(--piui-border-subtle); border-radius:var(--piui-radius-md); }
+  .piui-table-tools > div { flex:1 1 100%; }
+  .piui-table-tools details { flex:1 1 12rem; min-inline-size:0; }
+  .piui-table-tools details[open] { display:grid; gap:var(--piui-space-2); }
+  .piui-field:has(> input[type="checkbox"]) { display:flex; flex-direction:row; align-items:center; gap:var(--piui-space-2); }
+  .piui-field:has(> input[type="checkbox"]) input { min-inline-size:1.25rem; min-block-size:1.25rem; }
+  .piui-product-help,.piui-data-feedback { padding:var(--piui-space-3); margin-block:var(--piui-space-3); border:1px solid var(--piui-border-strong); border-radius:var(--piui-radius-md); }
+  .piui-product-help summary,.piui-table-tools summary { cursor:pointer; padding-block:var(--piui-space-2); font-weight:600; }
+  .piui-brand__mark { inline-size:var(--piui-space-8); block-size:var(--piui-space-8); flex-shrink:0; }
+  .piui-product-signature { display:inline-flex; align-items:center; gap:var(--piui-space-2); vertical-align:middle; max-inline-size:100%; }
+  .piui-product-signature .piui-brand__mark { inline-size:var(--piui-space-6); block-size:var(--piui-space-6); }
+  .piui-product-credit { font-size:var(--piui-text-xs); overflow-wrap:anywhere; margin:0; }
+  .piui-kanban__card .piui-btn { text-align:start; justify-content:start; }
+  .piui-kanban__col h3 { font-size:var(--piui-text-sm); }
+  .piui-pagination__ellipsis { padding:var(--piui-space-2); }
+  .piui-media-error { padding: var(--piui-space-3); color: var(--piui-text-primary); }
+  .piui-lazy-media.is-lazy-error { opacity: 1; filter: none; }
+  /* =========================================================================
+     1. TOMBOL & KONTROL INTERAKTIF (MONOKROM HALUS ABU-ABU TUA -> MUDA)
+     ========================================================================= */
+  .piui-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--piui-space-2);
+    min-block-size: var(--piui-touch-min);
+    padding-block: var(--piui-space-2);
+    padding-inline: var(--piui-space-4);
+    font-size: var(--piui-text-sm);
+    font-weight: 600;
+    line-height: 1.25;
+    border-radius: var(--piui-radius-md);
+    border: 1px solid var(--piui-border-strong);
+    cursor: pointer;
+    text-decoration: none;
+    white-space: normal;
+    max-inline-size: 100%;
+    overflow-wrap: anywhere;
+    transition: background-color var(--piui-duration-fast) var(--piui-ease-standard),
+                border-color var(--piui-duration-fast) var(--piui-ease-standard),
+                transform var(--piui-duration-fast) var(--piui-ease-standard);
+  }
+
+  @media (min-width: 64rem) {
+    .piui-btn {
+      min-block-size: 38px;
+    }
+  }
+
+  .piui-btn--primary {
+    background-color: var(--piui-palette-27272a);
+    background-image: var(--piui-gradient-btn-primary);
+    color: var(--piui-palette-fafafa);
+    border-color: var(--piui-palette-52525b);
+  }
+
+  .piui-btn--secondary {
+    background-color: var(--piui-bg-surface);
+    background-image: var(--piui-gradient-btn-secondary);
+    color: var(--piui-text-primary);
+    border-color: var(--piui-border-strong);
+  }
+
+  .piui-btn--danger {
+    background-color: var(--piui-status-danger-bg);
+    background-image: linear-gradient(135deg, var(--piui-palette-3f3f46) 0%, var(--piui-palette-18181b) 100%);
+    color: var(--piui-palette-fafafa);
+    border-color: var(--piui-status-danger-border);
+  }
+
+  .piui-btn--sm {
+    min-block-size: var(--piui-touch-min);
+    padding-block: var(--piui-space-1);
+    padding-inline: var(--piui-space-3);
+    font-size: var(--piui-text-xs);
+  }
+
+  .piui-btn:disabled,
+  .piui-btn[aria-busy="true"] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .piui-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--piui-touch-min);
+    block-size: var(--piui-touch-min);
+    padding: 0;
+    background-color: var(--piui-bg-elevated);
+    background-image: var(--piui-gradient-btn-secondary);
+    color: var(--piui-text-primary);
+    border: 1px solid var(--piui-border-subtle);
+    border-radius: var(--piui-radius-md);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .piui-btn--primary:hover:not(:disabled) {
+      filter: brightness(1.12);
+    }
+    .piui-btn--secondary:hover:not(:disabled),
+    .piui-icon-btn:hover:not(:disabled) {
+      background-color: var(--piui-bg-elevated);
+      border-color: var(--piui-border-strong);
+    }
+    .piui-btn--danger:hover:not(:disabled) {
+      filter: brightness(1.15);
+    }
+  }
+
+  /* =========================================================================
+     2. COMMAND PALETTE TRIGGER DI TOPBAR
+     ========================================================================= */
+  .piui-cmd-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--piui-space-2);
+    min-inline-size: var(--piui-touch-min);
+    block-size: var(--piui-touch-min);
+    padding-inline: var(--piui-space-3);
+    background-color: var(--piui-bg-elevated);
+    background-image: var(--piui-gradient-btn-secondary);
+    color: var(--piui-text-secondary);
+    border: 1px solid var(--piui-border-strong);
+    border-radius: var(--piui-radius-md);
+    cursor: pointer;
+    font-size: var(--piui-text-sm);
+  }
+
+  .piui-cmd-trigger__label,
+  .piui-cmd-trigger__kbd {
+    display: none;
+  }
+
+  @media (min-width: 48rem) {
+    .piui-cmd-trigger {
+      block-size: 38px;
+      min-inline-size: var(--piui-touch-min);
+      max-inline-size: min(32vw, 24rem);
+      justify-content: space-between;
+    }
+    .piui-cmd-trigger__label {
+      display: inline;
+      color: var(--piui-text-muted);
+      min-inline-size: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .piui-cmd-trigger__kbd {
+      display: inline-block;
+      padding: 2px 6px;
+      font-size: var(--piui-text-xs);
+      background-color: var(--piui-bg-surface);
+      border: 1px solid var(--piui-border-strong);
+      border-radius: var(--piui-radius-sm);
+    }
+  }
+
+  /* =========================================================================
+     3. SIDEBAR NAVIGATION (DAPAT DIKECILKAN MENJADI IKON SAJA)
+     ========================================================================= */
+  .piui-sidebar__group-label {
+    padding-inline: var(--piui-space-4);
+    padding-block: var(--piui-space-2);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--piui-text-on-dark-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .piui-nav-list {
+    list-style: none;
+    margin: 0;
+    padding: var(--piui-space-2);
+    display: flex;
+    flex-direction: column;
+    gap: var(--piui-space-1);
+  }
+
+  .piui-nav-link {
+    display: flex;
+    align-items: center;
+    gap: var(--piui-space-3);
+    min-block-size: 44px;
+    padding-block: var(--piui-space-2);
+    padding-inline: var(--piui-space-3);
+    color: var(--piui-text-on-dark-muted);
+    text-decoration: none;
+    font-size: var(--piui-text-sm);
+    font-weight: 500;
+    border-radius: var(--piui-radius-md);
+    border-inline-start: 3px solid transparent;
+    white-space: nowrap;
+    transition: background-color var(--piui-duration-fast) var(--piui-ease-standard),
+                color var(--piui-duration-fast) var(--piui-ease-standard);
+  }
+
+  .piui-nav-link svg {
+    flex-shrink: 0;
+  }
+
+  .piui-nav-link[aria-current="page"] {
+    background-color: var(--piui-bg-sidebar-hover);
+    background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%);
+    color: var(--piui-text-on-dark);
+    font-weight: 700;
+    border-inline-start-color: var(--piui-palette-d4d4d8);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .piui-nav-link:hover {
+      background-color: var(--piui-bg-sidebar-hover);
+      color: var(--piui-text-on-dark);
+    }
+  }
+
+  /* Tombol Ciutkan/Perluas di Bawah Sidebar */
+  .piui-sidebar__footer {
+    padding: var(--piui-space-2);
+    border-block-start: 1px solid rgba(255, 255, 255, 0.08);
+    margin-block-start: auto;
+  }
+
+  .piui-sidebar__collapse-btn {
+    inline-size: 100%;
+    display: flex;
+    align-items: center;
+    gap: var(--piui-space-3);
+    min-block-size: 42px;
+    padding-inline: var(--piui-space-3);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--piui-text-on-dark-muted);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--piui-radius-md);
+    font-size: var(--piui-text-xs);
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .piui-sidebar__collapse-btn:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+    color: var(--piui-text-on-dark);
+  }
+
+  /* ATURAN COLLAPSED SIDEBAR (HANYA TAMPIL IKON SAJA) */
+  .piui-app-shell[data-sidebar="collapsed"] .piui-sidebar__group-label,
+  .piui-app-shell[data-sidebar="collapsed"] .piui-nav-link__text,
+  .piui-app-shell[data-sidebar="collapsed"] .piui-sidebar__collapse-label {
+    display: none;
+  }
+
+  .piui-app-shell[data-sidebar="collapsed"] .piui-nav-link,
+  .piui-app-shell[data-sidebar="collapsed"] .piui-sidebar__collapse-btn {
+    justify-content: center;
+    padding-inline: 0;
+    gap: 0;
+  }
+
+  .piui-app-shell[data-sidebar="collapsed"] .piui-sidebar__collapse-btn svg {
+    transform: rotate(180deg);
+  }
+
+  /* MASTERPIECE BREADCRUMBS BAR */
+  .piui-breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--piui-space-3);
+    padding: 0.45rem 0.85rem;
+    background-color: var(--piui-bg-surface);
+    background-image: var(--piui-gradient-card);
+    border: 1px solid var(--piui-border-subtle);
+    border-radius: var(--piui-radius-md);
+    box-shadow: var(--piui-shadow-sm);
+    min-inline-size: 0;
+  }
+
+  .piui-breadcrumb ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: var(--piui-text-xs);
+    color: var(--piui-text-muted);
+    min-inline-size: 0;
+  }
+
+  .piui-breadcrumb li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .piui-breadcrumb li + li::before {
+    content: "›";
+    font-weight: 700;
+    font-size: 0.9rem;
+    line-height: 1;
+    color: var(--piui-text-muted);
+    margin-inline: 0.15rem;
+  }
+
+  .piui-breadcrumb a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: var(--piui-radius-pill);
+    background-color: var(--piui-bg-elevated);
+    border: 1px solid var(--piui-border-subtle);
+    color: var(--piui-text-secondary);
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color var(--piui-duration-fast) var(--piui-ease-standard),
+                color var(--piui-duration-fast) var(--piui-ease-standard),
+                border-color var(--piui-duration-fast) var(--piui-ease-standard);
+  }
+
+  .piui-breadcrumb a:hover {
+    background-color: var(--piui-bg-surface);
+    color: var(--piui-text-primary);
+    border-color: var(--piui-border-strong);
+  }
+
+  .piui-breadcrumb li[aria-current="page"] {
+    padding: 0.22rem 0.65rem;
+    border-radius: var(--piui-radius-pill);
+    background-image: var(--piui-gradient-btn-primary);
+    color: var(--piui-palette-fafafa);
+    font-weight: 700;
+    border: 1px solid var(--piui-border-strong);
+  }
+
+  .piui-breadcrumb__tools {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--piui-space-2);
+    margin-inline-start: auto;
+  }
+
+  /* =========================================================================
+     4. SYSTEM HEALTH BANNER & PILLS STATUS ANTI-OVERLAP
+     ========================================================================= */
+  .piui-health-banner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--piui-space-3);
+    padding: var(--piui-space-3) var(--piui-space-4);
+    background-color: var(--piui-bg-surface);
+    background-image: var(--piui-gradient-card);
+    color: var(--piui-text-primary);
+    border: 1px solid var(--piui-border-strong);
+    border-inline-start: 4px solid var(--piui-accent-primary);
+    border-radius: var(--piui-radius-md);
+    font-size: var(--piui-text-sm);
+    box-shadow: var(--piui-shadow-sm);
+  }
+
+  .piui-health-banner__content {
+    display: flex;
+    align-items: center;
+    gap: var(--piui-space-3);
+    min-inline-size: 0;
+    flex: 1 1 280px;
+  }
+
+  .piui-health-banner__content svg {
+    flex-shrink: 0;
+  }
+
+  /* Pills Status Anti-Overlap: Pembungkusan Teks Rapi & Kontras Monokrom */
+  .piui-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.22rem 0.65rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 1.3;
+    border-radius: var(--piui-radius-pill);
+    background-color: var(--piui-bg-elevated);
+    background-image: var(--piui-gradient-badge);
+    color: var(--piui-text-primary);
+    border: 1px solid var(--piui-border-strong);
+    max-inline-size: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-align: start;
+    flex-shrink: 0;
+  }
+
+  .piui-badge--env {
+    background-color: var(--piui-status-info-bg);
+    color: var(--piui-status-info-fg);
+    border-color: var(--piui-status-info-border);
+    white-space: nowrap;
+  }
+
+  .piui-badge[data-status="success"],
+  .piui-badge[data-status="active"],
+  .piui-badge[data-status="info"],
+  .piui-badge[data-status="neutral"] {
+    background-color: var(--piui-status-success-bg);
+    color: var(--piui-status-success-fg);
+    border-color: var(--piui-status-success-border);
+  }
+
+  .piui-badge[data-status="warning"],
+  .piui-badge[data-status="pending"] {
+    background-color: var(--piui-status-warning-bg);
+    color: var(--piui-status-warning-fg);
+    border-color: var(--piui-status-warning-border);
+  }
+
+  .piui-badge[data-status="danger"],
+  .piui-badge[data-status="high-risk"],
+  .piui-badge[data-status="suspended"] {
+    background-color: var(--piui-status-danger-bg);
+    color: var(--piui-status-danger-fg);
+    border-color: var(--piui-status-danger-border);
+  }
+
+  /* =========================================================================
+     5. KARTU KPI & PANEL MODUL (BEBAS OVERLAP ANTARA JUDUL & PILL STATUS)
+     ========================================================================= */
+  .piui-card {
+    background-color: var(--piui-bg-surface);
+    background-image: var(--piui-gradient-card);
+    border: 1px solid var(--piui-border-subtle);
+    border-radius: var(--piui-radius-lg);
+    padding: var(--piui-space-4);
+    box-shadow: var(--piui-shadow-sm);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--piui-space-3);
+    min-inline-size: 0;
+    transition: transform var(--piui-duration-normal) var(--piui-ease-standard),
+                box-shadow var(--piui-duration-normal) var(--piui-ease-standard);
+  }
+
+  @media (hover: hover) {
+    .piui-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--piui-shadow-md);
+    }
+  }
+
+  .piui-card__body-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--piui-space-2);
+  }
+
+  .piui-sparkline {
+    color: var(--piui-accent-primary);
+    opacity: 0.85;
+    flex-shrink: 0;
+    inline-size: 88px;
+    block-size: 28px;
+    transition: opacity var(--piui-duration-normal) var(--piui-ease-standard),
+                transform var(--piui-duration-normal) var(--piui-ease-standard);
+  }
+
+  .piui-card:hover .piui-sparkline {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+
+  .piui-accent-picker {
+    display: flex;
+    align-items: center;
+    gap: var(--piui-space-2);
+    margin-block: var(--piui-space-1);
+  }
+
+  .piui-accent-dot {
+    inline-size: 22px;
+    block-size: 22px;
+    border-radius: var(--piui-radius-pill);
+    border: 2px solid transparent;
+    cursor: pointer;
+    padding: 0;
+    transition: transform var(--piui-duration-fast), border-color var(--piui-duration-fast);
+  }
+
+  .piui-accent-dot:hover {
+    transform: scale(1.18);
+  }
+
+  .piui-accent-dot[aria-pressed="true"] {
+    border-color: var(--piui-text-primary);
+    box-shadow: 0 0 0 2px var(--piui-bg-surface);
+  }
+
+  .piui-accent-dot--default { background-color: var(--piui-palette-52525b); }
+  .piui-accent-dot--blue { background-color: var(--piui-palette-2563eb); }
+  .piui-accent-dot--emerald { background-color: var(--piui-palette-059669); }
+  .piui-accent-dot--violet { background-color: var(--piui-palette-7c3aed); }
+  .piui-accent-dot--amber { background-color: var(--piui-palette-d97706); }
+
+  /* Header Card disusun vertikal (column) agar judul dan pill status TIDAK PERNAH saling bertabrakan/overlap */
+  .piui-card__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: var(--piui-space-2);
+    inline-size: 100%;
+    min-inline-size: 0;
+  }
+
+  .piui-card__title {
+    font-size: var(--piui-text-sm);
+    font-weight: 600;
+    color: var(--piui-text-secondary);
+    inline-size: 100%;
+    line-height: 1.35;
+  }
+
+  .piui-card__value {
+    font-size: var(--piui-text-2xl);
+    font-weight: 800;
+    color: var(--piui-text-primary);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+
+  .piui-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--piui-space-2);
+    font-size: var(--piui-text-xs);
+    color: var(--piui-text-muted);
+    padding-block-start: var(--piui-space-2);
+    border-block-start: 1px solid var(--piui-border-subtle);
+    margin-block-start: auto;
+  }
+
+  /* Panel Kontainer Utama */
+  .piui-panel {
+    background-color: var(--piui-bg-surface);
+    background-image: var(--piui-gradient-surface);
+    border: 1px solid var(--piui-border-subtle);
+    border-radius: var(--piui-radius-lg);
+    padding: var(--piui-space-4);
+    box-shadow: var(--piui-shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: var(--piui-space-4);
+    min-inline-size: 0;
+  }
+
+  .piui-panel__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--piui-space-3);
+    padding-block-end: var(--piui-space-3);
+    border-block-end: 1px solid var(--piui-border-subtle);
+    min-inline-size: 0;
+  }
+
+  .piui-panel__header > *,
+  .piui-page-header > *,
+  .piui-page-actions > *,
+  .piui-filter-bar > *,
+  .piui-filter-collapse__body > * {
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .piui-panel__title {
+    font-size: var(--piui-text-lg);
+    font-weight: 700;
+    color: var(--piui-text-primary);
+    margin-block-end: 0.2rem;
+  }
+
+  .piui-panel__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--piui-space-4);
+    min-inline-size: 0;
+  }
+
+  /* =========================================================================
+     6. FILTER BAR & SEGMENTED PERIOD CONTROLS
+     ========================================================================= */
+  .piui-segmented {
+    display: inline-flex;
+    flex-wrap: wrap;
+    background-color: var(--piui-bg-elevated);
+    padding: 3px;
+    border-radius: var(--piui-radius-md);
+    border: 1px solid var(--piui-border-subtle);
+    gap: 2px;
+  }
+
+  .piui-segmented__btn {
+    min-block-size: var(--piui-touch-min);
+    padding-inline: var(--piui-space-3);
+    font-size: var(--piui-text-xs);
+    font-weight: 600;
+    border: none;
+    background: transparent;
+    color: var(--piui-text-secondary);
+    border-radius: var(--piui-radius-sm);
+    cursor: pointer;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    max-inline-size: 100%;
+  }
+
+  .piui-segmented__btn[aria-pressed="true"] {
+    background-color: var(--piui-bg-surface);
+    background-image: var(--piui-gradient-btn-secondary);
+    color: var(--piui-text-primary);
+    box-shadow: var(--piui-shadow-sm);
+  }
+
+  .piui-filter-bar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--piui-space-3);
+    padding: var(--piui-space-3);
+    background-color: var(--piui-bg-elevated);
+    border-radius: var(--piui-radius-md);
+    border: 1px solid var(--piui-border-subtle);
+  }
+
+  @container workspace (min-width: 36rem) {
+    .piui-filter-bar {
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+      align-items: end;
+    }
+    .piui-filter-bar > .piui-field:has(> input[type="search"]) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @container workspace (min-width: 58rem) {
+    .piui-filter-bar > .piui-field:has(> input[type="search"]) {
+      grid-column: span 2;
+    }
+  }
+
+  .piui-filter-collapse__body {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--piui-space-2);
+    margin-block-start: var(--piui-space-2);
+  }
+
+  .piui-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--piui-space-1);
+    min-inline-size: 0;
+    max-inline-size: 100%;
+  }
+
+  .piui-field__label {
+    font-size: var(--piui-text-xs);
+    font-weight: 600;
+    color: var(--piui-text-secondary);
+  }
+
+  .piui-field__hint {
+    font-size: 0.72rem;
+    color: var(--piui-text-muted);
+  }
+
+  .piui-input,
+  .piui-select,
+  .piui-textarea {
+    inline-size: 100%;
+    min-block-size: var(--piui-touch-min);
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    padding-inline: var(--piui-space-3);
+    padding-block: var(--piui-space-2);
+    background-color: var(--piui-bg-surface);
+    color: var(--piui-text-primary);
+    border: 1px solid var(--piui-border-strong);
+    border-radius: var(--piui-radius-md);
+  }
+
+  /* =========================================================================
+     7. TABEL DATA ANTI-JEBOL (.piui-table-scroll), STICKY COLUMN & KARTU RESPONSIF HP/TABLET
+     ========================================================================= */
+  .piui-table-responsive-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--piui-space-2);
+    padding: 0.45rem var(--piui-space-3);
+    margin-block-end: var(--piui-space-2);
+    background-color: var(--piui-bg-elevated);
+    border: 1px solid var(--piui-border-subtle);
+    border-radius: var(--piui-radius-md);
+    font-size: var(--piui-text-xs);
+    color: var(--piui-text-secondary);
+  }
+
+  .piui-table-responsive-bar__hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+  }
+
+  .piui-table-scroll {
+    container: piui-table / inline-size;
+    inline-size: 100%;
+    max-inline-size: 100%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    background-color: var(--piui-bg-surface);
+    border: 1px solid var(--piui-border-subtle);
+    border-radius: var(--piui-radius-md);
+  }
+
+  .piui-table {
+    inline-size: 100%;
+    border-collapse: collapse;
+    font-size: var(--piui-text-sm);
+    text-align: start;
+    table-layout: auto;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .piui-table th,
+  .piui-table td {
+    padding-block: var(--piui-cell-py);
+    padding-inline: var(--piui-cell-px);
+    border-block-end: 1px solid var(--piui-border-subtle);
+    vertical-align: middle;
+    min-inline-size: var(--piui-table-cell-min);
+    overflow-wrap: anywhere;
+  }
+
+  /* Table controls keep readable intrinsic widths; the scroll region absorbs excess. */
+  .piui-table :is(.piui-btn, .piui-icon-btn) {
+    white-space: nowrap;
+    overflow-wrap: normal;
+    word-break: normal;
+    flex-shrink: 0;
+    min-inline-size: var(--piui-touch-min);
+    max-inline-size: none;
+  }
+
+  .piui-table-actions,
+  .piui-table-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--piui-space-2);
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    text-align: start;
+  }
+
+  .piui-table-actions { justify-content: flex-end; }
+
+  .piui-table :is(.piui-table-column--actions, .piui-table-cell--actions) {
+    min-inline-size: var(--piui-table-action-min);
+    text-align: end;
+  }
+
+  .piui-table-controls > :not(.piui-btn, .piui-icon-btn) {
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .piui-table .piui-badge {
+    max-inline-size: 100%;
+    white-space: normal;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  .piui-table thead th {
+    background-color: var(--piui-bg-elevated);
+    color: var(--piui-text-secondary);
+    font-size: var(--piui-text-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  /* Mode Tabel Geser Samping dengan Sticky Column ( <= 140px di HP sesuai Hukum 6 ) */
+  .piui-table th[scope="row"],
+  .piui-table th.is-sticky-col {
+    position: sticky;
+    inset-inline-start: 0;
+    z-index: 2;
+    background-color: var(--piui-bg-surface);
+    max-inline-size: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.08);
+  }
+
+  .piui-table thead th.is-sticky-col {
+    background-color: var(--piui-bg-elevated);
+    z-index: 3;
+  }
+
+  /* Base Mobile (< 40rem / < 640px): Otomatis Tampilan Kartu Responsif kecuali dipilih Mode Geser */
+  .piui-table-scroll:not([data-table-view="scroll"]) .piui-table,
+  .piui-table-scroll:not([data-table-view="scroll"]) .piui-table tbody {
+    display: block;
+    inline-size: 100%;
+  }
+
+  .piui-table-scroll:not([data-table-view="scroll"]) .piui-table thead {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .piui-table-scroll:not([data-table-view="scroll"]) .piui-table tbody tr:not([hidden]) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.45rem;
+    padding: var(--piui-space-3);
+    margin: var(--piui-space-2);
+    background-color: var(--piui-bg-elevated);
+    background-image: var(--piui-gradient-surface);
+    border: 1px solid var(--piui-border-strong);
+    border-radius: var(--piui-radius-md);
+    box-shadow: var(--piui-shadow-sm);
+  }
+
+  .piui-table-scroll:not([data-table-view="scroll"]) .piui-table tbody th[scope="row"],
+  .piui-table-scroll:not([data-table-view="scroll"]) .piui-table tbody th.is-sticky-col {
+    position: static;
+    max-inline-size: 100%;
+    white-space: normal;
+    overflow: visible;
+    background: transparent;
+    box-shadow: none;
+    padding: 0 0 0.5rem 0;
+    border-block-end: 1px dashed var(--piui-border-strong);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--piui-space-2);
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .piui-table-scroll:not([data-table-view="scroll"]) .piui-table tbody td {
+    display: block;
+    padding: 0.3rem 0;
+    border-block-end: 1px solid var(--piui-border-subtle);
+    text-align: start;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+  }
+
+  .piui-table-scroll:not([data-table-view="scroll"]) .piui-table tbody td:last-child {
+    border-block-end: none;
+    padding-block-end: 0;
+  }
+
+  .piui-table-scroll:not([data-table-view="scroll"]) .piui-table tbody td::before {
+    display: block;
+    margin-block-end: var(--piui-space-1);
+    content: attr(data-label);
+    font-size: var(--piui-text-xs);
+    font-weight: 700;
+    color: var(--piui-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    text-align: start;
+  }
+
+  .piui-table-scroll:not([data-table-view="scroll"]) .piui-table-actions {
+    justify-content: flex-start;
+  }
+
+  /* Lebar area tabel >= 40rem: kolom penuh; mode "cards" tetap dapat dipaksa. */
+  @container piui-table (min-width: 40rem) {
+    .piui-table-scroll:not([data-table-view="cards"]) .piui-table {
+      display: table;
+    }
+
+    .piui-table-scroll:not([data-table-view="cards"]) .piui-table thead {
+      position: static;
+      inline-size: auto;
+      block-size: auto;
+      margin: 0;
+      overflow: visible;
+      clip: auto;
+      white-space: nowrap;
+    }
+
+    .piui-table-scroll:not([data-table-view="cards"]) .piui-table tbody {
+      display: table-row-group;
+    }
+
+    .piui-table-scroll:not([data-table-view="cards"]) .piui-table tbody tr:not([hidden]) {
+      display: table-row;
+      padding: 0;
+      margin: 0;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+    }
+
+    .piui-table-scroll:not([data-table-view="cards"]) .piui-table tbody th[scope="row"],
+    .piui-table-scroll:not([data-table-view="cards"]) .piui-table tbody th.is-sticky-col {
+      display: table-cell;
+      position: sticky;
+      inset-inline-start: 0;
+      z-index: 2;
+      background-color: var(--piui-bg-surface);
+      max-inline-size: 200px;
+      min-inline-size: var(--piui-table-cell-min);
+      white-space: normal;
+      padding-block: var(--piui-cell-py);
+      padding-inline: var(--piui-cell-px);
+      border-block-end: 1px solid var(--piui-border-subtle);
+      box-shadow: 2px 0 4px rgba(0, 0, 0, 0.08);
+    }
+
+    .piui-table-scroll:not([data-table-view="cards"]) .piui-table tbody td {
+      display: table-cell;
+      padding-block: var(--piui-cell-py);
+      padding-inline: var(--piui-cell-px);
+      border-block-end: 1px solid var(--piui-border-subtle);
+      text-align: start;
+      min-inline-size: var(--piui-table-cell-min);
+    }
+
+    .piui-table-scroll:not([data-table-view="cards"]) .piui-table tbody td.text-end {
+      text-align: end;
+    }
+
+    .piui-table-scroll:not([data-table-view="cards"]) .piui-table tbody td.piui-table-cell--actions {
+      min-inline-size: var(--piui-table-action-min);
+      text-align: end;
+    }
+
+    .piui-table-scroll:not([data-table-view="cards"]) .piui-table-actions {
+      justify-content: flex-end;
+    }
+
+    .piui-table-scroll:not([data-table-view="cards"]) .piui-table tbody td::before {
+      display: none;
+    }
+  }
+
+  @container piui-table (min-width: 48rem) {
+    .piui-table th[scope="row"],
+    .piui-table th.is-sticky-col,
+    .piui-table-scroll:not([data-table-view="cards"]) .piui-table tbody th[scope="row"],
+    .piui-table-scroll:not([data-table-view="cards"]) .piui-table tbody th.is-sticky-col {
+      max-inline-size: 240px;
+    }
+  }
+
+  /* =========================================================================
+     8. GRAFIK SVG NATIVE & TABEL PENDAMPING AKSESIBEL
+     ========================================================================= */
+  .piui-chart-box {
+    inline-size: 100%;
+    min-block-size: 220px;
+    padding-block: var(--piui-space-2);
+    margin: 0;
+  }
+
+  .piui-svg-chart {
+    inline-size: 100%;
+    block-size: auto;
+    max-block-size: 260px;
+    overflow: visible;
+  }
+
+  .piui-chart-details {
+    margin-block-start: var(--piui-space-3);
+    border-block-start: 1px solid var(--piui-border-subtle);
+    padding-block-start: var(--piui-space-2);
+    font-size: var(--piui-text-xs);
+  }
+
+  .piui-chart-details summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--piui-text-primary);
+    padding-block: var(--piui-space-1);
+  }
+
+  /* =========================================================================
+     9. SLIDE-OVER RIGHT MODAL DRAWER UNTUK SETIAP FORM ISIAN (<dialog>)
+     ========================================================================= */
+  @keyframes piui-slide-in-right {
+    from {
+      transform: translateX(100%);
+      opacity: 0.4;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  .piui-dialog {
+    position: fixed;
+    inset-block: 0;
+    inset-inline-start: auto;
+    inset-inline-end: 0;
+    margin: 0;
+    inline-size: min(500px, 94vw);
+    block-size: 100dvh;
+    max-block-size: 100dvh;
+    padding: 0;
+    background-color: var(--piui-bg-surface);
+    background-image: var(--piui-gradient-surface);
+    color: var(--piui-text-primary);
+    border: none;
+    border-inline-start: 1px solid var(--piui-border-strong);
+    border-radius: var(--piui-radius-lg) 0 0 var(--piui-radius-lg);
+    box-shadow: var(--piui-shadow-lg);
+    overflow-y: auto;
+  }
+
+  .piui-dialog[open] {
+    display: flex;
+    flex-direction: column;
+    animation: piui-slide-in-right var(--piui-duration-normal) var(--piui-ease-out);
+  }
+
+  .piui-dialog > form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-block-size: 100%;
+  }
+
+  .piui-dialog::backdrop {
+    background-color: var(--piui-scrim);
+    backdrop-filter: blur(3px);
+  }
+
+  .piui-dialog__header {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--piui-space-3);
+    padding: var(--piui-space-4);
+    background-color: var(--piui-bg-surface);
+    background-image: var(--piui-gradient-surface);
+    border-block-end: 1px solid var(--piui-border-subtle);
+  }
+
+  .piui-dialog__body {
+    padding: var(--piui-space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--piui-space-4);
+    flex: 1;
+  }
+
+  .piui-dialog__footer {
+    position: sticky;
+    inset-block-end: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: var(--piui-space-2);
+    padding: var(--piui-space-3) var(--piui-space-4);
+    background-color: var(--piui-bg-elevated);
+    border-block-start: 1px solid var(--piui-border-subtle);
+    margin-block-start: auto;
+  }
+
+  @media (min-width: 40rem) {
+    .piui-dialog__footer {
+      flex-direction: row;
+      justify-content: flex-end;
+    }
+  }
+
+  /* Off-Canvas Mobile Navigation Drawer berbasis <dialog> (Sisi Kiri di HP) */
+  .piui-drawer-mobile {
+    margin: 0;
+    inline-size: min(290px, 86vw);
+    block-size: 100dvh;
+    max-block-size: 100dvh;
+    background-color: var(--piui-bg-sidebar);
+    background-image: var(--piui-gradient-sidebar);
+    color: var(--piui-text-on-dark);
+    border: none;
+    border-inline-end: 1px solid var(--piui-border-strong);
+    padding: 0;
+  }
+
+  .piui-drawer-mobile::backdrop {
+    background-color: var(--piui-scrim);
+  }
+
+  /* Command Palette List */
+  .piui-cmd-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-block-size: 62dvh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--piui-space-1);
+  }
+
+  .piui-cmd-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--piui-space-3);
+    padding: var(--piui-space-3);
+    border-radius: var(--piui-radius-md);
+    text-decoration: none;
+    color: var(--piui-text-primary);
+    font-size: var(--piui-text-sm);
+    cursor: pointer;
+    border: 1px solid transparent;
+  }
+
+  .piui-cmd-item[aria-selected="true"],
+  .piui-cmd-item:focus-visible {
+    background-color: var(--piui-bg-elevated);
+    border-color: var(--piui-border-strong);
+    color: var(--piui-text-primary);
+    font-weight: 600;
+  }
+
+  /* Popover Native & Toast */
+  .piui-popover {
+    margin: 0;
+    inset: auto;
+    inset-block-start: calc(var(--piui-topbar-h) + 4px);
+    inset-inline-end: var(--piui-space-3);
+    inline-size: min(300px, calc(100vw - 1.5rem));
+    padding: var(--piui-space-3);
+    background-color: var(--piui-bg-surface);
+    background-image: var(--piui-gradient-surface);
+    color: var(--piui-text-primary);
+    border: 1px solid var(--piui-border-strong);
+    border-radius: var(--piui-radius-md);
+    box-shadow: var(--piui-shadow-lg);
+    max-block-size: calc(100dvh - var(--piui-topbar-h) - 1rem);
+    overflow-y: auto;
+  }
+
+  .piui-profile-menu:popover-open {
+    display: grid;
+    gap: var(--piui-space-3);
+  }
+  .piui-profile-menu > hr { inline-size:100%; margin:0; }
+  .piui-profile-menu .piui-page-actions { flex-direction:column; align-items:stretch; gap:var(--piui-space-3); }
+  .piui-profile-menu .piui-btn {
+    inline-size:100%;
+    min-block-size:var(--piui-touch-min);
+    justify-content:flex-start;
+    text-align:start;
+  }
+  .piui-profile-menu .piui-btn > svg { flex-shrink:0; }
+
+  .piui-toast-region {
+    position: fixed;
+    inset: auto;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    overflow: visible;
+    pointer-events: none;
+    inset-block-end: max(var(--piui-space-4), env(safe-area-inset-bottom));
+    inset-inline-end: var(--piui-space-4);
+    z-index: var(--piui-z-toast);
+    display: flex;
+    flex-direction: column;
+    gap: var(--piui-space-2);
+    max-inline-size: calc(100vw - 2rem);
+  }
+
+  .piui-toast-region[popover]:not(:popover-open) { display: none; }
+
+  .piui-toast {
+    overflow-wrap: anywhere;
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--piui-space-3);
+    padding: var(--piui-space-3) var(--piui-space-4);
+    background-color: var(--piui-bg-sidebar);
+    background-image: var(--piui-gradient-sidebar);
+    color: var(--piui-text-on-dark);
+    border: 1px solid var(--piui-border-strong);
+    border-radius: var(--piui-radius-md);
+    box-shadow: var(--piui-shadow-lg);
+    font-size: var(--piui-text-sm);
+  }
+
+  .piui-toast [data-toast-close] { white-space: nowrap; flex-shrink: 0; min-inline-size: var(--piui-touch-min); }
+
+  /* 10. Sortable Table Button, Density, Bulk Action Bar, & Pagination */
+  .piui-table-sort {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--piui-space-1);
+    background: transparent;
+    border: none;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    text-transform: inherit;
+    letter-spacing: inherit;
+    cursor: pointer;
+  }
+
+  .piui-table-sort:hover {
+    color: var(--piui-text-primary);
+  }
+
+  .piui-table--compact th,
+  .piui-table--compact td {
+    padding: var(--piui-space-2) var(--piui-space-3);
+    font-size: var(--piui-text-xs);
+  }
+
+  .piui-bulk-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--piui-space-3);
+    padding: var(--piui-space-3) var(--piui-space-4);
+    background-color: var(--piui-bg-elevated);
+    border-block-end: 1px solid var(--piui-border-strong);
+    font-size: var(--piui-text-sm);
+  }
+
+  /* MASTERPIECE PAGINATION BAR & PAGE SIZE SELECTOR */
+  .piui-pagination {
+    display: flex;
+    flex-direction: column;
+    gap: var(--piui-space-3);
+    padding: var(--piui-space-3) var(--piui-space-4);
+    border: 1px solid var(--piui-border-subtle);
+    border-radius: var(--piui-radius-md);
+    background-color: var(--piui-bg-surface);
+    background-image: var(--piui-gradient-card);
+    font-size: var(--piui-text-xs);
+    color: var(--piui-text-secondary);
+    box-shadow: var(--piui-shadow-sm);
+    margin-block-start: var(--piui-space-2);
+  }
+
+  @media (min-width: 48rem) {
+    .piui-pagination {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  .piui-pagination__info {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--piui-space-3);
+  }
+
+  .piui-pagination__controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--piui-space-3);
+  }
+
+  .piui-pagination__size {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--piui-space-2);
+    font-weight: 600;
+  }
+
+  .piui-pagination__pages {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem;
+    background-color: var(--piui-bg-elevated);
+    padding: 3px;
+    border-radius: var(--piui-radius-md);
+    border: 1px solid var(--piui-border-subtle);
+  }
+
+  .piui-page-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: 32px;
+    block-size: 32px;
+    padding-inline: 0.5rem;
+    border-radius: var(--piui-radius-sm);
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--piui-text-secondary);
+    font-size: var(--piui-text-xs);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    transition: background-color var(--piui-duration-fast) var(--piui-ease-standard),
+                color var(--piui-duration-fast) var(--piui-ease-standard);
+  }
+
+  .piui-page-btn:hover:not(:disabled) {
+    background-color: var(--piui-bg-surface);
+    color: var(--piui-text-primary);
+    border-color: var(--piui-border-subtle);
+  }
+
+  .piui-page-btn[aria-current="page"] {
+    background-image: var(--piui-gradient-btn-primary);
+    color: var(--piui-palette-fafafa);
+    border-color: var(--piui-border-strong);
+    box-shadow: var(--piui-shadow-sm);
+  }
+
+  .piui-page-btn:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+  }
+
+  /* =========================================================================
+     13. SELECT2-STYLE SEARCHABLE COMBOBOX (.piui-select2)
+     ========================================================================= */
+  .piui-select2 {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    inline-size: 100%;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    gap: var(--piui-space-2);
+  }
+
+
+  .piui-select2__control {
+    display: flex;
+    gap: var(--piui-space-2);
+    min-inline-size: 0;
+    max-inline-size: 100%;
+  }
+
+  .piui-select2__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--piui-space-2);
+    inline-size: 100%;
+    min-block-size: var(--piui-touch-min);
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    padding-inline: var(--piui-space-3);
+    padding-block: 0.4rem;
+    background-color: var(--piui-bg-surface);
+    background-image: var(--piui-gradient-btn-secondary);
+    color: var(--piui-text-primary);
+    border: 1px solid var(--piui-border-strong);
+    border-radius: var(--piui-radius-md);
+    font-size: var(--piui-text-xs);
+    font-weight: 600;
+    text-align: start;
+    cursor: pointer;
+    box-shadow: var(--piui-shadow-sm);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .piui-select2__trigger:hover {
+      border-color: var(--piui-text-secondary);
+    }
+  }
+
+  .piui-select2__value {
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+  }
+
+  .piui-select2__icons {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: var(--piui-text-muted);
+    flex-shrink: 0;
+  }
+
+  .piui-select2__clear {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--piui-touch-min);
+    min-block-size: var(--piui-touch-min);
+    flex-shrink: 0;
+    border: 1px solid var(--piui-border-strong);
+    border-radius: var(--piui-radius-pill);
+    background-color: var(--piui-bg-elevated);
+    color: var(--piui-text-secondary);
+    font-size: var(--piui-text-base);
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  .piui-select2__dropdown {
+    background-color: var(--piui-bg-surface);
+    background-image: var(--piui-gradient-surface);
+    border: 1px solid var(--piui-border-strong);
+    border-radius: var(--piui-radius-md);
+    box-shadow: var(--piui-shadow-md);
+    padding: var(--piui-space-2);
+    display: flex;
+    flex-direction: column;
+    gap: var(--piui-space-2);
+  }
+
+  .piui-select2__dropdown[hidden] {
+    display: none;
+  }
+
+  .piui-select2__search {
+    inline-size: 100%;
+    min-block-size: var(--piui-touch-min);
+    padding-inline: var(--piui-space-2);
+    padding-block: 0.25rem;
+    background-color: var(--piui-bg-elevated);
+    color: var(--piui-text-primary);
+    border: 1px solid var(--piui-border-subtle);
+    border-radius: var(--piui-radius-sm);
+    font-size: var(--piui-text-base);
+  }
+
+  .piui-select2__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-block-size: min(12rem, 30dvh);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .piui-select2__option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--piui-space-2);
+    padding: 0.45rem 0.6rem;
+    border-radius: var(--piui-radius-sm);
+    font-size: var(--piui-text-xs);
+    color: var(--piui-text-secondary);
+    cursor: pointer;
+    min-block-size: var(--piui-touch-min);
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+    gap: var(--piui-space-2);
+  }
+
+  .piui-select2__option[aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; }
+
+  .piui-select2__option.is-active {
+    background-color: var(--piui-bg-elevated);
+    color: var(--piui-text-primary);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .piui-select2__option:hover {
+      background-color: var(--piui-bg-elevated);
+      color: var(--piui-text-primary);
+    }
+  }
+
+  .piui-select2__option[aria-selected="true"] {
+    background-image: var(--piui-gradient-btn-primary);
+    color: var(--piui-palette-fafafa);
+    font-weight: 700;
+  }
+
+  /* =========================================================================
+     14. GALERI MEDIA MASONRY, DROPZONE FILE, & LIGHTBOX MODAL
+     ========================================================================= */
+  .piui-dropzone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: var(--piui-space-3);
+    padding: var(--piui-space-6) var(--piui-space-4);
+    background-color: var(--piui-bg-elevated);
+    background-image: var(--piui-gradient-card);
+    border: 2px dashed var(--piui-border-strong);
+    border-radius: var(--piui-radius-lg);
+    cursor: pointer;
+    transition: border-color var(--piui-duration-fast) var(--piui-ease-standard),
+                transform var(--piui-duration-fast) var(--piui-ease-standard);
+  }
+
+  .piui-dropzone:hover,
+  .piui-dropzone.is-dragover {
+    border-color: var(--piui-text-primary);
+    transform: translateY(-1px);
+  }
+
+  .piui-collection-frame { container-type:inline-size; container-name:collection; min-inline-size:0; max-inline-size:100%; }
+  .piui-collection { --piui-collection-columns:1; display:grid; grid-template-columns:repeat(var(--piui-collection-columns),minmax(0,1fr)); gap:var(--piui-space-4); inline-size:100%; min-inline-size:0; }
+  .piui-collection > * { min-inline-size:0; max-inline-size:100%; }
+  .piui-collection[data-collection-view="cards"] { grid-auto-rows:1fr; }
+  .piui-collection[data-collection-view="cards"] > * { block-size:100%; }
+  .piui-collection[data-collection-view="masonry"] { display:block; column-count:var(--piui-collection-columns); column-gap:var(--piui-space-4); }
+  .piui-collection[data-collection-view="masonry"] > * { break-inside:avoid; margin-block-end:var(--piui-space-4); }
+  .piui-collection:not([data-collection-view="masonry"]) [data-collection-preview] { aspect-ratio:16/10; flex-shrink:0; }
+  .piui-collection:not([data-collection-view="masonry"]) [data-collection-preview] > :is(img,video,svg) { inline-size:100%; block-size:100%; object-fit:cover; }
+  .piui-collection[data-collection-view="grid"] [data-collection-preview] { aspect-ratio:1; }
+  .piui-collection[data-collection-view="grid"] [data-collection-preview] > :is(img,video,svg) { object-fit:contain; }
+  .piui-collection-toolbar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:var(--piui-space-3); padding:var(--piui-space-3); margin-block:var(--piui-space-3); border:1px solid var(--piui-border-subtle); border-radius:var(--piui-radius-md); min-inline-size:0; max-inline-size:100%; }
+  .piui-collection-toolbar > .piui-content-stack { flex:1 1 14rem; gap:var(--piui-space-1); }
+  .piui-collection-toolbar .piui-btn[aria-pressed="true"] { background:var(--piui-bg-elevated); border-color:var(--piui-text-primary); box-shadow:inset 0 0 0 1px var(--piui-border-strong); }
+  .piui-collection .piui-media-card__body { flex:1; }
+  @container collection (min-width:36rem) { .piui-collection { --piui-collection-columns:2; } }
+  @container collection (min-width:58rem) { .piui-collection { --piui-collection-columns:3; } }
+  @container collection (min-width:80rem) { .piui-collection { --piui-collection-columns:4; } }
+
+  .piui-media-card {
+    break-inside: avoid;
+    background-color: var(--piui-bg-surface);
+    background-image: var(--piui-gradient-card);
+    border: 1px solid var(--piui-border-subtle);
+    border-radius: var(--piui-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--piui-shadow-sm);
+    display: flex;
+    flex-direction: column;
+    transition: transform var(--piui-duration-fast) var(--piui-ease-standard),
+                border-color var(--piui-duration-fast) var(--piui-ease-standard);
+  }
+
+  .piui-media-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--piui-border-strong);
+  }
+
+  .piui-media-card__preview {
+    position: relative;
+    inline-size: 100%;
+    background-color: var(--piui-bg-sidebar);
+    overflow: hidden;
+    cursor: pointer;
+    border: none;
+    padding: 0;
+    display: block;
+  }
+
+  .piui-media-card__preview img,
+  .piui-media-card__preview video,
+  .piui-media-card__preview svg {
+    inline-size: 100%;
+    block-size: auto;
+    display: block;
+    object-fit: cover;
+  }
+
+  .piui-media-card__body {
+    padding: var(--piui-space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--piui-space-3);
+  }
+
+  .piui-media-card__metadata {
+    min-inline-size:0;
+    max-inline-size:100%;
+    margin-block-start:var(--piui-space-1);
+    border-block-start:1px solid var(--piui-border-subtle);
+  }
+  .piui-media-card__metadata > summary {
+    min-block-size:var(--piui-touch-min);
+    padding-block:var(--piui-space-3);
+    font-size:var(--piui-text-sm);
+    font-weight:600;
+    cursor:pointer;
+    overflow-wrap:anywhere;
+  }
+  .piui-media-card__metadata[open] > summary { margin-block-end:var(--piui-space-2); }
+  .piui-media-card__metadata > .piui-content-stack { padding-block-end:var(--piui-space-1); }
+
+  /* Lightbox / Lighthouse Full-Viewport Preview Modal */
+  .piui-lightbox {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    inline-size: min(880px, calc(100vw - 2rem));
+    max-block-size: min(88dvh, 760px);
+    padding: 0;
+    background-color: var(--piui-bg-surface);
+    background-image: var(--piui-gradient-surface);
+    color: var(--piui-text-primary);
+    border: 1px solid var(--piui-border-strong);
+    border-radius: var(--piui-radius-lg);
+    box-shadow: var(--piui-shadow-lg);
+    overflow-y: auto;
+  }
+
+  .piui-lightbox::backdrop {
+    background-color: rgba(9, 9, 11, 0.86);
+    backdrop-filter: blur(6px);
+  }
+
+  .piui-lightbox__frame {
+    display: flex;
+    flex-direction: column;
+    inline-size: 100%;
+  }
+
+  .piui-lightbox__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--piui-space-4);
+    padding: var(--piui-space-4) var(--piui-space-6);
+    background-color: var(--piui-bg-elevated);
+    background-image: var(--piui-gradient-surface);
+    border-block-end: 1px solid var(--piui-border-subtle);
+  }
+
+  .piui-lightbox__header strong {
+    display: block;
+    font-size: var(--piui-text-base);
+    font-weight: 700;
+    color: var(--piui-text-primary);
+    margin-block-end: 0.2rem;
+  }
+
+  .piui-lightbox__stage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-block-size: 300px;
+    max-block-size: 56dvh;
+    margin: var(--piui-space-4) var(--piui-space-6);
+    padding: var(--piui-space-5);
+    background-color: var(--piui-palette-09090b);
+    border: 1px solid var(--piui-border-subtle);
+    border-radius: var(--piui-radius-md);
+    overflow: hidden;
+  }
+
+  .piui-lightbox__stage img,
+  .piui-lightbox__stage video,
+  .piui-lightbox__stage svg {
+    max-inline-size: 100%;
+    max-block-size: 48dvh;
+    object-fit: contain;
+    border-radius: var(--piui-radius-md);
+  }
+
+  .piui-lightbox__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--piui-space-4);
+    padding: var(--piui-space-4) var(--piui-space-6);
+    background-color: var(--piui-bg-elevated);
+    border-block-start: 1px solid var(--piui-border-subtle);
+  }
+
+  .piui-lightbox > .piui-card {
+    margin: var(--piui-space-5);
+    padding: var(--piui-space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--piui-space-4);
+  }
+
+  /* 11. WAI-ARIA Tabs */
+  .piui-tablist {
+    display: flex;
+    align-items: center;
+    gap: var(--piui-space-1);
+    overflow-x: auto;
+    max-inline-size: 100%;
+    border-block-end: 1px solid var(--piui-border-subtle);
+    padding-block-end: 1px;
+  }
+
+  .piui-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--piui-space-2);
+    min-block-size: var(--piui-touch-min);
+    padding-inline: var(--piui-space-4);
+    background: transparent;
+    border: none;
+    border-block-end: 2px solid transparent;
+    color: var(--piui-text-secondary);
+    font-size: var(--piui-text-sm);
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .piui-tab:hover {
+    color: var(--piui-text-primary);
+  }
+
+  .piui-tab[aria-selected="true"] {
+    color: var(--piui-text-primary);
+    border-block-end-color: var(--piui-text-primary);
+  }
+
+  @media (min-width: 64rem) {
+    .piui-tab {
+      min-block-size: var(--piui-touch-desktop);
+    }
+  }
+
+  /* 12. Audit Diff Comparison Grid & Settings Fieldset */
+  .piui-diff-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--piui-space-4);
+    min-inline-size: 0;
+  }
+
+  @container workspace (min-width: 48rem) {
+    .piui-diff-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .piui-code-block {
+    margin: 0;
+    padding: var(--piui-space-3);
+    background-color: var(--piui-bg-elevated);
+    border: 1px solid var(--piui-border-subtle);
+    border-radius: var(--piui-radius-md);
+    font-family: var(--piui-font-mono);
+    font-size: var(--piui-text-xs);
+    line-height: 1.55;
+    overflow-x: auto;
+    max-inline-size: 100%;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .piui-fieldset {
+    margin: 0;
+    padding: var(--piui-space-4);
+    border: 1px solid var(--piui-border-subtle);
+    border-radius: var(--piui-radius-lg);
+    background-color: var(--piui-bg-surface);
+    display: flex;
+    flex-direction: column;
+    gap: var(--piui-space-4);
+    min-inline-size: 0;
+  }
+
+  .piui-legend {
+    padding-inline: var(--piui-space-2);
+    font-size: var(--piui-text-sm);
+    font-weight: 700;
+    color: var(--piui-text-primary);
+  }
+
+  /* =========================================================================
+     15. APEX-GRADE INTERACTIVE SVG CHARTS (CLICKABLE & HOVERABLE)
+     ========================================================================= */
+  .piui-apex-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--piui-space-3);
+    padding: var(--piui-space-3);
+    margin-block-end: var(--piui-space-3);
+    background-color: var(--piui-bg-elevated);
+    background-image: var(--piui-gradient-surface);
+    border: 1px solid var(--piui-border-subtle);
+    border-radius: var(--piui-radius-md);
+  }
+
+  .piui-apex-legend {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--piui-space-2);
+  }
+
+  .piui-apex-legend__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-block-size: 32px;
+    padding-inline: 0.7rem;
+    padding-block: 0.25rem;
+    border-radius: var(--piui-radius-pill);
+    border: 1px solid var(--piui-border-strong);
+    background-color: var(--piui-bg-surface);
+    color: var(--piui-text-primary);
+    font-size: var(--piui-text-xs);
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity var(--piui-duration-fast) var(--piui-ease-standard),
+                transform var(--piui-duration-fast) var(--piui-ease-standard),
+                background-color var(--piui-duration-fast) var(--piui-ease-standard);
+  }
+
+  .piui-apex-legend__btn:hover {
+    transform: translateY(-1px);
+    background-color: var(--piui-bg-elevated);
+  }
+
+  .piui-apex-legend__btn[aria-pressed="false"] {
+    opacity: 0.45;
+    text-decoration: line-through;
+  }
+
+  .piui-apex-dot {
+    inline-size: 9px;
+    block-size: 9px;
+    border-radius: 50%;
+    background-color: var(--piui-accent-primary);
+  }
+
+  .piui-apex-dot--secondary {
+    background-color: var(--piui-text-muted);
+    border: 2px solid var(--piui-text-primary);
+  }
+
+  .piui-apex-modes {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 3px;
+    background-color: var(--piui-bg-surface);
+    border: 1px solid var(--piui-border-subtle);
+    border-radius: var(--piui-radius-md);
+  }
+
+  .piui-apex-mode-btn {
+    min-block-size: 28px;
+    padding-inline: 0.65rem;
+    border-radius: var(--piui-radius-sm);
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--piui-text-secondary);
+    font-size: var(--piui-text-xs);
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color var(--piui-duration-fast) var(--piui-ease-standard),
+                color var(--piui-duration-fast) var(--piui-ease-standard);
+  }
+
+  .piui-apex-mode-btn[aria-pressed="true"] {
+    background-image: var(--piui-gradient-btn-primary);
+    color: var(--piui-palette-fafafa);
+    border-color: var(--piui-border-strong);
+    box-shadow: var(--piui-shadow-sm);
+  }
+
+  .piui-apex-hud {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--piui-space-3);
+    padding-inline: var(--piui-space-3);
+    padding-block: 0.55rem;
+    margin-block-end: var(--piui-space-3);
+    background-color: var(--piui-bg-surface);
+    border: 1px solid var(--piui-border-strong);
+    border-inline-start: 4px solid var(--piui-accent-primary);
+    border-radius: var(--piui-radius-md);
+    font-size: var(--piui-text-xs);
+    box-shadow: var(--piui-shadow-sm);
+    transition: border-color var(--piui-duration-fast) var(--piui-ease-standard),
+                background-color var(--piui-duration-fast) var(--piui-ease-standard);
+  }
+
+  .piui-apex-hud.is-pinned {
+    background-color: var(--piui-bg-elevated);
+    border-color: var(--piui-text-primary);
+  }
+
+  .piui-apex-hud__metrics {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--piui-space-3);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .piui-svg-chart {
+    user-select: none;
+    touch-action: manipulation;
+  }
+
+  .piui-apex-curve {
+    stroke-dasharray: 1600;
+    stroke-dashoffset: 0;
+    animation: piui-apex-draw 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes piui-apex-draw {
+    from {
+      stroke-dashoffset: 1600;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  .piui-apex-area {
+    animation: piui-apex-fade 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes piui-apex-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .piui-apex-bar {
+    cursor: pointer;
+    transform-box: fill-box;
+    transform-origin: bottom;
+    animation: piui-apex-bar-grow 580ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    transition: fill-opacity var(--piui-duration-fast) var(--piui-ease-standard),
+                filter var(--piui-duration-fast) var(--piui-ease-standard);
+  }
+
+  @keyframes piui-apex-bar-grow {
+    from {
+      transform: scaleY(0.05);
+      opacity: 0.25;
+    }
+    to {
+      transform: scaleY(1);
+      opacity: 1;
+    }
+  }
+
+  .piui-apex-bar:hover,
+  .piui-apex-bar.is-active {
+    fill-opacity: 0.95;
+    filter: brightness(1.14);
+  }
+
+  .piui-apex-point {
+    cursor: pointer;
+    transition: r var(--piui-duration-fast) var(--piui-ease-standard),
+                stroke-width var(--piui-duration-fast) var(--piui-ease-standard);
+  }
+
+  .piui-apex-point:hover,
+  .piui-apex-point.is-active {
+    r: 7.5px;
+    stroke-width: 3.5px;
+  }
+
+  .piui-apex-hitcol {
+    fill: transparent;
+    cursor: crosshair;
+  }
+
+  .piui-apex-hitcol:hover {
+    fill: var(--piui-text-primary);
+    fill-opacity: 0.04;
+  }
+
+  .piui-apex-crosshair {
+    pointer-events: none;
+    transition: opacity 140ms ease;
+  }
+
+  .piui-apex-svg-tooltip {
+    pointer-events: none;
+    transition: opacity 150ms ease, transform 150ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .piui-table tbody tr.is-apex-selected {
+    background-color: var(--piui-accent-soft);
+    outline: 2px solid var(--piui-border-strong);
+    outline-offset: -2px;
+  }
+
+  /* =========================================================================
+     16. LAZY LOAD MEDIA (SHIMMER SKELETON & SMOOTH BLUR-UP REVEAL)
+     ========================================================================= */
+  .piui-lazy-wrap {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--piui-bg-elevated);
+  }
+
+  .piui-lazy-wrap.is-lazy-loading::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      100deg,
+      transparent 20%,
+      rgba(161, 161, 170, 0.22) 50%,
+      transparent 80%
+    );
+    background-size: 200% 100%;
+    animation: piui-lazy-shimmer 1.25s infinite linear;
+    pointer-events: none;
+  }
+
+  @keyframes piui-lazy-shimmer {
+    from {
+      background-position: 200% 0;
+    }
+    to {
+      background-position: -200% 0;
+    }
+  }
+
+  .piui-lazy-media {
+    opacity: 0;
+    filter: blur(10px);
+    transform: scale(1.03);
+    transition: opacity 520ms cubic-bezier(0.22, 1, 0.36, 1),
+                filter 520ms cubic-bezier(0.22, 1, 0.36, 1),
+                transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .piui-lazy-media.is-lazy-loaded {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+
+  /* =========================================================================
+     17. WOW SMOOTH ANIMATION ENGINE (SCROLL-REVEAL & STAGGER CASCADE)
+     ========================================================================= */
+  [data-wow] {
+    --piui-wow-delay: 0ms;
+    opacity: 0;
+    will-change: opacity, transform;
+    transition: opacity 580ms cubic-bezier(0.22, 1, 0.36, 1) var(--piui-wow-delay),
+                transform 580ms cubic-bezier(0.22, 1, 0.36, 1) var(--piui-wow-delay),
+                filter 580ms cubic-bezier(0.22, 1, 0.36, 1) var(--piui-wow-delay);
+  }
+
+  [data-wow="fade-up"] {
+    transform: translate3d(0, 22px, 0);
+    filter: blur(3px);
+  }
+
+  [data-wow="fade-right"] {
+    transform: translate3d(-20px, 0, 0);
+    filter: blur(2px);
+  }
+
+  [data-wow="zoom-in"] {
+    transform: scale(0.94) translate3d(0, 12px, 0);
+    filter: blur(3px);
+  }
+
+  [data-wow="flip-up"] {
+    transform: perspective(700px) rotateX(8deg) translate3d(0, 16px, 0);
+  }
+
+  [data-wow].is-wow-visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1) rotateX(0deg);
+    filter: blur(0);
+  }
+
+  [data-wow-delay="1"] { --piui-wow-delay: 55ms; }
+  [data-wow-delay="2"] { --piui-wow-delay: 110ms; }
+  [data-wow-delay="3"] { --piui-wow-delay: 165ms; }
+  [data-wow-delay="4"] { --piui-wow-delay: 220ms; }
+  [data-wow-delay="5"] { --piui-wow-delay: 275ms; }
+  [data-wow-delay="6"] { --piui-wow-delay: 330ms; }
+  [data-wow-delay="7"] { --piui-wow-delay: 385ms; }
+  [data-wow-delay="8"] { --piui-wow-delay: 440ms; }
+
+  /* Smooth Micro-Interaction Lift pada Kartu & Tombol */
+  .piui-card,
+  .piui-media-card {
+    transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 280ms cubic-bezier(0.22, 1, 0.36, 1),
+                border-color 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .piui-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--piui-shadow-md);
+    border-color: var(--piui-border-strong);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-wow],
+    .piui-lazy-media,
+    .piui-apex-curve,
+    .piui-apex-area,
+    .piui-apex-bar {
+      opacity: 1 !important;
+      transform: none !important;
+      filter: none !important;
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+
+  /* =========================================================================
+     18. NOTIFICATION CENTER (LONCENG TOPBAR & DRAWER INBOX)
+     ========================================================================= */
+  .piui-notif-btn,
+  .piui-notif-indicator {
+    position: relative;
+  }
+
+  .piui-notif-badge {
+    position: absolute;
+    inset-block-start: 4px;
+    inset-inline-end: 4px;
+    min-inline-size: 18px;
+    block-size: 18px;
+    padding-inline: 4px;
+    border-radius: var(--piui-radius-pill);
+    background-color: var(--piui-text-primary);
+    color: var(--piui-bg-surface);
+    border: 1.5px solid var(--piui-bg-surface);
+    font-size: 10px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  .piui-notif-badge[hidden] {
+    display: none;
+  }
+
+  .piui-notif-badge--inline {
+    position: static;
+    block-size: auto;
+    min-block-size: 24px;
+    padding: var(--piui-space-1) var(--piui-space-2);
+    font-size: var(--piui-text-xs);
+    white-space: nowrap;
+  }
+
+  .piui-topbar-extra {
+    display: none;
+  }
+
+  @media (min-width: 48rem) {
+    .piui-topbar-extra {
+      display: inline-flex;
+    }
+  }
+
+  .piui-notif-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--piui-space-2);
+  }
+
+  .piui-notif-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--piui-space-2);
+    padding: var(--piui-space-3);
+    border-radius: var(--piui-radius-md);
+    border: 1px solid var(--piui-border-subtle);
+    background-color: var(--piui-bg-surface);
+    cursor: pointer;
+    transition: background-color var(--piui-duration-fast) var(--piui-ease-standard),
+                border-color var(--piui-duration-fast) var(--piui-ease-standard);
+  }
+
+  .piui-notif-item.is-unread {
+    background-color: var(--piui-bg-elevated);
+    border-inline-start: 4px solid var(--piui-accent-primary);
+    border-color: var(--piui-border-strong);
+  }
+
+  .piui-notif-item:hover {
+    background-color: var(--piui-bg-elevated);
+  }
+
+  .piui-notif-item__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--piui-space-2);
+    font-size: var(--piui-text-xs);
+  }
+
+  /* =========================================================================
+     19. CUSTOM DATE RANGE PICKER (FLATPICKR-STYLE CALENDAR)
+     ========================================================================= */
+  .piui-daterange {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    min-inline-size: 0;
+  }
+
+  .piui-daterange__trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--piui-space-2);
+    min-block-size: var(--piui-touch-min);
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    padding-block: var(--piui-space-2);
+    padding-inline: var(--piui-space-3);
+    border-radius: var(--piui-radius-md);
+    border: 1px solid var(--piui-border-strong);
+    background-color: var(--piui-bg-surface);
+    background-image: var(--piui-gradient-btn-secondary);
+    color: var(--piui-text-primary);
+    font-size: var(--piui-text-xs);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    box-shadow: var(--piui-shadow-sm);
+  }
+
+  .piui-daterange__popover {
+    padding: var(--piui-space-3);
+    background-color: var(--piui-bg-surface);
+    border: 1px solid var(--piui-border-strong);
+    border-radius: var(--piui-radius-lg);
+    box-shadow: var(--piui-shadow-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--piui-space-3);
+  }
+
+  .piui-daterange__popover[hidden] {
+    display: none;
+  }
+
+  /* Top layer escapes panel transforms, containment, overflow and sticky headers.
+     Older anchor-positioning engines receive a bounded, centered native popup. */
+  .piui-popup[popover] {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    inline-size: min(21rem, calc(100dvw - 1rem));
+    max-inline-size: calc(100dvw - 1rem);
+    max-block-size: calc(100dvh - 2rem);
+    block-size: fit-content;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    color: var(--piui-text-primary);
+  }
+
+  .piui-popup[popover]:not(:popover-open) { display: none; }
+
+  @position-try --piui-popup-center {
+    position-area: none;
+    inset: 0;
+    margin: auto;
+  }
+
+  @supports (position-area: bottom span-right) {
+    .piui-popup[popover] {
+      inset: auto;
+      margin: var(--piui-space-2) 0;
+      position-area: bottom span-right;
+      position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline, --piui-popup-center;
+    }
+
+    .piui-select2__dropdown[popover] {
+      inline-size: clamp(10rem, anchor-size(width, 16rem), calc(100dvw - 1rem));
+    }
+  }
+
+  .piui-calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--piui-space-2);
+    font-size: var(--piui-text-xs);
+    font-weight: 700;
+  }
+
+  .piui-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 3px;
+    text-align: center;
+  }
+
+  .piui-cal-weekday {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--piui-text-muted);
+    padding-block: 4px;
+  }
+
+  .piui-cal-day {
+    block-size: 32px;
+    min-inline-size: 0;
+    padding: 0;
+    border-radius: var(--piui-radius-sm);
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--piui-text-primary);
+    font-size: var(--piui-text-xs);
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+  }
+
+  .piui-cal-day:hover {
+    background-color: var(--piui-bg-elevated);
+    border-color: var(--piui-border-subtle);
+  }
+
+  .piui-cal-day.is-in-range {
+    background-color: var(--piui-accent-soft);
+    color: var(--piui-text-primary);
+    font-weight: 600;
+  }
+
+  .piui-cal-day.is-range-edge {
+    background-image: var(--piui-gradient-btn-primary);
+    color: var(--piui-palette-fafafa);
+    font-weight: 700;
+  }
+
+  /* =========================================================================
+     20. MULTI-STEP FORM WIZARD (STEPPER) & VERTICAL TIMELINE
+     ========================================================================= */
+  .piui-stepper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--piui-space-2);
+    padding: var(--piui-space-3);
+    margin-block-end: var(--piui-space-3);
+    background-color: var(--piui-bg-elevated);
+    border: 1px solid var(--piui-border-subtle);
+    border-radius: var(--piui-radius-md);
+    list-style: none;
+  }
+
+  .piui-stepper__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: var(--piui-text-xs);
+    font-weight: 600;
+    color: var(--piui-text-muted);
+    cursor: pointer;
+  }
+
+  .piui-stepper__num {
+    inline-size: 22px;
+    block-size: 22px;
+    border-radius: 50%;
+    border: 1px solid var(--piui-border-strong);
+    background-color: var(--piui-bg-surface);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .piui-stepper__item.is-active {
+    color: var(--piui-text-primary);
+    font-weight: 700;
+  }
+
+  .piui-stepper__item.is-active .piui-stepper__num {
+    background-image: var(--piui-gradient-btn-primary);
+    color: var(--piui-palette-fafafa);
+  }
+
+  .piui-stepper__item.is-done .piui-stepper__num {
+    background-color: var(--piui-accent-soft);
+    color: var(--piui-text-primary);
+  }
+
+  .piui-timeline {
+    list-style: none;
+    margin: 0;
+    padding-inline-start: var(--piui-space-4);
+    border-inline-start: 2px solid var(--piui-border-strong);
+    display: flex;
+    flex-direction: column;
+    gap: var(--piui-space-4);
+  }
+
+  .piui-timeline__item {
+    position: relative;
+    padding: var(--piui-space-3);
+    background-color: var(--piui-bg-elevated);
+    border: 1px solid var(--piui-border-subtle);
+    border-radius: var(--piui-radius-md);
+  }
+
+  .piui-timeline__item::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: calc(-1 * var(--piui-space-4) - 6px);
+    inset-block-start: 16px;
+    inline-size: 10px;
+    block-size: 10px;
+    border-radius: 50%;
+    background-color: var(--piui-accent-primary);
+    border: 2px solid var(--piui-bg-surface);
+  }
+
+  /* =========================================================================
+     21. KANBAN BOARD INTERAKTIF (DRAG & DROP ANTAR KOLOM)
+     ========================================================================= */
+  .piui-kanban {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--piui-space-4);
+    min-inline-size: 0;
+  }
+
+  @container workspace (min-width: 42rem) {
+    .piui-kanban {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @container workspace (min-width: 66rem) {
+    .piui-kanban {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .piui-kanban__col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--piui-space-3);
+    padding: var(--piui-space-3);
+    background-color: var(--piui-bg-elevated);
+    border: 1px solid var(--piui-border-subtle);
+    border-radius: var(--piui-radius-lg);
+    min-block-size: 240px;
+    min-inline-size: 0;
+    transition: border-color var(--piui-duration-fast) var(--piui-ease-standard),
+                background-color var(--piui-duration-fast) var(--piui-ease-standard);
+  }
+
+  .piui-kanban__col.is-drag-over {
+    border-color: var(--piui-text-primary);
+    border-style: dashed;
+    background-color: var(--piui-accent-soft);
+  }
+
+  .piui-kanban__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--piui-space-2);
+    padding-block-end: var(--piui-space-2);
+    border-block-end: 1px solid var(--piui-border-subtle);
+    font-size: var(--piui-text-xs);
+    font-weight: 700;
+  }
+
+  .piui-kanban__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--piui-space-2);
+    min-block-size: 160px;
+  }
+
+  .piui-kanban__card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    padding: var(--piui-space-3);
+    background-color: var(--piui-bg-surface);
+    background-image: var(--piui-gradient-surface);
+    border: 1px solid var(--piui-border-strong);
+    border-radius: var(--piui-radius-md);
+    box-shadow: var(--piui-shadow-sm);
+    cursor: grab;
+    font-size: var(--piui-text-xs);
+  }
+
+  .piui-kanban__card:active {
+    cursor: grabbing;
+  }
+
+  .piui-kanban__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--piui-space-2);
+    padding-block-start: var(--piui-space-2);
+    border-block-start: 1px dashed var(--piui-border-subtle);
+  }
+
+  /* =========================================================================
+     22. TREE VIEW MATRIKS HAK AKSES (RBAC PERMISSION TREE)
+     ========================================================================= */
+  .piui-tree {
+    display: flex;
+    flex-direction: column;
+    gap: var(--piui-space-2);
+  }
+
+  .piui-tree__branch {
+    border: 1px solid var(--piui-border-subtle);
+    border-radius: var(--piui-radius-md);
+    background-color: var(--piui-bg-elevated);
+    padding: var(--piui-space-3);
+  }
+
+  .piui-tree__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--piui-space-2);
+    font-size: var(--piui-text-sm);
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .piui-tree__children {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--piui-space-2);
+    margin-block-start: var(--piui-space-3);
+    padding-inline-start: var(--piui-space-4);
+    border-inline-start: 2px solid var(--piui-border-strong);
+  }
+
+  @container workspace (min-width: 38rem) {
+    .piui-tree__children {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* =========================================================================
+     23. RICH-TEXT / MARKDOWN EDITOR & API KEY SECRET MASKING BOX
+     ========================================================================= */
+  .piui-secret-box {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--piui-space-2);
+    padding: var(--piui-space-3);
+    background-color: var(--piui-bg-elevated);
+    border: 1px solid var(--piui-border-strong);
+    border-radius: var(--piui-radius-md);
+    font-family: var(--piui-font-mono);
+    font-size: var(--piui-text-xs);
+  }
+
+  /* =========================================================================
+     24. UI DENSITY SWITCHER (COMPACT / NORMAL / COMFORTABLE) & PRINT PDF VIEW
+     ========================================================================= */
+  html[data-density="compact"] .piui-table th,
+  html[data-density="compact"] .piui-table td {
+    padding-block: 0.35rem;
+    padding-inline: 0.55rem;
+    font-size: 0.74rem;
+  }
+
+  html[data-density="compact"] .piui-card,
+  html[data-density="compact"] .piui-panel {
+    padding: var(--piui-space-3);
+  }
+
+  html[data-density="comfortable"] .piui-table th,
+  html[data-density="comfortable"] .piui-table td {
+    padding-block: 0.95rem;
+    padding-inline: 1.1rem;
+  }
+
+  .piui-print-banner {
+    display: none;
+  }
+
+  @media print {
+    .piui-topbar,
+    .piui-sidebar,
+    .piui-page-actions,
+    .piui-filter-bar,
+    .piui-pagination__controls,
+    .piui-breadcrumb__tools,
+    .piui-apex-toolbar,
+    dialog {
+      display: none !important;
+    }
+
+    .piui-app-shell {
+      display: block !important;
+    }
+
+    .piui-main {
+      padding: 0 !important;
+    }
+
+    .piui-print-banner {
+      display: flex !important;
+      align-items: center;
+      justify-content: space-between;
+      padding-block-end: 12px;
+      margin-block-end: 16px;
+      border-block-end: 2px solid var(--piui-palette-18181b);
+      font-size: 12px;
+    }
+  }
+}

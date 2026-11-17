@@ -1,0 +1,202 @@
+{
+  "timestamp": "2026-11-13T08:22:02.980040+00:00",
+  "task_id": "RM0-04-CATALOG-ROUTING",
+  "status": "RM0-04 IN_PROGRESS",
+  "next_phase": "RM0-05 NOT_STARTED",
+  "result": "PASS_LOCAL_BUILD_HTTP_DATA",
+  "changed_files": [
+    "backend/internal/modules/m1/api/identity.go",
+    "backend/internal/modules/m1/api/master.go",
+    "backend/internal/modules/m1/internal/app/directory.go",
+    "backend/internal/modules/m1/internal/app/http.go",
+    "backend/internal/modules/m1/internal/app/identity.go",
+    "backend/internal/modules/m1/internal/store/directory.go",
+    "backend/internal/modules/m1/internal/store/identity.go",
+    "backend/internal/modules/m3/api/tickets.go",
+    "backend/internal/modules/m3/internal/app/http.go",
+    "backend/internal/modules/m3/internal/app/routing.go",
+    "backend/internal/modules/m3/internal/app/tickets.go",
+    "backend/internal/modules/m3/internal/store/tickets.go",
+    "backend/internal/modules/m4/internal/domain/classify.go",
+    "backend/internal/modules/m4/internal/domain/classify_test.go",
+    "backend/internal/modules/m5/api/assignment.go",
+    "backend/internal/modules/m5/internal/app/assignment.go",
+    "backend/internal/modules/m5/internal/app/routing.go",
+    "backend/internal/modules/m5/internal/store/assignment.go",
+    "backend/internal/platform/database/pools.go",
+    "contracts/business_traceability.csv",
+    "contracts/openapi/business.json",
+    "docs/adr/0007-reporting-directory-and-category-routing.md",
+    "frontend/admin-navigation.mjs",
+    "frontend/business-pages.mjs",
+    "frontend/business.css",
+    "frontend/src/features/business-types.generated.ts",
+    "frontend/src/features/m0-03.ts",
+    "frontend/src/features/m0-04.ts",
+    "frontend/src/features/reporting-context.ts",
+    "frontend/src/features/routing-editor.ts",
+    "frontend/ticket-pages.mjs",
+    "migrations/checksums.sha256",
+    "migrations/m1/031-reporting-directory.sql",
+    "migrations/m3/032-report-context.sql",
+    "migrations/m5/033-category-routing.sql",
+    "migrations/manifest.json",
+    "planning/remediation_backlog.csv",
+    "scripts/build_business_contracts.py",
+    "scripts/m0_03_contracts.py",
+    "scripts/m0_04_contracts.py",
+    "scripts/m0_05_contracts.py",
+    "seeds/lab.sh",
+    "seeds/reporting-taxonomy-lab.sql",
+    "status/HANDOFF_RM0_04.md",
+    "status/PROJECT_STATE.md"
+  ],
+  "source_manifest": {
+    "path": "qa/remediation/rm0-04/catalog-routing/source-manifest.json",
+    "sha256": "5285a7a493535a53218be1a25e584f1cfacfd44d95f0adf803174ab795da82ab"
+  },
+  "tests": [
+    {
+      "command": [
+        "npm.cmd",
+        "--prefix",
+        "frontend",
+        "run",
+        "build"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "go",
+        "test",
+        "./internal/modules/m1/...",
+        "./internal/modules/m3/...",
+        "./internal/modules/m4/...",
+        "./internal/modules/m5/...",
+        "./internal/platform/database"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "scripts/build_business_contracts.py",
+        "--check"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/contract",
+        "-p",
+        "test_business_contracts.py"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "scripts/test_piui_build.py"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "node",
+        "--disable-warning=ExperimentalWarning",
+        "scripts/test_admin_profiles.mjs"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "qa/remediation/rm0-04/catalog-routing/verify_http.py"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "docker",
+        "compose",
+        "build",
+        "app",
+        "web"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "qa/remediation/rm0-04/catalog-routing/verify_gateway.py"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "docker",
+        "compose",
+        "run",
+        "--rm",
+        "--no-deps",
+        "migrate"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "docker",
+        "compose",
+        "run",
+        "--rm",
+        "--no-deps",
+        "seed-lab",
+        "reporting"
+      ],
+      "result": "PASS"
+    },
+    {
+      "command": [
+        "docker",
+        "compose",
+        "up",
+        "-d",
+        "--no-deps",
+        "--no-build",
+        "--wait",
+        "--wait-timeout",
+        "85",
+        "app",
+        "web"
+      ],
+      "result": "PASS"
+    }
+  ],
+  "browser": "NOT_RUN_LOCAL_BROWSER_UNAVAILABLE",
+  "verification_limits": [
+    "Visual desktop/mobile dan keyboard pada kandidat ini NOT_RUN karena browser lokal tidak tersedia.",
+    "Empat Bidang awal adalah contoh lab. Nama direktori merupakan referensi awal. Routing lintas OPD nyata bergantung pada mandat, master tujuan dan aturan yang disahkan.",
+    "Tidak ada UAT organisasi atau benchmark empat arsitektur. Acceptance RM0-04 masih terbuka."
+  ],
+  "artifacts": {
+    "qa/remediation/rm0-04/catalog-routing/analysis.md": "5366ee6afa85b34207b5a4c142bfea696fd7d9a071ae6a32ace78bc7525f6714",
+    "qa/remediation/rm0-04/catalog-routing/http.json": "229997fae4c612f15386b8976cca294ff1114446f14d341380a13da8950297d0",
+    "qa/remediation/rm0-04/catalog-routing/verify_http.py": "a86bb4a9ec2e3a2f25229c142287a5d3487f6c490837409ff597bcaf1f76545e",
+    "qa/remediation/rm0-04/catalog-routing/database-final.json": "71e4d9c6d51a92329b3fc1aed9499f707dd172a4eb29e31a8059c2c474098958",
+    "qa/remediation/rm0-04/catalog-routing/local-rollout.json": "dd9f2ca71522506e920ec67ba2504eb0cbdf83d445b5bf136318ebcf1721ea5f",
+    "qa/remediation/rm0-04/catalog-routing/local-directory.json": "ba0b9dc71e8bc2a01d85da899a1802c5c988a75b67d1fab30291453dff008a69",
+    "qa/remediation/rm0-04/catalog-routing/gateway.json": "752f78f99ded29ac60688a94e3fd22072617a513ce8073ab20349bff10e40147",
+    "qa/remediation/rm0-04/catalog-routing/build-images.txt": "271cb91502ca2be08c7c0d9a0f7572304f6f7e15317f1fc5c6240b80786b0c07"
+  }
+}

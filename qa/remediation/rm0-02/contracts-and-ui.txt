@@ -1,0 +1,8 @@
+PASS business contract generation consistency
+........
+----------------------------------------------------------------------
+Ran 8 tests in 13.589s
+
+OK
+PASS module boundaries (53 Go packages)
+PASS PIUI (runtime files, HTML pages, byte-identical files) {'piui-modern': (60, 49), 'piui-zero': (73, 51)}

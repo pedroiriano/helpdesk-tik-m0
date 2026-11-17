@@ -1,0 +1,10 @@
+module_id,schema,subcapabilities,ownership_constraint
+M1,identity,"organizations;delegation;api_clients;maintenance_policy;system_operation_requests","No implicit ticket content access; privileged jobs use scoped runner"
+M2,catalog,"service_forms;portal_navigation;feature_registry;upload_policies","Navigation does not grant permissions"
+M3,intake,"verification;resolution_attempts;confirmation;vendor_cases;handoffs;drafts;private_media","Sole canonical ticket lifecycle writer"
+M4,classification,"text_classification;category_proposal;priority_proposal;classifier_version","No assignment or ticket mutation"
+M5,assignment,"skills;roster;L1_L2_routing;assignment_proposal","Requires verified ticket; final commit in M3"
+M6,sla,"stage_targets;business_calendars;pause_calculation;SLO_definitions","Original accepted_at retained across reassignment"
+M7,escalation,"functional_escalation;hierarchical_escalation;vendor_followup;auto_close","Idempotent versioned command to M3"
+M8,knowledge,"articles;portal_content;editorial_media;content_drafts;public_SEO","Private ticket media require sanitized approved copy before publication"
+M9,notify_audit,"notification_center;telegram_bindings;audit;reporting;exports;visitor_aggregates","Separate queues; live authorization on reads and downloads"

@@ -1,0 +1,17 @@
+{
+  "result": "PASS",
+  "timestamp": "2026-11-13T08:43:45.684785+00:00",
+  "working_database_writes": false,
+  "cases": [
+    "Super Admin scoped editorial access and protected core",
+    "403 role, CSRF and privilege escalation guards",
+    "409 version guard, live session revocation and restore",
+    "new editorial permission requires an account grant",
+    "separate draft and publish permissions",
+    "pending/non-banner media rejected",
+    "draft private and published bytes served",
+    "public URL revoked on replacement",
+    "durable audit intents"
+  ],
+  "scanner": "CLEAN blob seeded after pending rejection; scan pipeline unchanged and not exercised in disposable lab"
+}

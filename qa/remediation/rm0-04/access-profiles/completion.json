@@ -1,0 +1,234 @@
+{
+  "timestamp": "2026-11-13T07:50:21.989882+00:00",
+  "task_id": "R4-UX-ACCESS",
+  "phase": "RM0-04",
+  "phase_status": "IN_PROGRESS",
+  "next_phase": "RM0-05 NOT_STARTED",
+  "result": "PASS_LOCAL_ACCESS_PROFILES",
+  "scope": "Lima profil, pengaturan akses organisasi dan pintasan dasbor M0",
+  "changed_files": [
+    "docs/06_ATURAN_UI_UX_WEB_ADMIN.md",
+    "frontend/admin-navigation.mjs",
+    "frontend/admin-profiles.d.mts",
+    "frontend/admin-profiles.mjs",
+    "frontend/business-pages.mjs",
+    "frontend/business.css",
+    "frontend/src/features/admin-access.ts",
+    "frontend/src/features/admin-shell.ts",
+    "frontend/src/features/dashboard.ts",
+    "frontend/src/features/m0-03.ts",
+    "infra/docker/web.Dockerfile",
+    "planning/remediation_backlog.csv",
+    "runbooks/peran-dan-akses.md",
+    "scripts/test_admin_profiles.mjs",
+    "status/HANDOFF_RM0_04.md",
+    "status/PROJECT_STATE.md"
+  ],
+  "source_manifest": {
+    "path": "qa/remediation/rm0-04/access-profiles/source-manifest.json",
+    "sha256": "ef602c9c63ec226fce9fc176a857bcd4d2c07c02531b87527239464245fd2d69",
+    "files": 714
+  },
+  "prior_checks": [
+    {
+      "command": [
+        "go",
+        "test",
+        "./internal/modules/m1/internal/domain",
+        "./internal/modules/m1/api"
+      ],
+      "cwd": "backend",
+      "exit": 0,
+      "result": "PASS",
+      "output": "qa\\remediation\\rm0-04\\access-profiles\\test-identity.txt"
+    },
+    {
+      "command": [
+        "npm.cmd",
+        "--prefix",
+        "frontend",
+        "run",
+        "build"
+      ],
+      "exit": 0,
+      "result": "PASS",
+      "output": "qa\\remediation\\rm0-04\\access-profiles\\build.txt"
+    },
+    {
+      "command": [
+        "node",
+        "--disable-warning=ExperimentalWarning",
+        "scripts/test_admin_profiles.mjs"
+      ],
+      "exit": 0,
+      "result": "PASS",
+      "output": "qa\\remediation\\rm0-04\\access-profiles\\test-profiles.txt"
+    },
+    {
+      "command": [
+        "node",
+        "--disable-warning=ExperimentalWarning",
+        "scripts/test_admin_navigation.mjs"
+      ],
+      "exit": 0,
+      "result": "PASS",
+      "output": "qa\\remediation\\rm0-04\\access-profiles\\test-navigation.txt"
+    },
+    {
+      "command": [
+        "python",
+        "scripts/test_piui_build.py"
+      ],
+      "exit": 0,
+      "result": "PASS",
+      "output": "qa\\remediation\\rm0-04\\access-profiles\\test-piui.txt"
+    },
+    {
+      "command": [
+        "node",
+        "--disable-warning=ExperimentalWarning",
+        "scripts/test_ux_flow.mjs"
+      ],
+      "exit": 0,
+      "result": "PASS",
+      "output": "qa\\remediation\\rm0-04\\access-profiles\\test-ux.txt"
+    },
+    {
+      "command": [
+        "docker",
+        "compose",
+        "build",
+        "web"
+      ],
+      "exit": 0,
+      "result": "PASS",
+      "output": "qa\\remediation\\rm0-04\\access-profiles\\build-web.txt"
+    },
+    {
+      "command": [
+        "docker",
+        "compose",
+        "up",
+        "-d",
+        "--no-deps",
+        "--no-build",
+        "--wait",
+        "--wait-timeout",
+        "85",
+        "web"
+      ],
+      "exit": 0,
+      "result": "PASS",
+      "output": "qa\\remediation\\rm0-04\\access-profiles\\cutover.txt"
+    },
+    {
+      "command": [
+        "python",
+        "qa\\remediation\\rm0-04\\access-profiles\\verify_gateway.py"
+      ],
+      "exit": 0,
+      "result": "PASS",
+      "output": "qa\\remediation\\rm0-04\\access-profiles\\gateway.txt"
+    }
+  ],
+  "final_checks": [
+    {
+      "command": [
+        "npm.cmd",
+        "--prefix",
+        "frontend",
+        "run",
+        "build"
+      ],
+      "exit": 0,
+      "result": "PASS",
+      "output": "qa/remediation/rm0-04/access-profiles/build-resume.txt"
+    },
+    {
+      "command": [
+        "node",
+        "--disable-warning=ExperimentalWarning",
+        "scripts/test_admin_profiles.mjs"
+      ],
+      "exit": 0,
+      "result": "PASS",
+      "output": "qa/remediation/rm0-04/access-profiles/test-profiles-resume.txt"
+    },
+    {
+      "command": [
+        "node",
+        "--disable-warning=ExperimentalWarning",
+        "scripts/test_admin_navigation.mjs"
+      ],
+      "exit": 0,
+      "result": "PASS",
+      "output": "qa/remediation/rm0-04/access-profiles/test-navigation-resume.txt"
+    },
+    {
+      "command": [
+        "docker",
+        "compose",
+        "build",
+        "web"
+      ],
+      "exit": 0,
+      "result": "PASS",
+      "output": "qa/remediation/rm0-04/access-profiles/build-web-resume.txt"
+    },
+    {
+      "command": [
+        "docker",
+        "compose",
+        "up",
+        "-d",
+        "--no-deps",
+        "--no-build",
+        "--wait",
+        "--wait-timeout",
+        "85",
+        "web"
+      ],
+      "exit": 0,
+      "result": "PASS",
+      "output": "qa/remediation/rm0-04/access-profiles/cutover-resume.txt"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "qa/remediation/rm0-04/access-profiles/verify_gateway.py"
+      ],
+      "exit": 0,
+      "result": "PASS",
+      "output": "qa/remediation/rm0-04/access-profiles/gateway-resume.txt"
+    }
+  ],
+  "http_check": {
+    "command": [
+      "python",
+      "-B",
+      "qa/remediation/rm0-04/access-profiles/verify_membership.py"
+    ],
+    "exit": 0,
+    "result": "PASS",
+    "output": "qa/remediation/rm0-04/access-profiles/membership-http.json"
+  },
+  "artifact_hashes": {
+    "qa/remediation/rm0-04/access-profiles/analysis.md": "5aeddecd1043d063955d792a6456617ab520810f25f4d5737f3f350f9d6b7bc4",
+    "qa/remediation/rm0-04/access-profiles/browser.json": "b6b589cea55ed94f4381496f0e24408f4b60cda12c1e5d36572a5ef143a65ede",
+    "qa/remediation/rm0-04/access-profiles/access-desktop.jpg": "ba3d87a6b9b03509c7507f87669f61800d00e6c4b77006963a2a07baec23d489",
+    "qa/remediation/rm0-04/access-profiles/access-mobile.jpg": "b34f942404d72f47c351c243ae93db112be8ceafe78b98ccbb36b43abdae312b",
+    "qa/remediation/rm0-04/access-profiles/membership-http.json": "337c4972802b9a8e6c25e7d5a54a46c0dc21ee1e0ccaa980363dead5aee7604c",
+    "qa/remediation/rm0-04/access-profiles/verify_membership.py": "f714857e9dad772f3a1a3c42ef9fdb653b5a1ad45a25bec5c449ed0c52863687",
+    "qa/remediation/rm0-04/access-profiles/browser-lab-state.json": "8ee6027d16b76aaedee0bfc8236db0487470931f2b8325008df184bfe3769309",
+    "qa/remediation/rm0-04/access-profiles/gateway.json": "4d7718a52708e5cfa57446a4a72131adcf2b128c78aef5c9bb929e80638f655c",
+    "qa/remediation/rm0-04/access-profiles/checks.json": "a848c590d409a777ee543f3a13ecb91588c34d3169403c078ccf398d398488a7",
+    "qa/remediation/rm0-04/access-profiles/resume-source-checks.json": "d3a9c65476abbe5f271b0730adfa555e1f6fb55b60f8c3b6027fdcef1b631e35",
+    "qa/remediation/rm0-04/access-profiles/resume-runtime-checks.json": "e2f7e845a1fb23409149aa7a641746768629e11ee2d4e000a2c125ef029b4adb"
+  },
+  "verification_limits": [
+    "Browser desktop/mobile dan keyboard tercatat sebelum koreksi Simpan. Browser lokal tidak tersedia pada sesi lanjutan.",
+    "Koreksi Simpan diuji melalui listener dengan transport terkontrol dan API nyata secara terpisah pada PostgreSQL disposable.",
+    "Penyimpanan dan pencabutan hanya menyentuh data sintetis terisolasi. Cakupan verifikasi adalah lab M0."
+  ]
+}

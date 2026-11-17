@@ -1,0 +1,34 @@
+[
+  {
+    "command": [
+      "npm.cmd",
+      "--prefix",
+      "frontend",
+      "run",
+      "build"
+    ],
+    "exit": 0,
+    "result": "PASS",
+    "output": "qa/remediation/rm0-04/access-profiles/build-resume.txt"
+  },
+  {
+    "command": [
+      "node",
+      "--disable-warning=ExperimentalWarning",
+      "scripts/test_admin_profiles.mjs"
+    ],
+    "exit": 0,
+    "result": "PASS",
+    "output": "qa/remediation/rm0-04/access-profiles/test-profiles-resume.txt"
+  },
+  {
+    "command": [
+      "node",
+      "--disable-warning=ExperimentalWarning",
+      "scripts/test_admin_navigation.mjs"
+    ],
+    "exit": 0,
+    "result": "PASS",
+    "output": "qa/remediation/rm0-04/access-profiles/test-navigation-resume.txt"
+  }
+]

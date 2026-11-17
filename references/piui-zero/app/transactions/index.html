@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Data &amp; Transaksi Operasional — PIUI Zero Admin</title>
+  <meta name="description" content="Template buku besar transaksi dengan data contoh, tampilan rekonsiliasi, dan jejak audit PIUI Zero.">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta property="og:title" content="Data &amp; Transaksi Operasional — PIUI Zero Admin">
+  <meta property="og:description" content="Modul internal pemantauan transaksi dan rekonsiliasi PIUI Zero.">
+  <meta property="og:type" content="website">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="stylesheet" href="/assets/css/main.css?v=2.2.2">
+  <script type="module" src="/assets/js/app.js?v=2.2.2"></script>
+<link rel="icon" href="/assets/icons/favicon.ico?v=2.2.2" sizes="16x16 32x32 48x48"><link rel="icon" href="/assets/icons/piui-favicon.svg?v=2.2.2" type="image/svg+xml" sizes="any"><link rel="apple-touch-icon" href="/assets/icons/piui-180.png?v=2.2.2" sizes="180x180">
+</head>
+<body>
+  <a class="piui-skip-link" href="#main-content">Langsung ke konten utama</a>
+  <div id="piui-live-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="piui-app-shell" data-sidebar="expanded">
+    <!-- TOPBAR GLOBAL -->
+    <header class="piui-topbar">
+      <div class="piui-topbar__start">
+        <button type="button" class="piui-icon-btn" id="btn-sidebar-toggle"
+                aria-label="Buka atau ciutkan panel navigasi" aria-expanded="true" aria-controls="piui-sidebar">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-menu"></use></svg>
+        </button>
+        <a href="/app/dashboard/index.html" class="piui-brand"><img class="piui-brand__mark" src="/assets/icons/piui-mark.svg" alt="" width="32" height="32"><span class="piui-brand__name">PIUI Zero™</span><span class="piui-badge piui-badge--env" title="Lingkungan demo lokal">DEMO</span></a>
+      </div>
+
+      <div class="piui-topbar__end">
+        <button type="button" class="piui-cmd-trigger" id="btn-open-cmd"
+                aria-label="Buka pencarian cepat dan palet perintah (Ctrl+K)">
+          <svg width="18" height="18" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-search"></use></svg>
+          <span class="piui-cmd-trigger__label">Cari rute, transaksi, perintah...</span>
+          <kbd class="piui-cmd-trigger__kbd">Ctrl+K</kbd>
+        </button>
+
+        <button type="button" class="piui-icon-btn" id="btn-theme-toggle"
+                aria-label="Ganti tema terang atau gelap">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-theme"></use></svg>
+        </button>
+
+        <button type="button" class="piui-icon-btn" popovertarget="popover-profile"
+                aria-label="Buka menu profil dan sesi administrator">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-user"></use></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- POPOVER PROFIL -->
+    <div id="popover-profile" popover="auto" class="piui-popover" role="region" aria-label="Informasi Sesi Administrator">
+      <div class="piui-field">
+        <strong>budi.sec@piui-zero.internal</strong>
+        <span class="piui-page-subtitle">Peran: Super Admin &amp; AppSec Lead</span>
+        <span class="piui-badge" data-status="success">Mode prototipe</span>
+      </div>
+      <hr>
+      <div class="piui-page-actions">
+        <a href="/index.html" class="piui-btn piui-btn--secondary piui-btn--sm">Portal Dokumentasi</a>
+        <button type="button" class="piui-btn piui-btn--danger piui-btn--sm" id="btn-session-logout">
+          <svg width="16" height="16" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-logout"></use></svg>
+          <span>Akhiri Sesi (Logout)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- SIDEBAR NAVIGASI -->
+    <aside class="piui-sidebar" id="piui-sidebar" aria-label="Navigasi Modul Admin">
+      <nav aria-label="Navigasi Utama">
+        <div class="piui-sidebar__group-label">Menu Utama</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/app/dashboard/index.html" class="piui-nav-link" title="Beranda Dashboard Utama">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-dashboard"></use></svg>
+              <span class="piui-nav-link__text">Beranda Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/analytics/index.html" class="piui-nav-link" title="Analitik &amp; Grafik Kinerja">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-analytics"></use></svg>
+              <span class="piui-nav-link__text">Analitik &amp; Grafik</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/notifications/index.html" class="piui-nav-link" title="Pusat Notifikasi &amp; Peringatan">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-bell"></use></svg>
+              <span class="piui-nav-link__text">Pusat Notifikasi</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="piui-sidebar__group-label">Kelola Data &amp; Media</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/app/users/index.html" class="piui-nav-link" title="Kelola Data Pengguna &amp; Hak Akses">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-users"></use></svg>
+              <span class="piui-nav-link__text">Data Pengguna</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/transactions/index.html" class="piui-nav-link" aria-current="page" title="Kelola Data Transaksi Keuangan">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-transactions"></use></svg>
+              <span class="piui-nav-link__text">Data Transaksi</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/gallery/index.html" class="piui-nav-link" title="Galeri Foto &amp; Video (Masonry &amp; Lightbox)">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-gallery"></use></svg>
+              <span class="piui-nav-link__text">Galeri Foto &amp; Video</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="piui-sidebar__group-label">Komponen &amp; Tampilan</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/app/components/index.html" class="piui-nav-link" title="Katalog Komponen UI/UX (UI Kit)">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-components"></use></svg>
+              <span class="piui-nav-link__text">Katalog Komponen</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="piui-sidebar__group-label">Sistem &amp; Keamanan</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/app/audit/index.html" class="piui-nav-link" title="Riwayat Aktivitas &amp; Log Audit">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-audit"></use></svg>
+              <span class="piui-nav-link__text">Riwayat Aktivitas</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/settings/index.html" class="piui-nav-link" title="Pengaturan Sistem &amp; Keamanan">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-settings"></use></svg>
+              <span class="piui-nav-link__text">Pengaturan Sistem</span>
+            </a>
+          </li>
+          <li>
+            <a href="/status/index.html" class="piui-nav-link" title="Status Server &amp; Layanan">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-status"></use></svg>
+              <span class="piui-nav-link__text">Status Server</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html" class="piui-nav-link" title="Panduan &amp; Dokumentasi Sistem">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-info"></use></svg>
+              <span class="piui-nav-link__text">Panduan &amp; Dokumentasi</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- OFF-CANVAS MOBILE DRAWER -->
+    <dialog id="piui-mobile-drawer" class="piui-drawer-mobile" aria-labelledby="mobile-drawer-title">
+      <div class="piui-dialog__header">
+        <strong id="mobile-drawer-title">Menu Navigasi PIUI Zero</strong>
+        <button type="button" class="piui-icon-btn" id="btn-close-mobile-drawer" aria-label="Tutup menu navigasi">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-close"></use></svg>
+        </button>
+      </div>
+      <nav aria-label="Navigasi Mobile">
+        <ul class="piui-nav-list">
+          <li><a href="/app/dashboard/index.html" class="piui-nav-link">Beranda Dashboard</a></li>
+          <li><a href="/app/analytics/index.html" class="piui-nav-link">Analitik &amp; Grafik</a></li>
+          <li><a href="/app/users/index.html" class="piui-nav-link">Data Pengguna</a></li>
+          <li><a href="/app/transactions/index.html" class="piui-nav-link" aria-current="page">Data Transaksi</a></li>
+          <li><a href="/app/gallery/index.html" class="piui-nav-link">Galeri Foto &amp; Video</a></li>
+          <li><a href="/app/components/index.html" class="piui-nav-link">Katalog Komponen (UI Kit)</a></li>
+          <li><a href="/app/audit/index.html" class="piui-nav-link">Riwayat Aktivitas (Audit)</a></li>
+          <li><a href="/app/settings/index.html" class="piui-nav-link">Pengaturan Sistem</a></li>
+          <li><a href="/status/index.html" class="piui-nav-link">Status Server</a></li>
+          <li><a href="/index.html" class="piui-nav-link">Panduan &amp; Dokumentasi</a></li>
+          <li><a href="/auth/login.html" class="piui-nav-link">Masuk Akun Admin</a></li>
+        </ul>
+      </nav>
+    </dialog>
+
+    <!-- AREA KERJA UTAMA -->
+    <main id="main-content" class="piui-main">
+      <nav aria-label="Breadcrumb" class="piui-breadcrumb">
+        <ol>
+          <li><a href="/app/dashboard/index.html">Beranda Dashboard</a></li>
+          <li>Kelola Data &amp; Media</li>
+          <li aria-current="page">Data Transaksi</li>
+        </ol>
+      </nav>
+
+      <div class="piui-page-header">
+        <div class="piui-page-header__titles">
+          <h1 class="piui-page-title">Data Transaksi &amp; Pembayaran</h1>
+          <p class="piui-page-subtitle">Daftar Transaksi Masuk &amp; Keluar • Pencarian Cepat, Filter Tanggal, dan Navigasi Halaman</p>
+        </div>
+        <div class="piui-page-actions">
+          <button type="button" class="piui-btn piui-btn--primary" data-open-dialog="dialog-trx-form">
+            <svg width="16" height="16" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-transactions"></use></svg>
+            <span>Input Transaksi (Modal Kanan)</span>
+          </button>
+          <button type="button" class="piui-btn piui-btn--secondary" data-table-export data-table-for="piui-primary-table">
+            <svg width="16" height="16" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-download"></use></svg>
+            <span>Ekspor CSV</span>
+          </button>
+          <button type="button" class="piui-btn piui-btn--danger" data-open-dialog="dialog-reverse-trx">
+            <svg width="16" height="16" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-shield-alert"></use></svg>
+            <span>Pembatalan &amp; Reversal</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 4 KARTU KPI (@container workspace) -->
+      <section aria-label="Ringkasan Metrik Transaksi" class="piui-kpi-grid">
+        <article class="piui-card">
+          <div class="piui-card__header">
+            <h2 class="piui-card__title">Volume Penyelesaian Hari Ini</h2>
+            <span class="piui-badge" data-status="success">+6,4% vs Kemarin</span>
+          </div>
+          <div class="piui-card__value tabular-nums">Rp 14,82 M</div>
+          <p class="piui-card__meta">Contoh: Rp 14.820.500.000 (WIB)</p>
+        </article>
+
+        <article class="piui-card">
+          <div class="piui-card__header">
+            <h2 class="piui-card__title">Transaksi Terverifikasi</h2>
+            <span class="piui-badge" data-status="info">Kliring Instan</span>
+          </div>
+          <div class="piui-card__value tabular-nums">24.890</div>
+          <p class="piui-card__meta">Rata-rata penyelesaian: 38 ms</p>
+        </article>
+
+        <article class="piui-card">
+          <div class="piui-card__header">
+            <h2 class="piui-card__title">Antrean Rekonsiliasi</h2>
+            <span class="piui-badge" data-status="warning">Tinjauan FinOps</span>
+          </div>
+          <div class="piui-card__value tabular-nums">7</div>
+          <p class="piui-card__meta">Menunggu konfirmasi bank mitra</p>
+        </article>
+
+        <article class="piui-card">
+          <div class="piui-card__header">
+            <h2 class="piui-card__title">Kepatuhan Idempotensi</h2>
+            <span class="piui-badge" data-status="success">Zero Duplicate</span>
+          </div>
+          <div class="piui-card__value tabular-nums">100,00%</div>
+          <p class="piui-card__meta">18 percobaan kirim ulang ditolak aman</p>
+        </article>
+      </section>
+
+      <!-- PANEL TABEL TRANSAKSI -->
+      <section class="piui-panel" aria-labelledby="heading-trx-table">
+        <div class="piui-panel__header">
+          <div>
+            <h2 id="heading-trx-table" class="piui-panel__title">Jurnal Transaksi &amp; Kunci Idempotensi</h2>
+            <p class="piui-page-subtitle" data-table-count>Menampilkan 5 dari 5 baris ditampilkan</p>
+          </div>
+          <div class="piui-page-actions">
+            
+            
+          </div>
+        </div>
+
+        <!-- FILTER BAR -->
+        <search class="piui-filter-bar" aria-label="Pencarian dan penyaringan jurnal transaksi">
+          <div class="piui-filter-bar__primary">
+            <label for="trx-search-input" class="sr-only">Cari ID transaksi, Idempotency-Key, atau entitas</label>
+            <input type="search" name="trx-search-input" id="trx-search-input" class="piui-input" data-table-search
+                   placeholder="Cari TRX-2026-9910, Idempotency-Key, atau entitas mitra...">
+          </div>
+
+          <details class="piui-filter-collapse" open>
+            <summary class="piui-btn piui-btn--secondary">
+              <svg width="16" height="16" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-filter"></use></svg>
+              <span>Filter Status &amp; Kanal</span>
+            </summary>
+            <div class="piui-filter-collapse__body">
+              <div>
+                <label for="trx-status-select" class="sr-only">Filter berdasarkan status penyelesaian</label>
+                <select name="trx-status-select" id="trx-status-select" class="piui-select" data-table-status>
+                  <option value="all">Semua Status Penyelesaian</option>
+                  <option value="settled">Selesai (Settled)</option>
+                  <option value="pending">Antrean Rekonsiliasi</option>
+                  <option value="flagged">Ditandai Fraud / Risiko</option>
+                </select>
+              </div>
+              <div>
+                <label for="trx-channel-select" class="sr-only">Filter berdasarkan kanal pembayaran</label>
+                <select name="trx-channel-select" id="trx-channel-select" class="piui-select" data-table-role>
+                  <option value="all">Semua Kanal Kliring</option>
+                  <option value="bi-fast">BI-FAST Korporat</option>
+                  <option value="rtgs">RTGS Settlement</option>
+                  <option value="escrow">Internal Escrow</option>
+                </select>
+              </div>
+              <button type="button" class="piui-btn piui-btn--secondary" data-table-reset>Reset Filter</button>
+            </div>
+          </details>
+        </search>
+
+        <!-- STATE 5: OFFLINE / STALE -->
+        <div class="piui-health-banner" data-state-panel="offline" role="status" hidden>
+          <div class="piui-health-banner__content">
+            <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-clock"></use></svg>
+            <span><strong>Mode Ledger Stale</strong> • Menampilkan snapshot kliring contoh pada 08:52 WIB.</span>
+          </div>
+          <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-table-reset>Sinkronkan Ledger</button>
+        </div>
+
+        <!-- BULK ACTION BAR -->
+        <div class="piui-bulk-bar" data-bulk-bar hidden role="region" aria-label="Tindakan massal transaksi terpilih">
+          <span><strong class="tabular-nums" data-selected-count>0</strong> transaksi dipilih</span>
+          <div class="piui-page-actions">
+            <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-clear-selection>Batalkan Pilihan</button>
+            <button type="button" class="piui-btn piui-btn--danger piui-btn--sm" data-open-dialog="dialog-reverse-trx">Ajukan Reversal</button>
+          </div>
+        </div>
+
+        <!-- STATE 1: LOADING SKELETON -->
+        <div class="piui-panel__body" data-state-panel="loading" hidden aria-busy="true">
+          <p class="piui-page-subtitle">Memvalidasi hash buku besar transaksi dan kunci idempotensi...</p>
+          <div class="piui-skeleton"></div>
+          <div class="piui-skeleton"></div>
+          <div class="piui-skeleton"></div>
+        </div>
+
+        <!-- STATE 4: ERROR PANEL -->
+        <div class="piui-panel__body" data-state-panel="error" hidden role="alert">
+          <div class="piui-card">
+            <h3 class="piui-card__title">Gagal Membaca Partisi Buku Besar</h3>
+            <p class="piui-page-subtitle">Replika baca kliring sedang melakukan rotasi indeks. Trace-ID: <code class="text-mono">TRC-LDG-20261021-408C</code></p>
+            <div class="piui-page-actions">
+              <button type="button" class="piui-btn piui-btn--primary piui-btn--sm" data-table-reset>Muat Ulang Partisi</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STATE 2: POPULATED DATA TABLE -->
+        <div class="piui-table-scroll" role="region" aria-labelledby="heading-trx-table" tabindex="0">
+          <table id="piui-primary-table" class="piui-table" data-piui-table="transactions">
+            <thead>
+              <tr>
+                <th scope="col" class="is-sticky-col" aria-sort="none">
+                  <button type="button" class="piui-table-sort" data-sort-col="0">ID Transaksi</button>
+                </th>
+                <th scope="col" aria-sort="none">
+                  <button type="button" class="piui-table-sort" data-sort-col="1">Entitas &amp; Kanal</button>
+                </th>
+                <th scope="col" aria-sort="none">
+                  <button type="button" class="piui-table-sort" data-sort-col="2">Nominal (IDR)</button>
+                </th>
+                <th scope="col">Rekening Tujuan (PII Masked)</th>
+                <th scope="col">Idempotency-Key</th>
+                <th scope="col">Status Kliring</th>
+                <th scope="col" data-table-column="actions">Jejak Audit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-row-id="TRX-2026-9910" data-status="settled" data-role="rtgs">
+                <th scope="row" class="is-sticky-col text-mono">
+                  <label for="chk-trx-9910" class="sr-only">Pilih transaksi TRX-2026-9910</label>
+                  <input type="checkbox" name="chk-trx-9910" id="chk-trx-9910" data-row-select>
+                  <span>TRX-2026-9910</span>
+                </th>
+                <td>
+                  <strong>PT Nusantara Clearing Nusantara</strong>
+                  <div class="piui-page-subtitle">Kanal: RTGS Settlement • 08:51:12 WIB</div>
+                </td>
+                <td class="tabular-nums"><strong>Rp 1.450.000.000</strong></td>
+                <td class="text-mono">
+                  <span data-pii-masked="REK: 014••••••••8821">REK: 014••••••••8821</span>
+                  <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-pii-toggle>Tampilkan</button>
+                </td>
+                <td class="text-mono overflow-anywhere">idem-8f92a1c0-4b11</td>
+                <td><span class="piui-badge" data-status="success">Settled (34 ms)</span></td>
+                <td>
+                  <a href="/app/audit/detail.html?id=AUD-2026-0892" class="piui-btn piui-btn--secondary piui-btn--sm" data-preserve-return>
+                    Lihat Audit
+                  </a>
+                </td>
+              </tr>
+
+              <tr data-row-id="TRX-2026-9909" data-status="settled" data-role="bi-fast">
+                <th scope="row" class="is-sticky-col text-mono">
+                  <label for="chk-trx-9909" class="sr-only">Pilih transaksi TRX-2026-9909</label>
+                  <input type="checkbox" name="chk-trx-9909" id="chk-trx-9909" data-row-select>
+                  <span>TRX-2026-9909</span>
+                </th>
+                <td>
+                  <strong>PT Sinar Logistik Terpadu</strong>
+                  <div class="piui-page-subtitle">Kanal: BI-FAST Korporat • 08:47:05 WIB</div>
+                </td>
+                <td class="tabular-nums"><strong>Rp 248.500.000</strong></td>
+                <td class="text-mono">
+                  <span data-pii-masked="REK: 008••••••••3109">REK: 008••••••••3109</span>
+                  <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-pii-toggle>Tampilkan</button>
+                </td>
+                <td class="text-mono overflow-anywhere">idem-3c19e7a2-901a</td>
+                <td><span class="piui-badge" data-status="success">Settled (29 ms)</span></td>
+                <td>
+                  <a href="/app/audit/detail.html?id=AUD-2026-0891" class="piui-btn piui-btn--secondary piui-btn--sm" data-preserve-return>
+                    Lihat Audit
+                  </a>
+                </td>
+              </tr>
+
+              <tr data-row-id="TRX-2026-9908" data-status="pending" data-role="escrow">
+                <th scope="row" class="is-sticky-col text-mono">
+                  <label for="chk-trx-9908" class="sr-only">Pilih transaksi TRX-2026-9908</label>
+                  <input type="checkbox" name="chk-trx-9908" id="chk-trx-9908" data-row-select>
+                  <span>TRX-2026-9908</span>
+                </th>
+                <td>
+                  <strong>Dana Escrow Mitra Regional Timur</strong>
+                  <div class="piui-page-subtitle">Kanal: Internal Escrow • 08:39:44 WIB</div>
+                </td>
+                <td class="tabular-nums"><strong>Rp 890.000.000</strong></td>
+                <td class="text-mono">
+                  <span data-pii-masked="REK: 002••••••••7740">REK: 002••••••••7740</span>
+                  <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-pii-toggle>Tampilkan</button>
+                </td>
+                <td class="text-mono overflow-anywhere">idem-7a44d0b8-112c</td>
+                <td><span class="piui-badge" data-status="warning">Menunggu Otorisasi Dual-Control</span></td>
+                <td>
+                  <a href="/app/audit/detail.html?id=AUD-2026-0890" class="piui-btn piui-btn--secondary piui-btn--sm" data-preserve-return>
+                    Lihat Audit
+                  </a>
+                </td>
+              </tr>
+
+              <tr data-row-id="TRX-2026-9907" data-status="flagged" data-role="rtgs">
+                <th scope="row" class="is-sticky-col text-mono">
+                  <label for="chk-trx-9907" class="sr-only">Pilih transaksi TRX-2026-9907</label>
+                  <input type="checkbox" name="chk-trx-9907" id="chk-trx-9907" data-row-select>
+                  <span>TRX-2026-9907</span>
+                </th>
+                <td>
+                  <strong>CV Global Eksim Mandiri</strong>
+                  <div class="piui-page-subtitle">Kanal: RTGS Settlement • 08:22:18 WIB</div>
+                </td>
+                <td class="tabular-nums"><strong>Rp 3.120.000.000</strong></td>
+                <td class="text-mono">
+                  <span data-pii-masked="REK: 009••••••••5512">REK: 009••••••••5512</span>
+                  <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-pii-toggle>Tampilkan</button>
+                </td>
+                <td class="text-mono overflow-anywhere">idem-9e01f4c7-663d</td>
+                <td><span class="piui-badge" data-status="danger">Ditahan Mesin Anti-Fraud</span></td>
+                <td>
+                  <a href="/app/audit/detail.html?id=AUD-2026-0889" class="piui-btn piui-btn--secondary piui-btn--sm" data-preserve-return>
+                    Lihat Audit
+                  </a>
+                </td>
+              </tr>
+
+              <tr data-row-id="TRX-2026-9906" data-status="settled" data-role="bi-fast">
+                <th scope="row" class="is-sticky-col text-mono">
+                  <label for="chk-trx-9906" class="sr-only">Pilih transaksi TRX-2026-9906</label>
+                  <input type="checkbox" name="chk-trx-9906" id="chk-trx-9906" data-row-select>
+                  <span>TRX-2026-9906</span>
+                </th>
+                <td>
+                  <strong>PT Karsa Energi Digital</strong>
+                  <div class="piui-page-subtitle">Kanal: BI-FAST Korporat • 08:10:03 WIB</div>
+                </td>
+                <td class="tabular-nums"><strong>Rp 175.250.000</strong></td>
+                <td class="text-mono">
+                  <span data-pii-masked="REK: 013••••••••9024">REK: 013••••••••9024</span>
+                  <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-pii-toggle>Tampilkan</button>
+                </td>
+                <td class="text-mono overflow-anywhere">idem-1b88c3e9-204f</td>
+                <td><span class="piui-badge" data-status="success">Settled (31 ms)</span></td>
+                <td>
+                  <a href="/app/audit/detail.html?id=AUD-2026-0888" class="piui-btn piui-btn--secondary piui-btn--sm" data-preserve-return>
+                    Lihat Audit
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- STATE 3: EMPTY FILTER STATE -->
+        <div class="piui-panel__body" data-state-panel="empty" hidden>
+          <div class="piui-card">
+            <h3 class="piui-card__title">Tidak Ada Transaksi yang Cocok</h3>
+            <p class="piui-page-subtitle">Tidak ditemukan catatan transaksi yang sesuai dengan filter status atau kanal pembayaran saat ini.</p>
+            <div class="piui-page-actions">
+              <button type="button" class="piui-btn piui-btn--primary piui-btn--sm" data-table-reset>Reset Semua Filter</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PAGINATION FOOTER -->
+        <div class="piui-pagination">
+          <div class="piui-page-actions">
+            <label for="chk-trx-select-all">
+              <input type="checkbox" name="chk-trx-select-all" id="chk-trx-select-all" data-select-all>
+              <span>Pilih Semua Transaksi Aktif</span>
+            </label>
+          </div>
+          <span class="tabular-nums">Halaman 1 dari 1 • Proteksi Idempotency-Key Aktif</span>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="piui-footer">
+      
+      <ul class="piui-footer__links">
+        <li><a href="/app/dashboard/index.html">Pusat Komando</a></li>
+        <li><a href="/app/audit/index.html">Jejak Audit</a></li>
+        <li><a href="/status/index.html">Status Layanan</a></li>
+      </ul>
+    <p class="piui-product-credit"><span class="piui-product-signature"><img class="piui-brand__mark" src="/assets/icons/piui-mark.svg" alt="" width="24" height="24"><span>PIUI Zero™ v2.2.2</span></span> • Created by Ipi &quot;Pedro Iriano&quot; • © 2026 • <a href="/about/index.html">Tentang produk</a></p></footer>
+  </div>
+
+  <!-- DIALOG 1: COMMAND PALETTE -->
+  <dialog id="piui-cmd-palette" class="piui-dialog" aria-labelledby="cmd-palette-title">
+    <div class="piui-dialog__header">
+      <strong id="cmd-palette-title">Palet Perintah &amp; Navigasi Cepat (Ctrl+K)</strong>
+      <button type="button" class="piui-icon-btn" id="btn-close-cmd" aria-label="Tutup palet perintah (Escape)">
+        <svg width="18" height="18" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-close"></use></svg>
+      </button>
+    </div>
+    <div class="piui-dialog__body">
+      <div class="piui-field">
+        <label for="cmd-search-input" class="piui-field__label">Ketik nama halaman, modul, atau aksi cepat</label>
+        <input type="search" name="cmd-search-input" id="cmd-search-input" class="piui-input"
+               role="combobox" aria-expanded="true" aria-controls="cmd-results-list"
+               autocomplete="off" spellcheck="false"
+               placeholder="Contoh: Pengguna, Transaksi, Audit, Tema Gelap...">
+      </div>
+      <ul id="cmd-results-list" class="piui-cmd-list" role="listbox" aria-label="Daftar perintah yang tersedia"></ul>
+      <p id="cmd-empty-state" class="piui-page-subtitle" hidden>Tidak ada perintah yang cocok dengan kata kunci tersebut.</p>
+    </div>
+  </dialog>
+
+  <!-- DIALOG 2: KONFIRMASI REVERSAL TRANSAKSI -->
+  <dialog id="dialog-reverse-trx" class="piui-dialog" aria-labelledby="reverse-trx-title" aria-describedby="reverse-trx-desc">
+    <form method="dialog" data-confirm-phrase="BATALKAN-TRX">
+      <div class="piui-dialog__header">
+        <strong id="reverse-trx-title">Konfirmasi Pembatalan &amp; Reversal Transaksi Kliring</strong>
+        <span class="piui-badge" data-status="danger">Otorisasi FinOps</span>
+      </div>
+      <div class="piui-dialog__body">
+        <p id="reverse-trx-desc">
+          Tindakan ini akan menerbitkan jurnal pembalik (<em>contra-entry</em>) dengan <code>Idempotency-Key</code> baru dan membekukan pencairan dana pada antrean kliring.
+        </p>
+        <div class="piui-field">
+          <label for="reverse-reason-input" class="piui-field__label">Alasan Audit &amp; Nomor Tiket FinOps (Wajib, min. 8 karakter)</label>
+          <textarea name="reverse-reason-input" id="reverse-reason-input" class="piui-textarea" rows="3" required minlength="8" data-reason-input
+                    placeholder="Contoh: FIN-2026-1092 Indikasi anomali nominal pada kliring RTGS..."></textarea>
+        </div>
+        <div class="piui-field">
+          <label for="reverse-phrase-input" class="piui-field__label">Ketik ulang frasa <code>BATALKAN-TRX</code> untuk mengonfirmasi</label>
+          <input type="text" name="reverse-phrase-input" id="reverse-phrase-input" class="piui-input text-mono" required autocomplete="off" data-phrase-input
+                 placeholder="BATALKAN-TRX">
+        </div>
+      </div>
+      <div class="piui-dialog__footer">
+        <button type="button" class="piui-btn piui-btn--secondary" data-close-dialog>Batalkan</button>
+        <button type="submit" class="piui-btn piui-btn--danger" disabled>Eksekusi Reversal Jurnal</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- DIALOG 3: FORM ISIAN INSTRUKSI TRANSAKSI BARU (SLIDE-OVER MODAL SISI KANAN) -->
+  <dialog id="dialog-trx-form" class="piui-dialog" aria-labelledby="trx-form-title">
+    <form data-settings-form action="/app/transactions/index.html" method="dialog">
+      <div class="piui-dialog__header">
+        <div>
+          <strong id="trx-form-title">Form Instruksi Kliring &amp; Settlement</strong>
+          <div class="piui-page-subtitle">Dilindungi <code>Idempotency-Key</code> Otomatis</div>
+        </div>
+        <button type="button" class="piui-icon-btn" data-close-dialog aria-label="Tutup form transaksi">
+          <svg width="18" height="18" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-close"></use></svg>
+        </button>
+      </div>
+      <div class="piui-dialog__body">
+        <div class="piui-field">
+          <label for="new-trx-entity" class="piui-field__label">Nama Entitas Mitra Tujuan (Wajib)</label>
+          <input type="text" id="new-trx-entity" name="entity" class="piui-input" required placeholder="Contoh: PT Nusantara Clearing">
+        </div>
+        <div class="piui-field">
+          <label for="new-trx-channel" class="piui-field__label">Kanal Penyelesaian Kliring</label>
+          <select id="new-trx-channel" name="channel" class="piui-select">
+            <option value="rtgs">RTGS Settlement</option>
+            <option value="bi-fast">BI-FAST Korporat</option>
+            <option value="escrow">Internal Escrow</option>
+          </select>
+        </div>
+        <div class="piui-field">
+          <label for="new-trx-amount" class="piui-field__label">Nominal Penyelesaian (IDR)</label>
+          <input type="number" id="new-trx-amount" name="amount" class="piui-input tabular-nums" min="100000" value="250000000" required>
+        </div>
+        <div class="piui-field">
+          <label for="new-trx-note" class="piui-field__label">Referensi Audit &amp; Catatan Kliring (Wajib)</label>
+          <textarea id="new-trx-note" name="note" class="piui-textarea" rows="3" required placeholder="Contoh: Penyelesaian kliring batch sesi pagi..."></textarea>
+        </div>
+      </div>
+      <div class="piui-dialog__footer">
+        <button type="button" class="piui-btn piui-btn--secondary" data-close-dialog>Batalkan</button>
+        <button type="submit" class="piui-btn piui-btn--primary">Kirim Instruksi Kliring</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="piui-toast-region" class="piui-toast-region" aria-live="polite"></div>
+
+  <template id="tpl-cmd-item">
+    <li class="piui-cmd-item" role="option" tabindex="-1">
+      <div>
+        <strong data-cmd-title></strong>
+        <div class="piui-page-subtitle" data-cmd-category></div>
+      </div>
+      <kbd class="piui-cmd-trigger__kbd text-mono" data-cmd-shortcut></kbd>
+    </li>
+  </template>
+
+  <template id="tpl-toast">
+    <div class="piui-toast" role="status">
+      <span data-toast-text></span>
+      <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-toast-close>Tutup</button>
+    </div>
+  </template>
+</body>
+</html>

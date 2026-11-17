@@ -1,0 +1,101 @@
+{
+  "timestamp": "2026-11-04T06:37:01.859327+00:00",
+  "task_id": "M0-01",
+  "scope": "canonical_public_ui_v1",
+  "result": "PASS",
+  "git_sha": null,
+  "governance": "docs/05_ATURAN_UI_UX_WEB_PUBLIK.md",
+  "source_hashes": {
+    "AGENTS.md": "34cff24eb0233ad4b36f16e612aa16fa71e45dc7c00b718bc58460ec6b534bee",
+    "README.md": "536f01ea5e10991e9b0f85155cfbdc84f343ce8430538a764b2c8fe7a0245dc2",
+    "docs/05_ATURAN_UI_UX_WEB_PUBLIK.md": "200c31711f793e8f3412619050d3d27697f0ad68480d06ced19249e0d3106b15",
+    "frontend/public-ui.css": "34914f703d21d2a595ef767538881f0efc9d4bd1b9f7f477d86ffa457d5b8b50",
+    "frontend/public-pages.css": "d82f5c44ccb1ae30ab2d339673257f70dba0ad9d3056ab3c1d938a573d438835",
+    "frontend/public-ui.mjs": "192c66b8e29b5bf4edb64692b9c74e816176e09ed0b2453a4f393aa743bb8027",
+    "frontend/landing.css": "6a896c0f14659d690e4eed75d65c2af84c7b0a9b03d47425c4d0b73bcfc24994",
+    "frontend/build-templates.mjs": "53485fcfddd48e65818b4ca036eea94bf37411b0b73e540d230d0210a04ee62e",
+    "frontend/helpdesk-content.mjs": "b7b89da01bae16e997f072035e279bbae080b9c8020a9db621da68c69f867c33",
+    "frontend/guide-content.mjs": "3e2d96177142c447501673755493009fd8e47ab70bdb127788350248b4fdf6be",
+    "scripts/test_piui_build.py": "f078f4989dfe688880e809dc69670e871cb710a27b0877fe983488dbbc0d4aea"
+  },
+  "commands": [
+    "npm.cmd run build (frontend)",
+    "python scripts/test_piui_build.py",
+    "docker compose up -d --no-deps --build --pull never web",
+    "python scripts/smoke_local.py"
+  ],
+  "distribution_gate": {
+    "public_html_pages": 47,
+    "uniform_header": true,
+    "uniform_footer": true,
+    "stylesheet": "/helpdesk/public-ui.css",
+    "marker": "data-public-ui-version=1",
+    "preserved_main_components": true,
+    "local_link_targets": true
+  },
+  "browser_checks": [
+    {
+      "route": "/details/plays/crossover-burst.html",
+      "viewport": [
+        1440,
+        900
+      ],
+      "h1_px": 48,
+      "overflow": false
+    },
+    {
+      "route": "/details/plays/crossover-burst.html",
+      "viewport": [
+        390,
+        844
+      ],
+      "h1_px": 32,
+      "overflow": false
+    },
+    {
+      "route": "/contact.html",
+      "viewport": [
+        1440,
+        900
+      ],
+      "h1_px": 48,
+      "overflow": false
+    },
+    {
+      "route": "/contact.html",
+      "viewport": [
+        390,
+        844
+      ],
+      "h1_px": 32,
+      "overflow": false
+    },
+    {
+      "route": "/play.html?id=crossover-burst",
+      "viewport": [
+        390,
+        844
+      ],
+      "h1_px": 32,
+      "overflow": false,
+      "heading": "Koneksi terputus"
+    },
+    {
+      "route": "/",
+      "viewport": [
+        1280,
+        600
+      ],
+      "hero_height": 600,
+      "cta_control_gap": 27.53,
+      "overflow": false
+    }
+  ],
+  "keyboard": "Enter opens shared menu with Tutup navigasi; Escape closes with Buka navigasi",
+  "screenshots": {
+    "qa/bootstrap/public-canonical-detail-desktop.png": "7de98b1756891c3b0fc29069e2534efb9eedeaf953b88cd7e0d6c363125980b5",
+    "qa/bootstrap/public-canonical-detail-mobile.png": "b64628e6580668378c9befd3119fc6c88492ede2e0419b545b81323b5a0854b2",
+    "qa/bootstrap/public-canonical-form-mobile.png": "a8b175dae4917926acf56ebddf752c7c4508324b5ab6e6126e90fd0a4adb4ed4"
+  },
+  "limits": "Representative visual checks. Application business acceptance and UAT not run."
+}

@@ -1,0 +1,226 @@
+[
+  {
+    "event_id": "00000000-0000-4000-8000-000000000001",
+    "event_type": "TicketCreated",
+    "producer": "M3",
+    "schema_version": 1,
+    "aggregate_id": "00000000-0000-4000-8000-000000000001",
+    "aggregate_version": 1,
+    "occurred_at": "2026-11-04T03:00:00Z",
+    "correlation_id": "00000000-0000-4000-8000-000000000001",
+    "payload": {
+      "state": "OPEN",
+      "requester_id": "00000000-0000-4000-8000-000000000001",
+      "service_id": "00000000-0000-4000-8000-000000000001",
+      "service_owner_org_id": "00000000-0000-4000-8000-000000000001",
+      "accepted_at": "2026-11-04T03:00:00Z",
+      "resolution_due_at": "2026-11-04T03:00:00Z",
+      "policy_version": 1,
+      "episode_id": "00000000-0000-4000-8000-000000000001",
+      "assignee_id": "00000000-0000-4000-8000-000000000001",
+      "handling_team_id": "00000000-0000-4000-8000-000000000001",
+      "resolution_endpoint": "2026-11-04T03:00:00Z",
+      "gross_seconds": 0,
+      "net_seconds": 0
+    }
+  },
+  {
+    "event_id": "00000000-0000-4000-8000-000000000001",
+    "event_type": "TicketVerified",
+    "producer": "M3",
+    "schema_version": 1,
+    "aggregate_id": "00000000-0000-4000-8000-000000000001",
+    "aggregate_version": 1,
+    "occurred_at": "2026-11-04T03:00:00Z",
+    "correlation_id": "00000000-0000-4000-8000-000000000001",
+    "payload": {
+      "verification": "VERIFIED",
+      "category_id": "00000000-0000-4000-8000-000000000001"
+    }
+  },
+  {
+    "event_id": "00000000-0000-4000-8000-000000000001",
+    "event_type": "AssignmentChanged",
+    "producer": "M3",
+    "schema_version": 1,
+    "aggregate_id": "00000000-0000-4000-8000-000000000001",
+    "aggregate_version": 1,
+    "occurred_at": "2026-11-04T03:00:00Z",
+    "correlation_id": "00000000-0000-4000-8000-000000000001",
+    "payload": {
+      "team_id": "00000000-0000-4000-8000-000000000001",
+      "assignee_id": "00000000-0000-4000-8000-000000000001"
+    }
+  },
+  {
+    "event_id": "00000000-0000-4000-8000-000000000001",
+    "event_type": "TicketStateChanged",
+    "producer": "M3",
+    "schema_version": 1,
+    "aggregate_id": "00000000-0000-4000-8000-000000000001",
+    "aggregate_version": 1,
+    "occurred_at": "2026-11-04T03:00:00Z",
+    "correlation_id": "00000000-0000-4000-8000-000000000001",
+    "payload": {
+      "state": "OPEN",
+      "requester_id": "00000000-0000-4000-8000-000000000001",
+      "service_id": "00000000-0000-4000-8000-000000000001",
+      "service_owner_org_id": "00000000-0000-4000-8000-000000000001",
+      "accepted_at": "2026-11-04T03:00:00Z",
+      "resolution_due_at": "2026-11-04T03:00:00Z",
+      "policy_version": 1,
+      "episode_id": "00000000-0000-4000-8000-000000000001",
+      "assignee_id": "00000000-0000-4000-8000-000000000001",
+      "handling_team_id": "00000000-0000-4000-8000-000000000001",
+      "resolution_endpoint": "2026-11-04T03:00:00Z",
+      "gross_seconds": 0,
+      "net_seconds": 0
+    }
+  },
+  {
+    "event_id": "00000000-0000-4000-8000-000000000001",
+    "event_type": "ResolutionProposed",
+    "producer": "M3",
+    "schema_version": 1,
+    "aggregate_id": "00000000-0000-4000-8000-000000000001",
+    "aggregate_version": 1,
+    "occurred_at": "2026-11-04T03:00:00Z",
+    "correlation_id": "00000000-0000-4000-8000-000000000001",
+    "payload": {
+      "attempt_id": "00000000-0000-4000-8000-000000000001",
+      "confirmation_due_at": "2026-11-05T03:00:00Z"
+    }
+  },
+  {
+    "event_id": "00000000-0000-4000-8000-000000000001",
+    "event_type": "NotificationStored",
+    "producer": "M9",
+    "schema_version": 1,
+    "aggregate_id": "00000000-0000-4000-8000-000000000001",
+    "aggregate_version": 1,
+    "occurred_at": "2026-11-04T03:00:00Z",
+    "correlation_id": "00000000-0000-4000-8000-000000000001",
+    "payload": {
+      "ticket_id": "00000000-0000-4000-8000-000000000001",
+      "attempt_id": "00000000-0000-4000-8000-000000000001"
+    }
+  },
+  {
+    "event_id": "00000000-0000-4000-8000-000000000001",
+    "event_type": "ConfirmationRecorded",
+    "producer": "M3",
+    "schema_version": 1,
+    "aggregate_id": "00000000-0000-4000-8000-000000000001",
+    "aggregate_version": 1,
+    "occurred_at": "2026-11-04T03:00:00Z",
+    "correlation_id": "00000000-0000-4000-8000-000000000001",
+    "payload": {
+      "attempt_id": "00000000-0000-4000-8000-000000000001",
+      "decision": "ACCEPT"
+    }
+  },
+  {
+    "event_id": "00000000-0000-4000-8000-000000000001",
+    "event_type": "VendorCaseRecorded",
+    "producer": "M3",
+    "schema_version": 1,
+    "aggregate_id": "00000000-0000-4000-8000-000000000001",
+    "aggregate_version": 1,
+    "occurred_at": "2026-11-04T03:00:00Z",
+    "correlation_id": "00000000-0000-4000-8000-000000000001",
+    "payload": {
+      "case_id": "00000000-0000-4000-8000-000000000001",
+      "internal_pic_id": "00000000-0000-4000-8000-000000000001",
+      "next_followup_at": "2026-11-04T03:00:00Z"
+    }
+  },
+  {
+    "event_id": "00000000-0000-4000-8000-000000000001",
+    "event_type": "PauseChanged",
+    "producer": "M3",
+    "schema_version": 1,
+    "aggregate_id": "00000000-0000-4000-8000-000000000001",
+    "aggregate_version": 1,
+    "occurred_at": "2026-11-04T03:00:00Z",
+    "correlation_id": "00000000-0000-4000-8000-000000000001",
+    "payload": {
+      "pause_id": "00000000-0000-4000-8000-000000000001",
+      "policy_version": 1
+    }
+  },
+  {
+    "event_id": "00000000-0000-4000-8000-000000000001",
+    "event_type": "HandoffAccepted",
+    "producer": "M3",
+    "schema_version": 1,
+    "aggregate_id": "00000000-0000-4000-8000-000000000001",
+    "aggregate_version": 1,
+    "occurred_at": "2026-11-04T03:00:00Z",
+    "correlation_id": "00000000-0000-4000-8000-000000000001",
+    "payload": {
+      "from_org_id": "00000000-0000-4000-8000-000000000001",
+      "to_org_id": "00000000-0000-4000-8000-000000000001",
+      "team_id": "00000000-0000-4000-8000-000000000001"
+    }
+  },
+  {
+    "event_id": "00000000-0000-4000-8000-000000000001",
+    "event_type": "EscalationRequested",
+    "producer": "M3",
+    "schema_version": 1,
+    "aggregate_id": "00000000-0000-4000-8000-000000000001",
+    "aggregate_version": 1,
+    "occurred_at": "2026-11-04T03:00:00Z",
+    "correlation_id": "00000000-0000-4000-8000-000000000001",
+    "payload": {
+      "operation_id": "00000000-0000-4000-8000-000000000001",
+      "level": "L2"
+    }
+  },
+  {
+    "event_id": "00000000-0000-4000-8000-000000000001",
+    "event_type": "MediaScanCompleted",
+    "producer": "M3",
+    "schema_version": 1,
+    "aggregate_id": "00000000-0000-4000-8000-000000000001",
+    "aggregate_version": 1,
+    "occurred_at": "2026-11-04T03:00:00Z",
+    "correlation_id": "00000000-0000-4000-8000-000000000001",
+    "payload": {
+      "status": "CLEAN",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  },
+  {
+    "event_id": "00000000-0000-4000-8000-000000000001",
+    "event_type": "ContentPublished",
+    "producer": "M8",
+    "schema_version": 1,
+    "aggregate_id": "00000000-0000-4000-8000-000000000001",
+    "aggregate_version": 1,
+    "occurred_at": "2026-11-04T03:00:00Z",
+    "correlation_id": "00000000-0000-4000-8000-000000000001",
+    "payload": {
+      "revision_id": "00000000-0000-4000-8000-000000000001",
+      "audience": "PUBLIC_GUEST"
+    }
+  },
+  {
+    "event_id": "00000000-0000-4000-8000-000000000001",
+    "event_type": "AuditRecorded",
+    "producer": "M1",
+    "schema_version": 1,
+    "aggregate_id": "00000000-0000-4000-8000-000000000001",
+    "aggregate_version": 1,
+    "occurred_at": "2026-11-04T03:00:00Z",
+    "correlation_id": "00000000-0000-4000-8000-000000000001",
+    "payload": {
+      "actor_id": "00000000-0000-4000-8000-000000000001",
+      "action": "LAB",
+      "object_id": "00000000-0000-4000-8000-000000000001",
+      "scope": "LAB",
+      "reason": "LAB",
+      "outcome": "SUCCESS"
+    }
+  }
+]

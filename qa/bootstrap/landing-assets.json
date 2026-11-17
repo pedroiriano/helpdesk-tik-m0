@@ -1,0 +1,212 @@
+{
+  "timestamp": "2026-11-04T00:34:04.834565+00:00",
+  "task_id": "M0-01",
+  "scope": "public_landing_assets",
+  "result": "PASS",
+  "git_sha": null,
+  "asset_inventory": [
+    {
+      "path": "assets/01_Hero/hero-01-bantuan-tik-terpadu.png",
+      "width": 1536,
+      "height": 524,
+      "bytes": 778502,
+      "sha256": "649c55a2a41a9b8c3af040d1978a539f072b0a31f2538fcf8832266b54160c0b"
+    },
+    {
+      "path": "assets/01_Hero/hero-02-tiket-layanan.png",
+      "width": 1536,
+      "height": 524,
+      "bytes": 655562,
+      "sha256": "fc26d6baec134ab615f7c5eb458aa020a548f5640a961bdc635d40113877664a"
+    },
+    {
+      "path": "assets/01_Hero/hero-03-dukungan-kinerja.png",
+      "width": 1536,
+      "height": 524,
+      "bytes": 677006,
+      "sha256": "c7649f32ade1a7e765274dfbd902e74d99d78cbec0aa47cbc5a95e1487034464"
+    },
+    {
+      "path": "assets/01_Hero/hero-04-layanan-terintegrasi.png",
+      "width": 1536,
+      "height": 524,
+      "bytes": 707280,
+      "sha256": "591f066d0fe03a533545f6fe74c9572c231a4d2c9cca1a2150dc25646d89becb"
+    },
+    {
+      "path": "assets/02_Hero_Tanpa_Teks/hero-01-bantuan-tik-terpadu-tanpa-teks.png",
+      "width": 1600,
+      "height": 600,
+      "bytes": 635889,
+      "sha256": "65eb25e134ab52be4eedd8d6df62f3fd8375bdfc5d89681a1ffb69e3c29e4d3f"
+    },
+    {
+      "path": "assets/02_Hero_Tanpa_Teks/hero-02-tiket-layanan-tanpa-teks.png",
+      "width": 1600,
+      "height": 600,
+      "bytes": 501529,
+      "sha256": "1d3b3316980cd5d2901450ccf4663db1fc8eaaf52a50b28c56038c9cdad4fa79"
+    },
+    {
+      "path": "assets/02_Hero_Tanpa_Teks/hero-03-dukungan-kinerja-tanpa-teks.png",
+      "width": 1600,
+      "height": 600,
+      "bytes": 471546,
+      "sha256": "7dd3082c85131208edad44ddb49e09970d4f9030b22c37991812fd5dd8da6ff6"
+    },
+    {
+      "path": "assets/02_Hero_Tanpa_Teks/hero-04-layanan-terintegrasi-tanpa-teks.png",
+      "width": 1600,
+      "height": 600,
+      "bytes": 501301,
+      "sha256": "fcc5405a6122199068644474c51859fe2306c96db6793f6cf0ef89fb816db437"
+    },
+    {
+      "path": "assets/03_Ilustrasi_Pendukung/ilustrasi-bantuan-operator.png",
+      "width": 512,
+      "height": 512,
+      "bytes": 136425,
+      "sha256": "fb7883e66cd191445a07f3a8dd7d7e7ee6f241821c22809aa0e52978df518079"
+    },
+    {
+      "path": "assets/03_Ilustrasi_Pendukung/ilustrasi-cloud-layanan.png",
+      "width": 512,
+      "height": 512,
+      "bytes": 78694,
+      "sha256": "8883aa36a6818ac5a145843a26645d059a57e63867f58f50fdf5142e6a8bb277"
+    },
+    {
+      "path": "assets/03_Ilustrasi_Pendukung/ilustrasi-dashboard-monitoring.png",
+      "width": 512,
+      "height": 512,
+      "bytes": 130054,
+      "sha256": "2dc40bf71baffdae976b94feab0b54621ec64ec1c972b9cc918827b570894c6c"
+    },
+    {
+      "path": "assets/03_Ilustrasi_Pendukung/ilustrasi-gedung-pemerintah.png",
+      "width": 512,
+      "height": 512,
+      "bytes": 96454,
+      "sha256": "c68cb08d3336b0e410f5d2cb975e36be1885cb90a029a53b92d680a8e4c97e9a"
+    },
+    {
+      "path": "assets/03_Ilustrasi_Pendukung/ilustrasi-keamanan-siber.png",
+      "width": 512,
+      "height": 512,
+      "bytes": 123245,
+      "sha256": "6fc401f9a3685bc3d8d9bfffd2e41fc439f38a40be6cd10083ec490219a704d2"
+    },
+    {
+      "path": "assets/03_Ilustrasi_Pendukung/ilustrasi-perawatan-tik.png",
+      "width": 512,
+      "height": 512,
+      "bytes": 165080,
+      "sha256": "69cc48dbb537befca5d270f246e76618396efb59f3f0843b6e14fb5cbd8973b0"
+    },
+    {
+      "path": "assets/03_Ilustrasi_Pendukung/ilustrasi-server-infrastruktur.png",
+      "width": 512,
+      "height": 512,
+      "bytes": 143443,
+      "sha256": "b939c5fa354ab30d0736be777d83fbdf2ae25d2cb82ca36897a3cd2cc1c5e87c"
+    },
+    {
+      "path": "assets/03_Ilustrasi_Pendukung/ilustrasi-tiket-helpdesk.png",
+      "width": 512,
+      "height": 512,
+      "bytes": 136756,
+      "sha256": "9fac3a6d9d3ab3ab6909ecf51c22628093302c4dc628712a0e1d05d45613bd19"
+    },
+    {
+      "path": "assets/03_Ilustrasi_Pendukung/ilustrasi-wifi-jaringan.png",
+      "width": 512,
+      "height": 512,
+      "bytes": 99242,
+      "sha256": "b3de97674fafe8818af2929b43ebd665b27cac8dc2d62dbeb05b9fcdbfff7c76"
+    },
+    {
+      "path": "assets/04_Preview/preview-paket-aset.png",
+      "width": 1600,
+      "height": 1180,
+      "bytes": 881635,
+      "sha256": "e0611c1fa7514b117ad426f323000698a5dc3d0c4cd9f421ac97bb871cd1d2d8"
+    },
+    {
+      "path": "assets/05_Brand/logo-dark.png",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 698993,
+      "sha256": "e6943f6e24e7175db1d6326a1e08e8c67fff812b5b82165f6e708ea82113ef9e"
+    },
+    {
+      "path": "assets/05_Brand/logo-favicon.png",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 993749,
+      "sha256": "8641e8d74ffd73ff00b1758c6a4d67f76df8cbd018997e4a02cede094a055893"
+    },
+    {
+      "path": "assets/05_Brand/logo-full.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 369888,
+      "sha256": "428cbfcce6ec5384d347c1db8391ab7b542e5592a8e6a744152252f819414131"
+    },
+    {
+      "path": "assets/05_Brand/logo-light.png",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 800185,
+      "sha256": "6bcb536a2b2440bd46eb10cf2d011cfda5ac634ef92ce8e9db06b9ee277172d5"
+    }
+  ],
+  "source_hashes": {
+    "frontend/landing-page.mjs": "c6371c1ce956bd8a6d8bb693a0f45898391d1924db5ffb8ea06699053982abdb",
+    "frontend/landing.css": "3c3f57ea339cda707e8a4ff9d29bf509280177511a39ce4549bb7c99db966773",
+    "frontend/build-templates.mjs": "5f7a59ff525270a96c83b99d3580aeacdb24cd3b5c55f1232d1219435236a1e2",
+    "frontend/helpdesk-content.mjs": "5b56cfcc74ce4d5587afae400bb7c0879dc5f8e33fb0cfa504a3851dcbd18c7d",
+    "infra/docker/web.Dockerfile": "24b4e49ed31f138c4c1e22daac97c4ddf0f909564a54b6ee96c5f560aaed9bae",
+    "scripts/test_piui_build.py": "025e3674aafdae69f21adacdbf4098e95e78285a381bc1f09b73d9ed0e7b1f23"
+  },
+  "screenshots": {
+    "qa/bootstrap/landing-assets-desktop.png": "3672ade379f5811aa2e61fd4c12922050f61a839714a22f5b3542ea158281464",
+    "qa/bootstrap/landing-assets-mobile.png": "931c7b5019db404fdb7642284fc38374b5c90b24bb24ceefdaf32815908554b8",
+    "qa/bootstrap/landing-assets-gallery.png": "370c1122c496790f115ad3271ba3ee45cc40ab2ef4cea881f20ce0ed745235b3"
+  },
+  "commands": [
+    "npm.cmd run build (frontend)",
+    "python scripts/test_piui_build.py",
+    "docker compose up -d --no-deps --build --pull never web",
+    "python scripts/smoke_local.py"
+  ],
+  "browser": {
+    "hero_height_vs_viewport": [
+      [
+        900,
+        900
+      ],
+      [
+        844,
+        844
+      ],
+      [
+        667.3334,
+        667
+      ]
+    ],
+    "horizontal_overflow": false,
+    "checks": [
+      "slider second tab selected",
+      "FAQ expanded",
+      "Jaringan filter shows 1/4 and Koneksi terputus",
+      "no captured console errors",
+      "short mobile slider tabs remain within hero"
+    ]
+  },
+  "runtime_recovery": "Existing M0 DB was stopped. docker compose start db and docker compose restart app restored API health.",
+  "limits": [
+    "PNG masters served without image optimization",
+    "Account and ticket functionality remains under development",
+    "Representative browser checks; UAT not run"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "code":"CAL-1",
+  "version":1,
+  "status":"SYNTHETIC_LAB_NOT_OFFICIAL_POLICY",
+  "timezone":"Asia/Jakarta",
+  "utc_offset_hours":7,
+  "weekdays":[0,1,2,3,4],
+  "start_hour":8,
+  "end_hour":16,
+  "interval":"[start,end)",
+  "confirmation_basis":"24 calendar hours, independent of business calendar",
+  "overlapping_pauses":"union, count once"
+}

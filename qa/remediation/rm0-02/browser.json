@@ -1,0 +1,107 @@
+{
+  "timestamp": "2026-11-10T06:21:30.214099+00:00",
+  "result": "PASS",
+  "status": "DONE_VERIFIED",
+  "scope": "Smoke representatif pada kandidat final M0 sintetis melalui gateway localhost, tanpa mutasi tiket bisnis di browser.",
+  "gateway": "http://127.0.0.1:18080",
+  "tool": "Codex in-app Chromium browser",
+  "app_image": "sha256:d7594b254c3d4a24fcaaefdad3b47056641345c98766642e6afbbfe381c0a57e",
+  "web_image": "sha256:735870556892ef1a8a1c7fce34e7d0202d04bb1d60a0a5722eedcb53aeebb284",
+  "built_bundle_sha256": "7df67bd4b70f7b524bf7e5775a3d6a11d829d96be4a4661fcf825ff56e75c330",
+  "served_bundle_sha256": "7df67bd4b70f7b524bf7e5775a3d6a11d829d96be4a4661fcf825ff56e75c330",
+  "served_bundle_match": "PASS",
+  "checks": [
+    {
+      "id": "operator-desktop-keyboard",
+      "result": "PASS",
+      "viewport": [
+        1440,
+        900
+      ],
+      "route": "/admin/app/tickets/detail.html",
+      "observed": [
+        "Operator lab masuk dari UI dan menu Antrean Tiket Petugas",
+        "Enter pada Antrean Verifikasi dan Buka tiket",
+        "Klasifikasi usulan, keputusan operator dan field kategori/priority tampil",
+        "Detail OPEN menawarkan Minta informasi dan Batalkan tiket",
+        "ArrowDown memilih CANCEL dan Tab memindahkan fokus ke lifecycle-reason",
+        "scrollWidth 1430 pada viewport 1440",
+        "Screenshot tata letak panel operator diperiksa secara visual"
+      ]
+    },
+    {
+      "id": "legacy-dispatch-mobile-keyboard",
+      "result": "PASS",
+      "viewport": [
+        390,
+        844
+      ],
+      "route": "/admin/app/tickets/detail.html",
+      "observed": [
+        "Tiket historis OPEN+VERIFIED dapat dibuka dari Antrean Disposisi",
+        "Radio tingkat L1/L2 merespons ArrowRight dan nilai berubah ke L2",
+        "Status manual, alasan dan watermark ditampilkan ketika kandidat tidak memenuhi aturan",
+        "Tombol Tugaskan Teknisi disabled tanpa kandidat",
+        "scrollWidth 380 pada viewport 390"
+      ]
+    },
+    {
+      "id": "technician-mobile-keyboard",
+      "result": "PASS",
+      "viewport": [
+        390,
+        844
+      ],
+      "route": "/admin/app/tickets/detail.html",
+      "observed": [
+        "Identitas Teknisi L1 OPD A dipilih dari server melalui UI lab",
+        "Enter membuka navigasi, Antrean Tiket Petugas, Tugas Saya dan detail ASSIGNED",
+        "Tindakan yang tampil adalah Mulai penanganan",
+        "Panel verifikasi, disposisi dan konfirmasi pemohon tidak tampil pada kasus teknisi ini",
+        "scrollWidth 380 pada viewport 390"
+      ]
+    },
+    {
+      "id": "requester-reopen-mobile",
+      "result": "PASS",
+      "viewport": [
+        390,
+        844
+      ],
+      "route": "/detail-tiket.html",
+      "observed": [
+        "Pemohon Publik A membuka tiket CLOSED miliknya dari daftar normal",
+        "Tindakan Buka kembali tiket tampil pada tiket dengan attempt sah dalam window lab",
+        "Opsi lifecycle adalah REOPEN, fokus Tab berada di lifecycle-reason",
+        "Panel tindakan internal tidak tampil",
+        "scrollWidth 375 pada viewport 390",
+        "Screenshot detail publik mobile diperiksa secara visual"
+      ]
+    },
+    {
+      "id": "different-requester-denied",
+      "result": "PASS",
+      "viewport": [
+        390,
+        844
+      ],
+      "route": "/detail-tiket.html",
+      "observed": [
+        "Identitas diganti menjadi Publik B melalui UI",
+        "URL tiket milik Publik A dibuka",
+        "Pesan Tiket tidak ditemukan tampil",
+        "Panel lifecycle hidden dan daftar opsi kosong"
+      ]
+    }
+  ],
+  "viewport_reset": "PASS",
+  "business_mutations": "Tidak dilakukan di browser. Commit dan skenario gagal dibuktikan melalui HTTP/PostgreSQL disposable.",
+  "limitations": [
+    "Satu engine browser, dua viewport representatif",
+    "Tiket existing lokal untuk smoke; tidak menulis ulang timestamp untuk memalsukan expiry",
+    "Expiry reopen tujuh hari dibuktikan oleh integration disposable; UI mengamati availability pada tiket yang masih eligible",
+    "UAT pemilik dan perangkat nyata belum dilakukan"
+  ],
+  "previous_attempts": "qa/remediation/rm0-02/browser-before-final.json",
+  "authorization_recovery": "Akses browser telah pulih pada giliran ini setelah pemulihan aplikasi. Pengaturan Local browser use sebelumnya sudah diaktifkan atas instruksi pengguna."
+}

@@ -1,0 +1,12 @@
+.local/
+.cache/
+scratch/
+frontend/node_modules/
+frontend/dist/
+**/__pycache__/
+*.exe
+*.dump
+*.bak
+*.tmp
+.msedge-*
+.env

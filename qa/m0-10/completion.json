@@ -1,0 +1,70 @@
+{
+  "timestamp": "2026-11-07T08:18:00.000000+00:00",
+  "task_id": "M0-10",
+  "status": "DONE_VERIFIED",
+  "result": "PASS",
+  "scope": "M0-10 Notifications center and delivery sink, Telegram verified binding and secret masking (AC21), report analytics with honest denominator, CSV export formula sanitization, dynamic revocation gate (AC23), and append-only audit entries; real HTTP and PostgreSQL; no working DB writes.",
+  "requirements": [
+    "AC20",
+    "AC21",
+    "AC23"
+  ],
+  "global_acceptance": {
+    "AC20": "DONE_VERIFIED",
+    "AC21": "DONE_VERIFIED",
+    "AC23": "DONE_VERIFIED"
+  },
+  "counts": {
+    "integration_subtests": 8,
+    "live_smoke_checks": 13,
+    "go_packages_boundary": 53,
+    "contract_tests": 8
+  },
+  "commands_executed": [
+    "python scripts/build_business_contracts.py",
+    "python scripts/build_business_contracts.py --check",
+    "python -m unittest tests/contract/test_business_contracts.py",
+    "cmd /c \"cd frontend && npm run build\"",
+    "python scripts/test_piui_build.py",
+    "python scripts/check_boundaries.py",
+    "cmd /c \"cd backend && go test ./internal/platform/... ./internal/modules/m9/...\"",
+    "python scripts/test_m0_10.py",
+    "docker compose build app",
+    "docker compose up -d app",
+    "python scripts/smoke_m0_10_local.py --allow-lab-writes",
+    "python scripts/verify_package.py"
+  ],
+  "changed_files": [
+    "backend/internal/bootstrap/application.go",
+    "backend/internal/bootstrap/m0_10_integration_test.go",
+    "backend/internal/modules/m1/internal/app/identity.go",
+    "backend/internal/modules/m1/internal/domain/permissions_generated.go",
+    "backend/internal/modules/m9/api/types.go",
+    "backend/internal/modules/m9/internal/app/http.go",
+    "backend/internal/modules/m9/internal/app/service.go",
+    "backend/internal/modules/m9/internal/domain/notification.go",
+    "backend/internal/modules/m9/internal/domain/notification_test.go",
+    "backend/internal/modules/m9/internal/store/store.go",
+    "backend/internal/modules/m9/module.go",
+    "contracts/openapi/business.json",
+    "contracts/policy/permissions.v1.json",
+    "frontend/business-pages.mjs",
+    "qa/m0-10/completion.json",
+    "qa/m0-10/integration.json",
+    "qa/m0-10/smoke_local.json",
+    "scripts/build_business_contracts.py",
+    "scripts/m0_10_contracts.py",
+    "scripts/smoke_m0_10_local.py",
+    "scripts/sync_identity_roles.py",
+    "scripts/test_m0_10.py",
+    "seeds/m0-03-lab.sql",
+    "tests/contract/test_business_contracts.py"
+  ],
+  "verification_limits": [
+    "Tests executed on disposable isolated containers and synthetic loopback lab (:18080) with synthetic test subjects.",
+    "Real PostgreSQL schemas M1 through M9 exercised with strict owner isolation and zero cross-owner joins.",
+    "Telegram binding tested with SINK channel; no actual external Telegram bot token or Telegram HTTP API used.",
+    "CSV formula sanitization verified against spreadsheet injection characters (=,+,-,@).",
+    "Production UAT, high load stress testing, and real production deployment remain NOT_RUN."
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "timestamp": "2026-11-07T09:11:52.400366+00:00",
+  "scope": "live loopback synthetic HTTP/API M0-11 system administration, AC22 purge dual-control & archive/restore, AC24 scoped runner & maintenance & redacted health, AC20 keyboard UI dialogs",
+  "command": "python scripts/smoke_m0_11_local.py --allow-lab-writes",
+  "checks": [
+    {
+      "name": "authenticated_lab_sessions",
+      "detail": "super_admin=17, second_admin=18, platform_admin=5, coord=11, operator=4, tech=9, pub1=1",
+      "result": "PASS"
+    },
+    {
+      "name": "ac22_non_super_admin_purge_rejected_403",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "ac22_super_admin_purge_disabled_no_data_loss",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "ac22_dual_control_enforced_and_accepted",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "ac22_archive_active_ticket_rejected_409",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "ac22_archive_closed_ticket_preserves_history",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "ac22_restore_archived_ticket_succeeds",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "ac24_scoped_runner_allowlist_enforced",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "ac24_maintenance_mode_readonly_blocks_writes",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "ac24_redacted_system_health_verified",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "ac20_ui_dialogs_keyboard_accessibility_verified",
+      "detail": "",
+      "result": "PASS"
+    }
+  ],
+  "result": "PASS"
+}

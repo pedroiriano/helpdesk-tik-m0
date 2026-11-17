@@ -1,0 +1,219 @@
+{
+  "timestamp": "2026-11-13T00:25:27.705603+00:00",
+  "task_id": "RM0-04",
+  "scope": "Hero thumbnail navigation and visible mobile banner",
+  "result": "PASS_LOCAL_HERO",
+  "phase_status": "IN_PROGRESS",
+  "next_phase": "RM0-05 NOT_STARTED",
+  "changed_files": [
+    "frontend/landing-page.mjs",
+    "frontend/public-ui.css",
+    "frontend/helpdesk-content.mjs",
+    "scripts/test_piui_build.py",
+    "docs/05_ATURAN_UI_UX_WEB_PUBLIK.md",
+    "status/PROJECT_STATE.md",
+    "status/HANDOFF_RM0_04.md",
+    "planning/remediation_backlog.csv"
+  ],
+  "source_manifest": {
+    "path": "qa/remediation/rm0-04/hero-thumbnails/source-manifest.json",
+    "sha256": "6cf0f758753804804a8ef58da567a8f8a56532710f3f078e76f37026ce3628a6",
+    "files": 699
+  },
+  "behavior": {
+    "panels_removed": [
+      "previous",
+      "counter",
+      "next",
+      "pause"
+    ],
+    "selection": "manual thumbnails, touch and keyboard",
+    "autoplay": "disabled when pause control absent",
+    "mobile_image": "adaptive contained artwork",
+    "internal_vertical_scroll": false,
+    "hero_max_height": "100VH"
+  },
+  "browser": {
+    "tool": "CUA IAB",
+    "viewport_checks": [
+      {
+        "viewport": [
+          400,
+          498
+        ],
+        "stage_client_height": 440,
+        "stage_scroll_height": 440,
+        "image_height": 74.77,
+        "image_fit": "contain",
+        "cta_bottom": 377.1875,
+        "thumbnails_top": 387.1875,
+        "thumbnails_bottom": 432,
+        "overflow_y": "clip",
+        "thumbnail_count": 5,
+        "removed_controls": 0,
+        "normal_document_origin": true
+      },
+      {
+        "viewport": [
+          320,
+          498
+        ],
+        "stage_client_height": 440,
+        "stage_scroll_height": 440,
+        "image_height": 74.77,
+        "image_fit": "contain",
+        "cta_bottom": 377.1875,
+        "thumbnails_top": 387.1875,
+        "thumbnails_bottom": 432,
+        "overflow_y": "clip",
+        "thumbnail_count": 5,
+        "removed_controls": 0,
+        "normal_document_origin": true
+      },
+      {
+        "viewport": [
+          320,
+          568
+        ],
+        "stage_client_height": 510,
+        "stage_scroll_height": 510,
+        "image_height": 91.43,
+        "image_fit": "contain",
+        "cta_bottom": 434.8854,
+        "thumbnails_top": 446.8854,
+        "thumbnails_bottom": 498,
+        "overflow_y": "clip",
+        "thumbnail_count": 5,
+        "removed_controls": 0,
+        "normal_document_origin": true
+      },
+      {
+        "viewport": [
+          375,
+          667
+        ],
+        "stage_client_height": 609,
+        "stage_scroll_height": 609,
+        "image_height": 160,
+        "image_fit": "contain",
+        "cta_bottom": 525.28125,
+        "thumbnails_top": 537.28125,
+        "thumbnails_bottom": 597.3334,
+        "overflow_y": "clip",
+        "thumbnail_count": 5,
+        "removed_controls": 0,
+        "normal_document_origin": true
+      },
+      {
+        "viewport": [
+          390,
+          844
+        ],
+        "stage_client_height": 786,
+        "stage_scroll_height": 786,
+        "image_height": 160,
+        "image_fit": "contain",
+        "cta_bottom": 696,
+        "thumbnails_top": 708,
+        "thumbnails_bottom": 774,
+        "overflow_y": "clip",
+        "thumbnail_count": 5,
+        "removed_controls": 0,
+        "normal_document_origin": true
+      },
+      {
+        "viewport": [
+          844,
+          390
+        ],
+        "stage_client_height": 332,
+        "stage_scroll_height": 332,
+        "image_height": 332,
+        "image_fit": "cover",
+        "cta_bottom": 260.8334,
+        "thumbnails_top": 276,
+        "thumbnails_bottom": 320,
+        "overflow_y": "clip",
+        "thumbnail_count": 5,
+        "removed_controls": 0,
+        "normal_document_origin": true
+      },
+      {
+        "viewport": [
+          1280,
+          720
+        ],
+        "stage_client_height": 662,
+        "stage_scroll_height": 662,
+        "image_height": 662,
+        "image_fit": "cover",
+        "cta_bottom": 488.5104,
+        "thumbnails_top": 562,
+        "thumbnails_bottom": 642,
+        "overflow_y": "clip",
+        "thumbnail_count": 5,
+        "removed_controls": 0,
+        "normal_document_origin": true
+      }
+    ],
+    "interaction": {
+      "click_third_thumbnail": true,
+      "end_selects_and_focuses_fifth": true,
+      "fifth_image_source": "/assets/helpdesk/02_Hero_Tanpa_Teks/hero-05-pusat-panduan-mandiri-tanpa-teks.png",
+      "mobile_view_background": "transparent"
+    },
+    "screenshots": "Visually inspected in CUA output at 400x498.",
+    "limits": "IAB responsive viewport coverage. Physical devices and browser engines outside this smoke."
+  },
+  "tests": [
+    {
+      "command": "npm.cmd --prefix frontend run build",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "python scripts/test_piui_build.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "node scripts/test_public_cache.mjs",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "docker compose build web",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "docker compose up -d --no-deps --no-build --wait --wait-timeout 85 web",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS"
+    }
+  ],
+  "gateway": {
+    "url": "http://127.0.0.1:18080/",
+    "readiness": 200,
+    "web_image": "sha256:53422e75004cf0dcfa6d74c1f3c7dd22bf3a38eb718b0a73da7f0b66077e483d",
+    "bundles": {
+      "index.html": {
+        "sha256": "a266c9bcb8e1980b7986e505c36bffb0007d961b00d993181212c6b1506bfc8a",
+        "content_type": "text/html"
+      },
+      "helpdesk/public-ui.css": {
+        "sha256": "db64b4df8694edabcf996cb84443734e9e1f09a311bdd43ad1bd885aada37607",
+        "content_type": "text/css"
+      },
+      "js/modules/hero-switcher.js": {
+        "sha256": "25da41696b7993394fac87f63b664cf7a4c99b90ad3a1a4ecd4d435ab1655dc3",
+        "content_type": "application/javascript"
+      }
+    }
+  }
+}

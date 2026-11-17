@@ -1,0 +1,7 @@
+{
+  "result": "PASS",
+  "synthetic_login": "SUPER_ADMIN",
+  "role_count": 10,
+  "hero_status": "DEFAULT_FIVE",
+  "working_mutation": "synthetic session only"
+}

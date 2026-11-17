@@ -1,0 +1,4 @@
+﻿/helpdesk-m0 image=helpdesk-m0-app:0.1.0 mem=4831838208 nano_cpus=2500000000 ports={"8080/tcp":null}
+/helpdesk-m0-db image=postgres:16.14-alpine@sha256:57c72fd2a128e416c7fcc499958864df5301e940bca0a56f58fddf30ffc07777 mem=2684354560 nano_cpus=1000000000 ports={"5432/tcp":null}
+/helpdesk-m0-nginx image=helpdesk-m0-web:0.1.0 mem=805306368 nano_cpus=400000000 ports={"8080/tcp":[{"HostIp":"127.0.0.1","HostPort":"18090"}]}
+/helpdesk-m0-scanner image=clamav/clamav:1.4.6@sha256:8ad6197396974726c35d017e50aaaaf4b91745726a04faec8480c203edd98052 mem=3221225472 nano_cpus=1000000000 ports={"3310/tcp":null,"7357/tcp":null}

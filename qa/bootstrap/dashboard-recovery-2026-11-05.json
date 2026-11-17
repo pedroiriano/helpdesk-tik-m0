@@ -1,0 +1,307 @@
+{
+  "timestamp": "2026-11-05T01:16:25.338201+00:00",
+  "task_id": "M0-03",
+  "change_type": "post_phase_local_dashboard_recovery",
+  "requirements": [
+    "AC11"
+  ],
+  "result": "PASS",
+  "before": {
+    "api_login_health_status": 502,
+    "db_exit_code": 255,
+    "db_oom_killed": false,
+    "db_restart_policy": "no",
+    "migrator_exit_code": 2,
+    "app_error": "schema not ready for m1"
+  },
+  "root_cause": "PostgreSQL stopped; login API unavailable through gateway. Database had no restart policy. Cause of database/host stop not established.",
+  "changed_files": [
+    "compose.yaml",
+    "runbooks/local-development.md",
+    "status/PROJECT_STATE.md"
+  ],
+  "source": {
+    "git_sha": null,
+    "file_sha256": {
+      "compose.yaml": "a6feb77f31d41cc029f3d32ff530c6ef820046f9406f6289c519db670017cd52",
+      "runbooks/local-development.md": "23afc43c74f5bb08340d244d4eb64f745b820a4756428b03fb794295d6b72768",
+      "status/PROJECT_STATE.md": "ad5d3656e47489315f7af69301461b1c6608d3556f130890c26e0061ddad3852"
+    }
+  },
+  "recovery_commands": [
+    {
+      "command": "docker update --restart unless-stopped helpdesk-m0-db",
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0
+    },
+    {
+      "command": "docker start helpdesk-m0-db",
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0
+    },
+    {
+      "command": "docker restart helpdesk-m0",
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0
+    },
+    {
+      "command": "docker start -a helpdesk-m0-migrate",
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0
+    },
+    {
+      "command": "python scripts/smoke_local.py",
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0
+    }
+  ],
+  "verification_commands": [
+    {
+      "argv": [
+        "docker",
+        "compose",
+        "config",
+        "-q"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "helpdesk-m0-db"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "helpdesk-m0"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "helpdesk-m0-nginx"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "argv": [
+        "docker",
+        "inspect",
+        "helpdesk-m0-migrate"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "--user",
+        "postgres",
+        "helpdesk-m0-db",
+        "psql",
+        "-X",
+        "-U",
+        "postgres",
+        "-d",
+        "helpdesk",
+        "-At",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT id,checksum FROM migration_control.ledger ORDER BY id"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "--user",
+        "postgres",
+        "helpdesk-m0-db",
+        "psql",
+        "-X",
+        "-U",
+        "postgres",
+        "-d",
+        "helpdesk",
+        "-At",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT version FROM identity.domain_version"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "--user",
+        "postgres",
+        "helpdesk-m0-db",
+        "psql",
+        "-X",
+        "-U",
+        "postgres",
+        "-d",
+        "helpdesk",
+        "-At",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT version FROM catalog.domain_version"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "--user",
+        "postgres",
+        "helpdesk-m0-db",
+        "psql",
+        "-X",
+        "-U",
+        "postgres",
+        "-d",
+        "helpdesk",
+        "-At",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-c",
+        "SELECT code,active,version FROM catalog.services WHERE code='LAB-BROWSER-M003'"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/verify_package.py"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "result": "PASS"
+    }
+  ],
+  "containers": [
+    {
+      "name": "helpdesk-m0-db",
+      "status": "running",
+      "health": "healthy",
+      "exit_code": 0,
+      "restart_policy": "unless-stopped",
+      "image": "sha256:57c72fd2a128e416c7fcc499958864df5301e940bca0a56f58fddf30ffc07777",
+      "ports": {
+        "5432/tcp": null
+      },
+      "volumes": [
+        {
+          "name": "helpdesk-m0_postgres-data",
+          "destination": "/var/lib/postgresql/data"
+        }
+      ]
+    },
+    {
+      "name": "helpdesk-m0",
+      "status": "running",
+      "health": "healthy",
+      "exit_code": 0,
+      "restart_policy": "unless-stopped",
+      "image": "sha256:40d19ea3926dae0da707d27d75b30ecc3573e027ea367698ed379016217f51a0",
+      "ports": {
+        "8080/tcp": null
+      },
+      "volumes": []
+    },
+    {
+      "name": "helpdesk-m0-nginx",
+      "status": "running",
+      "health": "healthy",
+      "exit_code": 0,
+      "restart_policy": "unless-stopped",
+      "image": "sha256:b0bb550e0fc62bad92f14dd1931c54504f74e39d40cfb8687378a4549b283ece",
+      "ports": {
+        "8080/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "18080"
+          }
+        ]
+      },
+      "volumes": []
+    },
+    {
+      "name": "helpdesk-m0-migrate",
+      "status": "exited",
+      "health": null,
+      "exit_code": 0,
+      "restart_policy": "no",
+      "image": "sha256:57c72fd2a128e416c7fcc499958864df5301e940bca0a56f58fddf30ffc07777",
+      "ports": {},
+      "volumes": [
+        {
+          "name": "28d0d26b31714908168fa34ddc25fddc6e685d395b6977db11f19bfca9a7032b",
+          "destination": "/var/lib/postgresql/data"
+        }
+      ]
+    }
+  ],
+  "ledger_matches_manifest": true,
+  "migrations": 12,
+  "domain_markers": {
+    "identity": 3,
+    "catalog": 3
+  },
+  "preserved_fixture": "LAB-BROWSER-M003|f|3",
+  "http": {
+    "/api/v1/health/live": 200,
+    "/api/v1/health/ready": 200,
+    "/api/v1/auth/bootstrap": 200,
+    "/admin/": 200,
+    "/admin/auth/login.html": 200
+  },
+  "browser": {
+    "result": "PASS",
+    "identity": "Admin Lab OPD A (synthetic)",
+    "login": "/admin/auth/login.html",
+    "landed": "/admin/app/helpdesk/index.html",
+    "master_rows": 5,
+    "dashboard": "/admin/app/dashboard/index.html",
+    "dashboard_heading": "Dashboard Helpdesk TIK Kota Depok",
+    "connection_label": "Layanan pengembangan terhubung",
+    "screenshot": "qa/bootstrap/dashboard-recovery-2026-11-05.jpg",
+    "screenshot_sha256": "164f08a40a54594735cefed37cf2e53f9ea884fb52791d0689fe1e42457382fa"
+  },
+  "limits": [
+    "No reset/restore/secret rotation/schema migration/new image build; same DB container and volume reused",
+    "Database recovery/restart policy verified in source and live config; no destructive crash test or host-reboot test",
+    "No authentication code/permissions changed; browser used existing synthetic lab identity",
+    "Dashboard figures remain template examples; M0-04 NOT_STARTED; no UAT/production readiness claim"
+  ]
+}

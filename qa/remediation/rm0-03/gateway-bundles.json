@@ -1,0 +1,12 @@
+[
+  {
+    "bundle": "m0-03.js",
+    "matches_local_build": true,
+    "sha256": "c893735749bedb3b871d3482507721ce3c2024dfcc3921675e1c3ce705f8e7e3"
+  },
+  {
+    "bundle": "m0-04.js",
+    "matches_local_build": true,
+    "sha256": "537dde589c576444fa8ba7336d1b038484f0ba7b4ef711b61dd8b0636be68d82"
+  }
+]

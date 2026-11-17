@@ -1,0 +1,21 @@
+
+> helpdesk-web@0.1.0 build
+> npm run typecheck && vite build && node build-templates.mjs
+
+
+> helpdesk-web@0.1.0 typecheck
+> tsc --noEmit
+
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 17 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/transport-CJVV_n_x.js    1.89 kB │ gzip:  1.04 kB
+dist/helpdesk/m0-04.js       64.38 kB │ gzip: 17.88 kB
+dist/helpdesk/m0-03.js       67.13 kB │ gzip: 19.70 kB
+dist/helpdesk/health.js     298.73 kB │ gzip: 77.28 kB
+
+✓ built in 422ms
+piui-modern: 63 source files published
+piui-zero: 78 source files published

@@ -1,0 +1,851 @@
+<!doctype html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Pusat Notifikasi &amp; Peringatan — PIUI Zero Admin</title>
+  <meta name="description" content="Halaman lengkap Pusat Notifikasi, peringatan keamanan, pemberitahuan transaksi, dan siaran pengumuman tim pada PIUI Zero Admin Dashboard.">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="stylesheet" href="/assets/css/main.css?v=2.2.2">
+  <script type="module" src="/assets/js/app.js?v=2.2.2"></script>
+<link rel="icon" href="/assets/icons/favicon.ico?v=2.2.2" sizes="16x16 32x32 48x48"><link rel="icon" href="/assets/icons/piui-favicon.svg?v=2.2.2" type="image/svg+xml" sizes="any"><link rel="apple-touch-icon" href="/assets/icons/piui-180.png?v=2.2.2" sizes="180x180">
+</head>
+<body>
+  <a class="piui-skip-link" href="#main-content">Langsung ke konten utama</a>
+  <div id="piui-live-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="piui-app-shell" data-sidebar="expanded">
+    <!-- TOPBAR -->
+    <header class="piui-topbar">
+      <div class="piui-topbar__start">
+        <button type="button" class="piui-icon-btn" id="btn-sidebar-toggle"
+                aria-label="Buka atau ciutkan panel navigasi" aria-expanded="true" aria-controls="piui-sidebar">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-menu"></use></svg>
+        </button>
+        <a href="/app/dashboard/index.html" class="piui-brand"><img class="piui-brand__mark" src="/assets/icons/piui-mark.svg" alt="" width="32" height="32"><span class="piui-brand__name">PIUI Zero™</span><span class="piui-badge piui-badge--env">NOTIFICATIONS</span></a>
+      </div>
+
+      <div class="piui-topbar__end">
+        <button type="button" class="piui-cmd-trigger" id="btn-open-cmd" aria-label="Buka Command Palette (Ctrl+K)">
+          <svg width="18" height="18" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-search"></use></svg>
+          <span class="piui-cmd-trigger__label">Cari notifikasi, menu, perintah...</span>
+          <kbd class="piui-cmd-trigger__kbd text-mono">Ctrl+K</kbd>
+        </button>
+
+        <button type="button" class="piui-icon-btn" id="btn-theme-toggle" aria-label="Ganti tema terang atau gelap">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-theme"></use></svg>
+        </button>
+
+        <button type="button" class="piui-icon-btn" popovertarget="popover-profile" aria-label="Menu profil administrator">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-user"></use></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- POPOVER PROFIL -->
+    <div id="popover-profile" popover class="piui-popover" role="region" aria-label="Informasi Sesi Administrator">
+      <div class="piui-popover__header">
+        <strong>Budi Santoso</strong>
+        <div class="piui-page-subtitle">Super Admin • Koordinator Pengumuman</div>
+      </div>
+      <div class="piui-field">
+        <button type="button" class="piui-btn piui-btn--danger piui-btn--sm" id="btn-session-logout">
+          <svg width="16" height="16" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-logout"></use></svg>
+          <span>Akhiri Sesi (Logout)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="piui-sidebar" id="piui-sidebar" aria-label="Menu Navigasi Admin">
+      <nav aria-label="Menu Utama">
+        <div class="piui-sidebar__group-label">Menu Utama</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/app/dashboard/index.html" class="piui-nav-link" title="Beranda Dashboard">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-dashboard"></use></svg>
+              <span class="piui-nav-link__text">Beranda Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/analytics/index.html" class="piui-nav-link" title="Analitik &amp; Grafik">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-analytics"></use></svg>
+              <span class="piui-nav-link__text">Analitik &amp; Grafik</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/notifications/index.html" class="piui-nav-link" aria-current="page" title="Pusat Notifikasi &amp; Peringatan">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-bell"></use></svg>
+              <span class="piui-nav-link__text">Pusat Notifikasi</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="piui-sidebar__group-label">Kelola Data &amp; Media</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/app/users/index.html" class="piui-nav-link" title="Data Pengguna">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-users"></use></svg>
+              <span class="piui-nav-link__text">Data Pengguna</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/transactions/index.html" class="piui-nav-link" title="Data Transaksi">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-transactions"></use></svg>
+              <span class="piui-nav-link__text">Data Transaksi</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/gallery/index.html" class="piui-nav-link" title="Galeri Foto &amp; Video">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-gallery"></use></svg>
+              <span class="piui-nav-link__text">Galeri Foto &amp; Video</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="piui-sidebar__group-label">Komponen &amp; Tampilan</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/app/components/index.html" class="piui-nav-link" title="Katalog Komponen UI/UX">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-components"></use></svg>
+              <span class="piui-nav-link__text">Katalog Komponen</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="piui-sidebar__group-label">Sistem &amp; Keamanan</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/app/audit/index.html" class="piui-nav-link" title="Riwayat Aktivitas (Audit)">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-audit"></use></svg>
+              <span class="piui-nav-link__text">Riwayat Aktivitas</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/settings/index.html" class="piui-nav-link" title="Pengaturan Sistem">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-settings"></use></svg>
+              <span class="piui-nav-link__text">Pengaturan Sistem</span>
+            </a>
+          </li>
+          <li>
+            <a href="/status/index.html" class="piui-nav-link" title="Status Server">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-status"></use></svg>
+              <span class="piui-nav-link__text">Status Server</span>
+            </a>
+          </li>
+          <li>
+            <a href="/index.html" class="piui-nav-link" title="Panduan &amp; Dokumentasi">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-info"></use></svg>
+              <span class="piui-nav-link__text">Panduan &amp; Dokumentasi</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- MOBILE DRAWER -->
+    <dialog id="piui-mobile-drawer" class="piui-drawer-mobile" aria-labelledby="mobile-drawer-title">
+      <div class="piui-dialog__header">
+        <strong id="mobile-drawer-title">Menu Navigasi PIUI Zero</strong>
+        <button type="button" class="piui-icon-btn" id="btn-close-mobile-drawer" aria-label="Tutup menu navigasi">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-close"></use></svg>
+        </button>
+      </div>
+      <nav aria-label="Navigasi Mobile">
+        <div class="piui-sidebar__group-label">Menu Utama</div>
+        <ul class="piui-nav-list">
+          <li><a href="/app/dashboard/index.html" class="piui-nav-link">Beranda Dashboard</a></li>
+          <li><a href="/app/analytics/index.html" class="piui-nav-link">Analitik &amp; Grafik</a></li>
+          <li><a href="/app/notifications/index.html" class="piui-nav-link" aria-current="page">Pusat Notifikasi</a></li>
+        </ul>
+        <div class="piui-sidebar__group-label">Kelola Data &amp; Media</div>
+        <ul class="piui-nav-list">
+          <li><a href="/app/users/index.html" class="piui-nav-link">Data Pengguna</a></li>
+          <li><a href="/app/transactions/index.html" class="piui-nav-link">Data Transaksi</a></li>
+          <li><a href="/app/gallery/index.html" class="piui-nav-link">Galeri Foto &amp; Video</a></li>
+        </ul>
+        <div class="piui-sidebar__group-label">Komponen &amp; Tampilan</div>
+        <ul class="piui-nav-list">
+          <li><a href="/app/components/index.html" class="piui-nav-link">Katalog Komponen</a></li>
+        </ul>
+        <div class="piui-sidebar__group-label">Sistem &amp; Keamanan</div>
+        <ul class="piui-nav-list">
+          <li><a href="/app/audit/index.html" class="piui-nav-link">Riwayat Aktivitas</a></li>
+          <li><a href="/app/settings/index.html" class="piui-nav-link">Pengaturan Sistem</a></li>
+          <li><a href="/status/index.html" class="piui-nav-link">Status Server</a></li>
+          <li><a href="/index.html" class="piui-nav-link">Panduan &amp; Dokumentasi</a></li>
+          <li><a href="/auth/login.html" class="piui-nav-link">Masuk Akun Admin</a></li>
+        </ul>
+      </nav>
+    </dialog>
+
+    <!-- AREA KERJA UTAMA -->
+    <main id="main-content" class="piui-main">
+      <nav aria-label="Breadcrumb" class="piui-breadcrumb">
+        <ol>
+          <li><a href="/app/dashboard/index.html">Beranda Dashboard</a></li>
+          <li><a href="/app/dashboard/index.html">Menu Utama</a></li>
+          <li aria-current="page">Pusat Notifikasi &amp; Peringatan</li>
+        </ol>
+      </nav>
+
+      <div class="piui-page-header">
+        <div class="piui-page-header__titles">
+          <h1 class="piui-page-title">Pusat Notifikasi &amp; Peringatan Sistem</h1>
+          <p class="piui-page-subtitle">Pantau seluruh pesan keamanan, pemberitahuan transaksi, status server, dan kirim siaran pengumuman ke tim.</p>
+        </div>
+        <div class="piui-page-actions">
+          <button type="button" class="piui-btn piui-btn--secondary" id="btn-page-notif-read-all">
+            <span>Tandai Semua Sudah Dibaca</span>
+          </button>
+          <button type="button" class="piui-btn piui-btn--secondary" data-open-dialog="dialog-notif-prefs">
+            <svg width="16" height="16" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-settings"></use></svg>
+            <span>Pengaturan Saluran Notifikasi</span>
+          </button>
+          <button type="button" class="piui-btn piui-btn--primary" data-open-dialog="dialog-notif-broadcast">
+            <span>+ Kirim Siaran Pengumuman</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 4 KARTU RINGKASAN ANGKA NOTIFIKASI -->
+      <section aria-label="Ringkasan Pusat Notifikasi" class="piui-kpi-grid">
+        <article class="piui-card">
+          <div class="piui-card__header">
+            <h2 class="piui-card__title">Pesan Belum Dibaca</h2>
+            <span class="piui-badge" data-status="warning" id="kpi-notif-unread-badge">Perlu Dicek</span>
+          </div>
+          <div class="piui-card__value tabular-nums" id="kpi-notif-unread-count">4 Pesan</div>
+          <p class="piui-card__meta">Klik "Tandai Semua Sudah Dibaca" untuk membersihkan antrean</p>
+        </article>
+
+        <article class="piui-card">
+          <div class="piui-card__header">
+            <h2 class="piui-card__title">Peringatan Keamanan</h2>
+            <span class="piui-badge" data-status="danger">Prioritas Tinggi</span>
+          </div>
+          <div class="piui-card__value tabular-nums">2 Peringatan</div>
+          <p class="piui-card__meta">Deteksi percobaan login &amp; pembaruan hak akses</p>
+        </article>
+
+        <article class="piui-card">
+          <div class="piui-card__header">
+            <h2 class="piui-card__title">Pemberitahuan Transaksi</h2>
+            <span class="piui-badge" data-status="info">Hari Ini</span>
+          </div>
+          <div class="piui-card__value tabular-nums">18 Transaksi</div>
+          <p class="piui-card__meta">Konfirmasi pembayaran masuk &amp; pencairan dana</p>
+        </article>
+
+        <article class="piui-card">
+          <div class="piui-card__header">
+            <h2 class="piui-card__title">Saluran Pengiriman Pesan</h2>
+            <span class="piui-badge" data-status="success" data-last-saved-summary>Aktif • 3 Saluran</span>
+          </div>
+          <div class="piui-card__value tabular-nums">100% Terkirim</div>
+          <p class="piui-card__meta">Layar Browser, Email Admin, &amp; Webhook Telegram</p>
+        </article>
+      </section>
+
+      <!-- PANEL UTAMA DAFTAR & TABEL NOTIFIKASI LENGKAP -->
+      <section class="piui-panel" aria-labelledby="heading-notif-table">
+        <div class="piui-panel__header">
+          <div>
+            <h2 id="heading-notif-table" class="piui-panel__title">Daftar Lengkap Semua Notifikasi &amp; Peringatan</h2>
+            <p class="piui-page-subtitle">Gunakan pencarian, filter kategori, atau kalender tanggal untuk menemukan pemberitahuan tertentu.</p>
+          </div>
+          <div class="piui-page-actions">
+            <span class="piui-badge tabular-nums" data-status="info" data-table-count>Menampilkan 7 dari 7 data</span>
+            <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-table-export data-table-for="piui-primary-table">
+              <svg width="16" height="16" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-download"></use></svg>
+              <span>Unduh Laporan CSV</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- FILTER BAR -->
+        <div class="piui-filter-bar" role="search" aria-label="Pencarian dan Filter Notifikasi">
+          <div class="piui-field">
+            <label for="notif-search-q" class="piui-field__label">Cari Judul, Pengirim, atau Kode Notifikasi</label>
+            <input type="search" name="notif-search-q" id="notif-search-q" class="piui-input" data-table-search
+                   placeholder="Ketik kata kunci: QRIS, Keamanan, Server, Login...">
+          </div>
+
+          <div class="piui-field">
+            <label for="notif-filter-status" class="piui-field__label">Filter Status Baca</label>
+            <select name="notif-filter-status" id="notif-filter-status" class="piui-select" data-table-status>
+              <option value="all">Semua Status Notifikasi</option>
+              <option value="unread">Belum Dibaca (Baru)</option>
+              <option value="read">Sudah Dibaca</option>
+              
+            </select>
+          </div>
+
+          <div class="piui-field">
+            <label for="notif-filter-category" class="piui-field__label">Filter Kategori Pesan</label>
+            <select name="notif-filter-category" id="notif-filter-category" class="piui-select" data-table-role>
+              <option value="all">Semua Kategori</option>
+              <option value="keamanan">Keamanan &amp; Login</option>
+              <option value="transaksi">Transaksi &amp; Pembayaran</option>
+              <option value="server">Sistem &amp; Server</option>
+              <option value="pengumuman">Pengumuman Tim</option>
+            </select>
+          </div>
+
+          <div class="piui-page-actions">
+            <button type="button" class="piui-btn piui-btn--secondary" data-table-reset>Atur Ulang Filter</button>
+          </div>
+        </div>
+
+        <!-- PENGALIH 5 KONDISI TABEL -->
+        
+
+        <!-- BULK ACTION BAR -->
+        <div class="piui-health-banner" data-bulk-bar hidden role="region" aria-label="Aksi Massal Notifikasi Terpilih">
+          <div class="piui-health-banner__content">
+            <strong class="tabular-nums"><span data-selected-count>0</span> Notifikasi Dipilih</strong>
+            <span>• Pilih tindakan massal untuk pesan yang dicentang:</span>
+          </div>
+          <div class="piui-page-actions">
+            <button type="button" class="piui-btn piui-btn--primary piui-btn--sm" id="btn-bulk-notif-read">
+              Tandai Sudah Dibaca
+            </button>
+            <button type="button" class="piui-btn piui-btn--danger piui-btn--sm" data-open-dialog="dialog-notif-delete">
+              Hapus Pesan Terpilih
+            </button>
+            <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-clear-selection>
+              Batal Pilih
+            </button>
+          </div>
+        </div>
+
+        <!-- BANNER OFFLINE -->
+        <div class="piui-state-box" data-state-panel="offline" hidden role="status">
+          <strong>Mode Tanpa Internet (Offline Cache Aktif)</strong>
+          <p class="piui-page-subtitle">Menampilkan salinan notifikasi terakhir. Pesan baru akan dimuat otomatis saat internet kembali terhubung.</p>
+        </div>
+
+        <!-- SKELETON LOADING -->
+        <div class="piui-state-box" data-state-panel="loading" hidden aria-busy="true">
+          <div class="piui-skeleton piui-skeleton--line"></div>
+          <div class="piui-skeleton piui-skeleton--block"></div>
+          <div class="piui-skeleton piui-skeleton--line"></div>
+        </div>
+
+        <!-- ERROR STATE -->
+        <div class="piui-state-box" data-state-panel="error" hidden role="alert">
+          <h3 class="piui-state-box__title">Gagal Memuat Daftar Notifikasi</h3>
+          <p class="piui-state-box__desc">Koneksi ke layanan pemberitahuan terputus sementara. Kode Referensi: <code class="text-mono">ERR-NTF-503</code></p>
+          <div class="piui-page-actions">
+            <button type="button" class="piui-btn piui-btn--primary" data-table-reset>Coba Muat Ulang</button>
+          </div>
+        </div>
+
+        <!-- EMPTY STATE -->
+        <div class="piui-state-box" data-state-panel="empty" hidden role="status">
+          <h3 class="piui-state-box__title">Tidak Ada Notifikasi yang Cocok</h3>
+          <p class="piui-state-box__desc">Tidak ditemukan pesan untuk kata kunci atau filter kategori yang dipilih.</p>
+          <div class="piui-page-actions">
+            <button type="button" class="piui-btn piui-btn--primary" data-table-reset>Tampilkan Semua Notifikasi</button>
+          </div>
+        </div>
+
+        <!-- TABEL NOTIFIKASI INTERAKTIF -->
+        <div class="piui-table-scroll" role="region" aria-labelledby="heading-notif-table" tabindex="0">
+          <table id="piui-primary-table" class="piui-table" data-piui-table="notifications-center">
+            <thead>
+              <tr>
+                <th scope="col" class="is-sticky-col">
+                  <label class="piui-field__label">
+                    <input type="checkbox" data-select-all aria-label="Pilih semua baris notifikasi">
+                    <span>Kode &amp; Waktu</span>
+                  </label>
+                </th>
+                <th scope="col" aria-sort="none">
+                  <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-sort-col="1">Kategori ↕</button>
+                </th>
+                <th scope="col" aria-sort="none">
+                  <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-sort-col="2">Judul &amp; Isi Pemberitahuan ↕</button>
+                </th>
+                <th scope="col">Pengirim / Sumber</th>
+                <th scope="col">Status Baca</th>
+                <th scope="col" class="text-end" data-table-column="actions">Tindakan</th>
+              </tr>
+            </thead>
+            <tbody id="notif-page-tbody">
+              <tr data-row-date="2026-10-21" data-row-id="NTF-2026-091" data-status="belum dibaca penting" data-role="keamanan" data-unread="true">
+                <th scope="row" class="is-sticky-col">
+                  <label class="piui-field__label">
+                    <input type="checkbox" data-row-select aria-label="Pilih notifikasi NTF-2026-091">
+                    <span class="text-mono">NTF-2026-091</span>
+                  </label>
+                  <div class="piui-page-subtitle tabular-nums">Baru Saja • 11:02 WIB</div>
+                </th>
+                <td><span class="piui-badge" data-status="danger">■ Keamanan &amp; Login</span></td>
+                <td>
+                  <strong>Deteksi 5 Percobaan Login Gagal Beruntun</strong>
+                  <div class="piui-page-subtitle">Sistem otomatis memblokir sementara alamat IP 103.144.22.19 selama 30 menit untuk melindungi akun.</div>
+                </td>
+                <td>Sistem Pelindung Login</td>
+                <td><span class="piui-badge" data-status="warning" data-notif-row-status>● Belum Dibaca</span></td>
+                <td class="text-end">
+                  <div class="piui-page-actions">
+                    <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm"
+                            data-notif-inspect
+                            data-notif-code="NTF-2026-091"
+                            data-notif-title="Deteksi 5 Percobaan Login Gagal Beruntun"
+                            data-notif-cat="Keamanan &amp; Login (Prioritas Tinggi)"
+                            data-notif-sender="Sistem Pelindung Login Otomatis"
+                            data-notif-time="21 Okt 2026, 11:02:14 WIB"
+                            data-notif-body="Sistem mendeteksi 5 kali percobaan kata sandi &amp; kode OTP yang salah secara beruntun dari alamat IP eksternal 103.144.22.19. Alamat IP tersebut telah dikarantina otomatis selama 30 menit dan dicatat ke dalam Riwayat Aktivitas."
+                            data-notif-link="/app/audit/index.html">
+                      Lihat Detail
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr data-row-date="2026-10-21" data-row-id="NTF-2026-090" data-status="belum dibaca" data-role="transaksi" data-unread="true">
+                <th scope="row" class="is-sticky-col">
+                  <label class="piui-field__label">
+                    <input type="checkbox" data-row-select aria-label="Pilih notifikasi NTF-2026-090">
+                    <span class="text-mono">NTF-2026-090</span>
+                  </label>
+                  <div class="piui-page-subtitle tabular-nums">8 Menit Lalu • 10:54 WIB</div>
+                </th>
+                <td><span class="piui-badge" data-status="success">● Transaksi &amp; Pembayaran</span></td>
+                <td>
+                  <strong>Pencairan Dana Batch QRIS Rp 428.500.000 Berhasil</strong>
+                  <div class="piui-page-subtitle">Dana kliring otomatis untuk 64 merchant cabang Jakarta telah masuk ke rekening penampungan utama.</div>
+                </td>
+                <td>Mesin Kliring Pembayaran</td>
+                <td><span class="piui-badge" data-status="warning" data-notif-row-status>● Belum Dibaca</span></td>
+                <td class="text-end">
+                  <div class="piui-page-actions">
+                    <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm"
+                            data-notif-inspect
+                            data-notif-code="NTF-2026-090"
+                            data-notif-title="Pencairan Dana Batch QRIS Rp 428.500.000 Berhasil"
+                            data-notif-cat="Transaksi &amp; Pembayaran"
+                            data-notif-sender="Mesin Kliring Pembayaran"
+                            data-notif-time="21 Okt 2026, 10:54:08 WIB"
+                            data-notif-body="Pencairan dana kolektif (Batch #QRS-1021) senilai Rp 428.500.000 untuk 64 transaksi telah berhasil diverifikasi dan diselesaikan tanpa selisih saldo."
+                            data-notif-link="/app/transactions/index.html">
+                      Lihat Detail
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr data-row-date="2026-10-21" data-row-id="NTF-2026-089" data-status="belum dibaca penting" data-role="server" data-unread="true">
+                <th scope="row" class="is-sticky-col">
+                  <label class="piui-field__label">
+                    <input type="checkbox" data-row-select aria-label="Pilih notifikasi NTF-2026-089">
+                    <span class="text-mono">NTF-2026-089</span>
+                  </label>
+                  <div class="piui-page-subtitle tabular-nums">19 Menit Lalu • 10:43 WIB</div>
+                </th>
+                <td><span class="piui-badge" data-status="warning">▲ Sistem &amp; Server</span></td>
+                <td>
+                  <strong>Penggunaan Memori Server Cadangan Surabaya Mencapai 78%</strong>
+                  <div class="piui-page-subtitle">Kapasitas RAM pada server SBY-DRC-02 meningkat saat proses pencadangan database harian berlangsung.</div>
+                </td>
+                <td>Pemantau Server Otomatis</td>
+                <td><span class="piui-badge" data-status="warning" data-notif-row-status>● Belum Dibaca</span></td>
+                <td class="text-end">
+                  <div class="piui-page-actions">
+                    <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm"
+                            data-notif-inspect
+                            data-notif-code="NTF-2026-089"
+                            data-notif-title="Penggunaan Memori Server Cadangan Surabaya Mencapai 78%"
+                            data-notif-cat="Sistem &amp; Server"
+                            data-notif-sender="Pemantau Server Otomatis"
+                            data-notif-time="21 Okt 2026, 10:43:19 WIB"
+                            data-notif-body="Beban memori pada node SBY-DRC-02 naik ke 78% karena sinkronisasi cadangan harian. Kecepatan layanan utama tetap normal (41 ms)."
+                            data-notif-link="/app/analytics/index.html">
+                      Lihat Detail
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr data-row-date="2026-10-21" data-row-id="NTF-2026-088" data-status="belum dibaca" data-role="pengumuman" data-unread="true">
+                <th scope="row" class="is-sticky-col">
+                  <label class="piui-field__label">
+                    <input type="checkbox" data-row-select aria-label="Pilih notifikasi NTF-2026-088">
+                    <span class="text-mono">NTF-2026-088</span>
+                  </label>
+                  <div class="piui-page-subtitle tabular-nums">45 Menit Lalu • 10:15 WIB</div>
+                </th>
+                <td><span class="piui-badge" data-status="info">◆ Pengumuman Tim</span></td>
+                <td>
+                  <strong>Pemeliharaan Terjadwal Akhir Pekan (Sabtu, 01:00–02:00 WIB)</strong>
+                  <div class="piui-page-subtitle">Pembaruan sertifikat keamanan server akan dilakukan tanpa menghentikan layanan transaksi utama.</div>
+                </td>
+                <td>Budi Santoso (Super Admin)</td>
+                <td><span class="piui-badge" data-status="warning" data-notif-row-status>● Belum Dibaca</span></td>
+                <td class="text-end">
+                  <div class="piui-page-actions">
+                    <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm"
+                            data-notif-inspect
+                            data-notif-code="NTF-2026-088"
+                            data-notif-title="Pemeliharaan Terjadwal Akhir Pekan (Sabtu, 01:00–02:00 WIB)"
+                            data-notif-cat="Pengumuman Tim"
+                            data-notif-sender="Budi Santoso (Super Admin)"
+                            data-notif-time="21 Okt 2026, 10:15:00 WIB"
+                            data-notif-body="Tim Infrastruktur akan melakukan pembaruan sertifikat keamanan TLS pada hari Sabtu pukul 01:00–02:00 WIB dengan metode Zero-Downtime."
+                            data-notif-link="/status/index.html">
+                      Lihat Detail
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr data-row-date="2026-10-21" data-row-id="NTF-2026-087" data-status="sudah dibaca" data-role="keamanan" data-unread="false">
+                <th scope="row" class="is-sticky-col">
+                  <label class="piui-field__label">
+                    <input type="checkbox" data-row-select aria-label="Pilih notifikasi NTF-2026-087">
+                    <span class="text-mono">NTF-2026-087</span>
+                  </label>
+                  <div class="piui-page-subtitle tabular-nums">2 Jam Lalu • 09:10 WIB</div>
+                </th>
+                <td><span class="piui-badge" data-status="danger">■ Keamanan &amp; Login</span></td>
+                <td>
+                  <strong>Persetujuan Hak Akses Baru untuk Akun Rina Wulandari (USR-9041)</strong>
+                  <div class="piui-page-subtitle">Peran "Admin Operasional" telah diaktifkan beserta verifikasi 2 langkah (MFA).</div>
+                </td>
+                <td>Nadia Putri (Kepala Keamanan)</td>
+                <td><span class="piui-badge" data-status="success" data-notif-row-status>✓ Sudah Dibaca</span></td>
+                <td class="text-end">
+                  <div class="piui-page-actions">
+                    <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm"
+                            data-notif-inspect
+                            data-notif-code="NTF-2026-087"
+                            data-notif-title="Persetujuan Hak Akses Baru untuk Akun Rina Wulandari (USR-9041)"
+                            data-notif-cat="Keamanan &amp; Login"
+                            data-notif-sender="Nadia Putri (Kepala Keamanan)"
+                            data-notif-time="21 Okt 2026, 09:10:42 WIB"
+                            data-notif-body="Perubahan hak akses untuk pengguna Rina Wulandari (USR-9041) telah disetujui dan tercatat pada Riwayat Aktivitas."
+                            data-notif-link="/app/users/detail.html?id=USR-9041">
+                      Lihat Detail
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr data-row-date="2026-10-21" data-row-id="NTF-2026-086" data-status="sudah dibaca" data-role="transaksi" data-unread="false">
+                <th scope="row" class="is-sticky-col">
+                  <label class="piui-field__label">
+                    <input type="checkbox" data-row-select aria-label="Pilih notifikasi NTF-2026-086">
+                    <span class="text-mono">NTF-2026-086</span>
+                  </label>
+                  <div class="piui-page-subtitle tabular-nums">3 Jam Lalu • 08:05 WIB</div>
+                </th>
+                <td><span class="piui-badge" data-status="success">● Transaksi &amp; Pembayaran</span></td>
+                <td>
+                  <strong>Rekonsiliasi Laporan Transaksi Harian Selesai 100%</strong>
+                  <div class="piui-page-subtitle">Seluruh 1.420 catatan transaksi kemarin cocok dengan mutasi bank utama tanpa selisih.</div>
+                </td>
+                <td>Hendra Wijaya (Keuangan)</td>
+                <td><span class="piui-badge" data-status="success" data-notif-row-status>✓ Sudah Dibaca</span></td>
+                <td class="text-end">
+                  <div class="piui-page-actions">
+                    <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm"
+                            data-notif-inspect
+                            data-notif-code="NTF-2026-086"
+                            data-notif-title="Rekonsiliasi Laporan Transaksi Harian Selesai 100%"
+                            data-notif-cat="Transaksi &amp; Pembayaran"
+                            data-notif-sender="Hendra Wijaya (Keuangan)"
+                            data-notif-time="21 Okt 2026, 08:05:11 WIB"
+                            data-notif-body="Laporan pencocokan transaksi harian telah selesai diverifikasi otomatis dan siap diunduh dalam format CSV."
+                            data-notif-link="/app/transactions/index.html">
+                      Lihat Detail
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr data-row-date="2026-10-20" data-row-id="NTF-2026-085" data-status="sudah dibaca" data-role="server" data-unread="false">
+                <th scope="row" class="is-sticky-col">
+                  <label class="piui-field__label">
+                    <input type="checkbox" data-row-select aria-label="Pilih notifikasi NTF-2026-085">
+                    <span class="text-mono">NTF-2026-085</span>
+                  </label>
+                  <div class="piui-page-subtitle tabular-nums">Kemarin • 22:30 WIB</div>
+                </th>
+                <td><span class="piui-badge" data-status="info">◆ Sistem &amp; Server</span></td>
+                <td>
+                  <strong>Cadangan Otomatis (Backup) Database Utama Berhasil Disimpan</strong>
+                  <div class="piui-page-subtitle">Contoh laporan arsip dengan hash SHA-256 untuk cadangan Jakarta &amp; Surabaya; bukan hasil pencadangan dari aplikasi ini.</div>
+                </td>
+                <td>Penjadwal Sistem Otomatis</td>
+                <td><span class="piui-badge" data-status="success" data-notif-row-status>✓ Sudah Dibaca</span></td>
+                <td class="text-end">
+                  <div class="piui-page-actions">
+                    <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm"
+                            data-notif-inspect
+                            data-notif-code="NTF-2026-085"
+                            data-notif-title="Cadangan Otomatis (Backup) Database Utama Berhasil Disimpan"
+                            data-notif-cat="Sistem &amp; Server"
+                            data-notif-sender="Penjadwal Sistem Otomatis"
+                            data-notif-time="20 Okt 2026, 22:30:00 WIB"
+                            data-notif-body="Proses pencadangan database harian selesai dalam 14 detik tanpa gangguan layanan."
+                            data-notif-link="/app/settings/index.html">
+                      Lihat Detail
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- PANEL PENGATURAN SALURAN NOTIFIKASI & TULIS PENGUMUMAN CEPAT -->
+      <section class="piui-panel" aria-labelledby="heading-notif-channels">
+        <div class="piui-panel__header">
+          <div>
+            <h2 id="heading-notif-channels" class="piui-panel__title">Saluran Pengiriman &amp; Tulis Pengumuman Tim</h2>
+            <p class="piui-page-subtitle">Tulis draf pengumuman dan pilih saluran contoh. Pengiriman email, push dan webhook memerlukan integrasi server.</p>
+          </div>
+          <button type="button" class="piui-btn piui-btn--primary piui-btn--sm" data-open-dialog="dialog-notif-broadcast">
+            Buka Form Siaran (Modal Kanan)
+          </button>
+        </div>
+
+        <div class="piui-kpi-grid">
+          <article class="piui-card">
+            <div class="piui-card__header">
+              <h3 class="piui-card__title">1. Notifikasi Layar Browser</h3>
+              <span class="piui-badge" data-status="success">● Pilihan contoh</span>
+            </div>
+            <p class="piui-page-subtitle">Menampilkan lonceng pemberitahuan &amp; pesan instan di pojok kanan atas layar saat admin bekerja.</p>
+          </article>
+
+          <article class="piui-card">
+            <div class="piui-card__header">
+              <h3 class="piui-card__title">2. Email Ringkasan &amp; Darurat</h3>
+              <span class="piui-badge" data-status="success">● Pilihan contoh</span>
+            </div>
+            <p class="piui-page-subtitle">Contoh konfigurasi ringkasan email. Pengiriman otomatis belum dihubungkan ke layanan email.</p>
+          </article>
+
+          <article class="piui-card">
+            <div class="piui-card__header">
+              <h3 class="piui-card__title">3. Integrasi Webhook &amp; Telegram</h3>
+              <span class="piui-badge" data-status="info">◆ Belum dihubungkan</span>
+            </div>
+            <p class="piui-page-subtitle">Pilihan integrasi kanal tim teknis; pengiriman peringatan memerlukan layanan server.</p>
+          </article>
+
+          <article class="piui-card">
+            <div class="piui-card__header">
+              <h3 class="piui-card__title">4. Mode Jam Tenang Malam</h3>
+              <span class="piui-badge" data-status="neutral">23:00 – 06:00 WIB</span>
+            </div>
+            <p class="piui-page-subtitle">Draf rentang jam tenang. Penjadwalan dan penundaan pesan memerlukan layanan server.</p>
+          </article>
+        </div>
+
+        <div class="piui-field">
+          <label for="notif-rich-draft" class="piui-field__label">Draf pengumuman tim</label>
+          <div class="piui-md-editor" data-piui-md-editor>
+            <textarea name="notif-rich-draft" id="notif-rich-draft" class="piui-textarea" rows="4">### Pengumuman Pembaruan Layanan Pembayaran
+Seluruh tim operasional dimohon memperhatikan jadwal berikut:
+- Pembaruan sistem kliring otomatis berjalan lancar pada **21 Oktober 2026**
+- Kecepatan verifikasi transaksi kini rata-rata _41 milidetik_
+- Gunakan kode referensi `BATCH-OKT-2026` untuk laporan harian</textarea>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="piui-footer">
+      
+      <ul class="piui-footer__links">
+        <li><a href="/app/dashboard/index.html">Beranda Dashboard</a></li>
+        <li><a href="/app/audit/index.html">Riwayat Aktivitas</a></li>
+        <li><a href="/app/settings/index.html">Pengaturan Sistem</a></li>
+      </ul>
+    <p class="piui-product-credit"><span class="piui-product-signature"><img class="piui-brand__mark" src="/assets/icons/piui-mark.svg" alt="" width="24" height="24"><span>PIUI Zero™ v2.2.2</span></span> • Created by Ipi &quot;Pedro Iriano&quot; • © 2026 • <a href="/about/index.html">Tentang produk</a></p></footer>
+  </div>
+
+  <!-- MODAL 1: KIRIM SIARAN PENGUMUMAN BARU (3 LANGKAH + TAMBAH BARIS OTOMATIS) -->
+  <dialog id="dialog-notif-broadcast" class="piui-dialog" aria-labelledby="notif-broadcast-title">
+    <form data-local-mutation id="form-notif-broadcast" method="dialog">
+      <div class="piui-dialog__header">
+        <div>
+          <strong id="notif-broadcast-title">Kirim Siaran Pengumuman Baru</strong>
+          <div class="piui-page-subtitle">Pesan yang dikirim langsung tampil di daftar Pusat Notifikasi &amp; lonceng atas</div>
+        </div>
+        <button type="button" class="piui-icon-btn" data-close-dialog aria-label="Tutup form siaran pengumuman">
+          <svg width="18" height="18" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-close"></use></svg>
+        </button>
+      </div>
+      <div class="piui-dialog__body">
+        <div class="piui-field">
+          <label for="broadcast-title-input" class="piui-field__label">Tahap 1 — Judul Pengumuman / Peringatan</label>
+          <input type="text" name="broadcast-title-input" id="broadcast-title-input" class="piui-input" value="Jadwal Penutupan Buku Transaksi Bulanan" required>
+        </div>
+        <div class="piui-field">
+          <label for="broadcast-category-select" class="piui-field__label">Tahap 2 — Kategori &amp; Target Penerima</label>
+          <select name="broadcast-category-select" id="broadcast-category-select" class="piui-select">
+            <option value="pengumuman">Pengumuman Tim (Semua Staf &amp; Admin)</option>
+            <option value="keamanan">Peringatan Keamanan (Prioritas Tinggi)</option>
+            <option value="transaksi">Pemberitahuan Transaksi &amp; Keuangan</option>
+            <option value="server">Informasi Pemeliharaan Server</option>
+          </select>
+        </div>
+        <div class="piui-field">
+          <label for="broadcast-body-input" class="piui-field__label">Tahap 3 — Isi Pesan Lengkap</label>
+          <textarea name="broadcast-body-input" id="broadcast-body-input" class="piui-textarea" rows="3" required>Mohon seluruh tim keuangan menyelesaikan verifikasi transaksi sebelum pukul 21:00 WIB.</textarea>
+        </div>
+      </div>
+      <div class="piui-dialog__footer">
+        <button type="button" class="piui-btn piui-btn--secondary" data-close-dialog>Batal</button>
+        <button type="submit" class="piui-btn piui-btn--primary">Kirim Pengumuman Sekarang</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- MODAL 2: PENGATURAN SALURAN NOTIFIKASI -->
+  <dialog id="dialog-notif-prefs" class="piui-dialog" aria-labelledby="notif-prefs-title">
+    <form action="/app/notifications/index.html" method="dialog" data-settings-form>
+      <div class="piui-dialog__header">
+        <div>
+          <strong id="notif-prefs-title">Pengaturan Saluran &amp; Jadwal Notifikasi</strong>
+          <div class="piui-page-subtitle">Pilih preferensi lokal; pengiriman pemberitahuan memerlukan integrasi server</div>
+        </div>
+        <button type="button" class="piui-icon-btn" data-close-dialog aria-label="Tutup pengaturan notifikasi">
+          <svg width="18" height="18" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-close"></use></svg>
+        </button>
+      </div>
+      <div class="piui-dialog__body">
+        <div class="piui-field">
+          <label for="pref-channel-select" class="piui-field__label">Saluran Utama Peringatan Penting</label>
+          <select name="pref-channel-select" id="pref-channel-select" class="piui-select">
+            <option value="all-channels">Layar Browser + Email + Telegram Webhook</option>
+            <option value="browser-email">Layar Browser + Email Saja</option>
+            <option value="browser-only">Hanya Lonceng Layar Browser</option>
+          </select>
+        </div>
+        <div class="piui-field">
+          <label for="pref-digest-freq" class="piui-field__label">Frekuensi Ringkasan Laporan Email</label>
+          <select name="pref-digest-freq" id="pref-digest-freq" class="piui-select">
+            <option value="realtime">Langsung Saat Kejadian (Real-Time)</option>
+            <option value="hourly">Ringkasan Setiap 1 Jam</option>
+            <option value="daily">Ringkasan Harian Pukul 08:00 WIB</option>
+          </select>
+        </div>
+        <div class="piui-field">
+          <label for="pref-webhook-url" class="piui-field__label">Alamat Tujuan Webhook Tim</label>
+          <input type="url" name="pref-webhook-url" id="pref-webhook-url" class="piui-input text-mono" value="https://hooks.perusahaan.internal/notify/admin-channel" required>
+        </div>
+      </div>
+      <div class="piui-dialog__footer">
+        <button type="button" class="piui-btn piui-btn--secondary" data-close-dialog>Batal</button>
+        <button type="submit" class="piui-btn piui-btn--primary">Simpan Pengaturan Notifikasi</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- MODAL 3: DETAIL LENGKAP ISI NOTIFIKASI (SAAT KLIK "LIHAT DETAIL") -->
+  <dialog id="dialog-notif-detail" class="piui-dialog" data-no-stepper aria-labelledby="notif-detail-modal-title">
+    <div class="piui-dialog__header">
+      <div>
+        <strong id="notif-detail-modal-title">Rincian Lengkap Pemberitahuan</strong>
+        <div class="piui-page-subtitle" id="notif-detail-code">NTF-2026-091 • 21 Okt 2026</div>
+      </div>
+      <button type="button" class="piui-icon-btn" data-close-dialog aria-label="Tutup rincian notifikasi">
+        <svg width="18" height="18" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-close"></use></svg>
+      </button>
+    </div>
+    <div class="piui-dialog__body">
+      <article class="piui-card">
+        <div class="piui-card__header">
+          <span class="piui-badge" data-status="info" id="notif-detail-cat">Kategori Pesan</span>
+          <span class="piui-badge" data-status="success" id="notif-detail-read-badge">✓ Sudah Dibaca</span>
+        </div>
+        <h3 class="piui-panel__title" id="notif-detail-heading">Judul Pemberitahuan</h3>
+        <p class="piui-page-subtitle" id="notif-detail-sender">Pengirim: Sistem Otomatis</p>
+        <p id="notif-detail-message">Isi lengkap pemberitahuan akan ditampilkan di sini.</p>
+      </article>
+    </div>
+    <div class="piui-dialog__footer">
+      <button type="button" class="piui-btn piui-btn--secondary" data-close-dialog>Tutup Panel</button>
+      <a href="/app/dashboard/index.html" class="piui-btn piui-btn--primary" id="notif-detail-action-link">Buka Halaman Terkait &rarr;</a>
+    </div>
+  </dialog>
+
+  <!-- MODAL 4: KONFIRMASI HAPUS NOTIFIKASI MASSAL -->
+  <dialog id="dialog-notif-delete" class="piui-dialog" data-no-stepper aria-labelledby="notif-delete-title">
+    <form action="/app/notifications/index.html" method="dialog" data-confirm-phrase="HAPUS-NOTIF">
+      <div class="piui-dialog__header">
+        <div>
+          <strong id="notif-delete-title">Hapus Pemberitahuan Terpilih</strong>
+          <div class="piui-page-subtitle">Konfirmasi penghapusan pesan dari daftar Pusat Notifikasi</div>
+        </div>
+        <button type="button" class="piui-icon-btn" data-close-dialog aria-label="Tutup konfirmasi hapus">
+          <svg width="18" height="18" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-close"></use></svg>
+        </button>
+      </div>
+      <div class="piui-dialog__body">
+        <div class="piui-field">
+          <label for="notif-del-reason" class="piui-field__label">Alasan Penghapusan (Minimal 8 Karakter)</label>
+          <textarea name="notif-del-reason" id="notif-del-reason" class="piui-textarea" rows="2" data-reason-input placeholder="Contoh: Pesan pemberitahuan sudah selesai ditindaklanjuti..." required></textarea>
+        </div>
+        <div class="piui-field">
+          <label for="notif-del-phrase" class="piui-field__label">Ketik Kode Konfirmasi: <code>HAPUS-NOTIF</code></label>
+          <input type="text" name="notif-del-phrase" id="notif-del-phrase" class="piui-input text-mono" data-phrase-input placeholder="Ketik HAPUS-NOTIF" autocomplete="off" required>
+        </div>
+      </div>
+      <div class="piui-dialog__footer">
+        <button type="button" class="piui-btn piui-btn--secondary" data-close-dialog>Batal</button>
+        <button type="submit" class="piui-btn piui-btn--danger" disabled>Hapus Notifikasi</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- COMMAND PALETTE DIALOG -->
+  <dialog id="piui-cmd-palette" class="piui-dialog" aria-labelledby="cmd-palette-title">
+    <div class="piui-dialog__header">
+      <strong id="cmd-palette-title">Pencarian Cepat &amp; Pintasan Menu (Ctrl+K)</strong>
+      <button type="button" class="piui-icon-btn" id="btn-close-cmd" aria-label="Tutup pencarian cepat (Escape)">
+        <svg width="18" height="18" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-close"></use></svg>
+      </button>
+    </div>
+    <div class="piui-dialog__body">
+      <div class="piui-field">
+        <label for="cmd-search-input" class="piui-field__label">Ketik nama menu, halaman, atau fitur yang dicari</label>
+        <input type="search" name="cmd-search-input" id="cmd-search-input" class="piui-input"
+               role="combobox" aria-expanded="true" aria-controls="cmd-results-list"
+               autocomplete="off" spellcheck="false"
+               placeholder="Contoh: Notifikasi, Komponen, Galeri, Pengguna...">
+      </div>
+      <ul id="cmd-results-list" class="piui-cmd-list" role="listbox" aria-label="Daftar menu dan perintah"></ul>
+      <p id="cmd-empty-state" class="piui-page-subtitle" hidden>Tidak ada menu yang cocok dengan kata kunci tersebut.</p>
+    </div>
+  </dialog>
+
+  <div id="piui-toast-region" class="piui-toast-region" aria-live="polite"></div>
+
+  <template id="tpl-cmd-item">
+    <li class="piui-cmd-item" role="option" tabindex="-1">
+      <div>
+        <strong data-cmd-title></strong>
+        <div class="piui-page-subtitle" data-cmd-category></div>
+      </div>
+      <kbd class="piui-cmd-trigger__kbd text-mono" data-cmd-shortcut></kbd>
+    </li>
+  </template>
+
+  <template id="tpl-toast">
+    <div class="piui-toast" role="status">
+      <span data-toast-text></span>
+      <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-toast-close>Tutup</button>
+    </div>
+  </template>
+</body>
+</html>

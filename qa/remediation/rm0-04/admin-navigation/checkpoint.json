@@ -1,0 +1,12 @@
+{
+  "timestamp": "2026-11-13T05:50:20.227984+00:00",
+  "base_manifest": "qa/remediation/rm0-04/lifecycle-review/source-manifest.json",
+  "sources": {
+    "frontend/build-templates.mjs": "e6d6b74b6b13b86513cf1f14f68c8182fd6434075a6a827a3af14c304d11e8d9",
+    "frontend/business-pages.mjs": "64c60739f8506468d1f973666f0eaaecf82c99e4182792f847a945dd1e4383a6",
+    "frontend/business.css": "2496688dbe5eb2c25ef42e54d3b9892f6304a76f79dd3f511d387863696c5ae4",
+    "frontend/src/features/journey.ts": "f9f5d463ea85e3b951169ff0b51563245cfb89bce619f34043225599c27e237b",
+    "frontend/src/features/m0-03.ts": "15ebf76ad7d8cd509413508b41036adcdba250b21bc2adec13ce837f2f1d2af4",
+    "scripts/test_piui_build.py": "10f9616ffd39763546a6677ed81e77ad1e38dd28561470787127a9bedb13c1a1"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "timestamp": "2026-11-05T06:33:01.298Z",
+  "result": "PASS",
+  "scope": "targeted smoke on rebuilt final candidate; unchanged representative browser scenarios are recorded separately",
+  "checks": [
+    {
+      "check": "tracking_form_secret_not_serializable_by_native_submit",
+      "result": "PASS",
+      "observed": {
+        "autocomplete": "off",
+        "maxLength": 64,
+        "method": "post",
+        "name": "",
+        "type": "password"
+      }
+    },
+    {
+      "check": "live_guest_session_removed_on_account_switch_logout",
+      "result": "PASS",
+      "account": "Tiket tidak ditemukan",
+      "afterLogout": "Silakan masuk atau gunakan kunci pelacakan"
+    },
+    {
+      "check": "explicit_key_exchange_reopens_only_bound_ticket",
+      "result": "PASS",
+      "url": "http://127.0.0.1:18080/detail-tiket.html?id=c860f540-2750-406e-9253-ed42ff08c9eb"
+    },
+    {
+      "check": "tracking_logout_and_clipboard_cleanup",
+      "result": "PASS"
+    }
+  ],
+  "screenshot": "tracking-final.jpg",
+  "raw_secret_persisted": false
+}

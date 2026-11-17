@@ -1,0 +1,529 @@
+{
+  "timestamp": "2026-11-04T01:33:05.085741+00:00",
+  "task_id": "M0-01",
+  "scope": "pastel_visual_assets_and_landing_ui",
+  "result": "PASS",
+  "git_sha": null,
+  "counts": {
+    "01_Hero": 6,
+    "02_Hero_Tanpa_Teks": 6,
+    "03_Ilustrasi_Pendukung": 15,
+    "04_Preview": 2,
+    "05_Brand": 6,
+    "total_png_assets": 35,
+    "live_referenced_helpdesk_urls_verified": 13
+  },
+  "quality_metrics_summary": {
+    "hero_01_mean_lum_range": [
+      177.11,
+      188.76
+    ],
+    "hero_01_p90_lum_range": [
+      220.46,
+      224.52
+    ],
+    "hero_02_mean_lum_range": [
+      168.1,
+      182.17
+    ],
+    "hero_02_p90_lum_range": [
+      194.62,
+      206.41
+    ],
+    "illustrations_max_white_fringe_pixels": 0
+  },
+  "source_hashes": {
+    "assets/README.md": "fa8525cfe0e13767fbee8e92d1f195f96611607bec0cb2c22ca0458528513732",
+    "frontend/landing-page.mjs": "555efaae5b15d5cb21c5705471565ba89fdafac65e426cd61edb04e700683c8e",
+    "frontend/landing.css": "8ebf7e1f2cf173a6e04a3707c706a6d4a4d335573d45c809fd043508f7e4ae6c",
+    "frontend/build-templates.mjs": "5f7a59ff525270a96c83b99d3580aeacdb24cd3b5c55f1232d1219435236a1e2",
+    "scripts/test_piui_build.py": "025e3674aafdae69f21adacdbf4098e95e78285a381bc1f09b73d9ed0e7b1f23"
+  },
+  "screenshots": {
+    "qa/bootstrap/landing-pastel-desktop.png": "4409c8c7d4d645a56667299295d933a0fc9981aff3008f5935eebc14944ed76d",
+    "qa/bootstrap/landing-pastel-cards.png": "b5d0958dcce2b4605d91b8e64366dbb5a88c8139e855bbd276f660dae22e7205",
+    "qa/bootstrap/landing-pastel-mobile.png": "4c1cb7d99feb44c3687b00848f518d97c8de24679c53ef380964fd2598444682"
+  },
+  "browser_probe": {
+    "desktop_1440x900": {
+      "viewport": [
+        1418,
+        802
+      ],
+      "hero_height": 802,
+      "hero_fits_100vh": true,
+      "horizontal_overflow": false,
+      "eager_images_loaded": true,
+      "total_img_elements": 25,
+      "keyboard_focus_tab": true,
+      "second_tab_selected": true,
+      "keyboard_focus_filter": true,
+      "faq_expanded": true
+    },
+    "mobile_500x880": {
+      "viewport": [
+        512,
+        782
+      ],
+      "hero_height": 782,
+      "hero_fits_100vh": true,
+      "horizontal_overflow": false,
+      "eager_images_loaded": true,
+      "total_img_elements": 25,
+      "keyboard_focus_tab": true,
+      "second_tab_selected": true,
+      "keyboard_focus_filter": true,
+      "faq_expanded": true
+    }
+  },
+  "commands": [
+    "npm.cmd --prefix frontend run build",
+    "python scripts/test_piui_build.py",
+    "docker compose up -d --no-deps --build --pull never web",
+    "python scripts/smoke_local.py",
+    "python scripts/verify_package.py"
+  ],
+  "asset_inventory": [
+    {
+      "path": "assets/01_Hero/hero-01-bantuan-tik-terpadu.png",
+      "width": 1536,
+      "height": 524,
+      "channels": 4,
+      "bytes": 1028475,
+      "sha256": "67459fa0bbd292c7630058408cf7b156e6a9ca5778ee2c5063d97b21b36af343",
+      "mean_lum": 183.56,
+      "p90_lum": 222.67,
+      "transparent_bg": true,
+      "active_pixel_ratio": 1.0,
+      "white_fringe_edge_pixels": 0
+    },
+    {
+      "path": "assets/01_Hero/hero-02-tiket-layanan.png",
+      "width": 1536,
+      "height": 524,
+      "channels": 4,
+      "bytes": 1048070,
+      "sha256": "2508ccf36b361be65f267a371d683e82db304f0e986588851838d34244f33bb7",
+      "mean_lum": 182.75,
+      "p90_lum": 223.38,
+      "transparent_bg": true,
+      "active_pixel_ratio": 1.0,
+      "white_fringe_edge_pixels": 0
+    },
+    {
+      "path": "assets/01_Hero/hero-03-dukungan-kinerja.png",
+      "width": 1536,
+      "height": 524,
+      "channels": 4,
+      "bytes": 1047349,
+      "sha256": "76a77c88d8a4de9c9766fd4889ecb9c72f9cb9c631fbb5f2f34c526f0b5addad",
+      "mean_lum": 181.35,
+      "p90_lum": 223.3,
+      "transparent_bg": true,
+      "active_pixel_ratio": 1.0,
+      "white_fringe_edge_pixels": 0
+    },
+    {
+      "path": "assets/01_Hero/hero-04-layanan-terintegrasi.png",
+      "width": 1536,
+      "height": 524,
+      "channels": 4,
+      "bytes": 955281,
+      "sha256": "95cf55bed8aff16fa6ee55a33973fd1829473df3575cd931c2a74e8e275cb245",
+      "mean_lum": 188.76,
+      "p90_lum": 222.24,
+      "transparent_bg": true,
+      "active_pixel_ratio": 1.0,
+      "white_fringe_edge_pixels": 0
+    },
+    {
+      "path": "assets/01_Hero/hero-05-pusat-panduan-mandiri.png",
+      "width": 1536,
+      "height": 524,
+      "channels": 4,
+      "bytes": 1113042,
+      "sha256": "f6173d69124701687c879239a87eedebf2aaaf6dd2fca0ca972bf59e9cfb3840",
+      "mean_lum": 177.11,
+      "p90_lum": 224.52,
+      "transparent_bg": true,
+      "active_pixel_ratio": 1.0,
+      "white_fringe_edge_pixels": 0
+    },
+    {
+      "path": "assets/01_Hero/hero-06-kolaborasi-perangkat-daerah.png",
+      "width": 1536,
+      "height": 524,
+      "channels": 4,
+      "bytes": 1033701,
+      "sha256": "ac50ddfd7779dbd2a7b3e75eb70766672894f1a6a79d2d82f161d71236457b97",
+      "mean_lum": 182.54,
+      "p90_lum": 220.46,
+      "transparent_bg": true,
+      "active_pixel_ratio": 1.0,
+      "white_fringe_edge_pixels": 0
+    },
+    {
+      "path": "assets/02_Hero_Tanpa_Teks/hero-01-bantuan-tik-terpadu-tanpa-teks.png",
+      "width": 1600,
+      "height": 600,
+      "channels": 3,
+      "bytes": 1060577,
+      "sha256": "e862c50013371461807d91d57ae74607d56227a9638a5c3621d81df1031bf4e1",
+      "mean_lum": 176.68,
+      "p90_lum": 195.92
+    },
+    {
+      "path": "assets/02_Hero_Tanpa_Teks/hero-02-tiket-layanan-tanpa-teks.png",
+      "width": 1600,
+      "height": 600,
+      "channels": 3,
+      "bytes": 1016698,
+      "sha256": "68822cbd8db82f630f6c5e4c3631e6fcbe6ed02068989c4a2d0c13181cc3354b",
+      "mean_lum": 175.29,
+      "p90_lum": 202.77
+    },
+    {
+      "path": "assets/02_Hero_Tanpa_Teks/hero-03-dukungan-kinerja-tanpa-teks.png",
+      "width": 1600,
+      "height": 600,
+      "channels": 3,
+      "bytes": 1076996,
+      "sha256": "3d5448b0c11cada27c2eb52dbfb1fa1e29bf0b7241bd1e605d23f910c7920f0f",
+      "mean_lum": 173.25,
+      "p90_lum": 206.41
+    },
+    {
+      "path": "assets/02_Hero_Tanpa_Teks/hero-04-layanan-terintegrasi-tanpa-teks.png",
+      "width": 1600,
+      "height": 600,
+      "channels": 3,
+      "bytes": 895203,
+      "sha256": "e4c9a4e7dbde20d5cfd0017ccb73bbfd981ae54e42934cdb1b25c6f9a111725b",
+      "mean_lum": 182.17,
+      "p90_lum": 194.62
+    },
+    {
+      "path": "assets/02_Hero_Tanpa_Teks/hero-05-pusat-panduan-mandiri-tanpa-teks.png",
+      "width": 1600,
+      "height": 600,
+      "channels": 3,
+      "bytes": 1228103,
+      "sha256": "bd9acc288ae6baf86ff4f33c3b9b2da455debd3618ed3dc60f8e4020325ed1ad",
+      "mean_lum": 168.1,
+      "p90_lum": 202.51
+    },
+    {
+      "path": "assets/02_Hero_Tanpa_Teks/hero-06-kolaborasi-perangkat-daerah-tanpa-teks.png",
+      "width": 1600,
+      "height": 600,
+      "channels": 3,
+      "bytes": 971362,
+      "sha256": "3058640efe42604412f4cc06c9e48257d0995f237b1e3751f8d61cafc0a1d41e",
+      "mean_lum": 172.58,
+      "p90_lum": 204.19
+    },
+    {
+      "path": "assets/03_Ilustrasi_Pendukung/ilustrasi-akun-identitas.png",
+      "width": 512,
+      "height": 512,
+      "channels": 4,
+      "bytes": 88816,
+      "sha256": "8ebc2485fed5a907e283268b2c60f0341080e9f3848d09ab3e91c229dc3993ab",
+      "mean_lum": 59.65,
+      "p90_lum": 226.75,
+      "transparent_bg": true,
+      "active_pixel_ratio": 0.3965,
+      "white_fringe_edge_pixels": 0
+    },
+    {
+      "path": "assets/03_Ilustrasi_Pendukung/ilustrasi-aplikasi-digital.png",
+      "width": 512,
+      "height": 512,
+      "channels": 4,
+      "bytes": 87796,
+      "sha256": "f659cf2643247e12a35a747c0892784ee7563ba6cb86c4f36b3441c5f4753ff8",
+      "mean_lum": 67.27,
+      "p90_lum": 226.75,
+      "transparent_bg": true,
+      "active_pixel_ratio": 0.4443,
+      "white_fringe_edge_pixels": 0
+    },
+    {
+      "path": "assets/03_Ilustrasi_Pendukung/ilustrasi-bantuan-operator.png",
+      "width": 512,
+      "height": 512,
+      "channels": 4,
+      "bytes": 104066,
+      "sha256": "fdc5e374e81fac5aeb032a2fa860835514fcbd96811015620b667582d8503578",
+      "mean_lum": 38.68,
+      "p90_lum": 175.73,
+      "transparent_bg": true,
+      "active_pixel_ratio": 0.3229,
+      "white_fringe_edge_pixels": 0
+    },
+    {
+      "path": "assets/03_Ilustrasi_Pendukung/ilustrasi-cloud-layanan.png",
+      "width": 512,
+      "height": 512,
+      "channels": 4,
+      "bytes": 90052,
+      "sha256": "9e00c92c607144df97321236529a6d2e06be3044f7205d9c98c7c237c247f7be",
+      "mean_lum": 49.65,
+      "p90_lum": 201.69,
+      "transparent_bg": true,
+      "active_pixel_ratio": 0.336,
+      "white_fringe_edge_pixels": 0
+    },
+    {
+      "path": "assets/03_Ilustrasi_Pendukung/ilustrasi-dashboard-monitoring.png",
+      "width": 512,
+      "height": 512,
+      "channels": 4,
+      "bytes": 85287,
+      "sha256": "4bbdde9244a2b7141c7a0b557507fe946b9d7a84a4f78eeb1ba3b8f0b65fb5b4",
+      "mean_lum": 66.08,
+      "p90_lum": 234.1,
+      "transparent_bg": true,
+      "active_pixel_ratio": 0.434,
+      "white_fringe_edge_pixels": 0
+    },
+    {
+      "path": "assets/03_Ilustrasi_Pendukung/ilustrasi-gedung-pemerintah.png",
+      "width": 512,
+      "height": 512,
+      "channels": 4,
+      "bytes": 110822,
+      "sha256": "1da422b879c64bf37e9b292365b49c3443f49568f7891290a6d5ae09b960b84f",
+      "mean_lum": 61.4,
+      "p90_lum": 209.97,
+      "transparent_bg": true,
+      "active_pixel_ratio": 0.4557,
+      "white_fringe_edge_pixels": 0
+    },
+    {
+      "path": "assets/03_Ilustrasi_Pendukung/ilustrasi-keamanan-siber.png",
+      "width": 512,
+      "height": 512,
+      "channels": 4,
+      "bytes": 99568,
+      "sha256": "b559968e51c800d41206bac93811acb35ec1b3a421021855de08563ad9fe73ec",
+      "mean_lum": 55.79,
+      "p90_lum": 202.21,
+      "transparent_bg": true,
+      "active_pixel_ratio": 0.3731,
+      "white_fringe_edge_pixels": 0
+    },
+    {
+      "path": "assets/03_Ilustrasi_Pendukung/ilustrasi-kolaborasi-opd.png",
+      "width": 512,
+      "height": 512,
+      "channels": 4,
+      "bytes": 97389,
+      "sha256": "96df1a3a693de77addf01a5c67471e6aeaaa3b2e85f73edb3bc480966d9bd55c",
+      "mean_lum": 45.34,
+      "p90_lum": 204.98,
+      "transparent_bg": true,
+      "active_pixel_ratio": 0.3339,
+      "white_fringe_edge_pixels": 0
+    },
+    {
+      "path": "assets/03_Ilustrasi_Pendukung/ilustrasi-notifikasi-audit.png",
+      "width": 512,
+      "height": 512,
+      "channels": 4,
+      "bytes": 92359,
+      "sha256": "ddd2d07d4cdd2c8f86d301e6672962c70e87714080f5bcde2920301608e3967c",
+      "mean_lum": 63.48,
+      "p90_lum": 224.2,
+      "transparent_bg": true,
+      "active_pixel_ratio": 0.4095,
+      "white_fringe_edge_pixels": 0
+    },
+    {
+      "path": "assets/03_Ilustrasi_Pendukung/ilustrasi-panduan-pengetahuan.png",
+      "width": 512,
+      "height": 512,
+      "channels": 4,
+      "bytes": 91464,
+      "sha256": "c5c39974605a46876191abe9f89dbfb90137d55a090f6e7b144bbdd3bea955a3",
+      "mean_lum": 57.41,
+      "p90_lum": 232.13,
+      "transparent_bg": true,
+      "active_pixel_ratio": 0.3739,
+      "white_fringe_edge_pixels": 0
+    },
+    {
+      "path": "assets/03_Ilustrasi_Pendukung/ilustrasi-pelacakan-sla.png",
+      "width": 512,
+      "height": 512,
+      "channels": 4,
+      "bytes": 99051,
+      "sha256": "480f9dfb8858465bf1882630c21ee1bab75e7822425c562fbe1050d50cbcad3d",
+      "mean_lum": 60.46,
+      "p90_lum": 227.2,
+      "transparent_bg": true,
+      "active_pixel_ratio": 0.3747,
+      "white_fringe_edge_pixels": 0
+    },
+    {
+      "path": "assets/03_Ilustrasi_Pendukung/ilustrasi-perawatan-tik.png",
+      "width": 512,
+      "height": 512,
+      "channels": 4,
+      "bytes": 107896,
+      "sha256": "586e62f069189e10a2137b57916bf6a005dd9f089e93476ff9aa1a01ac53de92",
+      "mean_lum": 44.6,
+      "p90_lum": 209.03,
+      "transparent_bg": true,
+      "active_pixel_ratio": 0.3219,
+      "white_fringe_edge_pixels": 0
+    },
+    {
+      "path": "assets/03_Ilustrasi_Pendukung/ilustrasi-server-infrastruktur.png",
+      "width": 512,
+      "height": 512,
+      "channels": 4,
+      "bytes": 89310,
+      "sha256": "def33e53b04456c88201c051305899555847ff0ef3d0612ca1c4023053b2c48c",
+      "mean_lum": 47.18,
+      "p90_lum": 146.08,
+      "transparent_bg": true,
+      "active_pixel_ratio": 0.4241,
+      "white_fringe_edge_pixels": 0
+    },
+    {
+      "path": "assets/03_Ilustrasi_Pendukung/ilustrasi-tiket-helpdesk.png",
+      "width": 512,
+      "height": 512,
+      "channels": 4,
+      "bytes": 113181,
+      "sha256": "c0e75e1671aeafb9d5236a7dcc026ce6b40fff2c729a7859b4b1803fb0ee416e",
+      "mean_lum": 57.21,
+      "p90_lum": 206.28,
+      "transparent_bg": true,
+      "active_pixel_ratio": 0.3822,
+      "white_fringe_edge_pixels": 0
+    },
+    {
+      "path": "assets/03_Ilustrasi_Pendukung/ilustrasi-wifi-jaringan.png",
+      "width": 512,
+      "height": 512,
+      "channels": 4,
+      "bytes": 93405,
+      "sha256": "c8bcfcd651c683b5f83e59acff4a7f718cd2aba9ee5eaef24ea02e6bcaf7b331",
+      "mean_lum": 28.72,
+      "p90_lum": 116.58,
+      "transparent_bg": true,
+      "active_pixel_ratio": 0.3178,
+      "white_fringe_edge_pixels": 0
+    },
+    {
+      "path": "assets/04_Preview/preview-hero-dan-mode-gelap.png",
+      "width": 1600,
+      "height": 1360,
+      "channels": 4,
+      "bytes": 1087764,
+      "sha256": "d4f04c1fd7c06333abf5d1d617c67a6b7fbe09db36bbef6a43a6ea37a6aeffb9",
+      "mean_lum": 73.88,
+      "p90_lum": 201.75,
+      "transparent_bg": true,
+      "active_pixel_ratio": 1.0,
+      "white_fringe_edge_pixels": 0
+    },
+    {
+      "path": "assets/04_Preview/preview-paket-aset.png",
+      "width": 1600,
+      "height": 1360,
+      "channels": 4,
+      "bytes": 1218890,
+      "sha256": "d6d9ab2147913486b853bf7a748bdcf11ee68fb9a0eeb010ab0f17f87eaac556",
+      "mean_lum": 218.61,
+      "p90_lum": 246.44,
+      "transparent_bg": true,
+      "active_pixel_ratio": 1.0,
+      "white_fringe_edge_pixels": 0
+    },
+    {
+      "path": "assets/05_Brand/logo-dark.png",
+      "width": 1254,
+      "height": 1254,
+      "channels": 4,
+      "bytes": 698993,
+      "sha256": "e6943f6e24e7175db1d6326a1e08e8c67fff812b5b82165f6e708ea82113ef9e",
+      "mean_lum": 89.35,
+      "p90_lum": 252.0,
+      "transparent_bg": true,
+      "active_pixel_ratio": 0.4233,
+      "white_fringe_edge_pixels": 28
+    },
+    {
+      "path": "assets/05_Brand/logo-favicon.png",
+      "width": 1254,
+      "height": 1254,
+      "channels": 4,
+      "bytes": 993749,
+      "sha256": "8641e8d74ffd73ff00b1758c6a4d67f76df8cbd018997e4a02cede094a055893",
+      "mean_lum": 46.48,
+      "p90_lum": 194.54,
+      "transparent_bg": true,
+      "active_pixel_ratio": 0.513,
+      "white_fringe_edge_pixels": 0
+    },
+    {
+      "path": "assets/05_Brand/logo-full.png",
+      "width": 1672,
+      "height": 941,
+      "channels": 4,
+      "bytes": 369888,
+      "sha256": "428cbfcce6ec5384d347c1db8391ab7b542e5592a8e6a744152252f819414131",
+      "mean_lum": 11.04,
+      "p90_lum": 17.13,
+      "transparent_bg": true,
+      "active_pixel_ratio": 0.1353,
+      "white_fringe_edge_pixels": 0
+    },
+    {
+      "path": "assets/05_Brand/logo-light.png",
+      "width": 1254,
+      "height": 1254,
+      "channels": 4,
+      "bytes": 800185,
+      "sha256": "6bcb536a2b2440bd46eb10cf2d011cfda5ac634ef92ce8e9db06b9ee277172d5",
+      "mean_lum": 37.74,
+      "p90_lum": 192.32,
+      "transparent_bg": true,
+      "active_pixel_ratio": 0.4191,
+      "white_fringe_edge_pixels": 0
+    },
+    {
+      "path": "assets/05_Brand/logo-pastel-full.png",
+      "width": 1200,
+      "height": 480,
+      "channels": 4,
+      "bytes": 89582,
+      "sha256": "6fbaf9b6e0f382c56a622a17962e19b47309e109b7769f8d2546d8b8a6e096bb",
+      "mean_lum": 16.79,
+      "p90_lum": 49.84,
+      "transparent_bg": true,
+      "active_pixel_ratio": 0.1445,
+      "white_fringe_edge_pixels": 0
+    },
+    {
+      "path": "assets/05_Brand/logo-pastel-mark.png",
+      "width": 512,
+      "height": 512,
+      "channels": 4,
+      "bytes": 203289,
+      "sha256": "cc9977c2793521d1757b69e0d88f30b11d4e13ffb33d2fc97841188105346ae7",
+      "mean_lum": 93.67,
+      "p90_lum": 232.6,
+      "transparent_bg": true,
+      "active_pixel_ratio": 0.7345,
+      "white_fringe_edge_pixels": 0
+    }
+  ],
+  "limits": [
+    "PNG masters served directly in local M0 web build; WebP/AVIF transcoding optional for production CDN",
+    "Representative headless Chromium desktop/mobile/keyboard checks; formal UAT not run"
+  ]
+}

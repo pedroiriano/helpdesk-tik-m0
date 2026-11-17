@@ -1,0 +1,10 @@
+PASS canonical desktop/mobile/footer/palette/module map; active scope, access guards, route context and actual server logout binding
+PASS Admin lab picker excludes requester identities
+PASS login task guidance and empty private group prevention
+PASS early enabled page picker and unauthorized target guard
+PASS unavailable session service is not presented as an unauthenticated account
+PASS shared queue and dashboard task labels
+PASS one session channel shared by login/logout without a self-echo sender
+PASS live dashboard excludes prototype notification launcher
+PASS native palette Escape closes instead of only clearing search
+PASS footer uses the canonical task map

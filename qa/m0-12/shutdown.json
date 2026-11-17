@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-11-17T04:03:14.893372+00:00",
+  "scope": "M0-12 Startup, Readiness/Liveness probes, graceful shutdown drill, clean pool closing, and in-flight request draining",
+  "command": "python scripts/test_m0_12_shutdown.py",
+  "checks": [
+    {
+      "name": "httpserver_unit_tests_pass",
+      "detail": "Covers /readyz, /livez, /api/v1/health/ready (200 & 503), /api/v1/health/live, and no-store headers",
+      "result": "PASS"
+    },
+    {
+      "name": "live_probes_verified_on_stack",
+      "detail": "/api/v1/health/live, /livez, /api/v1/health/ready, /readyz return 200 OK",
+      "result": "PASS"
+    },
+    {
+      "name": "container_state_healthy",
+      "detail": "helpdesk-m0 container state: running 0",
+      "result": "PASS"
+    },
+    {
+      "name": "graceful_drain_and_shutdown_verified",
+      "detail": "HTTP server timeout and shutdown verified without abrupt connection termination",
+      "result": "PASS"
+    }
+  ],
+  "result": "PASS"
+}

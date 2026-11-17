@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {durableIntent,APIError} from '../frontend/src/features/transport.ts';
+const run=durableIntent();const calls=[];
+await assert.rejects(run('/comments',{expected_version:1,body:'same'},async(key,body)=>{calls.push({key,body});throw new Error('lost response')},'same'));
+await assert.rejects(run('/comments',{expected_version:2,body:'different'},async()=>assert.fail('must block unresolved new intent'),'different'),/belum pasti/);
+await run('/comments',{expected_version:9,body:'same'},async(key,body)=>{calls.push({key,body});return {version:2}},'same');
+assert.equal(calls[0].key,calls[1].key);assert.equal(calls[1].body.expected_version,1);
+await run('/comments',{expected_version:2,body:'same'},async(key)=>{assert.notEqual(key,calls[0].key);throw new APIError(409,'stale')},'same').catch(()=>{});
+await run('/comments',{expected_version:3,body:'new'},async()=>({version:4}),'new');
+console.log('PASS unknown-commit intent holds key/payload/version across refresh, rejects changed intent, and resets after receipt or definite rejection');

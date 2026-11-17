@@ -1,0 +1,99 @@
+{
+  "timestamp": "2026-11-04T07:31:25.011346+00:00",
+  "scope": "M0-02 executable specifications; no business HTTP/auth/worker enforcement",
+  "commands": [
+    {
+      "argv": [
+        "C:\\Python313\\python.exe",
+        "scripts/build_business_contracts.py",
+        "--check"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "output": "PASS business contract generation consistency\n"
+    },
+    {
+      "argv": [
+        "C:\\Python313\\python.exe",
+        "scripts/build_owner_migrations.py",
+        "--check"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "output": "PASS owner migration generation consistency\n"
+    },
+    {
+      "argv": [
+        "C:\\Python313\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/contract",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "output": "test_examples_and_required_field_negatives (test_business_contracts.BusinessContracts.test_examples_and_required_field_negatives) ... ok\ntest_independent_business_invalid_payloads (test_business_contracts.BusinessContracts.test_independent_business_invalid_payloads) ... ok\ntest_openapi_standard_and_broken_reference (test_business_contracts.BusinessContracts.test_openapi_standard_and_broken_reference) ... ok\ntest_paths_aliases_auth_and_concurrency_contract (test_business_contracts.BusinessContracts.test_paths_aliases_auth_and_concurrency_contract) ... ok\ntest_traceability_uses_real_requirements_and_owners (test_business_contracts.BusinessContracts.test_traceability_uses_real_requirements_and_owners) ... ok\ntest_events_positive_negative_and_delivery_routes (test_business_contracts.BusinessEvents.test_events_positive_negative_and_delivery_routes) ... ok\ntest_acl_independent_expectations (test_policy.PolicyFixtures.test_acl_independent_expectations) ... ok\ntest_all_transition_rules_have_positive_and_negative_coverage (test_policy.PolicyFixtures.test_all_transition_rules_have_positive_and_negative_coverage) ... ok\ntest_feedback_then_job_and_old_job_after_new_attempt (test_policy.PolicyFixtures.test_feedback_then_job_and_old_job_after_new_attempt) ... ok\ntest_grant_ceiling_and_private_media_reuse (test_policy.PolicyFixtures.test_grant_ceiling_and_private_media_reuse) ... ok\ntest_lab_calendar_boundaries_holiday_and_pause_union (test_policy.PolicyFixtures.test_lab_calendar_boundaries_holiday_and_pause_union) ... ok\ntest_lifecycle_independent_expectations (test_policy.PolicyFixtures.test_lifecycle_independent_expectations) ... ok\ntest_scope_before_count_search_export_and_revoked_download (test_policy.PolicyFixtures.test_scope_before_count_search_export_and_revoked_download) ... ok\ntest_invalid_envelopes (test_resolution_events.ResolutionContract.test_invalid_envelopes) ... ok\ntest_reference_exchange (test_resolution_events.ResolutionContract.test_reference_exchange) ... ok\n\n----------------------------------------------------------------------\nRan 15 tests in 7.148s\n\nOK\n"
+    }
+  ],
+  "source_hashes": {
+    "contracts/acceptance.csv": "c1a8c0399412436b6e8f03e6f62d241d183ef0d2af21205e45aede2b33f5e03c",
+    "contracts/business_traceability.csv": "81320edb7445fb3d0d76ce44f58b62fa75acf4942b9bc834e0792660046f2b4a",
+    "contracts/capability_map.csv": "4e75b4339b3dff4995545ccb81424b835b39a613b631f79ea2c61f5e9dbb8a6a",
+    "contracts/dependencies.json": "fe316bab4c74b614c699c78e331fa0d17f39c3227fec697bfad867ad41e61bd6",
+    "contracts/events/business.v1.schema.json": "e4cf79fd96c36e7b55dbf79c59d724eeec88bcb84632c17b88ca9299267d817f",
+    "contracts/events/README.md": "8a94bbdd3930134eab6a6db0c31cb5c9a2ba0f0b45d621bee4559fb306b04ebb",
+    "contracts/events/resolution-notification.v1.schema.json": "288f81034591d5ef9a4cd4b6dde1b655eb74d2ff2f3e3df663a8d2caac58bac6",
+    "contracts/events/subscriptions.v1.json": "5eb43dfe0a5c11243fd5cf3bbf0a3ca59812be3f69c91fa705f581c8410a534a",
+    "contracts/feature_coverage.csv": "ba4512cf0b8cef6ce88cbe7801d3e041504c477e072c93dcb0e9c6fde13f15df",
+    "contracts/M0_02_TRACEABILITY.md": "bf13803624334ab47e9704a1a1c7ab5f198d343c76c0f5ad067fd537ebf7c92b",
+    "contracts/module_registry.csv": "fa2247dd86dcf86dfb827e6e228ff170ae8446c8738ac3b17d8a648dec64cbc9",
+    "contracts/openapi/business.json": "51dac42188a9f2ab38398820a18a1abb96aa90f9e8884bc57f28befaddecbc23",
+    "contracts/openapi/health.json": "6d8d56a46cc8e45c5dd1109746401aa8d55a498985bc1c30c502991152963420",
+    "contracts/policy/calendar.v1.json": "f7bbf5bd606a852fc45e88e489396f31235e98131ef9687a5f537d35af2e7f41",
+    "contracts/policy/evaluator.py": "5a0856fa314e7842fd6cb3fc444df314f7d0220a15c8e5d25b275bc4e7f47677",
+    "contracts/policy/permissions.v1.json": "7f00a09d7c4ba388f5fd32d535fc8b8b2891eb0f4bd7965f4b2a21f6d0af0767",
+    "contracts/policy/state-machine.v1.json": "8f3d0b9524aeafcd9e3a0ba570594aede09ff88e3b32b90a7279a7cf92b11f06",
+    "contracts/README.md": "6207087b87ae587191f1d7cf36b9845e197c4c3bedbc8cd7ede56d92f3296ca5",
+    "migrations/apply.sh": "8c80d1f7da4a4e47a85f08a69e784513f3cc24629d08ab1772ff78fd63dfdf4f",
+    "migrations/checksums.sha256": "4bacd594df3ea7942c4da6e714dc9c1fa3b9add34d7949f429ff2aac289ef731",
+    "migrations/m1/002-contracts.sql": "22b20ee7aed43f9f65f3495ecf994e7c17fde3fc8b61573d1556d0e24b5cf230",
+    "migrations/m1/README.md": "2f09cab436b3058a476fa8417b165460fff43e8a3d540b3e45193a3df373a127",
+    "migrations/m2/003-contracts.sql": "9c60061768b0e99975c7ce1cfb3a1f511bf1dd0b59c460db720bbd2d0945d3d1",
+    "migrations/m2/README.md": "00b33fd527a3945771ff181dcb1722a45a26989f9138586d3d74eb4588ea5530",
+    "migrations/m3/004-contracts.sql": "2309199a00d065973050bb5ee6e74e1ca311b48d005f6a5170232cf30ec9ce8f",
+    "migrations/m3/README.md": "a7d03f97d0cd0906eacf9c0fd19d0e0444cafcbd0c242a79363865b985a6e873",
+    "migrations/m4/005-contracts.sql": "119ab08d6916e51a6f055f5666a1fd2eb41fb66f73cc2d1a530770a9e4b4cfaf",
+    "migrations/m4/README.md": "0e5ac1fab0a3dd6de6f6a9d8d014db4e45309e622151f941c86957f1e71f7e02",
+    "migrations/m5/006-contracts.sql": "3e418c239b167e48f0d202bab5205a9f3dd6fb5d3235dd02870f2ca90eeaa191",
+    "migrations/m5/README.md": "5fc652f28a44feb9aabe1417eb90a76aaf33bcbf72e93fe3c2e43eb36b89cbe1",
+    "migrations/m6/007-contracts.sql": "26cd015b67eeeb55d14d73928947d1883475978b961ae32919124d5c599b0f69",
+    "migrations/m6/README.md": "19f617c15388dec03322ded1c949582f965e9a56fdb15aa564c5bebd578de023",
+    "migrations/m7/008-contracts.sql": "e7a0a7c1ef3a44eb619619140d1bc564e8bf7f0033d5efec0c4907b698d87335",
+    "migrations/m7/README.md": "bec63c73db48fe9e3e5241705bd9a1d992a1bda47356f1f8ee412352c90656b3",
+    "migrations/m8/009-contracts.sql": "fddca939a3849bcf962df7008b97ff85c78be631207ba69e5e8d0eb0109967f1",
+    "migrations/m8/README.md": "4a8a3883627bebf7cf008c7e8dfa5191c9adbc8889d91180ffb5548e73801d27",
+    "migrations/m9/010-contracts.sql": "dbb65ccc1c84c0b4081f5475bb81ed6a1e6df24eb9d8fa296d29a3940460b867",
+    "migrations/m9/README.md": "36986b214e13c8a1f3ff61506389a095feb017db38ea6ad3d47d39cb7c691869",
+    "migrations/manifest.json": "1fd8ff2c48b041c18ef5fd3cec7ce959d9e0011352dd86342fb2c7659ed5974d",
+    "migrations/README.md": "8ea7f93dcc87e7687e6f34483e83cdf9f813937469909cf9114bf3db065ece7a",
+    "scripts/build_business_contracts.py": "2b6c04a9b73dd22bf3a934ee379cba2b71460cdf99585c39a42ba85a27e5bd34",
+    "scripts/build_owner_migrations.py": "0c5762e50e72d86c4f70386862b23c0604d15d01873a6ddcdc477c93f377bec6",
+    "scripts/contract_validation.py": "1c3c4f2e2802a314cda0350b2c9ab675f54a8d6072a59d6bbf0ca12fa249a08e",
+    "scripts/verify_m0_02.py": "2fa4dec0b6e1433714e09b019f50fae38f06aa920381cc32d9c3da9a1099d126",
+    "tests/contract/business-events.v1.fixture.json": "ef1137066b904adbc31a29d5c9c020b814601712ab886008ad83c97674224c43",
+    "tests/contract/calendar.v1.fixture.json": "cf72906d15806a87a39cc938ef7781dfa21e3ed12858aab13c6adfa7b320ef30",
+    "tests/contract/openapi-requirements.txt": "76c23883892f7be9a3620929f973b373722ab64c782c47821e3c59a9ca77df3a",
+    "tests/contract/policy.v1.fixture.json": "ec51226ee7417bbf8fe273a67068fedf88d73ce6d339e9aa1647ed69b81c4a19",
+    "tests/contract/README.md": "db0ef39673af93e72b4dbf7d3a2c65b8c81bf47c6d54bf9fef35e9984270e9f9",
+    "tests/contract/requirements.txt": "a649ea38722675ae2ffabf58b11c6538e8118b023643887a7b1f65e5cef26bbd",
+    "tests/contract/resolution-notification.v1.fixture.json": "3a8aae0653a8e9b287e989632ca2a1bdc0cfc1ef03452ad4d0d2caaa48141a0a",
+    "tests/contract/test_business_contracts.py": "d2b1a1049d8be802e655eb341e5373a7c48425d69852ae33d51aeaebcfc82cdb",
+    "tests/contract/test_policy.py": "b39b923d5ffd800c9ff5e2d84b9a5f821d31cd77ebc7883c362a6c5e645f625d",
+    "tests/contract/test_resolution_events.py": "2612a99bb556f1528b35f2330c5413f67fa422f3bdc0e73b77c52829269f7bee"
+  },
+  "result": "PASS"
+}

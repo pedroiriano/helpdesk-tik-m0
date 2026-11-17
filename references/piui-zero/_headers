@@ -1,0 +1,28 @@
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; require-trusted-types-for 'script'; trusted-types piui-dom-policy
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-origin
+
+/app/*
+  X-Robots-Tag: noindex, nofollow, noarchive
+  Cache-Control: private, no-Cache, no-store, must-revalidate
+
+/auth/*
+  X-Robots-Tag: noindex, nofollow, noarchive
+  Cache-Control: private, no-Cache, no-store, must-revalidate
+
+/assets/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/403.html
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/404.html
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/offline.html
+  X-Robots-Tag: noindex, nofollow, noarchive

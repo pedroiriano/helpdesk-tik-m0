@@ -1,0 +1,90 @@
+{
+  "timestamp": "2026-11-13T08:15:09.203479+00:00",
+  "scope": "disposable PostgreSQL DDL/ledger/role integration only",
+  "image": "postgres:16.14-alpine@sha256:57c72fd2a128e416c7fcc499958864df5301e940bca0a56f58fddf30ffc07777",
+  "container": "helpdesk-m0-contract-768647414f",
+  "host_ports": [],
+  "persistent_volumes": [],
+  "command": "python scripts/test_owner_migrations.py",
+  "result": "PASS",
+  "cleanup": "PASS",
+  "checks": [
+    {
+      "name": "fresh_apply_manifest_migrations",
+      "result": "PASS"
+    },
+    {
+      "name": "idempotent_reapply_through_compose_entrypoint",
+      "result": "PASS"
+    },
+    {
+      "name": "nine_owner_roles_real_connections_and_isolation",
+      "result": "PASS"
+    },
+    {
+      "name": "domain_constraints_and_private_media",
+      "result": "PASS"
+    },
+    {
+      "name": "local_FK_only",
+      "result": "PASS"
+    },
+    {
+      "name": "same_owner_event_and_idempotency_constraints",
+      "result": "PASS"
+    },
+    {
+      "name": "checksum_lock_and_applied_ledger_drift_rejected",
+      "result": "PASS"
+    },
+    {
+      "name": "failed_migration_rolls_back_DDL_and_ledger",
+      "result": "PASS"
+    },
+    {
+      "name": "out_of_order_migration_rejected",
+      "result": "PASS"
+    }
+  ],
+  "source_hashes": {
+    "migrations/manifest.json": "8d6d75c984f63ca90ee98530f6db450562337ffe9f0d55f36af5afcb507b154c",
+    "migrations/checksums.sha256": "ffb8eb428d1d1ef12f64e2dda4d82e0cb477302e9e2142603f501bdf75fce4a2",
+    "migrations/apply.sh": "8827c18e4f0266917e962dbff7fa8f2a1c215d4e090c36d73256024020283960",
+    "infra/postgres/001-foundation.sql": "9d87f326cbec57bdf8950337bb7646a8fef04ccfcfba06b3491f2d7cecbfb3b9",
+    "infra/postgres/migrate.sh": "ed8a91609a78626f58b9a9c81ba4946e92d49ed4cf118fd90738c4d5fe92a56d",
+    "compose.yaml": "bfc5227ed080240038c3ae220c1e5e108c4b662bf25fe28963cd4ecb868f7271",
+    "scripts/test_owner_migrations.py": "44a47b61a88e4a02cf3be39c417b09e08d1b3bc05cabd8a5d8f3f34c56f8df6b",
+    "migrations/m1/002-contracts.sql": "22b20ee7aed43f9f65f3495ecf994e7c17fde3fc8b61573d1556d0e24b5cf230",
+    "migrations/m2/003-contracts.sql": "9c60061768b0e99975c7ce1cfb3a1f511bf1dd0b59c460db720bbd2d0945d3d1",
+    "migrations/m3/004-contracts.sql": "2309199a00d065973050bb5ee6e74e1ca311b48d005f6a5170232cf30ec9ce8f",
+    "migrations/m4/005-contracts.sql": "119ab08d6916e51a6f055f5666a1fd2eb41fb66f73cc2d1a530770a9e4b4cfaf",
+    "migrations/m5/006-contracts.sql": "3e418c239b167e48f0d202bab5205a9f3dd6fb5d3235dd02870f2ca90eeaa191",
+    "migrations/m6/007-contracts.sql": "26cd015b67eeeb55d14d73928947d1883475978b961ae32919124d5c599b0f69",
+    "migrations/m7/008-contracts.sql": "e7a0a7c1ef3a44eb619619140d1bc564e8bf7f0033d5efec0c4907b698d87335",
+    "migrations/m8/009-contracts.sql": "fddca939a3849bcf962df7008b97ff85c78be631207ba69e5e8d0eb0109967f1",
+    "migrations/m9/010-contracts.sql": "dbb65ccc1c84c0b4081f5475bb81ed6a1e6df24eb9d8fa296d29a3940460b867",
+    "migrations/m1/011-identity.sql": "115a31a4192a61a7112f5e83014c4be97b4cc59df005bedc3eabd5cb9ade519a",
+    "migrations/m2/012-catalog.sql": "3fee6d052bc20b9d9900b2af9330bc7adf6b546a7be58948d795ae17349e6b17",
+    "migrations/m3/013-tickets.sql": "fcc0f0ee6d4f9e3f7b3e3477585f6fec0ef1fd18c7e95577622a6e89cc1fca30",
+    "migrations/m1/014-delivery.sql": "22ef01d50c56a7e71edde29273ba3a7a5a93480e760d17d0ca282014d02c4cdc",
+    "migrations/m2/015-delivery.sql": "96a281df6cc4693fd7f7775584675942436fce92b6576846c9269212fba46140",
+    "migrations/m9/016-delivery.sql": "d930a7d2f9908b7366de738c3759f951cf9edaf1ffb897af15b3ed99dbb78b7a",
+    "migrations/m3/017-scan-queue.sql": "6138d0ecd467807696b2d3347aefd192b80ccb09af617d3ccab38bb353a7c765",
+    "migrations/m3/018-draft-grants.sql": "4d3af0028e879526ab84d27c01774142d0526c9538b084aee9b3f0fd7ba3acae",
+    "migrations/m1/019-account-credentials.sql": "1ebe38ea9e11782cfed89ee64c17dc33dfe5ae15579434e7938742dcc9947d29",
+    "migrations/m8/020-scoped-media-approval.sql": "8f37b8739c0479e37308ab213aeae5bd61ec36d192f168567a3863c2e190effa",
+    "migrations/m3/021-lifecycle.sql": "63fb1ef5a7088e0015466979badb8b68ecb906f7a2ee939c862840479562308f",
+    "migrations/m5/022-assignment-projection.sql": "86343b718729fe4020aa73533f9afebc9c5cd012149381106ac0d1072bbd7c07",
+    "migrations/m7/023-scheduler-recovery.sql": "0159223a8b97ff2eb02b786c17b97d6c147503c3da12dd6f4d3b8a418127d1ad",
+    "migrations/m6/024-sla-policy.sql": "0540fcdf7673009f26bd3930b89889eee37b685acf4f2ba6216ea2d085c45c18",
+    "migrations/m3/025-sla-snapshot.sql": "4724cee502830cb69dedd4b8deefe7941bb48a04c7ea3bdfea4abae252e49d12",
+    "migrations/m6/026-clock-projection.sql": "03dfc98e3515c636be5057c8be150dde37377fd88b2bc496f344b75371e61cd8",
+    "migrations/m9/027-report-snapshots.sql": "304b1988e4cb1c0f74c375d774d728b531698e7aed6bf53a056739b39236eee8",
+    "migrations/m1/028-operation-receipts.sql": "4720acfb5a617fd8969044da8fea47c36f13a1a239cb56377b54edebeda17d26",
+    "migrations/m7/029-scheduler-replay.sql": "ec191955c410b7c4a2ae083d4ea1db10ec34fede13d66d3011403c2e948b19ff",
+    "migrations/m9/030-sink-challenges.sql": "68cc7900faf259137cc2af2c7a6af146d26792a7fc8d2c880e4538ad12b132b1",
+    "migrations/m1/031-reporting-directory.sql": "a8937dac4193acb944aba27aa5f817dae3b9bb9429c16cef05e013e31863542f",
+    "migrations/m3/032-report-context.sql": "cea481d4296bc5a9523470e417d0fd4df7ee2137a32b9eed4181fc9e9414bf28",
+    "migrations/m5/033-category-routing.sql": "ec44b52aafbda1e5dde1d5d1b9027b5eb90ceb7415056f9e04b5e7e4dbc6aef9"
+  }
+}

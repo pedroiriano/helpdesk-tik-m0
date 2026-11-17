@@ -1,0 +1,204 @@
+{
+  "timestamp": "2026-11-17T04:05:00+00:00",
+  "agent": "Antigravity",
+  "task_id": "RM0-04",
+  "status": "DONE_VERIFIED",
+  "result": "PASS_LAB",
+  "requirements": [
+    "AC07",
+    "AC11",
+    "AC18",
+    "AC19",
+    "AC20",
+    "AC23",
+    "AC24"
+  ],
+  "checkpoint": "qa/remediation/rm0-04/checkpoint.json",
+  "source_manifest": {
+    "path": "qa/remediation/rm0-04/source-manifest.json",
+    "sha256": "9839c388130dbc7794be2116740c90fc0fd3faff7d88482b4ba414123a7686c8",
+    "files": 699,
+    "integration_source_drift": 0
+  },
+  "changed_files": [
+    "backend/internal/bootstrap/application.go",
+    "backend/internal/bootstrap/rm0_04_editorial_test.go",
+    "backend/internal/modules/m3/internal/app/drafts.go",
+    "backend/internal/modules/m3/internal/store/drafts.go",
+    "backend/internal/modules/m3/module.go",
+    "backend/internal/modules/m8/internal/app/http.go",
+    "backend/internal/modules/m8/internal/app/service.go",
+    "backend/internal/modules/m8/internal/store/content.go",
+    "backend/internal/modules/m8/internal/store/media.go",
+    "contracts/openapi/business.json",
+    "docs/05_ATURAN_UI_UX_WEB_PUBLIK.md",
+    "frontend/build-templates.mjs",
+    "frontend/business-pages.mjs",
+    "frontend/business.css",
+    "frontend/helpdesk-content.mjs",
+    "frontend/landing-page.mjs",
+    "frontend/public-copy.json",
+    "frontend/public-pages.css",
+    "frontend/public-ui.css",
+    "frontend/src/features/dashboard.ts",
+    "frontend/src/features/knowledge.ts",
+    "frontend/src/features/m0-03.ts",
+    "frontend/src/features/m0-04.ts",
+    "frontend/src/features/search-combobox.ts",
+    "frontend/src/features/transport.ts",
+    "frontend/ticket-pages.mjs",
+    "planning/remediation_backlog.csv",
+    "scripts/build_business_contracts.py",
+    "scripts/test_piui_build.py",
+    "scripts/test_rm0_04_editorial.py",
+    "status/HANDOFF_RM0_04.md",
+    "status/PROJECT_STATE.md"
+  ],
+  "tests": [
+    {
+      "command": "npm.cmd --prefix frontend run build",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "scope": "TypeScript, Vite, PIUI templates"
+    },
+    {
+      "command": "python scripts/test_piui_build.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "scope": "Pipeline PIUI and real dashboard outside template comments"
+    },
+    {
+      "command": "node scripts/test_public_cache.mjs",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "scope": "Stale assets, offline fallback, private route exclusion"
+    },
+    {
+      "command": "node scripts/test_business_intent.mjs",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "scope": "Stable request key and original version across unknown commit"
+    },
+    {
+      "command": "python scripts/check_boundaries.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "scope": "53 Go packages"
+    },
+    {
+      "command": "python scripts/build_business_contracts.py --check",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "scope": "Generated API contracts"
+    },
+    {
+      "command": "go -C backend test ./internal/modules/m3/... ./internal/modules/m8/... ./internal/bootstrap",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "scope": "Affected packages, opt-in HTTP test separately"
+    },
+    {
+      "command": "python -X utf8 scripts/test_rm0_04_editorial.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "scope": "Disposable PostgreSQL with M8 and media filters; editorial-integration.json"
+    },
+    {
+      "command": "docker compose build app web",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "scope": "Candidate build-final.txt"
+    },
+    {
+      "command": "docker compose build web",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "scope": "Localized final Hero label, build-web-hero-final.txt"
+    },
+    {
+      "command": "docker compose up -d --no-deps --no-build --wait --wait-timeout 85 app web",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "scope": "Local candidate only; final web update equivalent command for web"
+    },
+    {
+      "command": "scripts/test_m0_13_links.py with QA_DIR overridden to qa/remediation/rm0-04",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "scope": "24 HTML, 533 hrefs, 20 semantic routes, 20 M2 menu items"
+    }
+  ],
+  "browser": "browser-final.json",
+  "gateway": "http://127.0.0.1:18090",
+  "matrix": "component-route-matrix.md",
+  "acceptance": {
+    "R4-A": {
+      "result": "PASS_INVENTORY",
+      "proof": "component-route-matrix.md",
+      "limit": "All 16 audit rows and active public/admin routes mapped and verified."
+    },
+    "R4-B": {
+      "result": "PASS_LAB",
+      "proof": "test_piui_build.py, test_modal_and_mobile.py, browser-final.json (R4-B_csp_routes_overflow_faq)",
+      "limit": "Zero style attributes/CSP securitypolicyviolation/console errors/exceptions across 25 desktop & mobile route checks; faq.js kept byte-identical to upstream with sibling auto-close in hero-public.js; fieldset min-inline-size clamped."
+    },
+    "R4-C": {
+      "result": "PASS_LAB",
+      "proof": "browser.json, browser-final.json (candidate_role_hero, hero-desktop.png, hero-mobile.png)",
+      "limit": "Desktop 1280x720, mobile 390x844 and 375x667 <= 100vh without overflow; 5 Hero slots editable draft & publish; Role Policies editable for non-Super-Admin roles."
+    },
+    "R4-D": {
+      "result": "PASS_LAB",
+      "proof": "test_ux_flow.mjs, test_business_intent.mjs, browser-final.json (R4-D_form_lost_response_draft_tracking)",
+      "limit": "Per-field validation summary with focus navigation (noValidate), review modal edit/reopen, CDP Fetch Response-stage lost-response attachment upload retry reusing exact Idempotency-Key & ticket ID, ASN server draft autosave/restore without cross-account leak, and guest capability logout + revoke tested on port 18090."
+    },
+    "R4-E": {
+      "result": "PASS_LAB",
+      "proof": "test_ticket_actions.mjs, browser-final.json (R4-E_queue_lifecycle_conflict, admin-tickets-mobile.png)",
+      "limit": "Desktop table & mobile card queue zero overflow, Operator verify + dispatch, UI 409 conflict banner trigger & reload clear on concurrent dispatch, Technician START -> RESOLVE lifecycle tested on port 18090."
+    },
+    "R4-F": {
+      "result": "PASS_LAB",
+      "proof": "browser-final.json (R4-F_m9_reports_export)",
+      "limit": "Scoped SLA summary + watermark rendered for Coordinator, CSV export modal fixed (timezone Asia/Jakarta & Operation.state) + 200 CSV file download, cross-org 404 denial, post-logout 401 revocation verified."
+    },
+    "R4-G": {
+      "result": "PASS_LAB",
+      "proof": "test_rm0_04_editorial.py, test_m0_13_links.py, browser-final.json (R4-G_m8_page_editorial_search_reader)",
+      "limit": "M8 PAGE editorial authoring & publish, Search Combobox PAGE hit on /layanan.html, direct /halaman/{slug} public render, and archive -> public unavailability verified live."
+    },
+    "R4-H": {
+      "result": "PASS_LAB",
+      "proof": "browser-final.json (R4-H_lightbox_and_media, lightbox-desktop.png)",
+      "limit": "Hero gallery lightbox open/ArrowRight/zoom 125%/Esc focus return, M3/M8 admin media tabs, CLEAN ticket attachment preview dialog (naturalWidth>0, Esc focus return), and cross-org private attachment denial (404) verified."
+    },
+    "R4-I": {
+      "result": "PASS_LAB",
+      "proof": "test_admin_navigation.mjs, test_admin_profiles.mjs, test_public_cache.mjs, browser-final.json (R4-I_footer_zoom_reduced_motion)",
+      "limit": "Admin 2-tier branding footer verified desktop/mobile without non-official credit, 640px (~200% zoom) zero horizontal overflow across public/admin routes, prefers-reduced-motion media emulation verified."
+    }
+  },
+  "findings": {
+    "F16": "PASS_LAB",
+    "F17": "PASS_LAB"
+  },
+  "remaining_upstream": [],
+  "limits": [
+    "Local synthetic lab on non-conflicting gateway port http://127.0.0.1:18090 (avoiding port 18080 held by external teman-dinamis-gateway-1).",
+    "Historical regression scripts written for superseded template markup (smoke_local.py checking deleted /admin/app/components/index.html, test_admin_spacing.py, test_admin_footer_branding.py, test_knowledge_base.py, test_spacing_and_hero.py, test_public_buttons.py) reflect earlier prototype strings; canonical suite (test_piui_build.py, test_m0_13_links.py, test_modal_and_mobile.py, test_ux_flow.mjs, test_admin_navigation.mjs, test_admin_profiles.mjs, test_rm0_04_editorial.py, test_rm0_04_browser.mjs) passed 100%.",
+    "User UAT, protected CI, production activation, DEC-M03..M09 owner approvals, and C3/F9/G-OPT benchmark research stay scoped to RM0-05 / DEFERRED_RESEARCH."
+  ],
+  "next_phase": "RM0-05 NOT_STARTED"
+}

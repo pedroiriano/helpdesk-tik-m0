@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Portal Sistem &amp; Dokumentasi Arsitektur — PIUI Zero</title>
+  <meta name="description" content="Portal gerbang dan ringkasan arsitektur Admin Dashboard PIUI Zero berbasis 100% Zero Dependency Native Web Platform.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Portal Sistem &amp; Dokumentasi Arsitektur — PIUI Zero">
+  <meta property="og:description" content="Admin Dashboard Enterprise berbasis HTML Living Standard, CSS Cascade Layers, dan JavaScript ES2026+ tanpa dependensi runtime.">
+  <meta property="og:type" content="website">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="stylesheet" href="/assets/css/main.css?v=2.2.2">
+  <script type="module" src="/assets/js/app.js?v=2.2.2"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "PIUI Zero Admin Dashboard",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "All",
+    "softwareVersion": "2.2.2",
+    "description": "Panel Informasi, Konfigurasi, Audit, dan Utilitas Internal berbasis Zero Dependency Native Web."
+  }
+  </script>
+<link rel="icon" href="/assets/icons/favicon.ico?v=2.2.2" sizes="16x16 32x32 48x48"><link rel="icon" href="/assets/icons/piui-favicon.svg?v=2.2.2" type="image/svg+xml" sizes="any"><link rel="apple-touch-icon" href="/assets/icons/piui-180.png?v=2.2.2" sizes="180x180">
+</head>
+<body>
+  <a class="piui-skip-link" href="#main-content">Langsung ke konten utama</a>
+  <div id="piui-live-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="piui-app-shell" data-sidebar="expanded">
+    <header class="piui-topbar">
+      <div class="piui-topbar__start">
+        <a href="/index.html" class="piui-brand" aria-current="page"><img class="piui-brand__mark" src="/assets/icons/piui-mark.svg" alt="" width="32" height="32"><span class="piui-brand__name">PIUI Zero™</span><span class="piui-badge piui-badge--env">v2.2.2</span></a>
+      </div>
+      <div class="piui-topbar__end">
+        <button type="button" class="piui-icon-btn" id="btn-theme-toggle" aria-label="Ganti tema terang atau gelap">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-theme"></use></svg>
+        </button>
+        <a href="/auth/login.html" class="piui-btn piui-btn--secondary piui-btn--sm">Masuk Sesi</a>
+        <a href="/app/dashboard/index.html" class="piui-btn piui-btn--primary piui-btn--sm">Buka Dashboard</a>
+      </div>
+    </header>
+
+    <aside class="piui-sidebar" id="piui-sidebar" aria-label="Navigasi Portal">
+      <nav aria-label="Navigasi Utama">
+        <div class="piui-sidebar__group-label">Menu Cepat</div>
+        <ul class="piui-nav-list">
+          <li>
+            <a href="/index.html" class="piui-nav-link" aria-current="page">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-info"></use></svg>
+              <span class="piui-nav-link__text">Panduan &amp; Dokumentasi</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/dashboard/index.html" class="piui-nav-link">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-dashboard"></use></svg>
+              <span class="piui-nav-link__text">Beranda Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="/app/components/index.html" class="piui-nav-link">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-components"></use></svg>
+              <span class="piui-nav-link__text">Katalog Komponen</span>
+            </a>
+          </li>
+          <li>
+            <a href="/auth/login.html" class="piui-nav-link">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-lock"></use></svg>
+              <span class="piui-nav-link__text">Masuk Akun Admin</span>
+            </a>
+          </li>
+          <li>
+            <a href="/status/index.html" class="piui-nav-link">
+              <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-status"></use></svg>
+              <span class="piui-nav-link__text">Status Server</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main id="main-content" class="piui-main">
+      <nav aria-label="Breadcrumb" class="piui-breadcrumb">
+        <ol>
+          <li aria-current="page">Panduan &amp; Dokumentasi Sistem</li>
+        </ol>
+      </nav>
+
+      <div class="piui-health-banner" role="status">
+        <div class="piui-health-banner__content">
+          <svg width="20" height="20" aria-hidden="true"><use href="/assets/icons/piui-sprite.svg#icon-check-circle"></use></svg>
+          <span><strong>Status Sistem: Siap Digunakan</strong> — Seluruh halaman &amp; komponen berjalan murni di atas standar web tanpa library luar.</span>
+        </div>
+        <a href="/app/dashboard/index.html" class="piui-btn piui-btn--primary piui-btn--sm">Buka Beranda Dashboard</a>
+      </div>
+
+      <div class="piui-page-header">
+        <div class="piui-page-header__titles">
+          <h1 class="piui-page-title">Panduan &amp; Daftar Halaman PIUI Zero</h1>
+          <p class="piui-page-subtitle">Pusat informasi penggunaan template Admin Dashboard, struktur menu, dan daftar seluruh halaman aktif.</p>
+        </div>
+        <div class="piui-page-actions">
+          <a href="/app/components/index.html" class="piui-btn piui-btn--secondary">Lihat Katalog Komponen</a>
+          <a href="/app/dashboard/index.html" class="piui-btn piui-btn--primary">Buka Beranda Dashboard</a>
+        </div>
+      </div>
+
+      <section aria-labelledby="sec-pilar-title">
+        <h2 id="sec-pilar-title" class="sr-only">Empat Pilar Arsitektur PIUI Zero</h2>
+        <div class="piui-kpi-grid">
+          <article class="piui-card">
+            <div class="piui-card__header">
+              <h3 class="piui-card__title">Zero Runtime Dependency</h3>
+              <span class="piui-badge" data-status="success">0 Paket NPM</span>
+            </div>
+            <div class="piui-card__value tabular-nums">100% Native</div>
+            <p class="piui-page-subtitle">Menggunakan HTML Living Standard, CSS 5 Cascade Layers, dan JavaScript ES2026+ tanpa framework pihak ketiga.</p>
+            <div class="piui-card__meta">
+              <span>Tanpa paket runtime pihak ketiga</span>
+              <a href="/app/dashboard/index.html">Uji di Dashboard</a>
+            </div>
+          </article>
+
+          <article class="piui-card">
+            <div class="piui-card__header">
+              <h3 class="piui-card__title">Mobile-First Anti-Berantakan</h3>
+              <span class="piui-badge" data-status="info">320px – 2560px</span>
+            </div>
+            <div class="piui-card__value tabular-nums">Layout Adaptif</div>
+            <p class="piui-page-subtitle">Dilindungi kontrak <code>minmax(0, 1fr)</code>, <code>min-inline-size: 0</code>, dan <code>@container workspace</code>.</p>
+            <div class="piui-card__meta">
+              <span>HP, Tablet, &amp; Desktop</span>
+              <a href="/app/dashboard/index.html">Lihat Layout Adaptif</a>
+            </div>
+          </article>
+
+          <article class="piui-card">
+            <div class="piui-card__header">
+              <h3 class="piui-card__title">Keamanan Pertahanan Berlapis</h3>
+              <span class="piui-badge" data-status="success">Strict CSP</span>
+            </div>
+            <div class="piui-card__value tabular-nums">Trusted Types</div>
+            <p class="piui-page-subtitle">Tanpa <code>innerHTML</code>, tanpa <code>unsafe-inline</code>, dan dilengkapi konfirmasi ganda untuk aksi destruktif.</p>
+            <div class="piui-card__meta">
+              <span>Kebijakan piui-dom-policy</span>
+              <a href="/app/dashboard/index.html#section-audit">Periksa Log Audit</a>
+            </div>
+          </article>
+
+          <article class="piui-card">
+            <div class="piui-card__header">
+              <h3 class="piui-card__title">Kecepatan &amp; Integritas Tautan</h3>
+              <span class="piui-badge" data-status="success">35.000 B bootstrap</span>
+            </div>
+            <div class="piui-card__value tabular-nums">Gate Struktural</div>
+            <p class="piui-page-subtitle">Berkas rute diperiksa terhadap <code>routes.manifest.json</code> ; ukuran startup per halaman dan Core Web Vitals memerlukan pengukuran terpisah.</p>
+            <div class="piui-card__meta">
+              <span>Sinkronisasi URL State</span>
+              <a href="/auth/login.html">Uji Alur Masuk</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- KATALOG RUTE KANONIS (routes.manifest.json) -->
+      <section class="piui-panel" aria-labelledby="heading-route-catalog">
+        <div class="piui-panel__header">
+          <div>
+            <h2 id="heading-route-catalog" class="piui-panel__title">Daftar Halaman &amp; Kelompok Menu Aplikasi</h2>
+            <p class="piui-page-subtitle">Daftar halaman disusun ke dalam 4 kelompok menu yang mudah dipahami pengguna.</p>
+          </div>
+          <span class="piui-badge" data-status="success">Rute sesuai manifest</span>
+        </div>
+
+        <div class="piui-table-scroll" role="region" aria-labelledby="heading-route-catalog" tabindex="0">
+          <table class="piui-table">
+            <thead>
+              <tr>
+                <th scope="col" class="is-sticky-col">Kelompok Menu</th>
+                <th scope="col">Nama Halaman &amp; Fungsi</th>
+                <th scope="col">Indeks Mesin Pencari</th>
+                <th scope="col" data-table-column="actions">Buka Halaman</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row" class="is-sticky-col"><span class="piui-badge" data-status="info">1. Menu Utama</span></th>
+                <td><strong>Beranda Dashboard</strong> — Ringkasan angka utama, grafik trafik, dan aktivitas terbaru</td>
+                <td class="text-mono">noindex, nofollow</td>
+                <td><a href="/app/dashboard/index.html" class="piui-btn piui-btn--primary piui-btn--sm">Buka Beranda</a></td>
+              </tr>
+              <tr>
+                <th scope="row" class="is-sticky-col"><span class="piui-badge" data-status="info">1. Menu Utama</span></th>
+                <td><strong>Analitik &amp; Grafik</strong> — Grafik interaktif kecepatan layanan dan perbandingan wilayah server</td>
+                <td class="text-mono">noindex, nofollow</td>
+                <td><a href="/app/analytics/index.html" class="piui-btn piui-btn--secondary piui-btn--sm">Buka Analitik</a></td>
+              </tr>
+              <tr>
+                <th scope="row" class="is-sticky-col"><span class="piui-badge" data-status="info">1. Menu Utama</span></th>
+                <td><strong>Pusat Notifikasi &amp; Peringatan</strong> — Daftar lengkap pesan keamanan, transaksi, dan siaran pengumuman tim</td>
+                <td class="text-mono">noindex, nofollow</td>
+                <td><a href="/app/notifications/index.html" class="piui-btn piui-btn--primary piui-btn--sm">Buka Notifikasi</a></td>
+              </tr>
+              <tr>
+                <th scope="row" class="is-sticky-col"><span class="piui-badge" data-status="success">2. Data &amp; Media</span></th>
+                <td><strong>Data Pengguna</strong> — Tabel daftar akun pengguna, pencarian cepat, dan matriks hak akses</td>
+                <td class="text-mono">noindex, nofollow</td>
+                <td><a href="/app/users/index.html" class="piui-btn piui-btn--secondary piui-btn--sm">Buka Pengguna</a></td>
+              </tr>
+              <tr>
+                <th scope="row" class="is-sticky-col"><span class="piui-badge" data-status="neutral">2. Data &amp; Media</span></th>
+                <td><strong>Detail Pengguna</strong> — Halaman profil lengkap pengguna, sesi perangkat, dan riwayat akun</td>
+                <td class="text-mono">noindex, nofollow</td>
+                <td><a href="/app/users/detail.html?id=USR-9041" class="piui-btn piui-btn--secondary piui-btn--sm">Buka Detail</a></td>
+              </tr>
+              <tr>
+                <th scope="row" class="is-sticky-col"><span class="piui-badge" data-status="success">2. Data &amp; Media</span></th>
+                <td><strong>Data Transaksi</strong> — Daftar catatan pembayaran, pengembalian dana, dan ekspor CSV</td>
+                <td class="text-mono">noindex, nofollow</td>
+                <td><a href="/app/transactions/index.html" class="piui-btn piui-btn--secondary piui-btn--sm">Buka Transaksi</a></td>
+              </tr>
+              <tr>
+                <th scope="row" class="is-sticky-col"><span class="piui-badge" data-status="success">2. Data &amp; Media</span></th>
+                <td><strong>Galeri Foto &amp; Video</strong> — Unggah file Drag &amp; Drop, susunan gambar Masonry, dan pratinjau penuh</td>
+                <td class="text-mono">noindex, nofollow</td>
+                <td><a href="/app/gallery/index.html" class="piui-btn piui-btn--secondary piui-btn--sm">Buka Galeri</a></td>
+              </tr>
+              <tr>
+                <th scope="row" class="is-sticky-col"><span class="piui-badge" data-status="warning">3. Komponen UI</span></th>
+                <td><strong>Katalog Komponen (UI Kit)</strong> — Contoh siap pakai seluruh form, Select2, tabel, rich-text, dan grafik</td>
+                <td class="text-mono">noindex, nofollow</td>
+                <td><a href="/app/components/index.html" class="piui-btn piui-btn--primary piui-btn--sm">Buka Katalog UI</a></td>
+              </tr>
+              <tr>
+                <th scope="row" class="is-sticky-col"><span class="piui-badge" data-status="neutral">4. Sistem &amp; Keamanan</span></th>
+                <td><strong>Riwayat Aktivitas (Audit)</strong> — Catatan aktivitas pengguna dan perubahan data sistem</td>
+                <td class="text-mono">noindex, nofollow</td>
+                <td><a href="/app/audit/index.html" class="piui-btn piui-btn--secondary piui-btn--sm">Buka Riwayat</a></td>
+              </tr>
+              <tr>
+                <th scope="row" class="is-sticky-col"><span class="piui-badge" data-status="neutral">4. Sistem &amp; Keamanan</span></th>
+                <td><strong>Detail Riwayat Aktivitas</strong> — Perbandingan data sebelum dan sesudah perubahan</td>
+                <td class="text-mono">noindex, nofollow</td>
+                <td><a href="/app/audit/detail.html?id=AUD-2026-0892" class="piui-btn piui-btn--secondary piui-btn--sm">Buka Detail</a></td>
+              </tr>
+              <tr>
+                <th scope="row" class="is-sticky-col"><span class="piui-badge" data-status="neutral">4. Sistem &amp; Keamanan</span></th>
+                <td><strong>Pengaturan Sistem</strong> — Batas waktu sesi, keamanan aplikasi, dan manajemen kunci API</td>
+                <td class="text-mono">noindex, nofollow</td>
+                <td><a href="/app/settings/index.html" class="piui-btn piui-btn--secondary piui-btn--sm">Buka Pengaturan</a></td>
+              </tr>
+              <tr>
+                <th scope="row" class="is-sticky-col"><span class="piui-badge" data-status="success">4. Sistem &amp; Keamanan</span></th>
+                <td><strong>Status Server</strong> — Pantauan kondisi server dan waktu aktif (uptime) publik</td>
+                <td class="text-mono">index, follow</td>
+                <td><a href="/status/index.html" class="piui-btn piui-btn--secondary piui-btn--sm">Buka Status</a></td>
+              </tr>
+              <tr>
+                <th scope="row" class="is-sticky-col"><span class="piui-badge" data-status="warning">4. Sistem &amp; Keamanan</span></th>
+                <td><strong>Masuk Akun Admin</strong> — Halaman login administrator dan verifikasi kode keamanan (MFA)</td>
+                <td class="text-mono">noindex, nofollow</td>
+                <td><a href="/auth/login.html" class="piui-btn piui-btn--secondary piui-btn--sm">Buka Login</a></td>
+              </tr>
+              <tr>
+                <th scope="row" class="is-sticky-col"><span class="piui-badge" data-status="neutral">Halaman Bantuan</span></th>
+                <td><strong>Halaman Error &amp; Offline</strong> — Tampilan saat halaman tidak ditemukan (404), akses ditolak (403), atau tanpa internet</td>
+                <td class="text-mono">noindex, nofollow</td>
+                <td>
+                  <div class="piui-page-actions">
+                    <a href="/404.html" class="piui-btn piui-btn--secondary piui-btn--sm">404</a>
+                    <a href="/403.html" class="piui-btn piui-btn--secondary piui-btn--sm">403</a>
+                    <a href="/offline.html" class="piui-btn piui-btn--secondary piui-btn--sm">Offline</a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <footer class="piui-footer">
+      
+      <ul class="piui-footer__links">
+        <li><a href="/app/dashboard/index.html">Beranda Dashboard</a></li>
+        <li><a href="/app/components/index.html">Katalog Komponen</a></li>
+        <li><a href="/auth/login.html">Masuk Akun Admin</a></li>
+      </ul>
+    <p class="piui-product-credit"><span class="piui-product-signature"><img class="piui-brand__mark" src="/assets/icons/piui-mark.svg" alt="" width="24" height="24"><span>PIUI Zero™ v2.2.2</span></span> • Created by Ipi &quot;Pedro Iriano&quot; • © 2026 • <a href="/about/index.html">Tentang produk</a></p></footer>
+  </div>
+</body>
+</html>

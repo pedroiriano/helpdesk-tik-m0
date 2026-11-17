@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "status": "DESIGN_RULES_NOT_ENFORCED_BY_APPLICATION_YET",
+  "sync_business_ports": {
+    "M1": [],
+    "M2": [
+      "M1"
+    ],
+    "M3": [
+      "M1",
+      "M2",
+      "M4",
+      "M5",
+      "M6"
+    ],
+    "M4": [],
+    "M5": [
+      "M1"
+    ],
+    "M6": [],
+    "M7": [
+      "M3",
+      "M6"
+    ],
+    "M8": [
+      "M1",
+      "M2"
+    ],
+    "M9": [
+      "M1",
+      "M3"
+    ]
+  },
+  "event_subscriptions": [
+    {
+      "producer": "M3",
+      "consumer": "M5",
+      "purpose": "assignment load projection"
+    },
+    {
+      "producer": "M3",
+      "consumer": "M6",
+      "purpose": "clock projection"
+    },
+    {
+      "producer": "M3",
+      "consumer": "M7",
+      "purpose": "schedule lifecycle jobs"
+    },
+    {
+      "producer": "M3",
+      "consumer": "M9",
+      "purpose": "audit notifications and reports"
+    },
+    {
+      "producer": "M9",
+      "consumer": "M3",
+      "purpose": "durable NotificationStored proof per resolution attempt"
+    },
+    {
+      "producer": "ALL_OWNERS",
+      "consumer": "M9",
+      "purpose": "audit stream; M9 handles own audit locally without self-relay loop"
+    }
+  ],
+  "constraints": [
+    "No cross-owner SQL",
+    "No cross-owner foreign key",
+    "No transaction across owners",
+    "No sibling private imports",
+    "No synchronous business dependency cycles",
+    "One Go application process"
+  ]
+}

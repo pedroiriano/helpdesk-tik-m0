@@ -1,0 +1,92 @@
+{
+  "timestamp": "2026-11-03T03:54:34.754858+00:00",
+  "task_id": "M0-01",
+  "scope": "local_native_ui",
+  "git_sha": null,
+  "foundation": "qa/bootstrap/verification.json",
+  "web_image_index": "sha256:df1b0e9016b0eb76da2bc4e07744fa99ced0ba2d63bf6bd4ef399365b091da9a",
+  "result": "PASS",
+  "commands": [
+    "npm.cmd run build (frontend)",
+    "python scripts/test_piui_build.py",
+    "docker compose up -d --no-deps --build --pull never web",
+    "python scripts/smoke_local.py"
+  ],
+  "source_hashes": {
+    "frontend/build-templates.mjs": "1af910f4fee39a306fac20df87eeea1f1656a19aa4e14bb3ff6d211776108ceb",
+    "frontend/helpdesk-content.mjs": "668ec03e907b905b8cccb5c9af0d7b7e416f6c4ffff90421740410f42fc1a73b",
+    "frontend/guide-content.mjs": "e440fbb802e1844ebd816be246b68fdfc8d38660072c7c11c7906977c5b27403",
+    "frontend/admin-accent.js": "c3f77ede0861bc7ab23ea433654dfd887ba2429b73cebaf3bc8f15d6124d9c72",
+    "frontend/public-copy.json": "953e2136361c0bdc88f60362854e8e3b65e7811db031ec485f82dc9c2e01b70f",
+    "frontend/guide-copy.json": "3ec94f84bd64a4cd7b6548568a5f6aa4c8f85d74a56ee3b4c63083830b75795e",
+    "frontend/vite.config.mjs": "d0854f0199a99bb1842ec3d0b4d57cfa9fa3f84d35467d75956624dcf31469a7",
+    "frontend/package.json": "180ab22151fa614f05795c84d01dc935f92b13e5c5869f04b69763e1a3a92d03",
+    "frontend/src/main.tsx": "b6cce50cf04ffd24526d6ac0c93b6dcdc125f3a0848db1f5004c4b13d3130e0e",
+    "frontend/src/components/ServiceStatus.tsx": "1a226cfd8b4c78a1c15b37b8fcfd7fccad1a01d644ff110cd73aa1ef0689602f",
+    ".dockerignore": "e3becab900b51fed12e21b07ba4143668f0e7dbfbd79b6a8b42329b2e73e08e4",
+    "infra/nginx/nginx.conf": "c41d0be01584a3d24799e5b49048784760e19cd45c003d03b70ff3d207ca8118",
+    "infra/docker/web.Dockerfile": "08f82104aa28fe749438b7bd96ef0990a97a6a5d43122a0dbf616d97c3db5f5f",
+    "scripts/smoke_local.py": "8f8e815db746a57009900f569a1e10f2314598cbf1d7afece9a76079c7a14963",
+    "scripts/test_piui_build.py": "bb9fa8d4918caa482b70d30ebf6026ec8157f6d77374f61f95d22cbbe645c0a2"
+  },
+  "screenshots": {
+    "qa/bootstrap/piui-direct-public.png": "3ef131529cbdb069ca1888f930e7e9e1f3fe6f5ab74caf1f87f6f119b4d0ab13",
+    "qa/bootstrap/piui-direct-admin.png": "17c37fab0b8bf91d26ca32fc71126fc013b3e35a219ab0104552d5891b3f1f68",
+    "qa/bootstrap/piui-direct-public-mobile.png": "b010386d519664528258a698096407afe49805ccf03c02d431e46114526b6eb5",
+    "qa/bootstrap/piui-direct-admin-mobile.png": "91b28103cb862f5290ed12c179c1e0e7c15f133d970a92b59a7fc72047c48327"
+  },
+  "inventory": {
+    "piui-modern": {
+      "runtime_files": 107,
+      "html_pages": 47,
+      "byte_identical": 53
+    },
+    "piui-zero": {
+      "runtime_files": 91,
+      "html_pages": 18,
+      "byte_identical": 51
+    }
+  },
+  "browser": {
+    "desktop_viewport": [
+      1440,
+      900
+    ],
+    "mobile_viewport": [
+      390,
+      844
+    ],
+    "public_widths_scroll_client": {
+      "desktop": [
+        1425,
+        1425
+      ],
+      "mobile": [
+        375,
+        375
+      ]
+    },
+    "admin_widths_scroll_client": {
+      "desktop": [
+        1430,
+        1430
+      ],
+      "mobile": [
+        380,
+        380
+      ]
+    },
+    "public": [
+      "Jaringan selected and guide TIK-02 rendered",
+      "FAQ expanded",
+      "Jaringan detail heading Koneksi terputus",
+      "Calculator: increment changed 8000 to 8800 units at 4000 reports, weight 2"
+    ],
+    "admin": [
+      "API readiness text visible",
+      "7 Hari pressed, URL ?range=7d",
+      "Mobile Enter opens drawer; Escape closes it and returns focus to toggle"
+    ]
+  },
+  "limits": "Representative browser checks. Demo modules and synthetic records are not operational Helpdesk tickets or authenticated sessions. UAT and cross-model parity not run."
+}

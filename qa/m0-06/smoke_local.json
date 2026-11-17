@@ -1,0 +1,56 @@
+{
+  "timestamp": "2026-11-06T04:26:44.393273+00:00",
+  "scope": "live loopback synthetic HTTP/API M0-06 SLA, resolution, confirmation, and auto-close guard",
+  "command": "python scripts/smoke_m0_06_local.py --allow-lab-writes",
+  "checks": [
+    {
+      "name": "authenticated_ticket_created",
+      "result": "PASS"
+    },
+    {
+      "name": "verified_and_dispatched_to_technician",
+      "result": "PASS"
+    },
+    {
+      "name": "AC08_sla_projection_endpoint_verified",
+      "result": "PASS"
+    },
+    {
+      "name": "AC14_unauthorized_resolve_rejected_403",
+      "result": "PASS"
+    },
+    {
+      "name": "AC14_short_summary_resolve_rejected_400",
+      "result": "PASS"
+    },
+    {
+      "name": "AC14_stale_version_resolve_rejected_409",
+      "result": "PASS"
+    },
+    {
+      "name": "AC14_technician_resolve_success_resolved",
+      "result": "PASS"
+    },
+    {
+      "name": "AC14_resolution_attempts_history_verified",
+      "result": "PASS"
+    },
+    {
+      "name": "AC14_reject_without_reason_rejected_400",
+      "result": "PASS"
+    },
+    {
+      "name": "AC14_reject_resumes_in_progress",
+      "result": "PASS"
+    },
+    {
+      "name": "AC14_technician_reresolve_success",
+      "result": "PASS"
+    },
+    {
+      "name": "AC14_requester_confirm_accept_closed",
+      "result": "PASS"
+    }
+  ],
+  "result": "PASS"
+}

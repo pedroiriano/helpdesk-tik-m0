@@ -1,0 +1,54 @@
+{
+  "timestamp": "2026-11-10T04:05:01.016516+00:00",
+  "status": "PASS",
+  "surface": "ChatGPT in-app browser via cua_repl, actual Nginx gateway",
+  "origin": "http://127.0.0.1:18080",
+  "candidate_runtime": [
+    "/helpdesk-m0 sha256:b53a29b8bbfd93829f086b3ec868f024015dd85b729a522912403591cccb7f1c healthy",
+    "/helpdesk-m0-nginx sha256:26f640281645d68104d5eb8b857808bc62efb4efba41d0163c5e056be0f0cee9 healthy",
+    "/helpdesk-m0-db sha256:57c72fd2a128e416c7fcc499958864df5301e940bca0a56f58fddf30ffc07777 healthy",
+    "/helpdesk-m0-scanner sha256:8ad6197396974726c35d017e50aaaaf4b91745726a04faec8480c203edd98052 healthy"
+  ],
+  "source_and_dist_sha256": {
+    "frontend/business-pages.mjs": "4e34845d996985a29eb017e0bfaa6b8d7ead6dd6f2cdc69f6447865edc931f6a",
+    "frontend/src/features/m0-03.ts": "72121429c3fb7e219a410266329a18ec709e3cbe181097a37c730c892c4680f9",
+    "frontend/dist/akses.html": "d3e5e4f3b97e5ffba316a4366f67fa8ce471845dda2906059182567423d02e52",
+    "frontend/dist/daftar.html": "2d2a02b848f87c06d3a84420b911a6b1e658c451bef4fa7faca13c427cb96a71",
+    "frontend/dist/admin/auth/login.html": "836b83c22642bf40807c6e77b5222363e7245200496ada41a098d91ea8711938",
+    "frontend/dist/helpdesk/m0-03.js": "4fc89292b76296ba7ed53ac7f9804f94ec0a70bd347c9fdac971daa5c0d5e634"
+  },
+  "checks": [
+    {
+      "viewport": "1440x900",
+      "path": "/akses.html",
+      "result": "PASS",
+      "observed": "ArrowRight memfokuskan dan memilih tab ASN, menampilkan panel dan status SSO belum aktif. Enter pada tombol ASN lab mencapai /tiket.html."
+    },
+    {
+      "viewport": "1440x900",
+      "path": "/admin/auth/login.html",
+      "result": "PASS",
+      "observed": "Enter membuka dialog konsol. Pemilih Editor Konten OPD A menghasilkan sesi staf, dasbor dan tautan Pustaka Media."
+    },
+    {
+      "viewport": "1440x900",
+      "path": "/admin/app/helpdesk/index.html?kind=media",
+      "result": "PASS",
+      "observed": "Pustaka Media mengenali editor. Enter pada tombol unggah membuka satu pilihan organisasi wajib. Form review tampil. Tab M3 merender empty state sesuai scope."
+    },
+    {
+      "viewport": "390x844",
+      "path": "/daftar.html",
+      "result": "PASS",
+      "observed": "Submit kosong memfokuskan NIK. Setelah memperbaiki pattern template, NIK sintetis 16 digit valid dan mismatch password menampilkan pesan persisten. Form tidak overflow."
+    }
+  ],
+  "resolved_during_smoke": [
+    "Pattern NIK kehilangan escape saat dirender menjadi HTML. Diganti kelas digit eksplisit dan diuji ulang pada image web final."
+  ],
+  "limits": [
+    "Desktop diverifikasi sebelum koreksi markup registrasi yang terisolasi. Uji ulang mobile memakai image web akhir.",
+    "Registrasi berhasil, pengunggahan berkas dan publikasi approval dibuktikan via HTTP/PostgreSQL disposable. Smoke browser tidak menambah akun, tiket, unggahan atau konten kerja.",
+    "Cakupan keyboard representatif, bukan audit aksesibilitas penuh atau UAT manusia."
+  ]
+}

@@ -1,0 +1,102 @@
+[
+  {
+    "command": [
+      "go",
+      "test",
+      "./internal/modules/m1/internal/domain",
+      "./internal/modules/m1/api"
+    ],
+    "cwd": "backend",
+    "exit": 0,
+    "result": "PASS",
+    "output": "qa\\remediation\\rm0-04\\access-profiles\\test-identity.txt"
+  },
+  {
+    "command": [
+      "npm.cmd",
+      "--prefix",
+      "frontend",
+      "run",
+      "build"
+    ],
+    "exit": 0,
+    "result": "PASS",
+    "output": "qa\\remediation\\rm0-04\\access-profiles\\build.txt"
+  },
+  {
+    "command": [
+      "node",
+      "--disable-warning=ExperimentalWarning",
+      "scripts/test_admin_profiles.mjs"
+    ],
+    "exit": 0,
+    "result": "PASS",
+    "output": "qa\\remediation\\rm0-04\\access-profiles\\test-profiles.txt"
+  },
+  {
+    "command": [
+      "node",
+      "--disable-warning=ExperimentalWarning",
+      "scripts/test_admin_navigation.mjs"
+    ],
+    "exit": 0,
+    "result": "PASS",
+    "output": "qa\\remediation\\rm0-04\\access-profiles\\test-navigation.txt"
+  },
+  {
+    "command": [
+      "python",
+      "scripts/test_piui_build.py"
+    ],
+    "exit": 0,
+    "result": "PASS",
+    "output": "qa\\remediation\\rm0-04\\access-profiles\\test-piui.txt"
+  },
+  {
+    "command": [
+      "node",
+      "--disable-warning=ExperimentalWarning",
+      "scripts/test_ux_flow.mjs"
+    ],
+    "exit": 0,
+    "result": "PASS",
+    "output": "qa\\remediation\\rm0-04\\access-profiles\\test-ux.txt"
+  },
+  {
+    "command": [
+      "docker",
+      "compose",
+      "build",
+      "web"
+    ],
+    "exit": 0,
+    "result": "PASS",
+    "output": "qa\\remediation\\rm0-04\\access-profiles\\build-web.txt"
+  },
+  {
+    "command": [
+      "docker",
+      "compose",
+      "up",
+      "-d",
+      "--no-deps",
+      "--no-build",
+      "--wait",
+      "--wait-timeout",
+      "85",
+      "web"
+    ],
+    "exit": 0,
+    "result": "PASS",
+    "output": "qa\\remediation\\rm0-04\\access-profiles\\cutover.txt"
+  },
+  {
+    "command": [
+      "python",
+      "qa\\remediation\\rm0-04\\access-profiles\\verify_gateway.py"
+    ],
+    "exit": 0,
+    "result": "PASS",
+    "output": "qa\\remediation\\rm0-04\\access-profiles\\gateway.txt"
+  }
+]

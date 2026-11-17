@@ -1,0 +1,75 @@
+{
+  "timestamp": "2026-11-04T16:20:11.591634+00:00",
+  "task_id": "M0-04",
+  "scope": "documentation_only",
+  "result": "PASS",
+  "application_status": "NOT_STARTED",
+  "changed_files": [
+    "prompts/05_FASE_M0_04.md",
+    "README.md"
+  ],
+  "local_reference_check": {
+    "result": "PASS",
+    "file_count": 27,
+    "files": [
+      "AGENTS.md",
+      "README.md",
+      "configs/M0.json",
+      "contracts/M0_03_TRACEABILITY.md",
+      "contracts/acceptance.csv",
+      "contracts/business_traceability.csv",
+      "contracts/capability_map.csv",
+      "contracts/dependencies.json",
+      "contracts/feature_coverage.csv",
+      "contracts/module_registry.csv",
+      "contracts/openapi/business.json",
+      "docs/01_BLUEPRINT_M0.md",
+      "docs/02_ATURAN_PEMBANGUNAN.md",
+      "docs/03_PANDUAN_AGENT_AI.md",
+      "docs/05_ATURAN_UI_UX_WEB_PUBLIK.md",
+      "migrations/README.md",
+      "migrations/manifest.json",
+      "planning/URUTAN_PENGEMBANGAN.md",
+      "planning/backlog.csv",
+      "planning/command_registry.json",
+      "planning/decisions.csv",
+      "planning/technology-lock.json",
+      "qa/bootstrap/public-cache.json",
+      "qa/m0-03/completion.json",
+      "scripts/test_public_cache.mjs",
+      "status/HANDOFF_M0_03.md",
+      "status/PROJECT_STATE.md"
+    ]
+  },
+  "checkpoint_check": {
+    "result": "PASS",
+    "M0_03": "DONE_VERIFIED",
+    "M0_04": "NOT_STARTED",
+    "api_version": "1.1.0",
+    "operations": 96,
+    "implemented_M0_03": 28,
+    "migrations": 12,
+    "cache_overlay": "PASS"
+  },
+  "commands": [
+    {
+      "command": "python scripts/verify_package.py",
+      "working_directory": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit_code": 0,
+      "output": "PASS package consistency: 9 modules, 13 tasks, 25 acceptance, 29 source groups, 21 chapters\nNOT_RUN application tests, agent runtime loading, UAT and deployment\n"
+    }
+  ],
+  "source": {
+    "git_sha": null,
+    "file_sha256": {
+      "prompts/05_FASE_M0_04.md": "38776642be782bd44abcb9697a7924651e2a8851476f23f6a3373cf31a3c15c9",
+      "README.md": "8738eac694118b741ac06a9306f97098464f1cc5aaafaee31737d8528cb9b175"
+    }
+  },
+  "application_tests_run": false,
+  "limits": [
+    "Prompt preparation only; no M0-04 implementation, migration, Docker rebuild or application test",
+    "Referenced checkpoint is source/evidence metadata; no fresh live DB/runtime check claimed",
+    "No acceptance/application status promoted by package check"
+  ]
+}

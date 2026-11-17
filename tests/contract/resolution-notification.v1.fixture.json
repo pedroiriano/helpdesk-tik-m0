@@ -1,0 +1,30 @@
+[
+  {
+    "event_id": "00000000-0000-4000-8000-000000000001",
+    "event_type": "ResolutionProposed",
+    "producer": "M3",
+    "schema_version": 1,
+    "aggregate_id": "00000000-0000-4000-8000-000000000002",
+    "aggregate_version": 5,
+    "occurred_at": "2026-11-02T03:00:00Z",
+    "correlation_id": "00000000-0000-4000-8000-000000000003",
+    "payload": {
+      "attempt_id": "00000000-0000-4000-8000-000000000004",
+      "confirmation_due_at": "2026-11-03T03:00:00Z"
+    }
+  },
+  {
+    "event_id": "00000000-0000-4000-8000-000000000005",
+    "event_type": "NotificationStored",
+    "producer": "M9",
+    "schema_version": 1,
+    "aggregate_id": "00000000-0000-4000-8000-000000000006",
+    "aggregate_version": 1,
+    "occurred_at": "2026-11-02T03:00:01Z",
+    "correlation_id": "00000000-0000-4000-8000-000000000003",
+    "payload": {
+      "ticket_id": "00000000-0000-4000-8000-000000000002",
+      "attempt_id": "00000000-0000-4000-8000-000000000004"
+    }
+  }
+]

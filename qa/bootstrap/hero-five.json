@@ -1,0 +1,71 @@
+{
+  "timestamp": "2026-11-04T06:44:59.206083+00:00",
+  "task_id": "M0-01",
+  "scope": "five_banner_navigation",
+  "result": "PASS",
+  "git_sha": null,
+  "canonical_version": "1.1",
+  "source_hashes": {
+    "frontend/landing-page.mjs": "d30a850de47eddecad03c312a6fab5355aaecfdc31762c5c3ef2fd54945e9fd3",
+    "frontend/public-ui.css": "9c9a196aca39431e0b79186686c618689e02797974dd223d90adb47c0a73da43",
+    "frontend/helpdesk-content.mjs": "130527b5ff59abde938179b6519b927f4cbb197f9e8592c32b87f06cb9063d63",
+    "frontend/public-ui.mjs": "8f1c903a0c4655f0e811b51a85a3f2f996f73f12b2a06db4fd5b03ee5db1e282",
+    "scripts/test_piui_build.py": "60eb4b59aa7092a0ff0e7d052b1e00ea64aed289280bc37fbe43f6589ff02bc2",
+    "docs/05_ATURAN_UI_UX_WEB_PUBLIK.md": "45ff1cde1165c8a46bdead35b8e5eafd9e67ed1488760474f6e1add88898269c"
+  },
+  "commands": [
+    "npm.cmd run build (frontend)",
+    "python scripts/test_piui_build.py",
+    "docker compose up -d --no-deps --build --pull never web",
+    "python scripts/smoke_local.py"
+  ],
+  "browser": [
+    {
+      "viewport": [
+        1440,
+        900
+      ],
+      "hero_height": 900,
+      "cta_gap": 166.29,
+      "alignment_delta": 0,
+      "banners": 5,
+      "overflow": false,
+      "progress_bar": false,
+      "separator_border": "0px"
+    },
+    {
+      "viewport": [
+        1280,
+        600
+      ],
+      "hero_height": 600,
+      "cta_gap": 79.86,
+      "alignment_delta": 0,
+      "overflow": false
+    },
+    {
+      "viewport": [
+        375,
+        667
+      ],
+      "hero_height": 667.3334,
+      "cta_gap": 21.67,
+      "alignment_delta": 0,
+      "overflow": false,
+      "counter_fits": true,
+      "active_fifth_inside_rail": true
+    }
+  ],
+  "interactions": [
+    "Click fifth selects it",
+    "Next from fifth wraps to 01",
+    "Home/End reach first/fifth",
+    "Pause button toggles aria-pressed and stops autoplay",
+    "Mobile rail follows selected banner"
+  ],
+  "screenshots": {
+    "qa/bootstrap/hero-five-desktop.png": "b685627584b00b933b3e655f3ad13f6a14c5e5142b0fb8141f20d31036d42f72",
+    "qa/bootstrap/hero-five-mobile.png": "1e8c917cabf5e9fccd29ada705d93ce45c9707651509d51e7e39f169347a8811"
+  },
+  "limits": "Representative local browser checks. UAT not run."
+}

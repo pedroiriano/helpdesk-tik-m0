@@ -1,0 +1,13 @@
+# ADR 0007 — Fakta tiket dan proyeksi penugasan
+
+M3 memiliki state, verification, episode, assignee dan history. Dispatch dan reassign memanggil M5 untuk membaca kelayakan sebelum membuka transaksi M3. Transaksi M3 memeriksa versi, state dan organisasi yang sama dengan konteks izin. Commit mencakup tiket, history, audit, receipt serta event. Perubahan roster dan mandat diperiksa ulang sebelum transaksi M3. Selang antara pemeriksaan lintas owner dan commit tetap ada karena tidak ada transaksi lintas owner.
+
+M5 menerima snapshot TicketStateChanged. Bila snapshot memuat fakta dispatch, M5 menyimpan provenance proposal dan proyeksi bersama inbox. Snapshot lama dapat menambah histori proposal yang sebelumnya belum diterima, tetapi tidak menurunkan versi proyeksi. Delivery ACK sesudah commit. Deduplikasi mengikat event ID, versi, aggregate dan digest. AssignmentChanged tetap menjadi event intent untuk notifikasi M9.
+
+Pemilihan kandidat menggunakan routing per tier dan tim aktif. Roster harus berada pada rentang [available_from, available_until) dan memenuhi seluruh skill. Identitas teknisi dan mandat baca/resolve di OPD diperiksa melalui M1. Urutan adalah jumlah tiket aktif pada proyeksi OPD, kemudian ID subjek dan ID roster. Angka adalah estimasi dari event yang telah diterima. UI menunjukkan waktu snapshot terakhir. Manual berarti koordinator perlu meninjau master atau memilih tingkat lain yang memenuhi syarat.
+
+Tiket lama yang OPEN dan VERIFIED dapat masuk antrean disposisi untuk kompatibilitas. Mutasi baru selalu menghasilkan TRIAGED pada verify. Data verifikasi lama tanpa keputusan terpisah tetap tersedia melalui histori tanpa merekonstruksi priority dan confidence. Proyeksi lama tanpa organisasi tidak dihitung sebagai beban OPD sampai snapshot berizin diterima. Riwayat dan rekaman lama tetap tersimpan.
+
+Minta informasi tidak menambahkan pause SLA otomatis. Pelengkapan informasi masuk OPEN dan menandai PENDING sehingga operator memeriksa kembali. START memerlukan teknisi yang benar-benar ditugaskan. Reject resolusi mempertahankan episode dan kembali ke IN_PROGRESS selama window konfirmasi. Reopen lab diizinkan sampai tujuh hari kalender setelah close dan mencatat relasi episode. Kebijakan ini hanya aktif pada mode sintetis sambil menunggu DEC-M05. Waktu diterima awal dipertahankan. Perhitungan ulang target SLA dari keputusan final adalah pekerjaan RM0-03.
+
+Baseline M4 memakai kata utuh dan versi kamus. Mapping NETWORK dan DEVICE mengarah ke CAT-INFRA, APPLICATION ke CAT-APTIKA bila kategori aktif tersedia di organisasi pemilik. Sinyal ambigu atau kategori tak tersedia diserahkan ke operator. Prioritas NORMAL adalah usulan lab. Digest verifikasi dihasilkan server dari fakta tiket, usulan awal dan keputusan saat verify.

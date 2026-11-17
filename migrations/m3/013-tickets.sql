@@ -1,0 +1,20 @@
+-- M0-04 additive operational intake; historical 001-012 remain immutable.
+ALTER TABLE intake.tickets ADD COLUMN answers jsonb NOT NULL DEFAULT '{}';
+ALTER TABLE intake.tickets ADD COLUMN service_snapshot jsonb NOT NULL DEFAULT '{}';
+ALTER TABLE intake.tickets ADD COLUMN classification_snapshot jsonb NOT NULL DEFAULT '{}';
+ALTER TABLE intake.tickets ADD COLUMN resolution_due_at timestamptz;
+ALTER TABLE intake.tickets ADD COLUMN calendar_version text NOT NULL DEFAULT 'CAL-1-LAB-v1';
+ALTER TABLE intake.attachments ADD COLUMN display_name text NOT NULL DEFAULT 'lampiran';
+ALTER TABLE intake.attachments ADD COLUMN audience text NOT NULL DEFAULT 'REQUESTER' CHECK(audience IN ('REQUESTER','INTERNAL'));
+ALTER TABLE intake.attachments ADD COLUMN scan_detail text NOT NULL DEFAULT 'PENDING';
+CREATE TABLE intake.tracking_sessions(id uuid PRIMARY KEY,capability_id uuid NOT NULL REFERENCES intake.guest_capabilities(id),token_hash bytea NOT NULL UNIQUE CHECK(octet_length(token_hash)=32),csrf_hash bytea NOT NULL CHECK(octet_length(csrf_hash)=32),expires_at timestamptz NOT NULL,revoked_at timestamptz);
+GRANT SELECT,INSERT,UPDATE ON intake.tracking_sessions TO helpdesk_m3;
+CREATE TABLE intake.domain_version(singleton boolean PRIMARY KEY DEFAULT true CHECK(singleton),version integer NOT NULL CHECK(version=4));
+INSERT INTO intake.domain_version VALUES(true,4);
+GRANT SELECT ON intake.domain_version TO helpdesk_m3;
+CREATE INDEX ON intake.tickets(id,requester_id);
+CREATE INDEX ON intake.attachments(ticket_id,audience,id);
+CREATE INDEX ON intake.tracking_sessions(token_hash) WHERE revoked_at IS NULL;
+REVOKE ALL ON intake.tracking_sessions,intake.domain_version FROM PUBLIC;
+ALTER TABLE intake.outbox_delivery ADD COLUMN lease_token uuid;
+ALTER TABLE intake.outbox_delivery ADD COLUMN next_attempt_at timestamptz NOT NULL DEFAULT now();

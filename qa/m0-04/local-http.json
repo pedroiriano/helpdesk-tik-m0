@@ -1,0 +1,50 @@
+{
+  "timestamp": "2026-11-05T06:31:41.351249+00:00",
+  "scope": "live loopback synthetic HTTP/API and restart only; NOT browser UI/UAT",
+  "command": "python scripts/smoke_m0_04_local.py --allow-lab-writes --restart-proof",
+  "checks": [
+    {
+      "name": "authenticated_create_and_same_intent_replay",
+      "result": "PASS"
+    },
+    {
+      "name": "cross_user_ASN_self_scope_and_config_admin_denied_operator_allowed",
+      "result": "PASS"
+    },
+    {
+      "name": "comment_internal_note_projection_and_version",
+      "result": "PASS"
+    },
+    {
+      "name": "private_upload_real_scan_clean_download_and_scope",
+      "result": "PASS"
+    },
+    {
+      "name": "guest_capability_exchange_and_ticket_scope",
+      "result": "PASS"
+    },
+    {
+      "name": "same_app_restart_persists_account_tracking_ticket_comments_and_private_blob",
+      "result": "PASS"
+    },
+    {
+      "name": "guest_key_revocation_live",
+      "result": "PASS"
+    }
+  ],
+  "result": "PASS",
+  "credentials_persisted": false,
+  "data_impact": {
+    "public_ticket": "fd7b8466-603c-4b9d-b3bd-850a7b4a5bf9",
+    "guest_ticket": "93032fe4-56f3-4465-91e6-9a40714f765f",
+    "guest_capability_revoked": true,
+    "attachment_id": "699e7e75-9d55-4159-a160-bb713dd4c2f6",
+    "public_ticket_version": 4,
+    "existing_data_reset": false
+  },
+  "fixture_sha256": "efba66980fa52866c1d8c41ca43e6fec2a34bfc5420791bafddbb821f2da6511",
+  "limits": [
+    "HTTP proof does not replace browser desktop/mobile/keyboard acceptance",
+    "Synthetic tickets/attachment retained for review; no purge/production data or notification send"
+  ]
+}

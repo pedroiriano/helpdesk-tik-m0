@@ -1,0 +1,64 @@
+{
+  "timestamp": "2026-11-06T05:14:41.604514+00:00",
+  "scope": "live loopback synthetic HTTP/API M0-07 vendor case, pause SLA, cross-OPD handoff, revocation, and escalation",
+  "command": "python scripts/smoke_m0_07_local.py --allow-lab-writes",
+  "checks": [
+    {
+      "name": "ticket_created",
+      "detail": "id=6d610a9b-62ca-4206-b45d-7dcc43ebcebb",
+      "result": "PASS"
+    },
+    {
+      "name": "verified_and_dispatched",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "vendor_case_recorded",
+      "detail": "version=4",
+      "result": "PASS"
+    },
+    {
+      "name": "authorized_pause_approved",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "sla_gross_vs_net_checked",
+      "detail": "gross=0 net=0",
+      "result": "PASS"
+    },
+    {
+      "name": "handoff_requested",
+      "detail": "handoff_id=c273f985-2362-434b-9a09-9ed763782144",
+      "result": "PASS"
+    },
+    {
+      "name": "handoff_accepted",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "origin_technician_access_revoked",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "target_opd_ownership_verified",
+      "detail": "",
+      "result": "PASS"
+    },
+    {
+      "name": "escalation_async_accepted_202",
+      "detail": "operation_id=30a1f8fd-64fe-4eca-8cf2-6975fa9a7ecf location=/api/v1/operations/30a1f8fd-64fe-4eca-8cf2-6975fa9a7ecf",
+      "result": "PASS"
+    },
+    {
+      "name": "async_operation_read_verified",
+      "detail": "",
+      "result": "PASS"
+    }
+  ],
+  "result": "PASS",
+  "summary": "All 11 M0-07 live loopback checks passed successfully."
+}

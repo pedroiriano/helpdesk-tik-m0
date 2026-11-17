@@ -1,0 +1,9 @@
+[
+  {"name":"Friday to Monday", "start":"2026-11-06T08:30:00Z", "minutes":120, "expected":"2026-11-09T02:30:00Z"},
+  {"name":"Monday holiday", "start":"2026-11-06T08:30:00Z", "minutes":120, "holidays":["2026-11-09"], "expected":"2026-11-10T02:30:00Z"},
+  {"name":"approved pause", "start":"2026-11-06T08:30:00Z", "minutes":120, "pauses":[["2026-11-06T08:45:00Z","2026-11-09T03:00:00Z"]], "expected":"2026-11-09T04:45:00Z"},
+  {"name":"overlap counted once", "start":"2026-11-06T08:30:00Z", "minutes":120, "pauses":[["2026-11-06T08:45:00Z","2026-11-09T02:00:00Z"],["2026-11-09T01:00:00Z","2026-11-09T03:00:00Z"]], "expected":"2026-11-09T04:45:00Z"},
+  {"name":"exact open", "start":"2026-11-09T01:00:00Z", "minutes":60, "expected":"2026-11-09T02:00:00Z"},
+  {"name":"exact close advances", "start":"2026-11-06T09:00:00Z", "minutes":60, "expected":"2026-11-09T02:00:00Z"},
+  {"name":"weekend advances", "start":"2026-11-07T01:00:00Z", "minutes":60, "expected":"2026-11-09T02:00:00Z"}
+]

@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-11-13T00:07:58.946492+00:00",
+  "task_id": "RM0-04",
+  "sources": {
+    "frontend/public-ui.css": "515aa6089e94dfea91e3d574d875732fec4febd7baa4b4dd4b113fa9e1829bd0",
+    "frontend/public-pages.css": "ec458afc5113d48aca582ade113fee7d653c510f64a1f7d38db96819678e98f8",
+    "frontend/business.css": "3c19225ece63942254b13926c7800c2630544894960e21a44fe85ab7cc1daddb",
+    "frontend/business-pages.mjs": "45775d0008e5dc4165ddddac16bc26d98586b52dd99123700dc447f8b109d709",
+    "frontend/src/features/m0-03.ts": "79fd71766508be325850b4fe635039b08fb998f0ff86dff8cd1c51b7b199645f",
+    "docs/05_ATURAN_UI_UX_WEB_PUBLIK.md": "3aadc5f8a787b24943cee3fc52fdd0ee80c643fc82179a5521591ff10a0c3b3b",
+    "scripts/test_piui_build.py": "1e63e00183ecd114e2404956af99204de1eae6f0af7e96144ce3f3784fc46641"
+  },
+  "before": {
+    "viewport": [
+      400,
+      498
+    ],
+    "access_columns": 3,
+    "access_card_width": 106.89,
+    "input_tabs_height": 26,
+    "public_pager_height": 36,
+    "admin_quick_action_height": 34,
+    "menu_320": {
+      "brand_wraps": true,
+      "duplicate_menu_caption": true
+    }
+  }
+}

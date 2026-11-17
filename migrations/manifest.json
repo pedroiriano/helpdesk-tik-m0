@@ -1,0 +1,249 @@
+{
+  "migrations": [
+    {
+      "id": "001",
+      "path": "infra/postgres/001-foundation.sql",
+      "owner": "lab migrator (postgres)",
+      "scope": "schema, runtime roles and read-only version markers M1-M9",
+      "sha256": "9d87f326cbec57bdf8950337bb7646a8fef04ccfcfba06b3491f2d7cecbfb3b9"
+    },
+    {
+      "id": "002",
+      "path": "migrations/m1/002-contracts.sql",
+      "owner": "M1",
+      "scope": "business contract tables, local references, idempotency and durable event metadata",
+      "sha256": "22b20ee7aed43f9f65f3495ecf994e7c17fde3fc8b61573d1556d0e24b5cf230"
+    },
+    {
+      "id": "003",
+      "path": "migrations/m2/003-contracts.sql",
+      "owner": "M2",
+      "scope": "business contract tables, local references, idempotency and durable event metadata",
+      "sha256": "9c60061768b0e99975c7ce1cfb3a1f511bf1dd0b59c460db720bbd2d0945d3d1"
+    },
+    {
+      "id": "004",
+      "path": "migrations/m3/004-contracts.sql",
+      "owner": "M3",
+      "scope": "business contract tables, local references, idempotency and durable event metadata",
+      "sha256": "2309199a00d065973050bb5ee6e74e1ca311b48d005f6a5170232cf30ec9ce8f"
+    },
+    {
+      "id": "005",
+      "path": "migrations/m4/005-contracts.sql",
+      "owner": "M4",
+      "scope": "business contract tables, local references, idempotency and durable event metadata",
+      "sha256": "119ab08d6916e51a6f055f5666a1fd2eb41fb66f73cc2d1a530770a9e4b4cfaf"
+    },
+    {
+      "id": "006",
+      "path": "migrations/m5/006-contracts.sql",
+      "owner": "M5",
+      "scope": "business contract tables, local references, idempotency and durable event metadata",
+      "sha256": "3e418c239b167e48f0d202bab5205a9f3dd6fb5d3235dd02870f2ca90eeaa191"
+    },
+    {
+      "id": "007",
+      "path": "migrations/m6/007-contracts.sql",
+      "owner": "M6",
+      "scope": "business contract tables, local references, idempotency and durable event metadata",
+      "sha256": "26cd015b67eeeb55d14d73928947d1883475978b961ae32919124d5c599b0f69"
+    },
+    {
+      "id": "008",
+      "path": "migrations/m7/008-contracts.sql",
+      "owner": "M7",
+      "scope": "business contract tables, local references, idempotency and durable event metadata",
+      "sha256": "e7a0a7c1ef3a44eb619619140d1bc564e8bf7f0033d5efec0c4907b698d87335"
+    },
+    {
+      "id": "009",
+      "path": "migrations/m8/009-contracts.sql",
+      "owner": "M8",
+      "scope": "business contract tables, local references, idempotency and durable event metadata",
+      "sha256": "fddca939a3849bcf962df7008b97ff85c78be631207ba69e5e8d0eb0109967f1"
+    },
+    {
+      "id": "010",
+      "path": "migrations/m9/010-contracts.sql",
+      "owner": "M9",
+      "scope": "business contract tables, local references, idempotency and durable event metadata",
+      "sha256": "dbb65ccc1c84c0b4081f5475bb81ed6a1e6df24eb9d8fa296d29a3940460b867"
+    },
+    {
+      "id": "011",
+      "path": "migrations/m1/011-identity.sql",
+      "owner": "M1",
+      "scope": "M0-03 metadata, immutable versions and domain readiness",
+      "sha256": "115a31a4192a61a7112f5e83014c4be97b4cc59df005bedc3eabd5cb9ade519a"
+    },
+    {
+      "id": "012",
+      "path": "migrations/m2/012-catalog.sql",
+      "owner": "M2",
+      "scope": "M0-03 metadata, immutable versions and domain readiness",
+      "sha256": "3fee6d052bc20b9d9900b2af9330bc7adf6b546a7be58948d795ae17349e6b17"
+    },
+    {
+      "id": "013",
+      "path": "migrations/m3/013-tickets.sql",
+      "owner": "M3",
+      "scope": "M0-04 owner-scoped ticket, lease, scan queue and readiness metadata",
+      "sha256": "fcc0f0ee6d4f9e3f7b3e3477585f6fec0ef1fd18c7e95577622a6e89cc1fca30"
+    },
+    {
+      "id": "014",
+      "path": "migrations/m1/014-delivery.sql",
+      "owner": "M1",
+      "scope": "M0-04 owner-scoped ticket, lease, scan queue and readiness metadata",
+      "sha256": "22ef01d50c56a7e71edde29273ba3a7a5a93480e760d17d0ca282014d02c4cdc"
+    },
+    {
+      "id": "015",
+      "path": "migrations/m2/015-delivery.sql",
+      "owner": "M2",
+      "scope": "M0-04 owner-scoped ticket, lease, scan queue and readiness metadata",
+      "sha256": "96a281df6cc4693fd7f7775584675942436fce92b6576846c9269212fba46140"
+    },
+    {
+      "id": "016",
+      "path": "migrations/m9/016-delivery.sql",
+      "owner": "M9",
+      "scope": "M0-04 owner-scoped ticket, lease, scan queue and readiness metadata",
+      "sha256": "d930a7d2f9908b7366de738c3759f951cf9edaf1ffb897af15b3ed99dbb78b7a"
+    },
+    {
+      "id": "017",
+      "path": "migrations/m3/017-scan-queue.sql",
+      "owner": "M3",
+      "scope": "M0-04 owner-scoped ticket, lease, scan queue and readiness metadata",
+      "sha256": "6138d0ecd467807696b2d3347aefd192b80ccb09af617d3ccab38bb353a7c765"
+    },
+    {
+      "id": "018",
+      "path": "migrations/m3/018-draft-grants.sql",
+      "owner": "M3",
+      "scope": "M0-08 draft permissions for intake and knowledge",
+      "sha256": "4d3af0028e879526ab84d27c01774142d0526c9538b084aee9b3f0fd7ba3acae"
+    },
+    {
+      "id": "019",
+      "path": "migrations/m1/019-account-credentials.sql",
+      "owner": "M1",
+      "scope": "RM0-01 additive credentials and scoped media approvals",
+      "sha256": "1ebe38ea9e11782cfed89ee64c17dc33dfe5ae15579434e7938742dcc9947d29"
+    },
+    {
+      "id": "020",
+      "path": "migrations/m8/020-scoped-media-approval.sql",
+      "owner": "M8",
+      "scope": "RM0-01 additive credentials and scoped media approvals",
+      "sha256": "8f37b8739c0479e37308ab213aeae5bd61ec36d192f168567a3863c2e190effa"
+    },
+    {
+      "id": "021",
+      "path": "migrations/m3/021-lifecycle.sql",
+      "owner": "M3",
+      "scope": "RM0-02 lifecycle and linked reopen episodes",
+      "sha256": "63fb1ef5a7088e0015466979badb8b68ecb906f7a2ee939c862840479562308f"
+    },
+    {
+      "id": "022",
+      "path": "migrations/m5/022-assignment-projection.sql",
+      "owner": "M5",
+      "scope": "RM0-02 scoped durable assignment projection",
+      "sha256": "86343b718729fe4020aa73533f9afebc9c5cd012149381106ac0d1072bbd7c07"
+    },
+    {
+      "id": "023",
+      "path": "migrations/m7/023-scheduler-recovery.sql",
+      "owner": "M7",
+      "scope": "RM0-03 auto-close lease recovery, retries and correlation",
+      "sha256": "0159223a8b97ff2eb02b786c17b97d6c147503c3da12dd6f4d3b8a418127d1ad"
+    },
+    {
+      "id": "024",
+      "path": "migrations/m6/024-sla-policy.sql",
+      "owner": "M6",
+      "scope": "RM0-03 calendars and priority-specific policy targets",
+      "sha256": "0540fcdf7673009f26bd3930b89889eee37b685acf4f2ba6216ea2d085c45c18"
+    },
+    {
+      "id": "025",
+      "path": "migrations/m3/025-sla-snapshot.sql",
+      "owner": "M3",
+      "scope": "RM0-03 durable policy snapshot, response and episode timestamps",
+      "sha256": "4724cee502830cb69dedd4b8deefe7941bb48a04c7ea3bdfea4abae252e49d12"
+    },
+    {
+      "id": "026",
+      "path": "migrations/m6/026-clock-projection.sql",
+      "owner": "M6",
+      "scope": "RM0-03 projection snapshot at the source clock cutoff",
+      "sha256": "03dfc98e3515c636be5057c8be150dde37377fd88b2bc496f344b75371e61cd8"
+    },
+    {
+      "id": "027",
+      "path": "migrations/m9/027-report-snapshots.sql",
+      "owner": "M9",
+      "scope": "RM0-03 episode facts and bounded immutable report export",
+      "sha256": "304b1988e4cb1c0f74c375d774d728b531698e7aed6bf53a056739b39236eee8"
+    },
+    {
+      "id": "028",
+      "path": "migrations/m1/028-operation-receipts.sql",
+      "owner": "M1",
+      "scope": "RM0-03 scoped approval and execution receipts",
+      "sha256": "4720acfb5a617fd8969044da8fea47c36f13a1a239cb56377b54edebeda17d26"
+    },
+    {
+      "id": "029",
+      "path": "migrations/m7/029-scheduler-replay.sql",
+      "owner": "M7",
+      "scope": "RM0-03 scoped operator replay and audit",
+      "sha256": "ec191955c410b7c4a2ae083d4ea1db10ec34fede13d66d3011403c2e948b19ff"
+    },
+    {
+      "id": "030",
+      "path": "migrations/m9/030-sink-challenges.sql",
+      "owner": "M9",
+      "scope": "RM0-03 synthetic sink verification challenges",
+      "sha256": "68cc7900faf259137cc2af2c7a6af146d26792a7fc8d2c880e4538ad12b132b1"
+    },
+    {
+      "id": "031",
+      "path": "migrations/m1/031-reporting-directory.sql",
+      "owner": "M1",
+      "scope": "Scoped organization and division reporting directory",
+      "sha256": "69df3aedf5d6192ef5d22f0ff0b9f5c108dc0a98e98c3c26399d97eba325d82f"
+    },
+    {
+      "id": "032",
+      "path": "migrations/m3/032-report-context.sql",
+      "owner": "M3",
+      "scope": "Immutable reporting and reported category snapshots",
+      "sha256": "cea481d4296bc5a9523470e417d0fd4df7ee2137a32b9eed4181fc9e9414bf28"
+    },
+    {
+      "id": "033",
+      "path": "migrations/m5/033-category-routing.sql",
+      "owner": "M5",
+      "scope": "Versioned category routing overrides",
+      "sha256": "ec44b52aafbda1e5dde1d5d1b9027b5eb90ceb7415056f9e04b5e7e4dbc6aef9"
+    },
+    {
+      "id": "034",
+      "path": "migrations/m1/034-role-module-policy.sql",
+      "owner": "M1",
+      "scope": "role-module-policy",
+      "sha256": "0746c122639b7587da328eba5683547ce3c3ce7a0bcf005c10983c8e2ec55df6"
+    },
+    {
+      "id": "035",
+      "path": "migrations/m8/035-hero-publication.sql",
+      "owner": "M8",
+      "scope": "hero-publication",
+      "sha256": "ea2ef213bb86b19b3975b5b0f2279633abf70c38abcff4867055b768c563d45f"
+    }
+  ]
+}

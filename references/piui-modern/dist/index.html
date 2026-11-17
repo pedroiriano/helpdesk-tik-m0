@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>COURTSPEC — Elite Basketball Biomechanics, Scouting & Court Telemetry Studio</title>
+  <meta name="description" content="Next-generation basketball performance studio. Optical telemetry, shooting arc analytics, ISO deceleration physics, and biometric combine scouting.">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0A0A0C">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <link rel="canonical" href="https://courtspec.io/">
+
+  <!-- Open Graph & Twitter Cards -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="COURTSPEC — Elite Basketball Biomechanics & Court Telemetry">
+  <meta property="og:description" content="Pure native basketball performance studio. Zero-dependency optical telemetry and shooting biomechanics.">
+  <meta property="og:url" content="https://courtspec.io/">
+  <meta property="og:site_name" content="COURTSPEC">
+  <meta property="og:image" content="https://courtspec.io/assets/images/courtspec-social.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="COURTSPEC — Elite Basketball Biomechanics &amp; Court Telemetry">
+  <meta name="twitter:description" content="Native basketball performance studio for optical telemetry and shooting biomechanics.">
+  <meta name="twitter:image" content="https://courtspec.io/assets/images/courtspec-social.jpg">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://courtspec.io/#organization",
+        "name": "COURTSPEC",
+        "url": "https://courtspec.io/",
+        "email": "scout@courtspec.io",
+        "description": "Basketball biomechanics, optical telemetry, and coaching workflow studio."
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://courtspec.io/#website",
+        "url": "https://courtspec.io/",
+        "name": "COURTSPEC",
+        "publisher": { "@id": "https://courtspec.io/#organization" }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How does CourtSpec measure shooting arc without physical markers?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "CourtSpec uses multi-view computer vision calibrated to standard court and rim geometry to estimate ball flight, entry angle, and release mechanics."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can we integrate CourtSpec with our gym's existing court cameras?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The workflow is designed around standard camera feeds, subject to deployment-specific calibration, security, and performance validation."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Are biometric combine scouting reports compliant with athlete privacy standards?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "This static demonstration stores no athlete telemetry. Production deployments require documented consent, retention, access, encryption, and deletion controls."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <!-- Favicon & Web Manifest -->
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
+  <link rel="manifest" href="manifest.webmanifest">
+
+  <!-- Native CSS Layer Architecture -->
+  <link rel="stylesheet" href="css/main.css?v=4.3">
+</head>
+<body data-nav-after-hero>
+  <!-- WCAG 2.2 Level AA Skip Link -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Topbar Glide Navigation -->
+  <header id="vy-topbar_glide_frame">
+    <div id="vy-topbar_glide">
+      <a class="vy-hdr-glyph" href="contact.html" aria-label="Contact Court Studio">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="2.5" y="5" width="19" height="14" rx="0"></rect>
+          <path d="M2.5 7.5 12 14l9.5-6.5"></path>
+        </svg>
+      </a>
+
+      <a class="vy-hdr-brand" href="index.html#top" aria-label="Courtspec Home">COURTSPEC</a>
+
+      <button class="vy-hdr-glyph vy-hdr-burger" id="vy-topbar-glide-panel-btn" type="button"
+              aria-label="Open navigation menu" aria-expanded="false" aria-controls="vy-topbar-glide-flyout">
+        <svg class="vy-hdr-bun-svg" viewBox="0 0 24 24" aria-hidden="true">
+          <line class="vy-hdr-bun-l1" x1="5" y1="9" x2="19" y2="9"></line>
+          <line class="vy-hdr-bun-l2" x1="5" y1="15" x2="19" y2="15"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile-First Flyout Drawer -->
+    <nav class="vy-hdr-flyout" id="vy-topbar-glide-flyout" aria-hidden="true" aria-label="Site Navigation">
+      <div class="vy-hdr-panel-deck">
+        <div class="vy-hdr-panel-strips">
+          <a class="vy-hdr-reel-strip" href="index.html#top">
+            <span class="vy-hdr-reel-strip__seq">( Start )</span>
+            <span class="vy-hdr-reel-strip__chip" aria-hidden="true">
+              <img decoding="async" src="assets/images/thumbs/nav-ball-01.webp" width="240" height="135" alt="" loading="lazy">
+            </span>
+            <span class="vy-hdr-reel-strip__head">HOME</span>
+          </a>
+
+          <a class="vy-hdr-reel-strip" href="gallery.html">
+            <span class="vy-hdr-reel-strip__seq">( Telemetry )</span>
+            <span class="vy-hdr-reel-strip__chip" aria-hidden="true">
+              <img decoding="async" src="assets/images/thumbs/nav-ball-03.webp" width="240" height="135" alt="" loading="lazy">
+            </span>
+            <span class="vy-hdr-reel-strip__head">PLAYBOOK LOG</span>
+          </a>
+
+          <a class="vy-hdr-reel-strip" href="pricing.html">
+            <span class="vy-hdr-reel-strip__seq">( Access )</span>
+            <span class="vy-hdr-reel-strip__chip" aria-hidden="true">
+              <img decoding="async" src="assets/images/thumbs/nav-ball-02.webp" width="240" height="135" alt="" loading="lazy">
+            </span>
+            <span class="vy-hdr-reel-strip__head">REPS &amp; TIERS</span>
+          </a>
+
+          <a class="vy-hdr-reel-strip" href="about.html">
+            <span class="vy-hdr-reel-strip__seq">( Studio )</span>
+            <span class="vy-hdr-reel-strip__chip" aria-hidden="true">
+              <img decoding="async" src="assets/images/thumbs/nav-ball-04.webp" width="240" height="135" alt="" loading="lazy">
+            </span>
+            <span class="vy-hdr-reel-strip__head">MANIFESTO</span>
+          </a>
+
+          <a class="vy-hdr-reel-strip" href="contact.html">
+            <span class="vy-hdr-reel-strip__seq">( Scout Inquiries )</span>
+            <span class="vy-hdr-reel-strip__chip" aria-hidden="true">
+              <img decoding="async" src="assets/images/thumbs/nav-ball-01.webp" width="240" height="135" alt="" loading="lazy">
+            </span>
+            <span class="vy-hdr-reel-strip__head">CONTACT</span>
+          </a>
+
+          <a class="vy-hdr-reel-strip" href="index.html#faq">
+            <span class="vy-hdr-reel-strip__seq">( Field Guide )</span>
+            <span class="vy-hdr-reel-strip__chip" aria-hidden="true">
+              <img decoding="async" src="assets/images/thumbs/nav-ball-02.webp" width="240" height="135" alt="" loading="lazy">
+            </span>
+            <span class="vy-hdr-reel-strip__head">FAQ</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content Landmark -->
+  <main id="main-content">
+
+    <!-- 1. Full-Viewport Cinematic Basketball Stage -->
+    <section class="vy-ref-hero" id="top" aria-labelledby="hero-title">
+      <div class="vy-stage">
+        <div class="vy-stage__view">
+          <img class="vy-stage__img" src="assets/images/optimized/ball-01.webp" srcset="assets/images/thumbs/card-ball-01.webp 640w, assets/images/optimized/ball-01.webp 896w" sizes="100vw" width="896" height="1200"
+               fetchpriority="high" alt="Athletic basketball player executing high-apex tomahawk dunk on asphalt streetball court">
+        </div>
+
+        <div class="vy-stage__scrim" aria-hidden="true"></div>
+        <div class="vy-ref-hero__display">
+          <h1 class="vy-ref-hero__title" id="hero-title">
+            <span>COURT</span><span>SPEC</span>
+          </h1>
+          <span class="vy-ref-hero__descriptor">( Basketball Intelligence Studio )</span>
+          <p class="vy-ref-hero__mobile-value">Frame-linked court telemetry for clearer coaching decisions.</p>
+          <a class="vy-ref-hero__mobile-cta" href="gallery.html">Open playbook <span aria-hidden="true">→</span></a>
+        </div>
+
+        <div class="vy-ref-hero__paths" aria-label="Performance pipelines">
+          <a href="#pipeline-shooting">Shooting</a>
+          <a href="#pipeline-handles">Handles</a>
+          <a href="#pipeline-finishing">Finishing</a>
+          <a href="#pipeline-vision">Court vision</a>
+        </div>
+
+        <div class="vy-ref-hero__spec" aria-label="Capture specifications">
+          <span>Target 480 FPS</span>
+          <span>4 pipelines</span>
+          <span>Demo 0.12s shift</span>
+          <span>Player owned</span>
+        </div>
+
+        <span class="vy-ref-hero__rail vy-ref-hero__rail--left" aria-hidden="true">&copy; 2026</span>
+        <span class="vy-ref-hero__rail vy-ref-hero__rail--right" aria-hidden="true">V3 ENGINE</span>
+
+        <div class="vy-stage__header">
+          <div class="vy-stage__tally">
+            <button class="vy-stage__nav-btn" id="vy-hero-prev" type="button" aria-label="Previous play frame">&larr;</button>
+            <span class="vy-stage__tally-readout">
+              <span id="vy-hero-tally-cur">01</span> // <span>04</span>
+            </span>
+            <button class="vy-stage__nav-btn" id="vy-hero-next" type="button" aria-label="Next play frame">&rarr;</button>
+            <button class="vy-stage__nav-btn" id="vy-hero-autoplay" type="button"
+                    aria-label="Pause automatic slides" aria-pressed="false">&#10074;&#10074;</button>
+          </div>
+
+          <div class="vy-stage__bar" aria-hidden="true">
+            <div class="vy-stage__bar-fill u-progress-quarter"></div>
+          </div>
+
+          <div class="vy-stage__title-tag">
+            <span>( APEX FLUSH DUNK REPLAY )</span>
+          </div>
+        </div>
+
+        <div class="vy-stage__control-bar">
+          <div class="vy-stage__tabs" role="tablist" aria-label="Hero Telemetry Replays">
+            <button class="vy-stage__tab" type="button" role="tab" aria-selected="true"
+                    data-img="assets/images/optimized/ball-01.webp" data-width="896" data-height="1200"
+                    data-alt="Athletic basketball player executing high-apex tomahawk dunk on asphalt court"
+                    data-model="rim-apex-v4" data-steps="0.88s Hang" data-seed="882194-FLUSH" data-size="42.5 in Vert"
+                    data-title="( APEX FLUSH DUNK REPLAY )"
+                    data-detail="details/plays/apex-flush.html"
+                    data-prompt="High-speed optical camera tracking athletic guard rising above rim for two-handed tomahawk jam, explosive vertical lift, chalk dust explosion.">
+              <img decoding="async" loading="lazy" src="assets/images/thumbs/nav-ball-01.webp" width="240" height="135" alt="" aria-hidden="true">
+              <span>01 &middot; Rim Apex</span>
+              <span class="vy-stage__tab-indicator" aria-hidden="true"></span>
+            </button>
+
+            <button class="vy-stage__tab" type="button" role="tab" aria-selected="false" tabindex="-1"
+                    data-img="assets/images/optimized/ball-02.webp" data-width="1376" data-height="768"
+                    data-alt="Explosive low crossover dribble shifting defender balance on asphalt"
+                    data-model="iso-track-v2" data-steps="18.4 mph" data-seed="440182-SHAMMGOD" data-size="0.12s Shift"
+                    data-title="( LOW CROSSOVER SEPARATION )"
+                    data-detail="details/plays/crossover-burst.html"
+                    data-prompt="Outdoor asphalt streetball isolation, lethal low crossover dribble shifting defender balance, dynamic rim spotlight.">
+              <img decoding="async" src="assets/images/thumbs/nav-ball-02.webp" width="240" height="135" alt="" aria-hidden="true" loading="lazy">
+              <span>02 &middot; Crossover Iso</span>
+              <span class="vy-stage__tab-indicator" aria-hidden="true"></span>
+            </button>
+
+            <button class="vy-stage__tab" type="button" role="tab" aria-selected="false" tabindex="-1"
+                    data-img="assets/images/optimized/ball-03.webp" data-width="1376" data-height="768"
+                    data-alt="Shooting guard releasing high-arc jumpshot with perfect follow-through"
+                    data-model="shot-engine-v3" data-steps="2,400 RPM" data-seed="771092-SWISH" data-size="45.2&deg; Arc"
+                    data-title="( JUMPSHOT ARC DYNAMICS )"
+                    data-detail="details/plays/arena-three.html"
+                    data-prompt="Pure shooting guard elevating in dark arena, perfect goose-neck wrist follow-through, high-arc trajectory towards basket.">
+              <img decoding="async" src="assets/images/thumbs/nav-ball-03.webp" width="240" height="135" alt="" aria-hidden="true" loading="lazy">
+              <span>03 &middot; Arc 45&deg; Release</span>
+              <span class="vy-stage__tab-indicator" aria-hidden="true"></span>
+            </button>
+
+            <button class="vy-stage__tab" type="button" role="tab" aria-selected="false" tabindex="-1"
+                    data-img="assets/images/optimized/ball-04.webp" data-width="1376" data-height="768"
+                    data-alt="High-top basketball sneakers planting with elite grip on dark polished hardwood"
+                    data-model="traction-lab-v1" data-steps="2.8G Brake" data-seed="119830-GRIP" data-size="99.4% Adherence"
+                    data-title="( HARDWOOD BRAKE PHYSICS )"
+                    data-detail="details/plays/hardwood-brake.html"
+                    data-prompt="Macro high-speed close-up of elite high-top basketball shoes planting on glossy hardwood key, stadium light reflection.">
+              <img decoding="async" src="assets/images/thumbs/nav-ball-04.webp" width="240" height="135" alt="" aria-hidden="true" loading="lazy">
+              <span>04 &middot; Hardwood Grip</span>
+              <span class="vy-stage__tab-indicator" aria-hidden="true"></span>
+            </button>
+          </div>
+
+          <div class="vy-stage__info">
+            <div class="u-flex-between-wrap">
+              <span>Pipeline: <b class="vy-stage__model u-text-primary">rim-apex-v4</b></span>
+              <span>Metric: <b class="vy-stage__steps u-text-primary">0.88s Hang</b></span>
+              <span>Telemetry ID: #<b class="vy-stage__seed u-text-primary">882194-FLUSH</b></span>
+              <span>Apex / Arc: <b class="vy-stage__size u-text-primary">42.5 in Vert</b></span>
+            </div>
+            <div class="vy-stage__prompt">
+              High-speed optical camera tracking athletic guard rising above rim for two-handed tomahawk jam, explosive vertical lift, chalk dust explosion.
+            </div>
+            <a class="vy-detail-link" id="vy-hero-detail" href="details/plays/apex-flush.html">Open active play detail</a>
+          </div>
+        </div>
+
+        <nav class="vy-quick-nav" aria-label="Quick jump">
+          <a href="#problem">Why CourtSpec</a>
+          <a href="#method">How It Works</a>
+          <a href="#gallery">Playbook</a>
+          <a href="#metrics">Performance</a>
+          <a href="#pricing">Plans</a>
+        </nav>
+      </div>
+    </section>
+
+    <!-- 2. Problem Manifesto & 4 Specialized Basketball Pipelines -->
+    <section class="vy-section vy-shell" id="problem">
+      <div class="vy-problem-manifesto">
+        <div class="vy-rise u-delay-0">
+          <span class="vy-eyebrow">( Problem ) The Modern Hoops Gap</span>
+          <h2 class="vy-h2">Traditional scouting relies on eye-test guesswork.<br>We frame measurable evidence behind every bucket.</h2>
+          <p class="vy-lede-sub">CourtSpec demonstrates how calibrated video and time-aligned sensor inputs could support review of release arcs, deceleration bursts, and vertical-apex metrics. Production accuracy, latency, and supported hardware require deployment-specific validation.</p>
+        </div>
+        <figure class="vy-problem-visual vy-rise u-delay-1">
+          <img decoding="async" src="assets/images/thumbs/card-ball-02.webp" width="640" height="357" loading="lazy"
+               alt="Basketball athlete creating separation during a measured step-back drill">
+        </figure>
+      </div>
+
+      <div class="vy-paths-grid" id="pipelines">
+        <article class="vy-path-card vy-rise u-delay-1" id="pipeline-shooting">
+          <div class="vy-path-card__head">
+            <span>( Pipeline 01 )</span>
+            <span class="u-text-cyan">SHOT-ENGINE-V3</span>
+          </div>
+          <div>
+            <h3 class="vy-path-card__title"><a class="vy-title-link" href="details/pipelines/shooting.html">Shooting Lab</a></h3>
+            <p class="vy-path-card__desc">Models launch angle, backspin, wrist-release velocity, and entry arc while preserving the source frame and known uncertainty.</p>
+          </div>
+          <div class="vy-path-card__spec">
+            <span>Demo Arc 45.2&deg;</span>
+            <span>Demo Release 0.68s</span>
+          </div>
+          <a class="vy-detail-link" href="details/pipelines/shooting.html">Explore shooting pipeline</a>
+        </article>
+
+        <article class="vy-path-card vy-rise u-delay-2" id="pipeline-handles">
+          <div class="vy-path-card__head">
+            <span>( Pipeline 02 )</span>
+            <span class="u-text-sky">ISO-TRACK-V2</span>
+          </div>
+          <div>
+            <h3 class="vy-path-card__title"><a class="vy-title-link" href="details/pipelines/handles.html">Handle &amp; Iso</a></h3>
+            <p class="vy-path-card__desc">Explores lateral deceleration, hip-drop angle, center-of-gravity shift, and change-of-pace timing as coach-reviewed signals.</p>
+          </div>
+          <div class="vy-path-card__spec">
+            <span>Demo Brake 2.8G</span>
+            <span>Demo Shift 0.12s</span>
+          </div>
+          <a class="vy-detail-link" href="details/pipelines/handles.html">Explore handles pipeline</a>
+        </article>
+
+        <article class="vy-path-card vy-rise u-delay-3" id="pipeline-finishing">
+          <div class="vy-path-card__head">
+            <span>( Pipeline 03 )</span>
+            <span class="u-text-lime">RIM-APEX-V4</span>
+          </div>
+          <div>
+            <h3 class="vy-path-card__title"><a class="vy-title-link" href="details/pipelines/finishing.html">Rim Finish &amp; Dunk</a></h3>
+            <p class="vy-path-card__desc">Explores takeoff momentum, flight duration, apex elevation, and contact absorption with frame-linked context.</p>
+          </div>
+          <div class="vy-path-card__spec">
+            <span>Demo Apex 42.5"</span>
+            <span>Demo Contact 2.4G</span>
+          </div>
+          <a class="vy-detail-link" href="details/pipelines/finishing.html">Explore finishing pipeline</a>
+        </article>
+
+        <article class="vy-path-card vy-rise u-delay-4" id="pipeline-vision">
+          <div class="vy-path-card__head">
+            <span>( Pipeline 04 )</span>
+            <span class="u-text-purple">VISION-IQ-V3</span>
+          </div>
+          <div>
+            <h3 class="vy-path-card__title"><a class="vy-title-link" href="details/pipelines/vision.html">Court Vision &amp; IQ</a></h3>
+            <p class="vy-path-card__desc">Models spatial review for pick-and-roll coverage, passing-lane vectors, and player positioning within a time-aligned possession.</p>
+          </div>
+          <div class="vy-path-card__spec">
+            <span>Proposed 3D Court Matrix</span>
+            <span>Latency Validated Locally</span>
+          </div>
+          <a class="vy-detail-link" href="details/pipelines/vision.html">Explore vision pipeline</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- 3. Reference-Led Giant Typographic Transition -->
+    <section class="vy-type-banner" aria-labelledby="pipeline-title">
+      <span class="vy-eyebrow">( System ) Evidence In, Coaching Out</span>
+      <h2 id="pipeline-title">The<br>Pipeline</h2>
+      <p>From one game-speed frame to a decision your athlete can repeat.</p>
+      <div class="vy-type-banner__telemetry" aria-label="Target pipeline characteristics">
+        <span>Frame locked</span>
+        <span>Metric traced</span>
+        <span>Retry verified</span>
+      </div>
+    </section>
+
+    <!-- 4. Evidence Workflow & Platform Targets -->
+    <section class="vy-section vy-shell" id="method">
+      <div class="vy-section-heading vy-rise u-delay-0">
+        <div>
+          <span class="vy-eyebrow">( Method ) From Film To Feedback</span>
+          <h2 class="vy-h2">A repeatable performance loop.<br>No black-box score.</h2>
+        </div>
+        <p class="vy-lede-sub">Every result is linked to the original frame, sensor sample, and coaching cue. Re-run the same drill, compare the same metric, and prove what changed.</p>
+      </div>
+
+      <ol class="vy-method-grid" aria-label="CourtSpec analysis workflow">
+        <li class="vy-method-step vy-rise u-delay-1">
+          <span class="vy-method-step__number">01</span>
+          <div><strong>Capture</strong><p>Record from a compatible phone, sideline camera, or validated high-speed combine rig.</p></div>
+        </li>
+        <li class="vy-method-step vy-rise u-delay-2">
+          <span class="vy-method-step__number">02</span>
+          <div><strong>Resolve</strong><p>Map joints, ball flight, foot pressure, and court position into one time-aligned possession.</p></div>
+        </li>
+        <li class="vy-method-step vy-rise u-delay-3">
+          <span class="vy-method-step__number">03</span>
+          <div><strong>Coach</strong><p>Translate raw movement into a precise correction athletes can understand and repeat.</p></div>
+        </li>
+        <li class="vy-method-step vy-rise u-delay-4">
+          <span class="vy-method-step__number">04</span>
+          <div><strong>Verify</strong><p>Compare the next rep against the baseline and retain the evidence trail for staff.</p></div>
+        </li>
+      </ol>
+
+      <div class="vy-assurance-grid">
+        <article class="vy-assurance-card vy-rise u-delay-1">
+          <span>01 / TRACEABLE</span>
+          <h3>Every metric keeps its source frame.</h3>
+          <p>Review exactly where a reading came from instead of trusting an unexplained composite score.</p>
+        </article>
+        <article class="vy-assurance-card vy-rise u-delay-2">
+          <span>02 / COACH-READY</span>
+          <h3>Signal first. Dashboard second.</h3>
+          <p>Critical cues are readable courtside, exportable for scouting, and structured for player development.</p>
+        </article>
+        <article class="vy-assurance-card vy-rise u-delay-3">
+          <span>03 / PLAYER-OWNED</span>
+          <h3>Portable data without hardware lock-in.</h3>
+          <p>Use standard camera feeds, retain athlete records, and move the complete history with your program.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 5. Showcase Gallery with Interactive Category Filter -->
+    <section class="vy-section vy-shell" id="gallery">
+      <div class="vy-rise u-delay-0">
+        <span class="vy-eyebrow">( Telemetry ) Hardwood Playbook Archive</span>
+        <h2 class="vy-h2">Court Performance &amp; Shot Telemetry Log</h2>
+        <p class="vy-lede-sub">Inspect game-speed shot clips and isolation breakdowns across our combine pipelines. Every play retains full biometric telemetry and reproducible coaching cues.</p>
+      </div>
+
+      <!-- Filter Controls -->
+      <div class="vy-groups vy-rise u-delay-1" role="group" aria-label="Filter court plays">
+        <button class="vy-filter" type="button" data-filter="all" aria-pressed="true">All Plays</button>
+        <button class="vy-filter" type="button" data-filter="finishing" aria-pressed="false">Finishing</button>
+        <button class="vy-filter" type="button" data-filter="handles" aria-pressed="false">Handles &amp; Iso</button>
+        <button class="vy-filter" type="button" data-filter="shooting" aria-pressed="false">Shooting Lab</button>
+        <button class="vy-filter" type="button" data-filter="footwork" aria-pressed="false">Footwork &amp; Grip</button>
+        <span class="vy-console-count" id="vy-gallery-count" aria-live="polite">4 / 4</span>
+      </div>
+
+      <!-- Gallery Grid Cards -->
+      <div class="vy-gallery-grid" id="vy-gallery-grid">
+        <!-- Card 1 -->
+        <article class="vy-work vy-rise u-delay-2" data-path="finishing">
+          <a class="vy-work-pic vy-media-detail-link" href="details/plays/apex-flush.html" aria-label="Open Apex Tomahawk Flush detail">
+            <img decoding="async" src="assets/images/thumbs/card-ball-01.webp" width="640" height="857" loading="lazy"
+                 alt="Athletic player executing high-apex tomahawk dunk on outdoor court">
+          </a>
+          <div class="vy-meta">
+            <h3><a class="vy-title-link" href="details/plays/apex-flush.html">Apex Tomahawk Flush</a></h3>
+            <h4>Finishing &middot; rim-apex-v4</h4>
+            <dl class="vy-idx">
+              <dt>Vertical</dt><dd>42.5 in</dd>
+              <dt>Hangtime</dt><dd>0.88s</dd>
+              <dt>Force</dt><dd>2.4G Contact</dd>
+            </dl>
+            <div class="vy-prompt-field">
+              High-speed optical camera tracking athletic guard rising above rim for two-handed tomahawk jam, explosive vertical lift, chalk dust explosion.
+            </div>
+            <button class="vy-copy-prompt" type="button">Copy Telemetry Cue</button>
+            <a class="vy-detail-link" href="details/plays/apex-flush.html">Open full play detail</a>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="vy-work vy-rise u-delay-3" data-path="handles">
+          <a class="vy-work-pic vy-media-detail-link" href="details/plays/crossover-burst.html" aria-label="Open Streetball Crossover Burst detail">
+            <img decoding="async" src="assets/images/thumbs/card-ball-02.webp" width="640" height="357" loading="lazy"
+                 alt="Streetball player performing explosive crossover dribble on asphalt">
+          </a>
+          <div class="vy-meta">
+            <h3><a class="vy-title-link" href="details/plays/crossover-burst.html">Streetball Crossover Burst</a></h3>
+            <h4>Handles &middot; iso-track-v2</h4>
+            <dl class="vy-idx">
+              <dt>Entry</dt><dd>18.4 mph</dd>
+              <dt>Shift</dt><dd>0.12s Lateral</dd>
+              <dt>Hip Drop</dt><dd>48 cm Depth</dd>
+            </dl>
+            <div class="vy-prompt-field">
+              Outdoor asphalt streetball isolation, lethal low crossover dribble shifting defender balance, dynamic rim spotlight.
+            </div>
+            <button class="vy-copy-prompt" type="button">Copy Telemetry Cue</button>
+            <a class="vy-detail-link" href="details/plays/crossover-burst.html">Open full play detail</a>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="vy-work vy-rise u-delay-4" data-path="shooting">
+          <a class="vy-work-pic vy-media-detail-link" href="details/plays/arena-three.html" aria-label="Open Arena Catch and Shoot detail">
+            <img decoding="async" src="assets/images/thumbs/card-ball-03.webp" width="640" height="357" loading="lazy"
+                 alt="Shooting guard releasing high-arc jumpshot in arena">
+          </a>
+          <div class="vy-meta">
+            <h3><a class="vy-title-link" href="details/plays/arena-three.html">Arena Catch &amp; Shoot 3PT</a></h3>
+            <h4>Shooting &middot; shot-engine-v3</h4>
+            <dl class="vy-idx">
+              <dt>Arc</dt><dd>45.2&deg; Trajectory</dd>
+              <dt>Spin</dt><dd>2,400 RPM</dd>
+              <dt>Release</dt><dd>0.68s Catch-to-flick</dd>
+            </dl>
+            <div class="vy-prompt-field">
+              Pure shooting guard elevating in dark arena, perfect goose-neck wrist follow-through, high-arc trajectory towards basket.
+            </div>
+            <button class="vy-copy-prompt" type="button">Copy Telemetry Cue</button>
+            <a class="vy-detail-link" href="details/plays/arena-three.html">Open full play detail</a>
+          </div>
+        </article>
+
+        <!-- Card 4 -->
+        <article class="vy-work vy-rise u-delay-5" data-path="footwork">
+          <a class="vy-work-pic vy-media-detail-link" href="details/plays/hardwood-brake.html" aria-label="Open Hardwood Brake Dynamics detail">
+            <img decoding="async" src="assets/images/thumbs/card-ball-04.webp" width="640" height="357" loading="lazy"
+                 alt="High-top basketball shoes planting on hardwood court">
+          </a>
+          <div class="vy-meta">
+            <h3><a class="vy-title-link" href="details/plays/hardwood-brake.html">Hardwood Brake Dynamics</a></h3>
+            <h4>Footwork &middot; traction-lab-v1</h4>
+            <dl class="vy-idx">
+              <dt>Brake Force</dt><dd>2.8G Lateral</dd>
+              <dt>Adherence</dt><dd>99.4% Surface</dd>
+              <dt>Tread Grip</dt><dd>Herringbone 0.4mm</dd>
+            </dl>
+            <div class="vy-prompt-field">
+              Macro high-speed close-up of elite high-top basketball shoes planting on glossy hardwood key, stadium light reflection.
+            </div>
+            <button class="vy-copy-prompt" type="button">Copy Telemetry Cue</button>
+            <a class="vy-detail-link" href="details/plays/hardwood-brake.html">Open full play detail</a>
+          </div>
+        </article>
+
+      </div>
+
+      <div class="u-mt-48 u-text-center">
+        <a class="btn btn-secondary" href="gallery.html">Open Full Master-Detail Playbook &rarr;</a>
+      </div>
+    </section>
+
+    <!-- 6. Interactive 24h Basketball Telemetry Chart -->
+    <section class="vy-section vy-shell" id="metrics">
+      <div class="vy-rise u-delay-0">
+        <span class="vy-eyebrow">( Telemetry ) Hardwood Activity Splits</span>
+        <h2 class="vy-h2">24h Court Telemetry &amp; Shot Splits</h2>
+        <p class="vy-lede-sub">Illustrative hourly rep telemetry for connected basketball training environments. Point at the timeline or use the telemetry scrubber for an instantaneous pipeline readout.</p>
+      </div>
+
+      <div class="vy-chart-box vy-rise u-delay-1">
+        <div class="vy-chart-header">
+          <div class="vy-chart-legend" id="vy-chart-legend">
+            <button type="button" data-series="0" aria-pressed="true">
+              <span class="vy-chart-indicator u-bg-cyan"></span>
+              <span>Shooting Lab</span>
+            </button>
+            <button type="button" data-series="1" aria-pressed="true">
+              <span class="vy-chart-indicator u-bg-sky"></span>
+              <span>Handle &amp; Iso</span>
+            </button>
+            <button type="button" data-series="2" aria-pressed="true">
+              <span class="vy-chart-indicator u-bg-lime"></span>
+              <span>Rim Apex</span>
+            </button>
+            <button type="button" data-series="3" aria-pressed="true">
+              <span class="vy-chart-indicator u-bg-purple"></span>
+              <span>Court Vision</span>
+            </button>
+          </div>
+
+          <div class="vy-chart-readout" id="vy-chart-readout" role="status" aria-live="polite">&mdash;</div>
+        </div>
+
+        <!-- Pure Native Scalable Vector Chart -->
+        <svg id="vy-chart" viewBox="0 0 1200 400" role="img" aria-labelledby="vy-chart-title vy-chart-desc">
+          <title id="vy-chart-title">Illustrative basketball telemetry by half-hour interval</title>
+          <desc id="vy-chart-desc">Four patterned lines compare Shooting Lab, Handle and Iso, Rim Apex, and Court Vision activity. Use the scrubber for every interval or open the table for representative values.</desc>
+          <g id="vy-chart-grid"></g>
+          <g id="vy-chart-axis"></g>
+          <g id="vy-chart-series"></g>
+          <g id="vy-chart-cursor">
+            <line x1="0" x2="0" y1="20" y2="360"></line>
+          </g>
+        </svg>
+
+        <div class="vy-chart-keyboard">
+          <label class="vy-sr-only" for="vy-chart-scrubber">Explore telemetry in 30-minute intervals</label>
+          <input type="range" id="vy-chart-scrubber" min="0" max="48" step="1" value="0"
+                 aria-label="Explore telemetry in 30-minute intervals" aria-describedby="vy-chart-readout">
+        </div>
+
+        <details class="vy-chart-data">
+          <summary>View representative telemetry data</summary>
+          <p>Illustrative activity units sampled from the deterministic chart. Values are demonstrations, not measured athlete results.</p>
+          <div class="vy-chart-table-wrap" tabindex="0" role="region" aria-label="Scrollable telemetry data table">
+            <table class="vy-chart-table">
+              <caption>Representative points from the 24-hour chart</caption>
+              <thead>
+                <tr><th scope="col">Time</th><th scope="col">Shooting Lab</th><th scope="col">Handle &amp; Iso</th><th scope="col">Rim Apex</th><th scope="col">Court Vision</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">16:00 start</th><td>8.4</td><td>8.9</td><td>3.6</td><td>1.4</td></tr>
+                <tr><th scope="row">22:00</th><td>5.8</td><td>4.9</td><td>3.0</td><td>2.7</td></tr>
+                <tr><th scope="row">04:00</th><td>5.2</td><td>8.4</td><td>3.2</td><td>2.0</td></tr>
+                <tr><th scope="row">10:00</th><td>10.6</td><td>6.7</td><td>3.5</td><td>1.4</td></tr>
+                <tr><th scope="row">16:00 end</th><td>13.1</td><td>5.7</td><td>4.5</td><td>3.2</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <!-- Metric Count-up Stats Below Chart -->
+        <div class="vy-countup-deck">
+          <div class="vy-countup-card">
+            <span class="vy-countup-num" data-countup="4850210" data-decimals="0">0</span>
+            <span class="vy-countup-label">Simulated Shot Reps</span>
+          </div>
+
+          <div class="vy-countup-card">
+            <span class="vy-countup-num" data-countup="45.2" data-decimals="1">0.0<small>&deg;</small></span>
+            <span class="vy-countup-label">Median Optimal Shot Arc</span>
+          </div>
+
+          <div class="vy-countup-card">
+            <span class="vy-countup-num" data-countup="0.68" data-decimals="2">0.00<small>s</small></span>
+            <span class="vy-countup-label">Fastest Catch-to-Release</span>
+          </div>
+
+          <div class="vy-countup-card">
+            <span class="vy-countup-num" data-countup="99.98" data-decimals="2">0.00<small>%</small></span>
+            <span class="vy-countup-label">Target Telemetry Uptime</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Moving Proof Rail & Athlete Testimonial -->
+    <section class="vy-proof" id="proof" aria-label="Illustrative program contexts">
+      <div class="vy-proof__marquee" aria-hidden="true">
+        <span>SCHOOL PROGRAM · CLUB CIRCUIT · PRO COMBINE · SKILLS ACADEMY · </span>
+        <span>SCHOOL PROGRAM · CLUB CIRCUIT · PRO COMBINE · SKILLS ACADEMY · </span>
+      </div>
+      <div class="vy-proof__quote">
+        <img decoding="async" class="vy-proof__portrait" src="assets/images/thumbs/card-ball-02.webp" width="640" height="357" loading="lazy"
+             alt="Basketball guard during a controlled performance drill">
+        <div>
+          <blockquote>&ldquo;We stopped arguing about what the film looked like. Every rep now arrives with the number, the frame, and the correction.&rdquo;</blockquote>
+          <cite>Illustrative collegiate coaching workflow</cite>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. Interactive Reps Sizer & Access Tiers -->
+    <section class="vy-section vy-shell" id="pricing">
+      <div class="vy-rise u-delay-0">
+        <span class="vy-eyebrow">( Access ) Telemetry Reps &amp; Sensor Quotas</span>
+        <h2 class="vy-h2">Estimate your monthly basketball telemetry reps</h2>
+        <p class="vy-lede-sub">Explore an illustrative workload model for individual players, team programs, and enterprise environments. Final scope and commercial terms require written confirmation.</p>
+      </div>
+
+      <!-- Interactive Calculator Sizer -->
+      <div class="vy-sizer vy-rise u-delay-1" id="vy-sizer">
+        <div class="vy-sizer-control">
+          <div class="vy-sizer-label">
+            <label for="vy-calc-renders">Monthly Shot &amp; Play Reps</label>
+            <output id="vy-calc-renders-out" for="vy-calc-renders">4,000</output>
+          </div>
+          <input type="range" id="vy-calc-renders" min="500" max="40000" step="500" value="4000"
+                 aria-label="Monthly basketball reps slider">
+        </div>
+
+        <div class="vy-sizer-control">
+          <div class="vy-sizer-label">
+            <label for="vy-calc-size">Camera Sensor Capture Rate</label>
+            <output id="vy-calc-size-out" for="vy-calc-size">120 FPS</output>
+          </div>
+          <input type="range" id="vy-calc-size" min="0" max="3" step="1" value="1"
+                 aria-label="Sensor capture rate selector">
+        </div>
+
+        <div class="vy-sizer-control">
+          <div class="vy-sizer-label">
+            <span>Wearable IMU Pods (per 10 players)</span>
+            <div class="vy-sizer-stepper">
+              <button type="button" id="vy-calc-up-minus" aria-label="Decrease sensor pods">&minus;</button>
+              <output id="vy-calc-up-out">0</output>
+              <button type="button" id="vy-calc-up-plus" aria-label="Increase sensor pods">&plus;</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Plan Recommendation Box -->
+        <div class="vy-sizer-recommendation">
+          <div class="vy-sizer-rec-head">
+            <div>
+              <span class="vy-eyebrow u-mb-4">Recommended Hoops Tier</span>
+              <div class="vy-sizer-rec-plan" id="vy-calc-plan">COLLEGIATE PRO</div>
+            </div>
+            <div class="vy-sizer-rec-cost" id="vy-calc-cost"><b>$49</b> / mo</div>
+          </div>
+          <p class="vy-sizer-rec-why" id="vy-calc-why">15,000 rep credits covers your 4,000 reps at 120 FPS high-speed motion capture.</p>
+          <div id="vy-calc-formula" class="u-text-meta">
+            (4,000 shot reps &times; 2) + (0 sensor pods &times; 2) = 8,000 credits
+          </div>
+          <div>
+            <a class="btn btn-primary" id="vy-calc-cta" href="pricing.html#collegiate">Equip Collegiate Pro</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tier Cards Preview -->
+      <div class="vy-price-grid">
+        <!-- Amateur Tier -->
+        <article class="vy-tier vy-rise u-delay-2" data-tier="starter">
+          <span class="vy-tier__badge">Individual</span>
+          <div>
+            <h3 class="vy-tier__name">Amateur Hooper</h3>
+            <p class="vy-tier__desc">For individual players improving shooting form and isolation pullups.</p>
+            <div class="vy-tier__cost">$0 <span>/ mo</span></div>
+            <ul class="vy-tier__specs">
+              <li>2,000 reps / month</li>
+              <li>Standard 60 FPS smartphone capture</li>
+              <li>Shot arc &amp; release time breakdown</li>
+              <li>Personal development dashboard</li>
+            </ul>
+          </div>
+          <a class="vy-detail-link" href="details/plans/starter.html">Review plan detail</a>
+          <a class="btn btn-outline" href="pricing.html#starter">Start Free Hoop Log</a>
+        </article>
+
+        <!-- Collegiate Pro Tier -->
+        <article class="vy-tier vy-rise u-delay-3" data-tier="studio" data-recommended="1">
+          <span class="vy-tier__badge">Most Popular</span>
+          <div>
+            <h3 class="vy-tier__name">Collegiate Pro</h3>
+            <p class="vy-tier__desc">For school, club, and collegiate development programs.</p>
+            <div class="vy-tier__cost">$49 <span>/ mo</span></div>
+            <ul class="vy-tier__specs">
+              <li>15,000 reps / month</li>
+              <li>High-speed 120 &amp; 240 FPS optical tracking</li>
+              <li>Complete 4-pipeline biomechanics suite</li>
+              <li>Multi-player squad roster telemetry</li>
+              <li>Exportable coaching &amp; scouting cards</li>
+            </ul>
+          </div>
+          <a class="vy-detail-link" href="details/plans/studio.html">Review plan detail</a>
+          <a class="btn btn-primary" href="pricing.html#collegiate">Equip Collegiate Pro</a>
+        </article>
+
+        <!-- Franchise Apex Tier -->
+        <article class="vy-tier vy-rise u-delay-4" data-tier="scale">
+          <span class="vy-tier__badge">Enterprise &amp; Franchise</span>
+          <div>
+            <h3 class="vy-tier__name">Franchise Apex</h3>
+            <p class="vy-tier__desc">For professional basketball franchises, sports science labs, and combine camps.</p>
+            <div class="vy-tier__cost">$189 <span>/ mo</span></div>
+            <ul class="vy-tier__specs">
+              <li>60,000 reps / month</li>
+              <li>Proposed high-speed and 3D capture integration</li>
+              <li>Deployment-validated bench telemetry workflow</li>
+              <li>Configurable scouting data export</li>
+              <li>Custom sensor calibration &amp; API feed</li>
+            </ul>
+          </div>
+          <a class="vy-detail-link" href="details/plans/scale.html">Review plan detail</a>
+          <a class="btn btn-outline" href="pricing.html#franchise">Deploy Franchise Apex</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- 7. Basketball Telemetry FAQ Accordion -->
+    <section class="vy-section vy-shell" id="faq">
+      <div class="vy-rise u-delay-0">
+        <span class="vy-eyebrow">( Field Guide ) Common Inquiries</span>
+        <h2 class="vy-h2">Frequently Asked Questions</h2>
+      </div>
+
+      <div class="vy-faq vy-rise u-delay-1" id="vy-faq">
+        <div class="vy-faq__item">
+          <button class="vy-faq__q" type="button" aria-expanded="false" aria-controls="faq-a1">
+            <span>How does CourtSpec measure shooting arc without physical markers?</span>
+            <span class="vy-faq__icon" aria-hidden="true"></span>
+          </button>
+          <div class="vy-faq__a" id="faq-a1">
+            <div class="vy-faq__inner">
+              <p>CourtSpec uses multi-view computer vision calibrated to standard court and rim geometry. A production deployment must validate camera calibration and measurement tolerance against its intended training environment.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="vy-faq__item">
+          <button class="vy-faq__q" type="button" aria-expanded="false" aria-controls="faq-a2">
+            <span>Can we integrate CourtSpec with our gym's existing court cameras?</span>
+            <span class="vy-faq__icon" aria-hidden="true"></span>
+          </button>
+          <div class="vy-faq__a" id="faq-a2">
+            <div class="vy-faq__inner">
+              <p>The workflow is designed around standard camera feeds, including common streaming formats. Compatibility, latency, and security must be verified for each court before production use.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="vy-faq__item">
+          <button class="vy-faq__q" type="button" aria-expanded="false" aria-controls="faq-a3">
+            <span>What is the optimal shooting arc degree calculated by the Shooting Lab?</span>
+            <span class="vy-faq__icon" aria-hidden="true"></span>
+          </button>
+          <div class="vy-faq__a" id="faq-a3">
+            <div class="vy-faq__inner">
+              <p>The interface uses a configurable reference range for coaching comparisons. It should support a coach's assessment rather than present one universal release angle as a guarantee for every athlete.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="vy-faq__item">
+          <button class="vy-faq__q" type="button" aria-expanded="false" aria-controls="faq-a4">
+            <span>Are biometric combine scouting reports compliant with athlete privacy standards?</span>
+            <span class="vy-faq__icon" aria-hidden="true"></span>
+          </button>
+          <div class="vy-faq__a" id="faq-a4">
+            <div class="vy-faq__inner">
+              <p>This static demonstration stores no athlete telemetry. A production deployment must document consent, access, retention, encryption, export, and deletion controls before making regulatory or league-compliance claims.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. Call To Action Band -->
+    <section class="vy-section vy-section--tight vy-shell" id="cta">
+      <div class="vy-path-card vy-rise u-delay-0 u-cta-panel">
+        <span class="court-badge u-mb-16">Elite Hardwood Performance</span>
+        <h2 class="vy-h2 u-heading-cta">Elevate your basketball IQ today</h2>
+        <p class="vy-lede-sub u-mb-32">Explore an illustrative 2,000-rep starter configuration using compatible phone or gym-camera footage. Production capture requirements are confirmed during discovery.</p>
+        <div class="u-flex-wrap-center">
+          <a class="btn btn-primary" href="pricing.html#starter">Review Starter Configuration</a>
+          <a class="btn btn-secondary" href="gallery.html">Explore Hardwood Playbook</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="vy-footer" id="site-footer">
+    <div class="vy-tail-case">
+      <div class="vy-tail-mid">
+        <div class="vy-tail-signature">
+          <a href="#top" aria-label="CourtSpec — back to top">COURTSPEC</a>
+          <p><span aria-hidden="true"></span> Combine desk accepting Q4 programs</p>
+        </div>
+        <div class="vy-tail-top">
+          <nav class="vy-tail-paths" aria-label="Footer Navigation">
+            <a href="gallery.html">Playbook</a>
+            <a href="pricing.html">Reps &amp; Tiers</a>
+            <a href="about.html">Manifesto</a>
+            <a href="contact.html">Scout Contact</a>
+            <a href="index.html#faq">Answers</a>
+          </nav>
+          <div class="vy-tail-asset">
+            <img decoding="async" src="assets/images/thumbs/card-ball-03.webp" width="640" height="357" loading="lazy"
+                 alt="Basketball player releasing pure jumpshot in arena">
+          </div>
+        </div>
+
+        <p class="vy-tail-biz">
+          <b>COURTSPEC</b> &mdash; Elite Basketball Biomechanics, Scouting &amp; Hardwood Telemetry Studio<br>
+          <a href="mailto:scout@courtspec.io">scout@courtspec.io</a> &middot; Native Zero-Dependency Architecture &middot; Built toward WCAG 2.2 AA
+        </p>
+
+        <div class="vy-tail-share">
+          <a href="#top">Back to top &uarr;</a>
+          <a href="gallery.html">Playbook Log</a>
+          <a href="pricing.html">Reps Sizer</a>
+          <a href="about.html">Telemetry Architecture</a>
+          <a href="about.html#data-governance">Data &amp; Accessibility</a>
+          <a href="contact.html">Athlete Dispatch</a>
+        </div>
+
+        <p class="vy-tail-stamp">Attack, elevate, finish. Hardwood telemetry precision. &copy; 2026 CourtSpec Studio.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modular Vanilla JavaScript Bootstrap -->
+  <script src="js/modules/navigation.js?v=4.3" defer></script>
+  <script src="js/modules/hero-switcher.js?v=4.3" defer></script>
+  <script src="js/modules/gallery.js?v=4.3" defer></script>
+  <script src="js/modules/theme.js?v=4.3" defer></script>
+  <script src="js/modules/reveal.js?v=4.3" defer></script>
+  <script src="js/modules/metrics-chart.js?v=4.3" defer></script>
+  <script src="js/modules/pricing-sizer.js?v=4.3" defer></script>
+  <script src="js/modules/faq.js?v=4.3" defer></script>
+  <script src="js/modules/link-sentinel.js?v=4.3" defer></script>
+  <script src="js/main.js?v=4.3" defer></script>
+</body>
+</html>

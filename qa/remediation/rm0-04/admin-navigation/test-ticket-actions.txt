@@ -1,0 +1,3 @@
+PASS role/state actions, owner and active mandate, archived/terminal guards, active resolution and lifecycle UI consumer
+PASS guest receipt validation enabled only for guests
+PASS command fingerprint preserves original CAS on unknown-commit retry

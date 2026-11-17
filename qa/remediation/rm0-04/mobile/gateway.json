@@ -1,0 +1,51 @@
+{
+  "timestamp": "2026-11-13T00:18:51.668925+00:00",
+  "base_url": "http://127.0.0.1:18080",
+  "result": "PASS",
+  "readiness": 200,
+  "bundles": {
+    "index.html": {
+      "sha256": "7cbdd65ee1e91b1195ff44855ae13d5bb5241956a88b13d47d07541676648eaf",
+      "content_type": "text/html"
+    },
+    "akses.html": {
+      "sha256": "bec5c3f77649d3406a30ba06d6e691b5f7013394ef52e5a86a05143073b0fbac",
+      "content_type": "text/html"
+    },
+    "panduan.html": {
+      "sha256": "2cc6af45d1a053a53283b6dc7796ddd9cb74db4177c3a6e85f4796d2f8145f1c",
+      "content_type": "text/html"
+    },
+    "admin/auth/login.html": {
+      "sha256": "9550d702aaf9e0e988561d105a1d3d01c7e7690e7c28c560af24f8717d30c333",
+      "content_type": "text/html"
+    },
+    "helpdesk/public-ui.css": {
+      "sha256": "be0110d7e6bdd1d27a50630ef1861ec77d76755eef761b59e59905f449dfa12b",
+      "content_type": "text/css"
+    },
+    "helpdesk/public-pages.css": {
+      "sha256": "2a8c075db66a8cf592298bd0bf3250ae2e56c7c0c78c3f6480ea8c1ae080e377",
+      "content_type": "text/css"
+    },
+    "helpdesk/business.css": {
+      "sha256": "81fdae0f71824708f417968c5851e850b3f5c04a0016379e6a811cadd4a2ebd3",
+      "content_type": "text/css"
+    },
+    "helpdesk/m0-03.js": {
+      "sha256": "091d40aebf08fc0dc1e0f3e429dd307f95a66ce8395fa4d6524f8a68ee4c1ff4",
+      "content_type": "application/javascript"
+    },
+    "js/modules/gallery.js": {
+      "sha256": "4c8676a9bfb22f03490530943063cc6996e28739fc7a589b6abab7e8ce407173",
+      "content_type": "application/javascript"
+    }
+  },
+  "web_image": "sha256:0ebe3d90de627f8aa43d1de1ef78aafad9126ba743af761deb8b847ac488a016",
+  "health": [
+    "app running healthy",
+    "db running healthy",
+    "web running healthy",
+    "scanner running healthy"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "timestamp": "2026-11-06T03:19:58.803570+00:00",
+  "scope": "live loopback synthetic HTTP/API M0-05 verification and dispatch",
+  "command": "python scripts/smoke_m0_05_local.py --allow-lab-writes",
+  "checks": [
+    {
+      "name": "authenticated_ticket_created",
+      "result": "PASS"
+    },
+    {
+      "name": "AC04_guard_unverified_dispatch_rejected_409",
+      "result": "PASS"
+    },
+    {
+      "name": "AC04_AC13_operator_verified_with_override",
+      "result": "PASS"
+    },
+    {
+      "name": "AC13_dispatched_to_l1_technician",
+      "result": "PASS"
+    },
+    {
+      "name": "technician_queue_contains_assigned_ticket",
+      "result": "PASS"
+    },
+    {
+      "name": "technician_queue_isolation",
+      "result": "PASS"
+    },
+    {
+      "name": "AC13_CAS_stale_version_rejected_409",
+      "result": "PASS"
+    }
+  ],
+  "result": "PASS"
+}
