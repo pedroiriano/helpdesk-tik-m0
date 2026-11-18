@@ -364,6 +364,13 @@ async function getBootstrap(): Promise<Components['Bootstrap']> {
   try {
     const cfg = await api<Components['AuthConfig']>('/auth/config');
     if (cfg.lab_auth_enabled) {
+      if (cfg.subjects && cfg.subjects.length > 0) {
+        return {
+          mode: 'SYNTHETIC_LAB',
+          csrf_token: cfg.csrf_token,
+          subjects: cfg.subjects,
+        };
+      }
       return await api<Components['Bootstrap']>('/auth/bootstrap');
     }
     return {

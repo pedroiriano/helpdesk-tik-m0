@@ -41,25 +41,32 @@ type SSOOptions struct {
 }
 
 type AuthConfigView struct {
-	Mode              string `json:"mode"`
-	CSRFToken         string `json:"csrf_token"`
-	LabAuthEnabled    bool   `json:"lab_auth_enabled"`
-	PublicAuthEnabled bool   `json:"public_auth_enabled"`
-	SSOEnabled        bool   `json:"sso_enabled"`
-	SSOProviderLabel  string `json:"sso_provider_label"`
-	SSOLoginURL       string `json:"sso_login_url"`
-	PurgeEnabled      bool   `json:"purge_enabled"`
+	Mode              string        `json:"mode"`
+	CSRFToken         string        `json:"csrf_token"`
+	LabAuthEnabled    bool          `json:"lab_auth_enabled"`
+	PublicAuthEnabled bool          `json:"public_auth_enabled"`
+	SSOEnabled        bool          `json:"sso_enabled"`
+	SSOProviderLabel  string        `json:"sso_provider_label"`
+	SSOLoginURL       string        `json:"sso_login_url"`
+	PurgeEnabled      bool          `json:"purge_enabled"`
+	Subjects          []api.Subject `json:"subjects,omitempty"`
 }
 
-func (s *Service) IssueAuthChallenge() (AuthConfigView, string, error) {
+func (s *Service) IssueAuthChallenge(ctx context.Context) (AuthConfigView, string, error) {
 	nonce := make([]byte, 32)
 	if _, err := rand.Read(nonce); err != nil {
 		return AuthConfigView{}, "", err
 	}
 	token := hex.EncodeToString(nonce)
 	mode := "PRODUCTION"
+	var subjects []api.Subject
 	if s.Options.Lab {
 		mode = "SYNTHETIC_LAB"
+		users, err := s.Subjects(ctx)
+		if err != nil {
+			return AuthConfigView{}, "", err
+		}
+		subjects = users
 	}
 	label := strings.TrimSpace(s.Options.SSO.ProviderLabel)
 	if label == "" {
@@ -74,6 +81,7 @@ func (s *Service) IssueAuthChallenge() (AuthConfigView, string, error) {
 		SSOProviderLabel:  label,
 		SSOLoginURL:       "/api/v1/auth/sso/login",
 		PurgeEnabled:      s.Options.PurgeEnabled,
+		Subjects:          subjects,
 	}, token, nil
 }
 

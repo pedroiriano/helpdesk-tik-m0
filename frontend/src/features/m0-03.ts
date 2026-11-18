@@ -62,9 +62,9 @@ type AuthState = Components['AuthConfig'] & { subjects: Components['Subject'][] 
 async function loadAuthBootstrap(): Promise<AuthState> {
   try {
     const cfg = await api<Components['AuthConfig']>('/auth/config');
-    let subjects: Components['Subject'][] = [];
+    let subjects: Components['Subject'][] = cfg.subjects ?? [];
     let csrfToken = cfg.csrf_token;
-    if (cfg.lab_auth_enabled) {
+    if (cfg.lab_auth_enabled && subjects.length === 0) {
       try {
         const boot = await api<Components['Bootstrap']>('/auth/bootstrap');
         subjects = boot.subjects ?? [];
@@ -211,7 +211,7 @@ async function login(form: HTMLFormElement, bootstrap: Promise<AuthState>, initi
       });
 
       const subjectSelect = $<HTMLSelectElement>('#hd-subject') ?? $<HTMLSelectElement>('select[name=subject]', form);
-      if (subjectSelect && boot.lab_auth_enabled) {
+      if (subjectSelect && boot.lab_auth_enabled && labSubjects.length > 0) {
         options(subjectSelect, labSubjects.map(s => ({ value: s.id, label: `${s.name} · ${isAdminLogin ? roleLabels[s.role ?? ''] ?? 'Petugas' : s.role || s.kind}` })));
         subjectSelect.disabled = false;
       }

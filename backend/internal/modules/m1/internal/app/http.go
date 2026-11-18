@@ -26,7 +26,7 @@ func (s *Service) clearTrackingCookies(w http.ResponseWriter) {
 }
 func (s *Service) Register(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/v1/auth/config", func(w http.ResponseWriter, r *http.Request) {
-		cfg, token, err := s.IssueAuthChallenge()
+		cfg, token, err := s.IssueAuthChallenge(r.Context())
 		if err != nil {
 			web.WriteError(w, err)
 			return

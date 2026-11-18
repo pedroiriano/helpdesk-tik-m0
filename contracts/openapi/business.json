@@ -37334,6 +37334,13 @@
           },
           "purge_enabled": {
             "type": "boolean"
+          },
+          "subjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Subject"
+            },
+            "maxItems": 100
           }
         },
         "required": [

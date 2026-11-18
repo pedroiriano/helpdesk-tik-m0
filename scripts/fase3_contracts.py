@@ -14,16 +14,20 @@ def extend(schemas, operation, obj, arr, enum, ref, UUID, TEXT, UTC, VERSION):
     null_text = {'type': ['string', 'null'], 'maxLength': 120}
     nonneg = {'type': 'integer', 'minimum': 0}
 
-    schemas['AuthConfig'] = obj({
-        'mode': enum('SYNTHETIC_LAB', 'PRODUCTION'),
-        'csrf_token': TEXT,
-        'lab_auth_enabled': {'type': 'boolean'},
-        'public_auth_enabled': {'type': 'boolean'},
-        'sso_enabled': {'type': 'boolean'},
-        'sso_provider_label': TEXT,
-        'sso_login_url': TEXT,
-        'purge_enabled': {'type': 'boolean'},
-    })
+    schemas['AuthConfig'] = obj(
+        {
+            'mode': enum('SYNTHETIC_LAB', 'PRODUCTION'),
+            'csrf_token': TEXT,
+            'lab_auth_enabled': {'type': 'boolean'},
+            'public_auth_enabled': {'type': 'boolean'},
+            'sso_enabled': {'type': 'boolean'},
+            'sso_provider_label': TEXT,
+            'sso_login_url': TEXT,
+            'purge_enabled': {'type': 'boolean'},
+            'subjects': arr(ref('Subject')),
+        },
+        optional=('subjects',),
+    )
     schemas['SSORedirect'] = obj({'location': TEXT})
     schemas['DeliveryJobRecord'] = obj(
         {

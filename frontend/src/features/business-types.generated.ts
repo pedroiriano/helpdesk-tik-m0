@@ -110,7 +110,7 @@ export interface Components {
   'SystemJobList': { 'items': (Components['SystemJobResult'])[] };
   'MediaApprovalItem': { 'id': string; 'version': number; 'source_id': string; 'source_owner': 'M3' | 'M8'; 'copy_id': string; 'target_id': string; 'target_audience': string; 'organization_id': string; 'approved_by': string; 'reason': string; 'expires_at': string; 'used_at'?: string; 'revoked_at'?: string; 'created_at': string };
   'MediaApprovalList': { 'items': (Components['MediaApprovalItem'])[] };
-  'AuthConfig': { 'mode': 'SYNTHETIC_LAB' | 'PRODUCTION'; 'csrf_token': string; 'lab_auth_enabled': boolean; 'public_auth_enabled': boolean; 'sso_enabled': boolean; 'sso_provider_label': string; 'sso_login_url': string; 'purge_enabled': boolean };
+  'AuthConfig': { 'mode': 'SYNTHETIC_LAB' | 'PRODUCTION'; 'csrf_token': string; 'lab_auth_enabled': boolean; 'public_auth_enabled': boolean; 'sso_enabled': boolean; 'sso_provider_label': string; 'sso_login_url': string; 'purge_enabled': boolean; 'subjects'?: (Components['Subject'])[] };
   'SSORedirect': { 'location': string };
   'DeliveryJobRecord': { 'id': string; 'version': number; 'notification_id': string; 'title': string; 'channel': 'SINK' | 'TELEGRAM' | 'EMAIL'; 'target_masked': string; 'state': 'PENDING' | 'LEASED' | 'ACKED' | 'FAILED' | 'DEAD_LETTER'; 'attempts': number; 'last_error_code'?: string | null; 'next_attempt_at': string; 'delivered_at'?: string | null; 'created_at': string };
   'RetentionInput': { 'expected_version': number; 'legal_hold': boolean; 'retention_until'?: string | null; 'reason': string };
