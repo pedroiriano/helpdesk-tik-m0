@@ -9,25 +9,45 @@ import (
 // MaintenancePolicyInput defines the input payload for configuring maintenance windows.
 type MaintenancePolicyInput struct {
 	ExpectedVersion int64     `json:"expected_version,omitempty"`
+	TargetID        string    `json:"target_id,omitempty"`
 	OrgID           *string   `json:"org_id,omitempty"`
 	OrganizationID  string    `json:"organization_id,omitempty"`
 	Mode            string    `json:"mode"`
+	ScheduleKind    string    `json:"schedule_kind,omitempty"`
+	DisplayMode     string    `json:"display_mode,omitempty"`
 	StartsAt        time.Time `json:"starts_at"`
 	EndsAt          time.Time `json:"ends_at"`
 	Message         string    `json:"message"`
 }
 
-// MaintenancePolicy represents a scheduled maintenance policy.
+// MaintenancePolicy represents a scheduled or unscheduled maintenance policy.
 type MaintenancePolicy struct {
-	ID        string    `json:"id"`
-	Version   int64     `json:"version"`
-	OrgID     *string   `json:"org_id,omitempty"`
-	Mode      string    `json:"mode"`
-	StartsAt  time.Time `json:"starts_at"`
-	EndsAt    time.Time `json:"ends_at"`
-	Message   string    `json:"message"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID           string    `json:"id"`
+	Version      int64     `json:"version"`
+	OrgID        *string   `json:"org_id,omitempty"`
+	Mode         string    `json:"mode"`
+	ScheduleKind string    `json:"schedule_kind"`
+	DisplayMode  string    `json:"display_mode"`
+	StartsAt     time.Time `json:"starts_at"`
+	EndsAt       time.Time `json:"ends_at"`
+	Message      string    `json:"message"`
+	CreatedAt    time.Time `json:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
+}
+
+// PublicMaintenanceStatus exposes active and upcoming maintenance windows to public portals.
+type PublicMaintenanceStatus struct {
+	Active     *MaintenancePolicy  `json:"active"`
+	Upcoming   []MaintenancePolicy `json:"upcoming"`
+	ObservedAt time.Time           `json:"observed_at"`
+}
+
+// AdminMaintenanceOverview exposes active, upcoming, and recent maintenance windows in admin.
+type AdminMaintenanceOverview struct {
+	Active     *MaintenancePolicy  `json:"active"`
+	Upcoming   []MaintenancePolicy `json:"upcoming"`
+	Recent     []MaintenancePolicy `json:"recent"`
+	ObservedAt time.Time           `json:"observed_at"`
 }
 
 // SystemJobInput defines the request body for running a scoped operational job.

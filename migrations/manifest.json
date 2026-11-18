@@ -279,6 +279,13 @@
       "owner": "M3",
       "scope": "Fase 3 additive ticket retention & legal hold guard",
       "sha256": "24d0fac5d896bca9ff3f412db8eb4735bd2d7440dbb237e2955e5c39349e1c36"
+    },
+    {
+      "id": "041",
+      "path": "migrations/m1/041-maintenance-display.sql",
+      "owner": "M1",
+      "scope": "Additive maintenance schedule kind and public Under Maintenance display mode",
+      "sha256": "d2096fb6ee3a2c9032fc8bc4c630c4c6df572233611d692ec22c51e967b3af67"
     }
   ]
 }

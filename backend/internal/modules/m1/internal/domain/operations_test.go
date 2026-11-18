@@ -45,13 +45,35 @@ func TestValidateMaintenancePolicy(t *testing.T) {
 
 	// Kasus 4: Sah
 	err = ValidateMaintenancePolicy(api.MaintenancePolicyInput{
-		Mode:     "READ_ONLY",
-		StartsAt: now,
-		EndsAt:   now.Add(time.Hour),
-		Message:  "Pemeliharaan server berkala",
+		Mode:         "READ_ONLY",
+		ScheduleKind: "SCHEDULED",
+		DisplayMode:  "FULL_SCREEN",
+		StartsAt:     now,
+		EndsAt:       now.Add(time.Hour),
+		Message:      "Pemeliharaan server berkala",
 	})
 	if err != nil {
 		t.Fatalf("Expected nil error for valid input, got %v", err)
+	}
+
+	// Kasus 5: ScheduleKind dan DisplayMode tidak valid
+	if err := ValidateMaintenancePolicy(api.MaintenancePolicyInput{
+		Mode:         "READ_ONLY",
+		ScheduleKind: "RANDOM",
+		StartsAt:     now,
+		EndsAt:       now.Add(time.Hour),
+		Message:      "Pemeliharaan",
+	}); err == nil {
+		t.Fatal("Expected error for invalid schedule_kind")
+	}
+	if err := ValidateMaintenancePolicy(api.MaintenancePolicyInput{
+		Mode:        "READ_ONLY",
+		DisplayMode: "POPUP",
+		StartsAt:    now,
+		EndsAt:      now.Add(time.Hour),
+		Message:     "Pemeliharaan",
+	}); err == nil {
+		t.Fatal("Expected error for invalid display_mode")
 	}
 }
 

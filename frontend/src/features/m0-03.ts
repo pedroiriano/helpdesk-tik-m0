@@ -582,7 +582,14 @@ async function admin(): Promise<void> {
     }));
   };
   const maintenanceOrg = $<HTMLSelectElement>('#hd-maint-org');
-  if (maintenanceOrg) options(maintenanceOrg, scopedOrganizationOptions('system.maintenance'));
+  if (maintenanceOrg) {
+    const maintScopes = scopedOrganizationOptions('system.maintenance');
+    const allowGlobal = session?.actor.role === 'SUPER_ADMIN' || session?.actor.role === 'PLATFORM_ADMIN';
+    options(
+      maintenanceOrg,
+      allowGlobal ? [{ value: '', label: 'Semua Organisasi (Global Portal)' }, ...maintScopes] : maintScopes
+    );
+  }
   const runnerOrg = $<HTMLSelectElement>('#hd-runner-org');
   if (runnerOrg) options(runnerOrg, scopedOrganizationOptions('system.job'));
 
@@ -915,8 +922,9 @@ async function admin(): Promise<void> {
 
     if (requestedKind === 'maintenance') {
       if (maintSec) maintSec.hidden = false;
-      status('[data-hd-caption]', 'Pemeliharaan Sistem & Scoped Runner');
-      status('[data-hd-status]', 'Pilih mode pemeliharaan, ajukan job operasional scoped, atau periksa kesehatan sistem.');
+      status('[data-hd-caption]', 'Pemeliharaan Sistem ("Under Maintenance") & Scoped Runner');
+      status('[data-hd-status]', 'Kelola mode "Under Maintenance" (Terjadwal maupun Tidak Terjadwal / Darurat), job operasional, dan diagnostik.');
+      void loadMaintenanceOverview();
       void loadOperationsList();
       return;
     }
@@ -1573,31 +1581,217 @@ async function admin(): Promise<void> {
   $('[data-hd-refresh-scheduler]')?.addEventListener('click', () => void loadSchedulerJobs());
   $('#hd-scheduler-state')?.addEventListener('change', () => void loadSchedulerJobs());
 
+  const parseWibInputIso = (raw: string, fallbackMs: number) => {
+    if (!raw) return new Date(fallbackMs).toISOString();
+    const normalized = raw.length === 16 ? `${raw}:00+07:00` : raw;
+    const d = new Date(normalized);
+    return Number.isNaN(d.getTime()) ? new Date(fallbackMs).toISOString() : d.toISOString();
+  };
+
+  const fmtWibText = (iso: string) => {
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return iso;
+    return d.toLocaleString('id-ID', { timeZone: 'Asia/Jakarta', dateStyle: 'medium', timeStyle: 'short' }) + ' WIB';
+  };
+
+  async function stopMaintenancePolicy(targetId?: string, label = 'pemeliharaan saat ini') {
+    const now = Date.now();
+    const org = ($('#hd-maint-org') as HTMLSelectElement | null)?.value || '';
+    const body: Record<string, unknown> = {
+      mode: 'NORMAL',
+      schedule_kind: 'UNSCHEDULED',
+      display_mode: 'BANNER',
+      starts_at: new Date(now - 60000).toISOString(),
+      ends_at: new Date(now).toISOString(),
+      message: 'Pemeliharaan dihentikan oleh administrator; sistem beroperasi normal.',
+    };
+    if (org) body.organization_id = org;
+    if (targetId) body.target_id = targetId;
+    await api('/admin/maintenance', 'POST', body);
+    await loadMaintenanceOverview();
+    status('[data-hd-maint-status]', `${label} berhasil dihentikan; layanan kembali normal.`);
+  }
+
+  async function loadMaintenanceOverview() {
+    const liveCard = $('[data-hd-maint-live]');
+    const badge = $('[data-hd-maint-live-badge]');
+    const title = $('[data-hd-maint-live-title]');
+    const meta = $('[data-hd-maint-live-meta]');
+    const stopBtn = $<HTMLButtonElement>('[data-hd-maint-stop]');
+    const tbody = $('[data-hd-maint-rows]');
+    if (!tbody) return;
+    try {
+      const ov = await api<Components['AdminMaintenanceOverview']>('/admin/maintenance');
+      const active = (ov.active ?? null) as Components['MaintenanceWindow'] | null;
+      const upcoming = ov.upcoming ?? [];
+      const recent = ov.recent ?? [];
+
+      if (liveCard && badge && title && meta) {
+        liveCard.classList.remove('is-active', 'is-scheduled');
+        badge.classList.remove('is-normal', 'is-active', 'is-scheduled');
+        if (active) {
+          liveCard.classList.add('is-active');
+          badge.classList.add('is-active');
+          const kindTxt = active.schedule_kind === 'UNSCHEDULED' ? 'TIDAK TERJADWAL / DARURAT' : 'TERJADWAL';
+          badge.textContent = `UNDER MAINTENANCE AKTIF · ${kindTxt}`;
+          title.textContent = `${active.display_mode === 'FULL_SCREEN' ? 'Layar Penuh Under Maintenance' : 'Banner Pengumuman'} (${active.mode}) — ${active.message}`;
+          meta.textContent = `Berlangsung ${fmtWibText(active.starts_at)} s.d. ${fmtWibText(active.ends_at)} · Scope: ${active.org_id ? orgLabel(active.org_id) : 'Semua Organisasi (Global)'}`;
+          if (stopBtn) stopBtn.hidden = false;
+        } else if (upcoming.length > 0) {
+          const nextW = upcoming[0];
+          liveCard.classList.add('is-scheduled');
+          badge.classList.add('is-scheduled');
+          badge.textContent = `TERJADWAL (${upcoming.length})`;
+          title.textContent = `Jadwal terdekat: ${fmtWibText(nextW.starts_at)} s.d. ${fmtWibText(nextW.ends_at)} (${nextW.mode})`;
+          meta.textContent = `${nextW.display_mode === 'FULL_SCREEN' ? 'Layar Penuh Under Maintenance' : 'Banner'} · ${nextW.message}`;
+          if (stopBtn) stopBtn.hidden = false;
+        } else {
+          badge.classList.add('is-normal');
+          badge.textContent = 'OPERASIONAL NORMAL';
+          title.textContent = 'Sistem beroperasi penuh tanpa jendela pemeliharaan aktif.';
+          meta.textContent = 'Gunakan formulir di bawah untuk mengaktifkan mode "Under Maintenance" (Terjadwal maupun Tidak Terjadwal / Darurat).';
+          if (stopBtn) stopBtn.hidden = true;
+        }
+      }
+
+      const nowMs = Date.now();
+      const combined = new Map<string, Components['MaintenanceWindow']>();
+      for (const item of [...(active ? [active] : []), ...upcoming, ...recent]) {
+        if (item?.id && !combined.has(item.id)) combined.set(item.id, item);
+      }
+      tbody.replaceChildren();
+      if (!combined.size) {
+        const tr = element('tr');
+        const td = element('td', 'Belum ada catatan atau jadwal pemeliharaan sistem.');
+        td.colSpan = 6;
+        tr.append(td);
+        tbody.append(tr);
+        return;
+      }
+
+      for (const row of combined.values()) {
+        const sMs = new Date(row.starts_at).getTime();
+        const eMs = new Date(row.ends_at).getTime();
+        const isActiveNow = Number.isFinite(sMs) && Number.isFinite(eMs) && nowMs >= sMs && nowMs <= eMs;
+        const isFuture = Number.isFinite(sMs) && Number.isFinite(eMs) && nowMs < sMs && eMs > nowMs;
+        const stateText = isActiveNow ? 'AKTIF SEKARANG' : isFuture ? 'TERJADWAL' : 'SELESAI / TIDAK AKTIF';
+        const kindDisplay = `${row.schedule_kind === 'UNSCHEDULED' ? 'Tidak Terjadwal / Darurat' : 'Terjadwal'} · ${row.display_mode === 'FULL_SCREEN' ? 'Layar Penuh' : 'Banner'}`;
+        const scopeText = `${row.mode} · ${row.org_id ? orgLabel(row.org_id) : 'Global Portal'}`;
+
+        const tr = element('tr');
+        tr.append(
+          element('td', `${fmtWibText(row.starts_at)} — ${fmtWibText(row.ends_at)}`),
+          element('td', kindDisplay),
+          element('td', scopeText),
+          element('td', row.message),
+          element('td', stateText)
+        );
+        const tdAct = element('td');
+        if (isActiveNow || isFuture) {
+          const btn = element('button', isFuture ? 'Batalkan' : 'Hentikan', 'piui-btn piui-btn--secondary piui-btn--sm hd-btn-warn-outline');
+          btn.type = 'button';
+          btn.addEventListener('click', () => {
+            openAdminConfirmDialog({
+              title: isFuture ? 'Batalkan jadwal pemeliharaan?' : 'Hentikan pemeliharaan sekarang?',
+              description: `${kindDisplay} (${fmtWibText(row.starts_at)} s.d. ${fmtWibText(row.ends_at)}) akan diakhiri agar portal kembali normal.`,
+              confirmLabel: isFuture ? 'Ya, Batalkan Jadwal' : 'Ya, Hentikan Sekarang',
+              confirmTone: 'warn',
+              requireReason: false,
+              onConfirm: async () => {
+                await stopMaintenancePolicy(row.id, isFuture ? 'Jadwal pemeliharaan' : 'Mode pemeliharaan');
+              },
+            });
+          });
+          tdAct.append(btn);
+        } else {
+          tdAct.append(element('span', 'Selesai', 'hd-muted'));
+        }
+        tr.append(tdAct);
+        tbody.append(tr);
+      }
+    } catch (err) {
+      status('[data-hd-maint-status]', errorText(err));
+    }
+  }
+
+  $('[data-hd-maint-refresh]')?.addEventListener('click', () => void loadMaintenanceOverview());
+  $('[data-hd-maint-stop]')?.addEventListener('click', () => {
+    openAdminConfirmDialog({
+      title: 'Hentikan semua pemeliharaan aktif?',
+      description: 'Portal Web Publik dan seluruh operasi tulis API akan segera dikembalikan ke kondisi normal.',
+      confirmLabel: 'Ya, Kembalikan Normal',
+      confirmTone: 'primary',
+      requireReason: false,
+      onConfirm: async () => {
+        await stopMaintenancePolicy(undefined, 'Seluruh pemeliharaan');
+      },
+    });
+  });
+
   const maintForm = $('[data-hd-maintenance-form]') as HTMLFormElement | null;
   if (maintForm) {
+    const maintScheduleKind = $<HTMLSelectElement>('#hd-maint-schedule-kind');
+    const maintDisplay = $<HTMLSelectElement>('#hd-maint-display');
+    const maintMode = $<HTMLSelectElement>('#hd-maint-mode');
     const maintStart = $<HTMLInputElement>('#hd-maint-start');
     const maintEnd = $<HTMLInputElement>('#hd-maint-end');
-    if (maintStart && !maintStart.value) maintStart.value = toWibDateTimeInput(Date.now());
-    if (maintEnd && !maintEnd.value) maintEnd.value = toWibDateTimeInput(Date.now() + 2 * 3600000);
+    const setDefaultMaintWindow = (kindVal: string) => {
+      const now = Date.now();
+      if (kindVal === 'SCHEDULED') {
+        if (maintStart) maintStart.value = toWibDateTimeInput(now + 3600000);
+        if (maintEnd) maintEnd.value = toWibDateTimeInput(now + 3 * 3600000);
+      } else {
+        if (maintStart) maintStart.value = toWibDateTimeInput(now);
+        if (maintEnd) maintEnd.value = toWibDateTimeInput(now + 2 * 3600000);
+      }
+    };
+    if (maintStart && !maintStart.value && maintEnd && !maintEnd.value) {
+      setDefaultMaintWindow(maintScheduleKind?.value ?? 'UNSCHEDULED');
+    }
+    maintScheduleKind?.addEventListener('change', () => {
+      setDefaultMaintWindow(maintScheduleKind.value);
+    });
+    maintMode?.addEventListener('change', () => {
+      const normalMode = maintMode.value === 'NORMAL';
+      const reasonEl = $<HTMLTextAreaElement>('#hd-maint-reason');
+      if (reasonEl) {
+        reasonEl.required = !normalMode;
+        if (normalMode && !reasonEl.value.trim()) {
+          reasonEl.value = 'Pemeliharaan selesai; sistem beroperasi normal kembali.';
+        }
+      }
+    });
     maintForm.addEventListener('submit', async e => {
       e.preventDefault();
+      if (!maintForm.reportValidity()) return;
       const org = ($('#hd-maint-org') as HTMLSelectElement).value;
-      const mode = ($('#hd-maint-mode') as HTMLSelectElement).value;
-      const sVal = ($('#hd-maint-start') as HTMLInputElement).value;
-      const eVal = ($('#hd-maint-end') as HTMLInputElement).value;
-      const reason = ($('#hd-maint-reason') as HTMLTextAreaElement).value;
-      const body = {
-        organization_id: org,
+      const mode = maintMode?.value || 'READ_ONLY';
+      const scheduleKind = maintScheduleKind?.value || 'UNSCHEDULED';
+      const displayMode = maintDisplay?.value || 'FULL_SCREEN';
+      const sVal = maintStart?.value || '';
+      const eVal = maintEnd?.value || '';
+      const reason = ($('#hd-maint-reason') as HTMLTextAreaElement).value.trim() || 'Pemeliharaan sistem aktif.';
+      const now = Date.now();
+      const body: Record<string, unknown> = {
         mode,
-        starts_at: sVal ? new Date(sVal).toISOString() : new Date().toISOString(),
-        ends_at: eVal ? new Date(eVal).toISOString() : new Date(Date.now() + 3600000).toISOString(),
-        message: reason
+        schedule_kind: scheduleKind,
+        display_mode: displayMode,
+        starts_at: parseWibInputIso(sVal, now),
+        ends_at: parseWibInputIso(eVal, now + 7200000),
+        message: reason,
       };
+      if (org) body.organization_id = org;
       try {
         await api('/admin/maintenance', 'POST', body);
-        status('[data-hd-maint-status]', `Kebijakan pemeliharaan (${mode}) berhasil diterapkan pada server.`);
+        await loadMaintenanceOverview();
+        const modeDesc =
+          mode === 'NORMAL'
+            ? 'Mode NORMAL diaktifkan; sistem kembali beroperasi penuh.'
+            : `Kebijakan "${scheduleKind === 'UNSCHEDULED' ? 'Tidak Terjadwal / Darurat' : 'Terjadwal'}" (${displayMode === 'FULL_SCREEN' ? 'Layar Penuh Under Maintenance' : 'Banner'}, ${mode}) berhasil diterapkan.`;
+        status('[data-hd-maint-status]', modeDesc);
       } catch (err) {
         status('[data-hd-maint-status]', errorText(err));
+        $('[data-hd-maint-status]')?.focus();
       }
     });
   }

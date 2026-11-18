@@ -21,6 +21,14 @@ func ValidateMaintenancePolicy(in api.MaintenancePolicyInput) error {
 	if mode != "NORMAL" && mode != "READ_ONLY" && mode != "DRAIN" {
 		return web.Fail(400, "Mode pemeliharaan harus bernilai NORMAL, READ_ONLY atau DRAIN")
 	}
+	schedule := strings.TrimSpace(in.ScheduleKind)
+	if schedule != "" && schedule != "SCHEDULED" && schedule != "UNSCHEDULED" {
+		return web.Fail(400, "Jenis jadwal pemeliharaan harus bernilai SCHEDULED atau UNSCHEDULED")
+	}
+	display := strings.TrimSpace(in.DisplayMode)
+	if display != "" && display != "BANNER" && display != "FULL_SCREEN" {
+		return web.Fail(400, "Mode tampilan pemeliharaan harus bernilai BANNER atau FULL_SCREEN")
+	}
 	if in.StartsAt.IsZero() || in.EndsAt.IsZero() {
 		return web.Fail(400, "Waktu mulai dan selesai wajib diisi")
 	}
@@ -32,6 +40,9 @@ func ValidateMaintenancePolicy(in api.MaintenancePolicyInput) error {
 	}
 	if in.OrgID != nil && *in.OrgID != "" && !web.UUID(*in.OrgID) {
 		return web.Fail(400, "ID organisasi tidak valid")
+	}
+	if in.TargetID != "" && !web.UUID(in.TargetID) {
+		return web.Fail(400, "ID target jendela pemeliharaan tidak valid")
 	}
 	return nil
 }

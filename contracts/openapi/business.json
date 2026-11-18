@@ -19004,6 +19004,235 @@
             }
           }
         }
+      },
+      "get": {
+        "operationId": "ListMaintenanceWindows",
+        "summary": "ListMaintenanceWindows",
+        "x-command": "ListMaintenanceWindows",
+        "x-owner": "M1",
+        "x-permission": "system.maintenance",
+        "x-requirements": [
+          "FR18"
+        ],
+        "x-runtime-status": "IMPLEMENTED_RM0_05",
+        "x-authorization": "Trusted principal, live object/scope/revocation checks. Hidden object 404; visible forbidden action 403; config admin has no implicit ticket read.",
+        "security": [
+          {
+            "SessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 512
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id_asc"
+              ]
+            },
+            "description": "Stable UUID ordering; scope filter before cursor/limit. Other sort modes are rejected."
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Durable primary result; downstream delivery may still be pending",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AdminMaintenanceOverview"
+                      },
+                      "maxItems": 100
+                    },
+                    "next_cursor": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 512
+                    },
+                    "as_of": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "Z$"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "next_cursor",
+                    "as_of"
+                  ],
+                  "additionalProperties": false
+                },
+                "example": {
+                  "items": [],
+                  "next_cursor": "LAB",
+                  "as_of": "2026-11-04T03:00:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "VALIDATION_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "DEPENDENCY_UNAVAILABLE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/v1/admin/operations": {
@@ -32489,6 +32718,172 @@
         }
       }
     },
+    "/api/v1/maintenance/status": {
+      "get": {
+        "operationId": "ReadPublicMaintenanceStatus",
+        "summary": "ReadPublicMaintenanceStatus",
+        "x-command": "ReadPublicMaintenanceStatus",
+        "x-owner": "M1",
+        "x-permission": "catalog.read",
+        "x-requirements": [
+          "FR18"
+        ],
+        "x-runtime-status": "IMPLEMENTED_RM0_05",
+        "x-authorization": "Trusted principal, live object/scope/revocation checks. Hidden object 404; visible forbidden action 403; config admin has no implicit ticket read.",
+        "security": [
+          {
+            "SessionCookie": []
+          },
+          {}
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Durable primary result; downstream delivery may still be pending",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicMaintenanceStatus"
+                },
+                "example": {
+                  "active": "LAB",
+                  "upcoming": [],
+                  "observed_at": "2026-11-04T03:00:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "VALIDATION_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "DEPENDENCY_UNAVAILABLE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/tickets/{id}/retention": {
       "post": {
         "operationId": "ConfigureRetention",
@@ -35082,13 +35477,32 @@
             "type": "string",
             "enum": [
               "READ_ONLY",
-              "DRAIN"
+              "DRAIN",
+              "NORMAL"
             ]
           },
           "message": {
             "type": "string",
             "minLength": 1,
             "maxLength": 4000
+          },
+          "schedule_kind": {
+            "type": "string",
+            "enum": [
+              "SCHEDULED",
+              "UNSCHEDULED"
+            ]
+          },
+          "display_mode": {
+            "type": "string",
+            "enum": [
+              "BANNER",
+              "FULL_SCREEN"
+            ]
+          },
+          "target_id": {
+            "type": "string",
+            "format": "uuid"
           }
         },
         "required": [
@@ -38052,6 +38466,160 @@
           "kind",
           "role",
           "active"
+        ],
+        "additionalProperties": false
+      },
+      "MaintenanceWindow": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "org_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "READ_ONLY",
+              "DRAIN",
+              "NORMAL"
+            ]
+          },
+          "schedule_kind": {
+            "type": "string",
+            "enum": [
+              "SCHEDULED",
+              "UNSCHEDULED"
+            ]
+          },
+          "display_mode": {
+            "type": "string",
+            "enum": [
+              "BANNER",
+              "FULL_SCREEN"
+            ]
+          },
+          "starts_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "ends_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          }
+        },
+        "required": [
+          "id",
+          "version",
+          "mode",
+          "schedule_kind",
+          "display_mode",
+          "starts_at",
+          "ends_at",
+          "message",
+          "created_at",
+          "updated_at"
+        ],
+        "additionalProperties": false
+      },
+      "PublicMaintenanceStatus": {
+        "type": "object",
+        "properties": {
+          "active": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MaintenanceWindow"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "upcoming": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MaintenanceWindow"
+            },
+            "maxItems": 100
+          },
+          "observed_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          }
+        },
+        "required": [
+          "active",
+          "upcoming",
+          "observed_at"
+        ],
+        "additionalProperties": false
+      },
+      "AdminMaintenanceOverview": {
+        "type": "object",
+        "properties": {
+          "active": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MaintenanceWindow"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "upcoming": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MaintenanceWindow"
+            },
+            "maxItems": 100
+          },
+          "recent": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MaintenanceWindow"
+            },
+            "maxItems": 100
+          },
+          "observed_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          }
+        },
+        "required": [
+          "active",
+          "upcoming",
+          "recent",
+          "observed_at"
         ],
         "additionalProperties": false
       },

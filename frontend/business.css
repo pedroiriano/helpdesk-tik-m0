@@ -2981,3 +2981,66 @@ form[data-hd-admin-login] .hd-s2-option__check {
   }
 }
 
+/* ===== Admin Under Maintenance Status Card ===== */
+.hd-maint-live-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--piui-border, #30363d);
+  background: var(--piui-surface-2, #161b22);
+}
+
+.hd-maint-live-card.is-active {
+  border-color: rgba(248, 81, 73, 0.55);
+  background: rgba(248, 81, 73, 0.08);
+}
+
+.hd-maint-live-card.is-scheduled {
+  border-color: rgba(88, 166, 255, 0.55);
+  background: rgba(88, 166, 255, 0.08);
+}
+
+.hd-maint-live-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1 1 280px;
+  min-width: 0;
+}
+
+.hd-maint-live-card__info small {
+  color: var(--piui-muted, #8b949e);
+}
+
+.hd-maint-live-badge {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.hd-maint-live-badge.is-normal {
+  background: rgba(63, 185, 80, 0.16);
+  color: #7ee787;
+  border: 1px solid rgba(63, 185, 80, 0.35);
+}
+
+.hd-maint-live-badge.is-active {
+  background: rgba(248, 81, 73, 0.18);
+  color: #ffa198;
+  border: 1px solid rgba(248, 81, 73, 0.45);
+}
+
+.hd-maint-live-badge.is-scheduled {
+  background: rgba(88, 166, 255, 0.18);
+  color: #a5d6ff;
+  border: 1px solid rgba(88, 166, 255, 0.45);
+}
+

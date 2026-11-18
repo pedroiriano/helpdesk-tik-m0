@@ -250,6 +250,10 @@ function statusSection() {
         <div class="hd-status-tile__head"><span class="hd-status-dot"></span><strong>Depok-CSIRT &amp; Monitoring Keamanan</strong></div>
         <p class="hd-status-tile__body">Kondisi: <strong data-hd-status-csirt>Siaga 24/7 (CAL-247)</strong><br>Kedaruratan siber: Layanan <code>TIK-SEC-01</code> / Call Center 112</p>
       </div>
+      <div class="hd-status-tile" data-hd-status-maintenance>
+        <div class="hd-status-tile__head"><span class="hd-status-dot" data-hd-status-maint-dot></span><strong>Status Pemeliharaan Sistem</strong></div>
+        <p class="hd-status-tile__body">Status: <strong data-hd-status-maint-state>Memeriksa jendela pemeliharaan…</strong><br><span data-hd-status-maint-desc>Pemeliharaan terjadwal dan darurat diinformasikan secara terbuka.</span></p>
+      </div>
     </div>
     <div class="hd-status-window">
       <h3 class="hd-status-window__title">Jadwal Layanan &amp; Jendela Pemeliharaan</h3>
@@ -517,20 +521,39 @@ export function adminBusinessPage(source) {
 
     <!-- Panel Mode Pemeliharaan -->
     <div data-hd-panel-m11="maintenance" class="piui-panel">
-      <div class="hd-subform-card">
-        <h3>Konfigurasi Jendela Pemeliharaan Sistem (M1)</h3>
+      <div class="hd-maint-live-card" data-hd-maint-live>
+        <div class="hd-maint-live-card__info">
+          <span class="hd-maint-live-badge is-normal" data-hd-maint-live-badge>OPERASIONAL NORMAL</span>
+          <strong data-hd-maint-live-title>Sistem beroperasi penuh tanpa jendela pemeliharaan aktif.</strong>
+          <small data-hd-maint-live-meta>Gunakan formulir di bawah untuk mengaktifkan mode "Under Maintenance" (Terjadwal maupun Tidak Terjadwal / Darurat).</small>
+        </div>
+        <div class="hd-actions">
+          <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-hd-maint-refresh>Segarkan</button>
+          <button type="button" class="piui-btn piui-btn--primary piui-btn--sm" data-hd-maint-stop hidden>Hentikan Pemeliharaan Sekarang</button>
+        </div>
+      </div>
+
+      <div class="hd-subform-card hd-table-mt">
+        <h3>Konfigurasi Mode &amp; Jadwal "Under Maintenance" (M1)</h3>
         <form data-hd-maintenance-form class="hd-form-grid" data-local-mutation>
+          <div class="piui-field"><label for="hd-maint-schedule-kind">Jenis Pemeliharaan *</label><select class="piui-input" id="hd-maint-schedule-kind"><option value="UNSCHEDULED">Tidak Terjadwal / Darurat (Aktif Seketika)</option><option value="SCHEDULED">Terjadwal (Sesuai Waktu Mulai–Selesai)</option></select><small>Pilih "Tidak Terjadwal" untuk penanganan darurat mendadak, atau "Terjadwal" untuk rencana perawatan berkala.</small></div>
+          <div class="piui-field"><label for="hd-maint-display">Tampilan pada Portal Publik *</label><select class="piui-input" id="hd-maint-display"><option value="FULL_SCREEN">Layar Penuh "Under Maintenance" (Tutup Portal Publik)</option><option value="BANNER">Banner Pengumuman (Portal Tetap Terbaca)</option></select><small>Layar penuh menutup seluruh halaman Web Publik dengan pengumuman pemeliharaan (halaman Status &amp; Web Admin tetap dapat diakses).</small></div>
+          <div class="piui-field"><label for="hd-maint-mode">Pembatasan Operasi API *</label><select class="piui-input" id="hd-maint-mode"><option value="READ_ONLY">Read-Only (Blokir Semua Pengiriman / Mutasi)</option><option value="DRAIN">Drain (Tutup Pembuatan Tiket Baru, Tiket Lama Tetap Berjalan)</option><option value="NORMAL">Normal (Hentikan Semua Pemeliharaan Aktif &amp; Terjadwal)</option></select></div>
           <div class="piui-field"><label for="hd-maint-org">Organisasi Scope</label><select class="piui-input" id="hd-maint-org"></select></div>
-          <div class="piui-field"><label for="hd-maint-mode">Mode Pemeliharaan</label><select class="piui-input" id="hd-maint-mode"><option value="NORMAL">Normal (Semua Operasi Aktif)</option><option value="READ_ONLY">Read Only (Blokir Mutasi Tulis)</option><option value="DRAIN">Drain (Blokir Pembuatan Tiket Baru)</option></select></div>
-          <div class="piui-field"><label for="hd-maint-start">Waktu Mulai (WIB)</label><input class="piui-input" type="datetime-local" id="hd-maint-start"></div>
-          <div class="piui-field"><label for="hd-maint-end">Waktu Selesai (WIB)</label><input class="piui-input" type="datetime-local" id="hd-maint-end"></div>
-          <div class="piui-field hd-col-full"><label for="hd-maint-reason">Pesan / Alasan Pemeliharaan</label><textarea class="piui-input" id="hd-maint-reason" rows="2" placeholder="Pemberitahuan kepada pengguna saat pemeliharaan aktif..."></textarea></div>
+          <div class="piui-field"><label for="hd-maint-start">Waktu Mulai (WIB) *</label><input class="piui-input" type="datetime-local" id="hd-maint-start" required></div>
+          <div class="piui-field"><label for="hd-maint-end">Estimasi Selesai (WIB) *</label><input class="piui-input" type="datetime-local" id="hd-maint-end" required></div>
+          <div class="piui-field hd-col-full"><label for="hd-maint-reason">Pesan Pengumuman untuk Pengguna *</label><textarea class="piui-input" id="hd-maint-reason" rows="2" maxlength="500" placeholder="Contoh: Pembaruan keamanan dan infrastruktur server SPBE Kota Depok sedang berlangsung..." required></textarea></div>
           <div class="hd-form-footer hd-col-full">
             <button type="submit" class="piui-btn piui-btn--primary">Terapkan Kebijakan Pemeliharaan</button>
           </div>
         </form>
-        <p data-hd-maint-status role="status"></p>
+        <p data-hd-maint-status role="status" tabindex="-1"></p>
       </div>
+
+      <div class="hd-section-bar hd-table-mt">
+        <h4>Jadwal Aktif, Terjadwal &amp; Riwayat Pemeliharaan</h4>
+      </div>
+      <div class="hd-table-wrap"><table class="piui-table"><caption class="u-sr-only">Daftar jendela pemeliharaan sistem</caption><thead><tr><th scope="col">Jendela Waktu (WIB)</th><th scope="col">Jenis &amp; Tampilan</th><th scope="col">Mode</th><th scope="col">Pesan</th><th scope="col">Status</th><th scope="col">Tindakan</th></tr></thead><tbody data-hd-maint-rows></tbody></table></div>
     </div>
 
     <!-- Panel Scoped Operational Runner -->

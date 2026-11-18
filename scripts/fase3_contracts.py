@@ -5,6 +5,8 @@ COMMANDS = {
     'ListAdminSubjects',
     'CreateSubject',
     'UpdateSubject',
+    'ReadPublicMaintenanceStatus',
+    'ListMaintenanceWindows',
     'ListDeliveryJobs',
     'ReplayDeliveryJob',
     'ConfigureRetention',
@@ -99,6 +101,43 @@ def extend(schemas, operation, obj, arr, enum, ref, UUID, TEXT, UTC, VERSION):
         },
         optional=('expected_version', 'external_ref', 'email', 'phone', 'password'),
     )
+    schemas['Maintenance']['properties']['mode'] = enum('READ_ONLY', 'DRAIN', 'NORMAL')
+    schemas['Maintenance']['properties'].update({
+        'schedule_kind': enum('SCHEDULED', 'UNSCHEDULED'),
+        'display_mode': enum('BANNER', 'FULL_SCREEN'),
+        'target_id': UUID,
+    })
+    schemas['MaintenanceWindow'] = obj(
+        {
+            'id': UUID,
+            'version': VERSION,
+            'org_id': {'type': ['string', 'null'], 'format': 'uuid'},
+            'mode': enum('READ_ONLY', 'DRAIN', 'NORMAL'),
+            'schedule_kind': enum('SCHEDULED', 'UNSCHEDULED'),
+            'display_mode': enum('BANNER', 'FULL_SCREEN'),
+            'starts_at': UTC,
+            'ends_at': UTC,
+            'message': TEXT,
+            'created_at': UTC,
+            'updated_at': UTC,
+        },
+        optional=('org_id',),
+    )
+    schemas['PublicMaintenanceStatus'] = obj(
+        {
+            'active': {'anyOf': [{'$ref': '#/components/schemas/MaintenanceWindow'}, {'type': 'null'}]},
+            'upcoming': arr({'$ref': '#/components/schemas/MaintenanceWindow'}),
+            'observed_at': UTC,
+        }
+    )
+    schemas['AdminMaintenanceOverview'] = obj(
+        {
+            'active': {'anyOf': [{'$ref': '#/components/schemas/MaintenanceWindow'}, {'type': 'null'}]},
+            'upcoming': arr({'$ref': '#/components/schemas/MaintenanceWindow'}),
+            'recent': arr({'$ref': '#/components/schemas/MaintenanceWindow'}),
+            'observed_at': UTC,
+        }
+    )
 
     operation('get', '/auth/config', 'ReadAuthConfig', 'M1', 'session.create', 'AuthConfig', fr='FR29', public=True)
     operation('get', '/auth/sso/login', 'StartSSOLogin', 'M1', 'session.create', 'SSORedirect', status=302, fr='FR29', public=True)
@@ -137,6 +176,8 @@ def extend(schemas, operation, obj, arr, enum, ref, UUID, TEXT, UTC, VERSION):
         'VersionedReason',
         fr='FR18 FR21',
     )
+    operation('get', '/maintenance/status', 'ReadPublicMaintenanceStatus', 'M1', 'catalog.read', 'PublicMaintenanceStatus', fr='FR18', public=True)
+    operation('get', '/admin/maintenance', 'ListMaintenanceWindows', 'M1', 'system.maintenance', 'AdminMaintenanceOverview', fr='FR18', query=('organization_id',))
     operation(
         'post',
         '/tickets/{id}/retention',

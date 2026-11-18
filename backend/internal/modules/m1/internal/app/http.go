@@ -190,6 +190,24 @@ func (s *Service) Register(mux *http.ServeMux) {
 	}
 
 	// M0-11: System Administration & Recovery
+	mux.HandleFunc("GET /api/v1/maintenance/status", func(w http.ResponseWriter, r *http.Request) {
+		res, err := s.PublicMaintenanceStatus(r.Context())
+		if err != nil {
+			web.WriteError(w, err)
+			return
+		}
+		w.Header().Set("Cache-Control", "no-store")
+		web.JSON(w, 200, res)
+	})
+	mux.HandleFunc("GET /api/v1/admin/maintenance", func(w http.ResponseWriter, r *http.Request) {
+		res, err := s.ListMaintenanceOverview(r.Context(), Credentials(r), r.URL.Query().Get("organization_id"))
+		if err != nil {
+			web.WriteError(w, err)
+			return
+		}
+		w.Header().Set("Cache-Control", "no-store")
+		web.JSON(w, 200, res)
+	})
 	mux.HandleFunc("POST /api/v1/admin/maintenance", func(w http.ResponseWriter, r *http.Request) {
 		var in api.MaintenancePolicyInput
 		if err := web.Decode(w, r, &in); err != nil {

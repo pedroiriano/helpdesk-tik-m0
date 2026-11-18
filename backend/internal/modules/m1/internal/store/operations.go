@@ -11,6 +11,35 @@ import (
 	"helpdesk.local/m0/internal/platform/web"
 )
 
+const maintenanceColumns = `id, version, org_id::text, mode, schedule_kind, display_mode, starts_at, ends_at, message, created_at, updated_at`
+
+func scanMaintenancePolicy(row pgx.Row) (api.MaintenancePolicy, error) {
+	var p api.MaintenancePolicy
+	var orgNull sql.NullString
+	err := row.Scan(
+		&p.ID, &p.Version, &orgNull, &p.Mode, &p.ScheduleKind, &p.DisplayMode,
+		&p.StartsAt, &p.EndsAt, &p.Message, &p.CreatedAt, &p.UpdatedAt,
+	)
+	if err == nil && orgNull.Valid {
+		val := orgNull.String
+		p.OrgID = &val
+	}
+	return p, err
+}
+
+func scanMaintenanceList(rows pgx.Rows) ([]api.MaintenancePolicy, error) {
+	out := make([]api.MaintenancePolicy, 0)
+	defer rows.Close()
+	for rows.Next() {
+		p, err := scanMaintenancePolicy(rows)
+		if err != nil {
+			return nil, err
+		}
+		out = append(out, p)
+	}
+	return out, rows.Err()
+}
+
 // InsertMaintenancePolicy records a new maintenance policy in identity.maintenance_policies.
 func (s Store) InsertMaintenancePolicy(ctx context.Context, in api.MaintenancePolicyInput) (*api.MaintenancePolicy, error) {
 	id := web.ID()
@@ -21,12 +50,39 @@ func (s Store) InsertMaintenancePolicy(ctx context.Context, in api.MaintenancePo
 		orgVal = *in.OrgID
 	}
 
+	scheduleKind := in.ScheduleKind
+	if scheduleKind == "" {
+		scheduleKind = "UNSCHEDULED"
+	}
+	displayMode := in.DisplayMode
+	if displayMode == "" {
+		displayMode = "BANNER"
+	}
+
 	if in.Mode == "NORMAL" {
-		// When mode is NORMAL, terminate any active maintenance windows
-		if orgVal != nil {
+		// End active and scheduled future windows without violating CHECK(ends_at > starts_at).
+		if in.TargetID != "" && web.UUID(in.TargetID) {
+			var err error
+			if orgVal != nil {
+				_, err = s.Pool.Exec(ctx, `
+					UPDATE identity.maintenance_policies
+					SET starts_at = LEAST(starts_at, now() - interval '1 second'), ends_at = now(), updated_at = now()
+					WHERE id = $1 AND ends_at > now() AND (org_id IS NULL OR org_id = $2)
+				`, in.TargetID, orgVal)
+			} else {
+				_, err = s.Pool.Exec(ctx, `
+					UPDATE identity.maintenance_policies
+					SET starts_at = LEAST(starts_at, now() - interval '1 second'), ends_at = now(), updated_at = now()
+					WHERE id = $1 AND ends_at > now()
+				`, in.TargetID)
+			}
+			if err != nil {
+				return nil, err
+			}
+		} else if orgVal != nil {
 			_, err := s.Pool.Exec(ctx, `
 				UPDATE identity.maintenance_policies
-				SET ends_at = now(), updated_at = now()
+				SET starts_at = LEAST(starts_at, now() - interval '1 second'), ends_at = now(), updated_at = now()
 				WHERE ends_at > now() AND (org_id IS NULL OR org_id = $1)
 			`, orgVal)
 			if err != nil {
@@ -35,7 +91,7 @@ func (s Store) InsertMaintenancePolicy(ctx context.Context, in api.MaintenancePo
 		} else {
 			_, err := s.Pool.Exec(ctx, `
 				UPDATE identity.maintenance_policies
-				SET ends_at = now(), updated_at = now()
+				SET starts_at = LEAST(starts_at, now() - interval '1 second'), ends_at = now(), updated_at = now()
 				WHERE ends_at > now()
 			`)
 			if err != nil {
@@ -43,46 +99,47 @@ func (s Store) InsertMaintenancePolicy(ctx context.Context, in api.MaintenancePo
 			}
 		}
 		return &api.MaintenancePolicy{
-			ID:        id,
-			Version:   1,
-			OrgID:     in.OrgID,
-			Mode:      in.Mode,
-			StartsAt:  in.StartsAt,
-			EndsAt:    in.EndsAt,
-			Message:   in.Message,
-			CreatedAt: now,
-			UpdatedAt: now,
+			ID:           id,
+			Version:      1,
+			OrgID:        in.OrgID,
+			Mode:         in.Mode,
+			ScheduleKind: scheduleKind,
+			DisplayMode:  displayMode,
+			StartsAt:     in.StartsAt,
+			EndsAt:       in.EndsAt,
+			Message:      in.Message,
+			CreatedAt:    now,
+			UpdatedAt:    now,
 		}, nil
 	}
 
 	_, err := s.Pool.Exec(ctx, `
-		INSERT INTO identity.maintenance_policies (id, version, org_id, mode, starts_at, ends_at, message, created_at, updated_at)
-		VALUES ($1, 1, $2, $3, $4, $5, $6, $7, $7)
-	`, id, orgVal, in.Mode, in.StartsAt, in.EndsAt, in.Message, now)
+		INSERT INTO identity.maintenance_policies (id, version, org_id, mode, schedule_kind, display_mode, starts_at, ends_at, message, created_at, updated_at)
+		VALUES ($1, 1, $2, $3, $4, $5, $6, $7, $8, $9, $9)
+	`, id, orgVal, in.Mode, scheduleKind, displayMode, in.StartsAt, in.EndsAt, in.Message, now)
 	if err != nil {
 		return nil, err
 	}
 
 	return &api.MaintenancePolicy{
-		ID:        id,
-		Version:   1,
-		OrgID:     in.OrgID,
-		Mode:      in.Mode,
-		StartsAt:  in.StartsAt,
-		EndsAt:    in.EndsAt,
-		Message:   in.Message,
-		CreatedAt: now,
-		UpdatedAt: now,
+		ID:           id,
+		Version:      1,
+		OrgID:        in.OrgID,
+		Mode:         in.Mode,
+		ScheduleKind: scheduleKind,
+		DisplayMode:  displayMode,
+		StartsAt:     in.StartsAt,
+		EndsAt:       in.EndsAt,
+		Message:      in.Message,
+		CreatedAt:    now,
+		UpdatedAt:    now,
 	}, nil
 }
 
 // ActiveMaintenancePolicy checks if there is any active maintenance window for the given org (or global).
 func (s Store) ActiveMaintenancePolicy(ctx context.Context, orgID string) (*api.MaintenancePolicy, error) {
-	var p api.MaintenancePolicy
-	var orgNull sql.NullString
-
 	query := `
-		SELECT id, version, org_id::text, mode, starts_at, ends_at, message, created_at, updated_at
+		SELECT ` + maintenanceColumns + `
 		FROM identity.maintenance_policies
 		WHERE now() >= starts_at AND now() <= ends_at
 	`
@@ -91,22 +148,68 @@ func (s Store) ActiveMaintenancePolicy(ctx context.Context, orgID string) (*api.
 		query += ` AND (org_id IS NULL OR org_id = $1)`
 		args = append(args, orgID)
 	}
-	query += ` ORDER BY created_at DESC LIMIT 1`
+	query += ` ORDER BY created_at DESC, (display_mode = 'FULL_SCREEN') DESC LIMIT 1`
 
-	err := s.Pool.QueryRow(ctx, query, args...).Scan(
-		&p.ID, &p.Version, &orgNull, &p.Mode, &p.StartsAt, &p.EndsAt, &p.Message, &p.CreatedAt, &p.UpdatedAt,
-	)
-	if err == pgx.ErrNoRows {
+	p, err := scanMaintenancePolicy(s.Pool.QueryRow(ctx, query, args...))
+	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, nil
 	} else if err != nil {
 		return nil, err
 	}
-
-	if orgNull.Valid {
-		val := orgNull.String
-		p.OrgID = &val
-	}
 	return &p, nil
+}
+
+// MaintenanceOverview returns active, upcoming scheduled, and recent maintenance policies.
+func (s Store) MaintenanceOverview(ctx context.Context, orgID string, recentLimit int) (*api.MaintenancePolicy, []api.MaintenancePolicy, []api.MaintenancePolicy, error) {
+	if recentLimit < 1 || recentLimit > 50 {
+		recentLimit = 15
+	}
+	active, err := s.ActiveMaintenancePolicy(ctx, orgID)
+	if err != nil {
+		return nil, nil, nil, err
+	}
+
+	upcomingSQL := `
+		SELECT ` + maintenanceColumns + `
+		FROM identity.maintenance_policies
+		WHERE starts_at > now() AND ends_at > now()
+	`
+	upcomingArgs := []any{}
+	if orgID != "" && web.UUID(orgID) {
+		upcomingSQL += ` AND (org_id IS NULL OR org_id = $1)`
+		upcomingArgs = append(upcomingArgs, orgID)
+	}
+	upcomingSQL += ` ORDER BY starts_at ASC LIMIT 5`
+	upRows, err := s.Pool.Query(ctx, upcomingSQL, upcomingArgs...)
+	if err != nil {
+		return nil, nil, nil, err
+	}
+	upcoming, err := scanMaintenanceList(upRows)
+	if err != nil {
+		return nil, nil, nil, err
+	}
+
+	recentSQL := `
+		SELECT ` + maintenanceColumns + `
+		FROM identity.maintenance_policies
+	`
+	recentArgs := []any{}
+	if orgID != "" && web.UUID(orgID) {
+		recentSQL += ` WHERE (org_id IS NULL OR org_id = $1) ORDER BY created_at DESC LIMIT $2`
+		recentArgs = append(recentArgs, orgID, recentLimit)
+	} else {
+		recentSQL += ` ORDER BY created_at DESC LIMIT $1`
+		recentArgs = append(recentArgs, recentLimit)
+	}
+	recRows, err := s.Pool.Query(ctx, recentSQL, recentArgs...)
+	if err != nil {
+		return nil, nil, nil, err
+	}
+	recent, err := scanMaintenanceList(recRows)
+	if err != nil {
+		return nil, nil, nil, err
+	}
+	return active, upcoming, recent, nil
 }
 
 const systemJobColumns = `id::text,version,kind,requested_by::text,target_id::text,

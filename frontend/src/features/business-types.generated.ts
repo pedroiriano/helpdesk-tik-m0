@@ -47,7 +47,7 @@ export interface Components {
   'NavigationWrite': { 'expected_version': number; 'route': string; 'label': string; 'audience': 'PUBLIC_GUEST' | 'PUBLIC_AUTH' | 'ASN_AUTH' | 'STAFF_ONLY'; 'position': number };
   'MembershipWrite': { 'expected_version'?: number; 'subject_id': string; 'organization_id': string; 'team_id'?: string | null; 'permissions': (string)[]; 'expires_at': string; 'revoked'?: boolean; 'reason': string };
   'RuleWrite': { 'expected_version': number; 'code': string; 'rule_version': number; 'active': boolean; 'reason': string };
-  'Maintenance': { 'expected_version': number; 'organization_id': string; 'starts_at': string; 'ends_at': string; 'mode': 'READ_ONLY' | 'DRAIN'; 'message': string };
+  'Maintenance': { 'expected_version': number; 'organization_id': string; 'starts_at': string; 'ends_at': string; 'mode': 'READ_ONLY' | 'DRAIN' | 'NORMAL'; 'message': string; 'schedule_kind'?: 'SCHEDULED' | 'UNSCHEDULED'; 'display_mode'?: 'BANNER' | 'FULL_SCREEN'; 'target_id'?: string };
   'SystemJob': { 'kind': 'BACKUP_MANIFEST' | 'HEALTH_REPORT' | 'PURGE_REQUEST'; 'target_id': string; 'reason': string };
   'PurgeRequest': { 'expected_version': number; 'object_id': string; 'retention_policy_version': number; 'reason': string };
   'HealthAdmin': { 'status': 'HEALTHY' | 'DEGRADED' | 'BUSY'; 'modules': Record<string, unknown>; 'scanner': 'HEALTHY' | 'UNAVAILABLE'; 'storage': 'HEALTHY' | 'UNAVAILABLE'; 'worker': 'HEALTHY' | 'UNAVAILABLE'; 'outbox_lag': number | null; 'inbox_lag': number | null; 'oldest_delivery_seconds': number | null; 'dead_letters': number | null; 'observed_at': string };
@@ -116,6 +116,9 @@ export interface Components {
   'RetentionInput': { 'expected_version': number; 'legal_hold': boolean; 'retention_until'?: string | null; 'reason': string };
   'RetentionStatus': { 'ticket_id': string; 'version': number; 'legal_hold': boolean; 'retention_until'?: string | null; 'purged_at'?: string | null };
   'SubjectWrite': { 'expected_version'?: number; 'name': string; 'kind': 'PUBLIC' | 'ASN' | 'STAFF'; 'role': string; 'external_ref'?: string; 'email'?: string; 'phone'?: string; 'password'?: string; 'active': boolean };
+  'MaintenanceWindow': { 'id': string; 'version': number; 'org_id'?: string | null; 'mode': 'READ_ONLY' | 'DRAIN' | 'NORMAL'; 'schedule_kind': 'SCHEDULED' | 'UNSCHEDULED'; 'display_mode': 'BANNER' | 'FULL_SCREEN'; 'starts_at': string; 'ends_at': string; 'message': string; 'created_at': string; 'updated_at': string };
+  'PublicMaintenanceStatus': { 'active': unknown; 'upcoming': (Components['MaintenanceWindow'])[]; 'observed_at': string };
+  'AdminMaintenanceOverview': { 'active': unknown; 'upcoming': (Components['MaintenanceWindow'])[]; 'recent': (Components['MaintenanceWindow'])[]; 'observed_at': string };
   'AcceptResolution': { 'expected_version': number; 'attempt_id': string };
   'ServiceUpdate': { 'expected_version': number; 'code': string; 'name': string; 'access_mode': 'PUBLIC_GUEST' | 'PUBLIC_AUTH' | 'ASN_AUTH' | 'STAFF_ONLY'; 'owner_org_id': string; 'form_version': number; 'active': boolean; 'category_id': string | null };
 }

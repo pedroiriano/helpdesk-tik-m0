@@ -29,8 +29,34 @@ func (s *Service) ConfigureMaintenance(ctx context.Context, c api.Credentials, i
 	if in.OrgID == nil && in.OrganizationID != "" {
 		in.OrgID = &in.OrganizationID
 	}
+	if in.OrgID != nil && *in.OrgID != "" {
+		if web.UUID(*in.OrgID) && !actor.Can("system.maintenance", *in.OrgID) {
+			return nil, web.Fail(403, "Organisasi target di luar mandat system.maintenance")
+		}
+	} else if actor.Role != "SUPER_ADMIN" && actor.Role != "PLATFORM_ADMIN" {
+		orgs := actor.Orgs("system.maintenance")
+		if len(orgs) == 1 {
+			in.OrgID = &orgs[0]
+		} else {
+			return nil, web.Fail(403, "Pemeliharaan global memerlukan kewenangan Platform Admin atau Super Admin; tentukan organisasi target")
+		}
+	}
 	if in.Message == "" {
 		in.Message = "Jendela pemeliharaan sistem aktif"
+	}
+	if strings.TrimSpace(in.ScheduleKind) == "" {
+		if in.Mode != "NORMAL" && in.StartsAt.After(time.Now().UTC().Add(2*time.Minute)) {
+			in.ScheduleKind = "SCHEDULED"
+		} else {
+			in.ScheduleKind = "UNSCHEDULED"
+		}
+	} else {
+		in.ScheduleKind = strings.TrimSpace(in.ScheduleKind)
+	}
+	if strings.TrimSpace(in.DisplayMode) == "" {
+		in.DisplayMode = "BANNER"
+	} else {
+		in.DisplayMode = strings.TrimSpace(in.DisplayMode)
 	}
 
 	if err := domain.ValidateMaintenancePolicy(in); err != nil {
@@ -43,6 +69,57 @@ func (s *Service) ConfigureMaintenance(ctx context.Context, c api.Credentials, i
 	}
 
 	return policy, nil
+}
+
+// PublicMaintenanceStatus exposes safe maintenance status and upcoming windows for public views.
+func (s *Service) PublicMaintenanceStatus(ctx context.Context) (api.PublicMaintenanceStatus, error) {
+	active, upcoming, _, err := s.Store.MaintenanceOverview(ctx, "", 1)
+	if err != nil {
+		return api.PublicMaintenanceStatus{}, err
+	}
+	return api.PublicMaintenanceStatus{
+		Active:     active,
+		Upcoming:   upcoming,
+		ObservedAt: time.Now().UTC(),
+	}, nil
+}
+
+// ListMaintenanceOverview returns active, upcoming, and recent windows scoped for system.maintenance admins.
+func (s *Service) ListMaintenanceOverview(ctx context.Context, c api.Credentials, orgID string) (api.AdminMaintenanceOverview, error) {
+	actor, err := s.Authenticate(ctx, c)
+	if err != nil {
+		return api.AdminMaintenanceOverview{}, err
+	}
+	if !s.hasPermission(actor, "system.maintenance") && !s.hasPermission(actor, "system.health") {
+		return api.AdminMaintenanceOverview{}, web.Fail(403, "Izin system.maintenance atau system.health diperlukan")
+	}
+	scopeOrg := strings.TrimSpace(orgID)
+	if scopeOrg != "" {
+		if !web.UUID(scopeOrg) {
+			return api.AdminMaintenanceOverview{}, web.Fail(400, "ID organisasi tidak valid")
+		}
+		if !actor.Can("system.maintenance", scopeOrg) && !actor.Can("system.health", scopeOrg) {
+			return api.AdminMaintenanceOverview{}, web.Fail(403, "Organisasi di luar mandat system.maintenance")
+		}
+	} else if actor.Role != "SUPER_ADMIN" && actor.Role != "PLATFORM_ADMIN" {
+		orgs := actor.Orgs("system.maintenance")
+		if len(orgs) == 0 {
+			orgs = actor.Orgs("system.health")
+		}
+		if len(orgs) > 0 {
+			scopeOrg = orgs[0]
+		}
+	}
+	active, upcoming, recent, err := s.Store.MaintenanceOverview(ctx, scopeOrg, 15)
+	if err != nil {
+		return api.AdminMaintenanceOverview{}, err
+	}
+	return api.AdminMaintenanceOverview{
+		Active:     active,
+		Upcoming:   upcoming,
+		Recent:     recent,
+		ObservedAt: time.Now().UTC(),
+	}, nil
 }
 
 func (s *Service) RequestSystemJob(ctx context.Context, c api.Credentials, in api.SystemJobInput, key string) (*api.SystemJob, error) {

@@ -27,6 +27,9 @@ export function createPublicUI(landing) {
     if (!html.includes('js/modules/navigation.js')) {
       html = html.replace('</body>', '<script src="/js/modules/navigation.js?v=4.3" defer></script></body>');
     }
+    if (!html.includes('helpdesk/maintenance-banner.js')) {
+      html = html.replace('</body>', '<script src="/helpdesk/maintenance-banner.js" defer></script></body>');
+    }
     const images = ['bantuan-operator', 'wifi-jaringan', 'cloud-layanan', 'perawatan-tik'];
     html = html.replace(/<source\b[^>]*ball-0[1-4][^>]*>/g, '');
     html = html.replace(/<img\b[^>]*src="[^"]*ball-0([1-4])[^"]*"[^>]*>/g, (image, number) => {

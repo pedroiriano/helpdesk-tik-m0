@@ -266,6 +266,7 @@ await writeFile(join(output, 'helpdesk/landing.css'), await readFile(new URL('./
 await writeFile(join(output, 'helpdesk/hero-public.js'), await readFile(new URL('./hero-public.js', import.meta.url)));
 await writeFile(join(output, 'helpdesk/public-ui.css'), await readFile(new URL('./public-ui.css', import.meta.url)));
 await writeFile(join(output, 'helpdesk/public-pages.css'), await readFile(new URL('./public-pages.css', import.meta.url)));
+await writeFile(join(output, 'helpdesk/maintenance-banner.js'), await readFile(new URL('./maintenance-banner.js', import.meta.url)));
 for (const folder of ['02_Hero_Tanpa_Teks', '03_Ilustrasi_Pendukung', '05_Brand']) {
   await cp(new URL('../assets/' + folder, import.meta.url), join(output, 'assets/helpdesk', folder), { recursive: true });
 }
