@@ -1,4 +1,5 @@
 import { sessionBus } from './session-events';
+import { initAdminDataTables } from './admin-datatable';
 import { primaryProfiles, quickLoginSubject } from '../../admin-profiles.mjs';
 import { bindAccessEditor } from './admin-access';
 import { showRolePolicies } from './role-policy-editor';
@@ -906,7 +907,7 @@ async function admin(): Promise<void> {
     root.replaceChildren();
     status('[data-hd-status]', 'Memuat master dari server…');
     try {
-      const page = await api<Page<Master>>(`/admin/${requestedKind}?limit=20${cursor ? '&cursor=' + encodeURIComponent(cursor) : ''}`);
+      const page = await api<Page<Master>>(`/admin/${requestedKind}?limit=100${cursor ? '&cursor=' + encodeURIComponent(cursor) : ''}`);
       if (epoch !== listEpoch) return;
       next = page.next_cursor;
       for (const row of page.items) {
@@ -1114,6 +1115,32 @@ async function admin(): Promise<void> {
     }
   });
 
+  const loadAuditLogs = async () => {
+    status('[data-hd-status]', 'Memuat jejak audit append-only…');
+    try {
+      const res = await api<{ items: { created_at: string; actor_id: string; action: string; object_id: string; result: string; reason?: string }[] }>('/audit?limit=100');
+      const rows = $('[data-hd-audit-rows]');
+      if (rows) {
+        rows.replaceChildren();
+        for (const it of res.items || []) {
+          const tr = element('tr');
+          tr.append(
+            element('td', new Date(it.created_at).toLocaleString('id-ID')),
+            element('td', it.actor_id.slice(0, 8) + '…'),
+            element('td', it.action),
+            element('td', it.object_id ? it.object_id.slice(0, 8) + '…' : '-'),
+            element('td', it.result),
+            element('td', it.reason || '-')
+          );
+          rows.append(tr);
+        }
+      }
+      status('[data-hd-status]', 'Jejak audit berhasil dimuat.');
+    } catch (err) {
+      status('[data-hd-status]', errorText(err));
+    }
+  };
+
   // M9 Tabs & Handlers
   const m9Tabs = nodes<HTMLButtonElement>('[data-hd-tab]');
   const m9Panels = nodes<HTMLElement>('[data-hd-panel]');
@@ -1129,6 +1156,9 @@ async function admin(): Promise<void> {
       p.hidden = p.dataset.hdPanel !== target;
     }
     if (target === 'notifications') void loadNotificationsInbox();
+    if (target === 'audit' && session?.actor.memberships.some(m => m.organization_active && m.permissions.includes('audit.read'))) {
+      void loadAuditLogs();
+    }
   }
   $('[data-hd-refresh-notif]')?.addEventListener('click', () => void loadNotificationsInbox());
   $('[data-hd-refresh-delivery]')?.addEventListener('click', () => void loadDeliveryJobs());
@@ -1327,30 +1357,8 @@ async function admin(): Promise<void> {
     });
   }
 
-  $('[data-hd-refresh-audit]')?.addEventListener('click', async () => {
-    status('[data-hd-status]', 'Memuat jejak audit append-only…');
-    try {
-      const res = await api<{ items: { created_at: string; actor_id: string; action: string; object_id: string; result: string; reason?: string }[] }>('/audit?limit=25');
-      const rows = $('[data-hd-audit-rows]');
-      if (rows) {
-        rows.replaceChildren();
-        for (const it of res.items || []) {
-          const tr = element('tr');
-          tr.append(
-            element('td', new Date(it.created_at).toLocaleString('id-ID')),
-            element('td', it.actor_id.slice(0, 8) + '…'),
-            element('td', it.action),
-            element('td', it.object_id ? it.object_id.slice(0, 8) + '…' : '-'),
-            element('td', it.result),
-            element('td', it.reason || '-')
-          );
-          rows.append(tr);
-        }
-      }
-      status('[data-hd-status]', 'Jejak audit berhasil dimuat.');
-    } catch (err) {
-      status('[data-hd-status]', errorText(err));
-    }
+  $('[data-hd-refresh-audit]')?.addEventListener('click', () => {
+    void loadAuditLogs();
   });
 
   // M11 Tabs and Operational Runner
@@ -2063,7 +2071,7 @@ async function admin(): Promise<void> {
     if (editorialPrev) editorialPrev.disabled = true;
     if (editorialNext) editorialNext.disabled = true;
     try {
-      const query = new URLSearchParams({limit: '20'});
+      const query = new URLSearchParams({limit: '100'});
       const cursor = articleCursors.at(-1);
       if (cursor) query.set('cursor', cursor);
       const res = await api<Page<EditorialArticle>>(`${editorialApiBase()}?` + query);
@@ -2216,6 +2224,7 @@ async function main() {
   if (page && page !== 'login' && page !== 'register') {
     await loadSession();
     if (location.pathname.startsWith('/admin/') && !canOpenAdminPage(location.pathname,location.search,session)) return;
+    if (location.pathname.startsWith('/admin/')) initAdminDataTables();
     if (page === 'catalog') await catalog();
     if (page === 'detail') await detail();
     if (page === 'status') await statusPage();

@@ -182,7 +182,7 @@ export async function loadHandoffInbox(session: Session, onRefreshQueue: () => P
   if (!allowed) return;
   const reload = async () => {
     try {
-      const res = await api<{ items: HandoffItem[] }>('/handoffs?limit=20');
+      const res = await api<{ items: HandoffItem[] }>('/handoffs?limit=100');
       rows.replaceChildren();
       if (!res.items.length) {
         const tr = el('tr');

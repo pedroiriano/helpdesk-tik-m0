@@ -1,4 +1,5 @@
 import { syncAdminShell } from './admin-shell';
+import { initAdminDataTables } from './admin-datatable';
 import { bindReportingContext } from './reporting-context';
 import { canOpenAdminPage } from '../../admin-navigation.mjs';
 import { ticketActions, activeResolution, setGuestReceiptMode, commandFingerprint } from './ticket-actions';
@@ -1632,7 +1633,9 @@ function createCursorPager<T>(
 
   urlProvider: () => string,
 
-  renderer: (items: T[]) => void
+  renderer: (items: T[]) => void,
+
+  limit = 10
 
 ): (reset?: boolean) => Promise<void> {
 
@@ -1676,7 +1679,7 @@ function createCursorPager<T>(
 
       const sep = base.includes('?') ? '&' : '?';
 
-      const u = `${base}${sep}limit=10${cursor ? '&cursor=' + encodeURIComponent(cursor) : ''}`;
+      const u = `${base}${sep}limit=${limit}${cursor ? '&cursor=' + encodeURIComponent(cursor) : ''}`;
 
       const res = await api<{ items: T[]; next_cursor: string | null }>(u);
 
@@ -1864,7 +1867,10 @@ async function list(): Promise<void> {
   const renderTickets = (items: Ticket[]) => {
     root.replaceChildren();
     if (adminQueue) {
-      if (items.length) root.append(queueTable(items, bulkCfg));
+      if (items.length) {
+        root.append(queueTable(items, bulkCfg));
+        initAdminDataTables(root);
+      }
       return;
     }
     for (const ticket of items) {
@@ -1887,7 +1893,7 @@ async function list(): Promise<void> {
 
   const pager = createCursorPager<Ticket>('tiket', buildEndpoint, items => {
     renderTickets(items);
-  });
+  }, adminQueue ? 100 : 10);
 
   if (searchForm) {
     searchForm.hidden = false;
@@ -4165,6 +4171,7 @@ async function main(): Promise<void> {
   try {
     await loadSession();
     if (location.pathname.startsWith('/admin/') && !canOpenAdminPage(location.pathname,location.search,session)) return;
+    if (location.pathname.startsWith('/admin/')) initAdminDataTables();
 
     if (kind === 'create') await create();
 

@@ -1915,3 +1915,307 @@ dialog .hd-actions {
 .hd-ticket-lightbox__img { max-width: 100%; max-height: 70vh; object-fit: contain; display: block; margin: 0 auto; border-radius: 8px; }
 .hd-service-option__meta .court-badge { margin: 0; }
 
+/* ============================================================================
+   Web Admin Interactive Data Tables (Sorting, Filter, Live Search, Page Size, Pagination, Responsive)
+   ============================================================================ */
+.hd-dt-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin-block: 18px 22px;
+  min-inline-size: 0;
+}
+
+[data-ticket-list] > .hd-dt-shell,
+[data-ticket-list] > .hd-queue-table {
+  grid-column: 1 / -1;
+  min-inline-size: 0;
+}
+
+.hd-dt-shell > .hd-table-wrap,
+.hd-dt-shell > .piui-table-scroll {
+  margin-block: 0 !important;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.hd-dt-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--piui-border-subtle, #27272a);
+  border-radius: 8px;
+  background: var(--piui-bg-subtle, rgba(127, 127, 127, 0.04));
+  min-inline-size: 0;
+}
+
+.hd-dt-control {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-inline-size: 0;
+}
+
+.hd-dt-control--search {
+  flex: 1 1 220px;
+}
+
+.hd-dt-control--filter {
+  flex: 0 1 220px;
+  max-inline-size: 100%;
+}
+
+.hd-dt-control--pagesize {
+  flex: 0 0 auto;
+  min-inline-size: 104px;
+}
+
+.hd-dt-control--mobile-sort {
+  display: none;
+}
+
+.hd-dt-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--piui-text-secondary, #a1a1aa);
+  line-height: 1.3;
+}
+
+.hd-dt-toolbar .piui-input {
+  min-block-size: 38px;
+  padding-block: 6px;
+  padding-inline: 10px;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  box-sizing: border-box;
+}
+
+.hd-dt-reset {
+  min-block-size: 38px;
+  align-self: flex-end;
+}
+
+.hd-dt-reset[hidden] {
+  display: none !important;
+}
+
+.hd-dt-table th[aria-sort] {
+  padding: 6px 8px !important;
+}
+
+.hd-dt-sort {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  inline-size: 100%;
+  min-block-size: 34px;
+  padding: 4px 8px;
+  margin: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.hd-dt-sort:hover {
+  background: rgba(56, 139, 253, 0.12);
+  border-color: rgba(56, 139, 253, 0.35);
+}
+
+.hd-dt-sort:focus-visible {
+  outline: 2px solid #388bfd;
+  outline-offset: 2px;
+}
+
+.hd-dt-table th.is-sorted .hd-dt-sort {
+  background: rgba(56, 139, 253, 0.16);
+  border-color: rgba(56, 139, 253, 0.45);
+  color: #58a6ff;
+}
+
+.hd-dt-sort__icon {
+  flex: 0 0 auto;
+  font-size: 0.85rem;
+  opacity: 0.72;
+}
+
+.hd-dt-table th.is-sorted .hd-dt-sort__icon {
+  opacity: 1;
+  font-weight: 700;
+}
+
+.piui-app-shell .hd-dt-table tbody tr[hidden],
+.hd-dt-table tbody tr[hidden],
+.hd-queue-table table.piui-table tbody tr[hidden] {
+  display: none !important;
+}
+
+.hd-dt-empty-row td {
+  text-align: center !important;
+  padding: 22px 16px !important;
+  color: var(--piui-text-secondary, #a1a1aa);
+  font-style: italic;
+}
+
+.hd-dt-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px 14px;
+  min-inline-size: 0;
+}
+
+.hd-dt-info {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--piui-text-secondary, #a1a1aa);
+}
+
+.hd-dt-pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.hd-dt-pager[hidden] {
+  display: none !important;
+}
+
+.hd-dt-page-btn {
+  min-inline-size: 36px;
+}
+
+.hd-dt-page-btn.is-active {
+  font-weight: 700;
+}
+
+.hd-dt-ellipsis {
+  padding-inline: 4px;
+  color: var(--piui-text-secondary, #a1a1aa);
+  user-select: none;
+}
+
+@media (max-width: 768px) {
+  .hd-dt-toolbar {
+    gap: 10px;
+  }
+  .hd-dt-control--search {
+    flex: 1 1 100%;
+  }
+  .hd-dt-control--filter {
+    flex: 1 1 180px;
+  }
+  .hd-dt-control--pagesize {
+    flex: 0 1 110px;
+  }
+}
+
+@media (max-width: 640px) {
+  .hd-dt-control--mobile-sort {
+    display: flex;
+    flex: 1 1 100%;
+  }
+  .hd-dt-control--filter,
+  .hd-dt-control--pagesize {
+    flex: 1 1 calc(50% - 5px);
+  }
+  .hd-dt-reset {
+    inline-size: 100%;
+    min-block-size: 44px;
+  }
+  .hd-dt-toolbar .piui-input,
+  .hd-dt-page-btn {
+    min-block-size: 44px;
+  }
+  .hd-dt-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .hd-dt-pager {
+    justify-content: center;
+  }
+  .piui-app-shell .hd-dt-scroll {
+    overflow-x: visible !important;
+    border: 0 !important;
+    background: transparent !important;
+  }
+  .piui-app-shell .hd-dt-table {
+    inline-size: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  .piui-app-shell .hd-dt-table caption {
+    padding-bottom: 10px;
+    font-weight: 700;
+  }
+  .piui-app-shell .hd-dt-table thead {
+    display: none;
+  }
+  .piui-app-shell .hd-dt-table tbody {
+    display: grid;
+    gap: 12px;
+  }
+  .piui-app-shell .hd-dt-table tbody tr {
+    display: block;
+    margin: 0;
+    padding: 12px;
+    border: 1px solid var(--piui-border, #3f3f46);
+    border-radius: 10px;
+    background: var(--piui-bg-elevated, rgba(255, 255, 255, 0.02));
+    min-inline-size: 0;
+  }
+  .piui-app-shell .hd-dt-table tbody tr > :is(th, td) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px 12px;
+    padding: 7px 0 !important;
+    border-bottom: 1px dashed rgba(161, 161, 170, 0.25);
+    text-align: end;
+    overflow-wrap: anywhere;
+  }
+  .piui-app-shell .hd-dt-table tbody tr > :is(th, td):last-child {
+    border-bottom: 0;
+    padding-bottom: 2px !important;
+  }
+  .piui-app-shell .hd-dt-table tbody tr > :is(th, td)::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--piui-text-secondary, #a1a1aa);
+    text-align: start;
+    flex: 0 1 auto;
+  }
+  .piui-app-shell .hd-dt-table tbody tr > th[scope="row"] {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: start;
+    gap: 4px;
+  }
+  .piui-app-shell .hd-dt-table tbody tr > th[scope="row"]::before {
+    font-size: 0.78rem;
+  }
+  .piui-app-shell .hd-dt-table tbody tr > td[colspan] {
+    display: block;
+    text-align: center;
+    border-bottom: 0;
+  }
+  .piui-app-shell .hd-dt-table tbody tr > td[colspan]::before {
+    content: none;
+  }
+  .piui-app-shell .hd-dt-table tbody tr > td .hd-row-actions,
+  .piui-app-shell .hd-dt-table tbody tr > td.hd-actions {
+    justify-content: flex-end;
+  }
+}
+

@@ -86,7 +86,7 @@ export async function loadNotificationsInbox(): Promise<void> {
   if (!rows) return;
   if (stat) stat.textContent = 'Memuat notifikasi dari server…';
   try {
-    const res = await api<Page<NotificationItem>>('/notifications?limit=25');
+    const res = await api<Page<NotificationItem>>('/notifications?limit=100');
     rows.replaceChildren();
     if (!res.items.length) {
       rows.append(emptyRow(4, 'Belum ada notifikasi pada akun Anda.'));
@@ -142,7 +142,7 @@ export async function loadDeliveryJobs(): Promise<void> {
   const stat = $('[data-hd-delivery-status]');
   if (!panel || !rows) return;
   const filter = ($('#hd-delivery-state') as HTMLSelectElement | null)?.value ?? '';
-  const query = filter ? `?limit=25&state=${encodeURIComponent(filter)}` : '?limit=25';
+  const query = filter ? `?limit=100&state=${encodeURIComponent(filter)}` : '?limit=100';
   try {
     const res = await api<Page<DeliveryJobItem>>(`/admin/delivery-jobs${query}`);
     panel.hidden = false;
@@ -228,7 +228,7 @@ export async function loadOperationsList(): Promise<void> {
   const stat = $('[data-hd-runner-status]');
   if (!rows) return;
   try {
-    const res = await api<{ items: SystemJobItem[] }>('/admin/operations?limit=20');
+    const res = await api<{ items: SystemJobItem[] }>('/admin/operations?limit=100');
     rows.replaceChildren();
     if (!res.items.length) {
       rows.append(emptyRow(5, 'Belum ada pekerjaan sistem pada scope Anda.'));
@@ -270,7 +270,7 @@ export async function loadSchedulerJobs(): Promise<void> {
   const st = stateSelect?.value ?? '';
   if (stat) stat.textContent = 'Memuat antrean penjadwalan M7…';
   try {
-    const res = await api<{ items: SchedulerJobItem[] }>(`/admin/scheduler-jobs?limit=30${st ? '&state=' + encodeURIComponent(st) : ''}`);
+    const res = await api<{ items: SchedulerJobItem[] }>(`/admin/scheduler-jobs?limit=100${st ? '&state=' + encodeURIComponent(st) : ''}`);
     rows.replaceChildren();
     if (!res.items.length) {
       rows.append(emptyRow(5, 'Tidak ada job penjadwalan pada filter ini.'));
@@ -399,7 +399,7 @@ export async function loadMediaPickersAndApprovals(): Promise<void> {
 
   if (approvalRows) {
     try {
-      const res = await api<{ items: MediaApprovalItem[] }>('/media/approvals?limit=25');
+      const res = await api<{ items: MediaApprovalItem[] }>('/media/approvals?limit=100');
       approvalRows.replaceChildren();
       if (!res.items.length) {
         approvalRows.append(emptyRow(5, 'Belum ada persetujuan media pada organisasi Anda.'));
