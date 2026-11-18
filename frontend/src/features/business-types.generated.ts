@@ -58,8 +58,8 @@ export interface Components {
   'SLAClock': { 'ticket_id': string; 'episode_id': string; 'accepted_at': string; 'episode_started_at': string; 'resolution_due_at': string; 'due_at': string; 'resolution_endpoint': string | null; 'gross_seconds': number; 'net_seconds': number; 'working_seconds'?: number; 'policy_version': number; 'calendar_version': number; 'as_of': string; 'status': 'ON_TRACK' | 'AT_RISK' | 'BREACHED' | 'PAUSED' | 'CANCELLED' | 'UNAVAILABLE'; 'policy_source': 'SERVICE_SNAPSHOT' | 'LAB_DEFAULT' | 'LEGACY'; 'response_due_at'?: string; 'first_response_at'?: string };
   'ReuseMedia': { 'expected_version': number; 'target_owner': 'M8'; 'target_id': string; 'target_audience': 'PUBLIC_GUEST' | 'PUBLIC_AUTH' | 'ASN_AUTH' | 'STAFF_ONLY'; 'sanitized_copy_id'?: string; 'approval_id'?: string; 'reason': string };
   'FormWrite': { 'expected_version': number; 'form_version': number; 'fields': ({ 'key': string; 'label': string; 'kind': 'text' | 'number' | 'date' | 'choice'; 'required': boolean; 'options': (string)[] })[] };
-  'Bootstrap': { 'mode': 'SYNTHETIC_LAB'; 'csrf_token': string; 'subjects': ({ 'id': string; 'name': string; 'kind': 'PUBLIC' | 'ASN' | 'STAFF'; 'role': string })[] };
-  'Subject': { 'id': string; 'name': string; 'kind': 'PUBLIC' | 'ASN' | 'STAFF'; 'role': string };
+  'Bootstrap': { 'mode': 'SYNTHETIC_LAB'; 'csrf_token': string; 'subjects': ({ 'id': string; 'name': string; 'kind': 'PUBLIC' | 'ASN' | 'STAFF'; 'role': string; 'version'?: number; 'external_ref'?: string | null; 'email'?: string | null; 'phone'?: string | null; 'active'?: boolean })[] };
+  'Subject': { 'id': string; 'name': string; 'kind': 'PUBLIC' | 'ASN' | 'STAFF'; 'role': string; 'version'?: number; 'external_ref'?: string | null; 'email'?: string | null; 'phone'?: string | null; 'active'?: boolean };
   'Organization': { 'id': string; 'version': number; 'code': string; 'name': string; 'active': boolean; 'reporting_visible': boolean };
   'OrganizationWrite': { 'expected_version'?: number; 'code': string; 'name': string; 'active': boolean; 'reporting_visible'?: boolean };
   'Team': { 'id': string; 'version': number; 'organization_id': string; 'name': string; 'active': boolean; 'division_id'?: string };
@@ -115,6 +115,7 @@ export interface Components {
   'DeliveryJobRecord': { 'id': string; 'version': number; 'notification_id': string; 'title': string; 'channel': 'SINK' | 'TELEGRAM' | 'EMAIL'; 'target_masked': string; 'state': 'PENDING' | 'LEASED' | 'ACKED' | 'FAILED' | 'DEAD_LETTER'; 'attempts': number; 'last_error_code'?: string | null; 'next_attempt_at': string; 'delivered_at'?: string | null; 'created_at': string };
   'RetentionInput': { 'expected_version': number; 'legal_hold': boolean; 'retention_until'?: string | null; 'reason': string };
   'RetentionStatus': { 'ticket_id': string; 'version': number; 'legal_hold': boolean; 'retention_until'?: string | null; 'purged_at'?: string | null };
+  'SubjectWrite': { 'expected_version'?: number; 'name': string; 'kind': 'PUBLIC' | 'ASN' | 'STAFF'; 'role': string; 'external_ref'?: string; 'email'?: string; 'phone'?: string; 'password'?: string; 'active': boolean };
   'AcceptResolution': { 'expected_version': number; 'attempt_id': string };
   'ServiceUpdate': { 'expected_version': number; 'code': string; 'name': string; 'access_mode': 'PUBLIC_GUEST' | 'PUBLIC_AUTH' | 'ASN_AUTH' | 'STAFF_ONLY'; 'owner_org_id': string; 'form_version': number; 'active': boolean; 'category_id': string | null };
 }

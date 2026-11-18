@@ -43,10 +43,27 @@ type Binding struct {
 	Revoked        bool     `json:"revoked"`
 }
 type Subject struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-	Kind string `json:"kind"`
-	Role string `json:"role"`
+	ID          string  `json:"id"`
+	Version     int64   `json:"version,omitempty"`
+	Name        string  `json:"name"`
+	Kind        string  `json:"kind"`
+	Role        string  `json:"role"`
+	ExternalRef *string `json:"external_ref,omitempty"`
+	Email       *string `json:"email,omitempty"`
+	Phone       *string `json:"phone,omitempty"`
+	Active      *bool   `json:"active,omitempty"`
+}
+
+type SubjectWriteInput struct {
+	ExpectedVersion int64  `json:"expected_version"`
+	Name            string `json:"name"`
+	Kind            string `json:"kind"`
+	Role            string `json:"role"`
+	ExternalRef     string `json:"external_ref,omitempty"`
+	Email           string `json:"email,omitempty"`
+	Phone           string `json:"phone,omitempty"`
+	Password        string `json:"password,omitempty"`
+	Active          bool   `json:"active"`
 }
 
 type MasterInput struct {

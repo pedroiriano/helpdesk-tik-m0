@@ -7,20 +7,25 @@ import (
 	"strings"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
 	"helpdesk.local/m0/internal/modules/m1/api"
 	"helpdesk.local/m0/internal/platform/web"
 )
 
 // ListActiveSubjects returns active subjects for identity grant administration when lab bootstrap is disabled.
 func (s Store) ListActiveSubjects(ctx context.Context, includeLab bool, limit int) ([]api.Subject, error) {
+	return s.ListSubjectsAdmin(ctx, includeLab, false, limit)
+}
+
+func (s Store) ListSubjectsAdmin(ctx context.Context, includeLab, includeInactive bool, limit int) ([]api.Subject, error) {
 	if limit <= 0 || limit > 200 {
 		limit = 100
 	}
-	rows, err := s.Pool.Query(ctx, `SELECT id::text,display_name,kind,role_code
+	rows, err := s.Pool.Query(ctx, `SELECT id::text,version,display_name,kind,role_code,external_ref,email,phone,active
 		FROM identity.subjects
-		WHERE active AND ($1 OR NOT lab_fixture)
+		WHERE ($1 OR NOT lab_fixture) AND ($2 OR active)
 		ORDER BY kind,display_name,id
-		LIMIT $2`, includeLab, limit)
+		LIMIT $3`, includeLab, includeInactive, limit)
 	if err != nil {
 		return nil, err
 	}
@@ -28,12 +33,83 @@ func (s Store) ListActiveSubjects(ctx context.Context, includeLab bool, limit in
 	out := []api.Subject{}
 	for rows.Next() {
 		var u api.Subject
-		if err := rows.Scan(&u.ID, &u.Name, &u.Kind, &u.Role); err != nil {
+		var ext, email, phone sql.NullString
+		var act bool
+		if err := rows.Scan(&u.ID, &u.Version, &u.Name, &u.Kind, &u.Role, &ext, &email, &phone, &act); err != nil {
 			return nil, err
 		}
+		if ext.Valid && ext.String != "" {
+			v := ext.String
+			u.ExternalRef = &v
+		}
+		if email.Valid && email.String != "" {
+			v := email.String
+			u.Email = &v
+		}
+		if phone.Valid && phone.String != "" {
+			v := phone.String
+			u.Phone = &v
+		}
+		u.Active = &act
 		out = append(out, u)
 	}
 	return out, rows.Err()
+}
+
+func (s Store) ReadSubjectAdmin(ctx context.Context, id string) (api.Subject, bool, error) {
+	var u api.Subject
+	var act, lab bool
+	err := s.Pool.QueryRow(ctx, `SELECT id::text,version,display_name,kind,role_code,active,lab_fixture
+		FROM identity.subjects WHERE id=$1`, id).Scan(&u.ID, &u.Version, &u.Name, &u.Kind, &u.Role, &act, &lab)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return u, false, web.Fail(404, "Akun pengguna tidak ditemukan")
+	}
+	u.Active = &act
+	return u, lab, err
+}
+
+func (s Store) SaveSubject(ctx context.Context, tx pgx.Tx, id string, create bool, in api.SubjectWriteInput, passwordHash *string) (int64, error) {
+	var err error
+	var tagRows int64
+	if create {
+		var pw string
+		if passwordHash != nil {
+			pw = *passwordHash
+		}
+		_, err = tx.Exec(ctx, `INSERT INTO identity.subjects(id,version,kind,external_ref,display_name,role_code,email,phone,password_hash,lab_fixture,auth_provider,active)
+			VALUES($1,1,$2,nullif($3,''),$4,$5,nullif($6,''),nullif($7,''),nullif($8,''),false,'LOCAL',$9)`,
+			id, in.Kind, in.ExternalRef, in.Name, in.Role, in.Email, in.Phone, pw, in.Active)
+		tagRows = 1
+	} else {
+		tag, e := tx.Exec(ctx, `UPDATE identity.subjects
+			SET kind=$1,role_code=$2,display_name=$3,external_ref=nullif($4,''),email=nullif($5,''),phone=nullif($6,''),active=$7,
+				password_hash=COALESCE(nullif($8,''), password_hash),version=version+1,updated_at=now()
+			WHERE id=$9 AND version=$10`,
+			in.Kind, in.Role, in.Name, in.ExternalRef, in.Email, in.Phone, in.Active,
+			func() string {
+				if passwordHash != nil {
+					return *passwordHash
+				}
+				return ""
+			}(),
+			id, in.ExpectedVersion)
+		err = e
+		tagRows = tag.RowsAffected()
+	}
+	if err != nil {
+		var pgerr *pgconn.PgError
+		if errors.As(err, &pgerr) && pgerr.Code == "23505" {
+			return 0, web.Fail(409, "NIP/NIK/ID referensi atau alamat email sudah terdaftar pada akun lain")
+		}
+		return 0, err
+	}
+	if tagRows != 1 {
+		return 0, web.Fail(409, "Versi akun berubah; muat ulang data sebelum menyimpan")
+	}
+	if create {
+		return 1, nil
+	}
+	return in.ExpectedVersion + 1, nil
 }
 
 // SubjectContactEmail returns the subject's normalized email when active and eligible for non-lab delivery.

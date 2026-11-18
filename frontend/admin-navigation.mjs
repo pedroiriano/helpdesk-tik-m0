@@ -14,6 +14,7 @@ export const adminGroups = [
     {id:'navigation',kind:'navigation',label:'Menu portal publik',icon:'settings',permissions:['catalog.write'],description:'Atur susunan menu pada portal publik.'},
   ]},
   {label:'Organisasi dan akses', items:[
+    {id:'subjects',kind:'subjects',label:'Daftar akun pengguna',icon:'users',permissions:['identity.grant'],description:'Tambahkan akun staf, ASN, atau pengguna baru dan kelola peran serta status aktif.'},
     {id:'organizations',kind:'organizations',label:'Perangkat daerah dan unit kerja',icon:'users',permissions:['identity.grant'],description:'Kelola perangkat daerah dan unit kerja yang dapat dipilih pelapor.'},
     {id:'divisions',kind:'divisions',label:'Bidang',icon:'users',permissions:['identity.grant'],description:'Kelola bidang aktif di masing-masing perangkat daerah atau unit kerja.'},
     {id:'memberships',kind:'memberships',label:'Akun dan hak akses',icon:'users',permissions:['identity.grant'],description:'Kelola keanggotaan dan hak akses sesuai mandat organisasi Anda.'},

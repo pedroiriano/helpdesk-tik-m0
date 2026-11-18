@@ -1,5 +1,6 @@
 import { syncAdminShell } from './admin-shell';
 import { initAdminDataTables } from './admin-datatable';
+import { initSelect2ComboBoxes } from './select2-combobox';
 import { bindReportingContext } from './reporting-context';
 import { canOpenAdminPage } from '../../admin-navigation.mjs';
 import { ticketActions, activeResolution, setGuestReceiptMode, commandFingerprint } from './ticket-actions';
@@ -4165,7 +4166,7 @@ document.addEventListener('hd:unauthorized', () => {
 
 
 async function main(): Promise<void> {
-
+  initSelect2ComboBoxes();
   const kind = $('[data-ticket-page]')?.dataset.ticketPage;
 
   try {

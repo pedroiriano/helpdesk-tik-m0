@@ -17,9 +17,11 @@ import (
 	"io"
 	"math/big"
 	"net/http"
+	"net/mail"
 	"net/url"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	"github.com/jackc/pgx/v5"
 	"helpdesk.local/m0/internal/modules/m1/api"
@@ -85,7 +87,7 @@ func (s *Service) IssueAuthChallenge(ctx context.Context) (AuthConfigView, strin
 	}, token, nil
 }
 
-func (s *Service) AdminSubjects(ctx context.Context, c api.Credentials, limit int) ([]api.Subject, error) {
+func (s *Service) AdminSubjects(ctx context.Context, c api.Credentials, includeInactive bool, limit int) ([]api.Subject, error) {
 	actor, err := s.Authenticate(ctx, c)
 	if err != nil {
 		return nil, err
@@ -93,7 +95,130 @@ func (s *Service) AdminSubjects(ctx context.Context, c api.Credentials, limit in
 	if actor.Kind != "STAFF" || !s.hasPermission(actor, "identity.grant") {
 		return nil, web.Fail(403, "Izin identity.grant diperlukan untuk melihat daftar akun")
 	}
-	return s.Store.ListActiveSubjects(ctx, s.Options.Lab, limit)
+	return s.Store.ListSubjectsAdmin(ctx, s.Options.Lab, includeInactive, limit)
+}
+
+func validSubjectRoleForKind(kind, role string) bool {
+	switch kind {
+	case "PUBLIC":
+		return role == "PUBLIC"
+	case "ASN":
+		return role == "ASN"
+	case "STAFF":
+		return role == "SUPER_ADMIN" || editableRole(role)
+	}
+	return false
+}
+
+func (s *Service) SaveSubject(ctx context.Context, c api.Credentials, id, key string, in api.SubjectWriteInput) (database.Result, error) {
+	c.Write = true
+	actor, err := s.Authenticate(ctx, c)
+	if err != nil {
+		return database.Result{}, err
+	}
+	if actor.Kind != "STAFF" || !s.hasPermission(actor, "identity.grant") {
+		return database.Result{}, web.Fail(403, "Izin identity.grant diperlukan untuk mengelola akun")
+	}
+
+	create := id == ""
+	if create {
+		id = web.ID()
+	} else {
+		if !web.UUID(id) {
+			return database.Result{}, web.Fail(404, "Akun pengguna tidak ditemukan")
+		}
+		if in.ExpectedVersion < 1 {
+			return database.Result{}, web.Fail(422, "Expected version diperlukan")
+		}
+	}
+
+	in.Name = strings.TrimSpace(in.Name)
+	in.Kind = strings.TrimSpace(in.Kind)
+	in.Role = strings.TrimSpace(in.Role)
+	in.ExternalRef = strings.TrimSpace(in.ExternalRef)
+	in.Email = strings.ToLower(strings.TrimSpace(in.Email))
+	in.Phone = strings.TrimSpace(in.Phone)
+
+	if utf8.RuneCountInString(in.Name) < 2 || utf8.RuneCountInString(in.Name) > 200 {
+		return database.Result{}, web.Fail(422, "Nama lengkap akun harus 2–200 karakter")
+	}
+	if !validSubjectRoleForKind(in.Kind, in.Role) {
+		return database.Result{}, web.Fail(422, "Kombinasi jenis akun dan peran tidak valid")
+	}
+	if (in.Role == "SUPER_ADMIN" || in.Role == "PLATFORM_ADMIN") && actor.Role != "SUPER_ADMIN" && !(actor.Role == "PLATFORM_ADMIN" && in.Role == "PLATFORM_ADMIN") {
+		return database.Result{}, web.Fail(403, "Hanya Super Admin yang berwenang menetapkan peran ini")
+	}
+	if utf8.RuneCountInString(in.ExternalRef) > 120 {
+		return database.Result{}, web.Fail(422, "NIP/NIK/ID referensi maksimal 120 karakter")
+	}
+	if in.Email != "" {
+		addr, err := mail.ParseAddress(in.Email)
+		if err != nil || addr.Address != in.Email || len(in.Email) > 200 {
+			return database.Result{}, web.Fail(422, "Alamat email tidak valid")
+		}
+	}
+	if in.Phone != "" && (len(in.Phone) > 40 || !digits(strings.TrimPrefix(in.Phone, "+"))) {
+		return database.Result{}, web.Fail(422, "Nomor telepon hanya boleh berisi angka dan awalan +")
+	}
+
+	var passwordHash *string
+	if in.Password != "" {
+		if len(in.Password) < 8 || len(in.Password) > 128 {
+			return database.Result{}, web.Fail(422, "Kata sandi harus 8–128 karakter")
+		}
+		hashed, err := domain.HashPassword(in.Password)
+		if err != nil {
+			return database.Result{}, web.Fail(422, err.Error())
+		}
+		passwordHash = &hashed
+	}
+
+	if !create {
+		existing, _, err := s.Store.ReadSubjectAdmin(ctx, id)
+		if err != nil {
+			return database.Result{}, err
+		}
+		if (existing.Role == "SUPER_ADMIN" || (existing.Role == "PLATFORM_ADMIN" && actor.Role == "ADMIN_OPD")) && actor.Role != "SUPER_ADMIN" {
+			return database.Result{}, web.Fail(403, "Anda tidak berwenang mengubah akun dengan peran lebih tinggi")
+		}
+		if id == actor.ID && !in.Active {
+			return database.Result{}, web.Fail(422, "Anda tidak dapat menonaktifkan akun Anda sendiri")
+		}
+	}
+
+	cmd := "UpdateSubject"
+	target := id
+	statusCode := 200
+	if create {
+		cmd = "CreateSubject"
+		target = "new"
+		statusCode = 201
+	}
+	auditPayload := map[string]any{
+		"name":         in.Name,
+		"kind":         in.Kind,
+		"role":         in.Role,
+		"external_ref": in.ExternalRef,
+		"email":        in.Email,
+		"active":       in.Active,
+		"has_password": passwordHash != nil,
+	}
+	return database.Mutate(ctx, s.Store.Pool, database.Mutation{
+		Owner:   "M1",
+		Actor:   actor.ID,
+		Command: cmd,
+		Target:  target,
+		Key:     key,
+		Scope:   "subjects",
+		Reason:  "Pengelolaan master akun pengguna",
+		Payload: auditPayload,
+	}, func(tx pgx.Tx) (database.Result, error) {
+		version, e := s.Store.SaveSubject(ctx, tx, id, create, in, passwordHash)
+		if e != nil {
+			return database.Result{}, e
+		}
+		return database.Response(statusCode, map[string]any{"id": id, "version": version})
+	})
 }
 
 func (s *Service) ContactEmail(ctx context.Context, subjectID string) (string, bool, error) {

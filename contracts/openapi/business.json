@@ -31436,6 +31436,16 @@
               ]
             },
             "description": "Stable UUID ordering; scope filter before cursor/limit. Other sort modes are rejected."
+          },
+          {
+            "name": "include_inactive",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4000
+            }
           }
         ],
         "responses": {
@@ -31606,6 +31616,421 @@
                   "correlation_id": "00000000-0000-4000-8000-000000000001",
                   "details": []
                 }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "CreateSubject",
+        "summary": "CreateSubject",
+        "x-command": "CreateSubject",
+        "x-owner": "M1",
+        "x-permission": "identity.grant",
+        "x-requirements": [
+          "FR17",
+          "FR29"
+        ],
+        "x-runtime-status": "IMPLEMENTED_RM0_05",
+        "x-authorization": "Trusted principal, live object/scope/revocation checks. Hidden object 404; visible forbidden action 403; config admin has no implicit ticket read.",
+        "security": [
+          {
+            "SessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 128
+            },
+            "description": "Bound to trusted actor/capability, command, target and canonical payload hash; replay same intent, 409 for changed intent."
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4000
+            },
+            "description": "Required for cookie-authenticated mutations; verified Origin and CSRF token."
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Durable primary result; downstream delivery may still be pending",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Receipt"
+                },
+                "example": {
+                  "id": "00000000-0000-4000-8000-000000000001",
+                  "version": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "VALIDATION_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "DEPENDENCY_UNAVAILABLE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubjectWrite"
+              },
+              "example": {
+                "name": "LAB",
+                "kind": "PUBLIC",
+                "role": "LAB",
+                "active": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/subjects/{id}": {
+      "put": {
+        "operationId": "UpdateSubject",
+        "summary": "UpdateSubject",
+        "x-command": "UpdateSubject",
+        "x-owner": "M1",
+        "x-permission": "identity.grant",
+        "x-requirements": [
+          "FR17",
+          "FR29"
+        ],
+        "x-runtime-status": "IMPLEMENTED_RM0_05",
+        "x-authorization": "Trusted principal, live object/scope/revocation checks. Hidden object 404; visible forbidden action 403; config admin has no implicit ticket read.",
+        "security": [
+          {
+            "SessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 128
+            },
+            "description": "Bound to trusted actor/capability, command, target and canonical payload hash; replay same intent, 409 for changed intent."
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4000
+            },
+            "description": "Required for cookie-authenticated mutations; verified Origin and CSRF token."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Durable primary result; downstream delivery may still be pending",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Receipt"
+                },
+                "example": {
+                  "id": "00000000-0000-4000-8000-000000000001",
+                  "version": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "VALIDATION_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "DEPENDENCY_UNAVAILABLE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubjectWrite"
+              },
+              "example": {
+                "name": "LAB",
+                "kind": "PUBLIC",
+                "role": "LAB",
+                "active": true
               }
             }
           }
@@ -35288,6 +35713,34 @@
                   "type": "string",
                   "minLength": 1,
                   "maxLength": 4000
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "external_ref": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 120
+                },
+                "email": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 200
+                },
+                "phone": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 40
+                },
+                "active": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -35332,6 +35785,34 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 4000
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "external_ref": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200
+          },
+          "phone": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 40
+          },
+          "active": {
+            "type": "boolean"
           }
         },
         "required": [
@@ -37518,6 +37999,59 @@
           "ticket_id",
           "version",
           "legal_hold"
+        ],
+        "additionalProperties": false
+      },
+      "SubjectWrite": {
+        "type": "object",
+        "properties": {
+          "expected_version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 200
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "PUBLIC",
+              "ASN",
+              "STAFF"
+            ]
+          },
+          "role": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "external_ref": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "phone": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "active": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "kind",
+          "role",
+          "active"
         ],
         "additionalProperties": false
       },

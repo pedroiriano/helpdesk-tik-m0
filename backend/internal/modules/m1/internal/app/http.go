@@ -210,13 +210,30 @@ func (s *Service) Register(mux *http.ServeMux) {
 			web.WriteError(w, err)
 			return
 		}
-		items, err := s.AdminSubjects(r.Context(), Credentials(r), p.Limit)
+		qInc := strings.TrimSpace(r.URL.Query().Get("include_inactive"))
+		includeInactive := qInc == "1" || qInc == "true"
+		items, err := s.AdminSubjects(r.Context(), Credentials(r), includeInactive, p.Limit)
 		if err != nil {
 			web.WriteError(w, err)
 			return
 		}
 		web.JSON(w, 200, map[string]any{"items": items, "next_cursor": nil, "as_of": time.Now().UTC().Format(time.RFC3339)})
 	})
+	saveSubject := func(w http.ResponseWriter, r *http.Request) {
+		var in api.SubjectWriteInput
+		if err := web.Decode(w, r, &in); err != nil {
+			web.WriteError(w, err)
+			return
+		}
+		res, err := s.SaveSubject(r.Context(), Credentials(r), r.PathValue("id"), r.Header.Get("Idempotency-Key"), in)
+		if err != nil {
+			web.WriteError(w, err)
+			return
+		}
+		web.JSON(w, res.Status, res.Body)
+	}
+	mux.HandleFunc("POST /api/v1/admin/subjects", saveSubject)
+	mux.HandleFunc("PUT /api/v1/admin/subjects/{id}", saveSubject)
 
 	mux.HandleFunc("GET /api/v1/staff/directory", func(w http.ResponseWriter, r *http.Request) {
 		items, err := s.ListStaffDirectory(r.Context(), Credentials(r), r.URL.Query().Get("organization_id"))

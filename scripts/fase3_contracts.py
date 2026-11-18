@@ -3,6 +3,8 @@ COMMANDS = {
     'StartSSOLogin',
     'CompleteSSOCallback',
     'ListAdminSubjects',
+    'CreateSubject',
+    'UpdateSubject',
     'ListDeliveryJobs',
     'ReplayDeliveryJob',
     'ConfigureRetention',
@@ -76,6 +78,27 @@ def extend(schemas, operation, obj, arr, enum, ref, UUID, TEXT, UTC, VERSION):
         optional=('chat_ref',),
     )
     schemas['Session']['properties']['mode'] = TEXT
+    schemas['Subject']['properties'].update({
+        'version': VERSION,
+        'external_ref': null_text,
+        'email': {'type': ['string', 'null'], 'maxLength': 200},
+        'phone': {'type': ['string', 'null'], 'maxLength': 40},
+        'active': {'type': 'boolean'},
+    })
+    schemas['SubjectWrite'] = obj(
+        {
+            'expected_version': VERSION,
+            'name': {**TEXT, 'minLength': 2, 'maxLength': 200},
+            'kind': enum('PUBLIC', 'ASN', 'STAFF'),
+            'role': {**TEXT, 'minLength': 1, 'maxLength': 64},
+            'external_ref': {'type': 'string', 'maxLength': 120},
+            'email': {'type': 'string', 'maxLength': 200},
+            'phone': {'type': 'string', 'maxLength': 40},
+            'password': {'type': 'string', 'maxLength': 128},
+            'active': {'type': 'boolean'},
+        },
+        optional=('expected_version', 'external_ref', 'email', 'phone', 'password'),
+    )
 
     operation('get', '/auth/config', 'ReadAuthConfig', 'M1', 'session.create', 'AuthConfig', fr='FR29', public=True)
     operation('get', '/auth/sso/login', 'StartSSOLogin', 'M1', 'session.create', 'SSORedirect', status=302, fr='FR29', public=True)
@@ -91,7 +114,9 @@ def extend(schemas, operation, obj, arr, enum, ref, UUID, TEXT, UTC, VERSION):
         public=True,
         query=('code', 'state', 'error'),
     )
-    operation('get', '/admin/subjects', 'ListAdminSubjects', 'M1', 'identity.grant', 'Subject', fr='FR17 FR29')
+    operation('get', '/admin/subjects', 'ListAdminSubjects', 'M1', 'identity.grant', 'Subject', fr='FR17 FR29', query=('include_inactive',))
+    operation('post', '/admin/subjects', 'CreateSubject', 'M1', 'identity.grant', 'Receipt', 'SubjectWrite', status=201, fr='FR17 FR29')
+    operation('put', '/admin/subjects/{id}', 'UpdateSubject', 'M1', 'identity.grant', 'Receipt', 'SubjectWrite', fr='FR17 FR29')
     operation(
         'get',
         '/admin/delivery-jobs',

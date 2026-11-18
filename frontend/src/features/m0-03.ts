@@ -1,5 +1,6 @@
 import { sessionBus } from './session-events';
 import { initAdminDataTables } from './admin-datatable';
+import { initSelect2ComboBoxes } from './select2-combobox';
 import { openAdminConfirmDialog } from './admin-confirm';
 import { primaryProfiles, quickLoginSubject } from '../../admin-profiles.mjs';
 import { bindAccessEditor } from './admin-access';
@@ -30,7 +31,7 @@ type Field = Components['Form']['fields'][number];
 type FormSnapshot = Components['Form'];
 type Policy = Components['Policy'];
 type Page<T> = { items: T[]; next_cursor: string | null; as_of: string };
-type Master = Partial<Service & Components['Category'] & Components['Organization'] & Components['Team'] & Components['Membership']> & { id: string; version: number };
+type Master = Partial<Service & Components['Category'] & Components['Organization'] & Components['Team'] & Components['Membership'] & Components['Subject']> & { id: string; version: number };
 const $ = <T extends HTMLElement = HTMLElement>(selector: string, parent: ParentNode = document): T | null => parent.querySelector<T>(selector);
 const nodes = <T extends HTMLElement = HTMLElement>(selector: string, parent: ParentNode = document): T[] => [...parent.querySelectorAll<T>(selector)];
 const element = <K extends keyof HTMLElementTagNameMap>(tag: K, text = '', className = '') => { const el = document.createElement(tag); el.textContent = text; el.className = className; return el; };
@@ -614,7 +615,7 @@ async function admin(): Promise<void> {
     prev.disabled = true; prev.hidden = true;
     nextBtn.disabled = true; nextBtn.hidden = true;
     row.append(prev, nextBtn, reload);
-    target.parentElement?.append(row);
+    (target.closest('.piui-field') ?? target.parentElement)?.append(row);
 
     let cursor = '', after: string | null = null; const history: string[] = []; let epoch = 0;
     async function loadPicker(reset = false) {
@@ -685,6 +686,7 @@ async function admin(): Promise<void> {
   let currentForm: FormSnapshot | undefined, currentPolicy: Policy | undefined;
   const refreshRulesPanel = bindAdminRulesPanel();
   const names: Record<string, string> = {
+    subjects: 'akun pengguna',
     services: 'layanan',
     categories: 'kategori',
     organizations: 'organisasi',
@@ -702,11 +704,41 @@ async function admin(): Promise<void> {
 
   const submit = $('button[type=submit]', form) as HTMLButtonElement | null;
 
+  function syncSubjectRoleOptions(kindVal: string, desiredRole?: string) {
+    if (!form) return;
+    const roleSelect = control(form, 'subject-role') as HTMLSelectElement;
+    const actorRole = session?.actor.role ?? '';
+    const allowedRoles =
+      kindVal === 'PUBLIC'
+        ? ['PUBLIC']
+        : kindVal === 'ASN'
+          ? ['ASN']
+          : actorRole === 'SUPER_ADMIN'
+            ? ['OPERATOR', 'TECHNICIAN', 'COORDINATOR', 'LEADERSHIP', 'EDITOR', 'PUBLISHER', 'AUDITOR', 'ADMIN_OPD', 'PLATFORM_ADMIN', 'SUPER_ADMIN']
+            : actorRole === 'PLATFORM_ADMIN'
+              ? ['OPERATOR', 'TECHNICIAN', 'COORDINATOR', 'LEADERSHIP', 'EDITOR', 'PUBLISHER', 'AUDITOR', 'ADMIN_OPD', 'PLATFORM_ADMIN']
+              : ['OPERATOR', 'TECHNICIAN', 'COORDINATOR', 'LEADERSHIP', 'EDITOR', 'PUBLISHER', 'AUDITOR', 'ADMIN_OPD'];
+    for (const opt of Array.from(roleSelect.options)) {
+      const ok = allowedRoles.includes(opt.value);
+      opt.hidden = !ok;
+      opt.disabled = !ok;
+    }
+    const candidate = desiredRole && allowedRoles.includes(desiredRole) ? desiredRole : (allowedRoles[0] ?? 'OPERATOR');
+    roleSelect.value = candidate;
+  }
+
+  if (form) {
+    control(form, 'subject-kind').addEventListener('change', () => {
+      syncSubjectRoleOptions(value(form, 'subject-kind'));
+    });
+  }
+
   function configure(row?: Master) {
     selected = row;
     if (form) form.reset();
     const kind = select.value;
     const fields: Record<string, string[]> = {
+      subjects: ['name', 'subject-kind', 'subject-role', 'external-ref', 'email', 'phone', 'password', 'active'],
       services: ['code', 'name', 'org', 'category', 'access', 'active'],
       categories: ['code', 'name', 'org', 'active'],
       organizations: ['code', 'name', 'active', 'reporting-visible'],
@@ -726,10 +758,16 @@ async function admin(): Promise<void> {
       nodes<HTMLElement>('[data-hd-field]', form).forEach(wrapper => {
         const visible = allowed.includes(wrapper.dataset.hdField!);
         wrapper.hidden = !visible;
-        nodes<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>('input,select,textarea', wrapper).forEach(input => {
+        nodes<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>('input:not(.hd-s2-search),select,textarea', wrapper).forEach(input => {
           input.disabled = !visible;
-          input.required = visible && !['category', 'team', 'division', 'active', 'reporting-visible', 'revoked', 'permissions', 'access-profile', 'access-special', 'access-summary'].includes(wrapper.dataset.hdField!);
+          input.required = visible && !['category', 'team', 'division', 'external-ref', 'email', 'phone', 'password', 'active', 'reporting-visible', 'revoked', 'permissions', 'access-profile', 'access-special', 'access-summary'].includes(wrapper.dataset.hdField!);
         });
+      });
+      nodes<HTMLElement>('[data-hd-shortcut="organizations"]', form).forEach(el => {
+        el.hidden = kind === 'organizations' || !can('identity.organization.create');
+      });
+      nodes<HTMLElement>('[data-hd-shortcut="subjects"]', form).forEach(el => {
+        el.hidden = kind === 'subjects' || !identityAllowed;
       });
       status('[data-hd-editor-title]', `${row ? 'Ubah' : 'Tambah'} ${names[kind] ?? kind}`);
       status('[data-hd-editor-version]', row ? `Versi ${row.version}. Perubahan hanya diterima jika versi masih sama.` : 'Isi formulir di bawah lalu klik Simpan ke server.');
@@ -740,6 +778,13 @@ async function admin(): Promise<void> {
       if (row) {
         control(form, 'code').value = row.code ?? '';
         control(form, 'name').value = row.name ?? '';
+        const subjectKind = row.kind ?? 'STAFF';
+        control(form, 'subject-kind').value = subjectKind;
+        syncSubjectRoleOptions(subjectKind, row.role);
+        control(form, 'external-ref').value = row.external_ref ?? '';
+        control(form, 'email').value = row.email ?? '';
+        control(form, 'phone').value = row.phone ?? '';
+        control(form, 'password').value = '';
         const rowOrg = row.owner_org_id ?? row.organization_id ?? '';
         if (rowOrg && ![...(control(form, 'org') as HTMLSelectElement).options].some(o => o.value === rowOrg)) {
           const o = element('option', orgLabel(rowOrg));
@@ -767,6 +812,10 @@ async function admin(): Promise<void> {
         (control(form, 'reporting-visible') as HTMLInputElement).checked = row.reporting_visible ?? false;
         (control(form, 'revoked') as HTMLInputElement).checked = row.revoked ?? false;
         control(form, 'expires').value = row.expires_at ? toWibDateTimeInput(new Date(row.expires_at).getTime()) : '';
+      } else if (kind === 'subjects') {
+        control(form, 'subject-kind').value = 'STAFF';
+        syncSubjectRoleOptions('STAFF', 'OPERATOR');
+        (control(form, 'active') as HTMLInputElement).checked = true;
       } else if (kind === 'memberships') {
         control(form, 'expires').value = toWibDateTimeInput(Date.now() + 365 * 86400000);
       }
@@ -943,19 +992,30 @@ async function admin(): Promise<void> {
     root.replaceChildren();
     status('[data-hd-status]', 'Memuat master dari server…');
     try {
-      const page = await api<Page<Master>>(`/admin/${requestedKind}?limit=100${cursor ? '&cursor=' + encodeURIComponent(cursor) : ''}`);
+      const extraQuery = requestedKind === 'subjects' ? '&include_inactive=1' : '';
+      const page = await api<Page<Master>>(`/admin/${requestedKind}?limit=100${extraQuery}${cursor ? '&cursor=' + encodeURIComponent(cursor) : ''}`);
       if (epoch !== listEpoch) return;
       next = page.next_cursor;
+      if (requestedKind === 'subjects' && !cursor) {
+        const activeList = page.items.filter(s => s.active !== false) as unknown as Components['Subject'][];
+        subjects.splice(0, subjects.length, ...activeList);
+      }
       for (const row of page.items) {
         const tr = element('tr');
+        const isSubjectRow = requestedKind === 'subjects';
         const subject = subjects.find(s => s.id === row.subject_id);
-        const label = row.name ?? (subject
-          ? `${subject.name} · ${roleLabels[subject.role] ?? subject.role}`
-          : (row.subject_id ? `Akun (${row.subject_id.slice(0, 8)}…)` : 'Akses pengguna'));
+        const label = isSubjectRow
+          ? `${row.name ?? 'Akun'} · ${roleLabels[row.role ?? ''] ?? row.role ?? '-'}`
+          : (row.name ?? (subject
+            ? `${subject.name} · ${roleLabels[subject.role] ?? subject.role}`
+            : (row.subject_id ? `Akun (${row.subject_id.slice(0, 8)}…)` : 'Akses pengguna')));
+        const secondaryCol = isSubjectRow
+          ? `${row.kind ?? 'STAFF'} · ${row.email || row.external_ref || row.phone || 'Global'}`
+          : orgLabel(row.owner_org_id ?? row.organization_id ?? row.id);
         tr.append(
           element('td', label),
-          element('td', orgLabel(row.owner_org_id ?? row.organization_id ?? row.id)),
-          element('td', `${row.revoked ? 'Dicabut' : row.active === false ? 'Nonaktif' : 'Aktif'} · v${row.version}`)
+          element('td', secondaryCol),
+          element('td', `${row.revoked ? 'Dicabut' : row.active === false ? 'Nonaktif' : 'Aktif'} · v${row.version ?? 1}`)
         );
         const action = element('td');
         const actWrap = element('div', '', 'hd-row-actions');
@@ -1000,8 +1060,19 @@ async function admin(): Promise<void> {
             defaultReason: isMembership ? (currentlyRevokedOrInactive ? 'Pemulihan keanggotaan organisasi' : 'Pencabutan akses organisasi') : '',
             onConfirm: async (reasonText: string) => {
               const togglePath = `/admin/${requestedKind}/${row.id}`;
-              let payload: Record<string, unknown> = { expected_version: row.version };
-              if (requestedKind === 'organizations') {
+              let payload: Record<string, unknown> = { expected_version: row.version ?? 1 };
+              if (requestedKind === 'subjects') {
+                payload = {
+                  ...payload,
+                  name: row.name,
+                  kind: row.kind ?? 'STAFF',
+                  role: row.role ?? 'OPERATOR',
+                  external_ref: row.external_ref ?? '',
+                  email: row.email ?? '',
+                  phone: row.phone ?? '',
+                  active: currentlyRevokedOrInactive,
+                };
+              } else if (requestedKind === 'organizations') {
                 payload = { ...payload, code: row.code, name: row.name, active: currentlyRevokedOrInactive, reporting_visible: Boolean(row.reporting_visible) };
               } else if (requestedKind === 'categories') {
                 payload = { ...payload, code: row.code, name: row.name, owner_org_id: row.owner_org_id ?? row.organization_id, active: currentlyRevokedOrInactive };
@@ -1072,6 +1143,15 @@ async function admin(): Promise<void> {
       const body: Record<string, unknown> = rowAtSubmit ? { expected_version: rowAtSubmit.version } : {};
       if (['services', 'categories', 'organizations'].includes(kind)) body.code = value(form, 'code');
       if (kind !== 'memberships') { body.name = value(form, 'name'); body.active = checked(form, 'active'); }
+      if (kind === 'subjects') {
+        body.kind = value(form, 'subject-kind');
+        body.role = value(form, 'subject-role');
+        body.external_ref = value(form, 'external-ref');
+        body.email = value(form, 'email');
+        body.phone = value(form, 'phone');
+        const pw = value(form, 'password');
+        if (pw) body.password = pw;
+      }
       if (kind === 'services' || kind === 'categories') body.owner_org_id = value(form, 'org');
       if (kind === 'teams' || kind === 'divisions' || kind === 'memberships') body.organization_id = value(form, 'org');
       if (kind === 'teams') body.division_id = value(form,'division');
@@ -1102,6 +1182,8 @@ async function admin(): Promise<void> {
         await load();
         if (selected === rowAtSubmit && (rowAtSubmit || kind === 'memberships')) {
           configure({ ...rowAtSubmit, ...body, id: result.id, version: result.version } as Master);
+        } else if (selected === rowAtSubmit && !rowAtSubmit && kind === 'subjects') {
+          configure();
         }
         status('[data-hd-save-status]', `Tersimpan pada server. Versi ${result.version}.`);
       } catch (e) {
@@ -2311,6 +2393,10 @@ async function admin(): Promise<void> {
 
   configure();
   await load();
+  if (location.hash === '#new') {
+    configure();
+    focusMasterForm();
+  }
   if (adminPanel) adminPanel.hidden = false;
 }
 
@@ -2341,6 +2427,7 @@ async function statusPage(): Promise<void> {
 }
 
 async function main() {
+  initSelect2ComboBoxes();
   setupSearchCombobox();
   for (const f of nodes<HTMLFormElement>('form[data-hd-register]')) void registerUser(f);
   const loginForms = nodes<HTMLFormElement>('form[data-hd-login]');
