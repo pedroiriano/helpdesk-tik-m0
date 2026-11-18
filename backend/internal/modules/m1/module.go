@@ -13,6 +13,7 @@ import (
 )
 
 type Options = app.Options
+type SSOOptions = app.SSOOptions
 type Module struct {
 	pool    *pgxpool.Pool
 	service *app.Service
@@ -36,4 +37,12 @@ func (m *Module) SetDiagnostics(probe func(context.Context) api.RedactedHealth) 
 
 func (m *Module) SetBackupManifest(runner api.BackupManifestRunner) {
 	m.service.BackupManifest = runner
+}
+
+func (m *Module) SetPurgeRunner(runner api.PurgeRunner) {
+	m.service.Purge = runner
+}
+
+func (m *Module) ContactEmail(ctx context.Context, subjectID string) (string, bool, error) {
+	return m.service.ContactEmail(ctx, subjectID)
 }

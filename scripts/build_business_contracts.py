@@ -272,6 +272,9 @@ role_hero_contracts.extend(schemas,operation,obj,arr,ref,UUID,TEXT)
 import fase2_contracts
 fase2_contracts.extend(schemas,operation,obj,arr,enum,ref,UUID,TEXT,UTC,VERSION)
 
+import fase3_contracts
+fase3_contracts.extend(schemas,operation,obj,arr,enum,ref,UUID,TEXT,UTC,VERSION)
+
 RUNTIME_COMMANDS={'ListReportingDirectory','ListDivision','CreateDivision','UpdateDivision','RevokeMediaApproval','RegisterPublicSubject','ApproveSanitizedMedia','CreateLabSession','RevokeSession','ReadSession','ReadLabBootstrap','ListServices','ReadService','ReadServiceForm','CreateService','UpdateService','UpdateServiceForm','GrantMembership','ListOrganization','CreateOrganization','UpdateOrganization','ListTeam','CreateTeam','UpdateTeam','ListMembership','UpdateMembership','ListAdminServices','ReadAdminService','ReadAdminServiceForm','ListCategories','CreateCategory','UpdateCategory','ReadCatalogServicePolicy','ReadAdminServicePolicy','UpdateServicePolicy'}
 
 def build_openapi():
@@ -297,7 +300,7 @@ def build_openapi():
                        {"name": "sort", "in": "query", "schema": enum("id_asc"), "description": "Stable UUID ordering; scope filter before cursor/limit. Other sort modes are rejected."}]
         for query in op["query"]:
             shape = enum("M2", "M3", "M8") if query == "owner" and path.endswith("/search") else enum("M3", "M8") if query == "owner" else UTC if query in ("from", "to") else UUID if query.endswith("_id") else TEXT
-            params.append({"name": query, "in": "query", "required": query not in ("tier","mode","view","q","status") or query == "q" and path.endswith("/search"), "schema": enum("L1","L2") if query=="tier" else enum("reassign") if query=="mode" else enum("published") if query=="view" else enum("CLEAN") if query=="status" and path.endswith("/media") else shape})
+            params.append({"name": query, "in": "query", "required": query not in ("tier","mode","view","q","status","state","code","error") or query == "q" and path.endswith("/search"), "schema": enum("L1","L2") if query=="tier" else enum("reassign") if query=="mode" else enum("published") if query=="view" else enum("CLEAN") if query=="status" and path.endswith("/media") else shape})
         if op["command"] in ("CreateTicket", "ExchangeGuestCapability"):
             params.append({"name": "X-Guest-Capability", "in": "header", "required": op["command"] == "ExchangeGuestCapability", "schema": {"type": "string", "pattern": "^[A-Za-z0-9_-]{43}$"}, "description": "Client generates >=256 random bits; secret never URL/log/draft. Required for unauthenticated guest create; hash only at rest."})
         body_name = op["request"]
@@ -309,7 +312,7 @@ def build_openapi():
             schemas[body_name] = obj({"expected_version": VERSION, "attempt_id": UUID})
         entry = {"operationId": op["command"] + ("Alias"+str(index) if op["alias"] else ""), "summary": op["command"],
                  "x-command": op["command"], "x-owner": op["owner"], "x-permission": op["permission"], "x-requirements": op["fr"],
-                 "x-runtime-status": "IMPLEMENTED_RM0_05" if op['command'] in fase2_contracts.COMMANDS else "IMPLEMENTED_RM0_04" if op['command'] in role_hero_contracts.COMMANDS else "IMPLEMENTED_M0_11" if op['command'] in m0_11_contracts.COMMANDS else "IMPLEMENTED_M0_10" if op['command'] in m0_10_contracts.COMMANDS else "IMPLEMENTED_M0_09" if op['command'] in m0_09_contracts.COMMANDS else "IMPLEMENTED_M0_08" if op['command'] in m0_08_contracts.COMMANDS else "IMPLEMENTED_M0_07" if op['command'] in m0_07_contracts.COMMANDS else "IMPLEMENTED_M0_06" if op['command'] in m0_06_contracts.COMMANDS else "IMPLEMENTED_M0_05" if op['command'] in m0_05_contracts.COMMANDS else "IMPLEMENTED_M0_04" if op['command'] in m0_04_contracts.COMMANDS else "IMPLEMENTED_M0_03" if op['command'] in RUNTIME_COMMANDS else "NOT_IMPLEMENTED", "x-authorization": "Trusted principal, live object/scope/revocation checks. Hidden object 404; visible forbidden action 403; config admin has no implicit ticket read.",
+                 "x-runtime-status": "IMPLEMENTED_RM0_05" if (op['command'] in fase2_contracts.COMMANDS or op['command'] in fase3_contracts.COMMANDS) else "IMPLEMENTED_RM0_04" if op['command'] in role_hero_contracts.COMMANDS else "IMPLEMENTED_M0_11" if op['command'] in m0_11_contracts.COMMANDS else "IMPLEMENTED_M0_10" if op['command'] in m0_10_contracts.COMMANDS else "IMPLEMENTED_M0_09" if op['command'] in m0_09_contracts.COMMANDS else "IMPLEMENTED_M0_08" if op['command'] in m0_08_contracts.COMMANDS else "IMPLEMENTED_M0_07" if op['command'] in m0_07_contracts.COMMANDS else "IMPLEMENTED_M0_06" if op['command'] in m0_06_contracts.COMMANDS else "IMPLEMENTED_M0_05" if op['command'] in m0_05_contracts.COMMANDS else "IMPLEMENTED_M0_04" if op['command'] in m0_04_contracts.COMMANDS else "IMPLEMENTED_M0_03" if op['command'] in RUNTIME_COMMANDS else "NOT_IMPLEMENTED", "x-authorization": "Trusted principal, live object/scope/revocation checks. Hidden object 404; visible forbidden action 403; config admin has no implicit ticket read.",
                  "security": [{"SessionCookie": []}], "parameters": params,
                  "responses": {str(op["status"]): {"description": "Accepted job with scope-bound polling" if op["status"] == 202 else "Durable primary result; downstream delivery may still be pending", "content": {"application/json": {"schema": response, "example": sample(response)}}}}}
         if op["public"]:

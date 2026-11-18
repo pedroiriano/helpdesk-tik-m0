@@ -361,9 +361,19 @@ async function loadSession(): Promise<void> {
 
 
 async function getBootstrap(): Promise<Components['Bootstrap']> {
-
-  return api<Components['Bootstrap']>('/auth/bootstrap');
-
+  try {
+    const cfg = await api<Components['AuthConfig']>('/auth/config');
+    if (cfg.lab_auth_enabled) {
+      return await api<Components['Bootstrap']>('/auth/bootstrap');
+    }
+    return {
+      mode: 'PRODUCTION',
+      csrf_token: cfg.csrf_token,
+      subjects: [],
+    } as unknown as Components['Bootstrap'];
+  } catch {
+    return api<Components['Bootstrap']>('/auth/bootstrap');
+  }
 }
 
 

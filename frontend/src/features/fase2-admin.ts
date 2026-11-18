@@ -1,6 +1,8 @@
 import { api, errorText } from './transport';
+import type { Components } from './business-types.generated';
 
 type Page<T> = { items: T[]; next_cursor: string | null; as_of: string };
+type DeliveryJobItem = Components['DeliveryJobRecord'];
 
 interface NotificationItem {
   id: string;
@@ -120,6 +122,77 @@ export async function loadNotificationsInbox(): Promise<void> {
     }
     if (stat) stat.textContent = `Menampilkan ${res.items.length} notifikasi terbaru.`;
   } catch (err) {
+    if (stat) stat.textContent = errorText(err);
+  } finally {
+    await loadDeliveryJobs();
+  }
+}
+
+const DELIVERY_STATE_LABELS: Record<string, string> = {
+  PENDING: 'Menunggu kirim',
+  LEASED: 'Sedang dikirim',
+  ACKED: 'Terkirim',
+  FAILED: 'Gagal sementara (Retry)',
+  DEAD_LETTER: 'Dead Letter (Butuh Replay)',
+};
+
+export async function loadDeliveryJobs(): Promise<void> {
+  const panel = $('[data-hd-delivery-panel]');
+  const rows = $('[data-hd-delivery-rows]');
+  const stat = $('[data-hd-delivery-status]');
+  if (!panel || !rows) return;
+  const filter = ($('#hd-delivery-state') as HTMLSelectElement | null)?.value ?? '';
+  const query = filter ? `?limit=25&state=${encodeURIComponent(filter)}` : '?limit=25';
+  try {
+    const res = await api<Page<DeliveryJobItem>>(`/admin/delivery-jobs${query}`);
+    panel.hidden = false;
+    rows.replaceChildren();
+    if (!res.items.length) {
+      rows.append(emptyRow(5, 'Tidak ada antrean pengiriman saluran untuk filter ini.'));
+      if (stat) stat.textContent = 'Antrean pengiriman saluran bersih.';
+      return;
+    }
+    for (const job of res.items) {
+      const tr = el('tr');
+      const errText = job.last_error_code ? ` · ${job.last_error_code}` : '';
+      const attemptsTd = el('td', `${job.attempts}/5${errText}`);
+      const actTd = el('td');
+      if (job.state === 'FAILED' || job.state === 'DEAD_LETTER') {
+        const replayBtn = el('button', 'Replay', 'piui-btn piui-btn--secondary piui-btn--sm');
+        replayBtn.type = 'button';
+        replayBtn.addEventListener('click', async () => {
+          replayBtn.disabled = true;
+          try {
+            await api(`/admin/delivery-jobs/${encodeURIComponent(job.id)}/replay`, 'POST', {
+              expected_version: job.version,
+              reason: 'Replay antrean notifikasi melalui konsol admin',
+            });
+            await loadDeliveryJobs();
+          } catch (err) {
+            if (stat) stat.textContent = errorText(err);
+            replayBtn.disabled = false;
+          }
+        });
+        actTd.append(replayBtn);
+      } else {
+        actTd.textContent = job.delivered_at ? fmtWib(job.delivered_at) : '-';
+      }
+      tr.append(
+        el('td', job.channel),
+        el('td', job.target_masked || '***'),
+        el('td', DELIVERY_STATE_LABELS[job.state] ?? job.state),
+        attemptsTd,
+        actTd,
+      );
+      rows.append(tr);
+    }
+    if (stat) stat.textContent = `Menampilkan ${res.items.length} job pengiriman saluran (target teredaksi).`;
+  } catch (err) {
+    if (err && typeof err === 'object' && 'status' in err && Number((err as { status?: number }).status) === 403) {
+      panel.hidden = true;
+      return;
+    }
+    panel.hidden = false;
     if (stat) stat.textContent = errorText(err);
   }
 }

@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"sync/atomic"
 	"time"
@@ -69,6 +70,7 @@ func NewApplication(pools database.Pools, options m1.Options) *Runtime {
 	intake.Service().SharedBlobReferences = knowledgeMod.BlobReferenced
 	notifyMod := m9.New(pools[8], intake.ReportScope)
 	notifyMod.EnableLabSink(options.Lab && web.ValidLabOrigin(options.Origin))
+	notifyMod.ConfigureDelivery(deliveryOptionsFromEnv(identity.ContactEmail))
 
 	bindings := []delivery.Binding{
 		{Source: identity.Source(), Consumer: notifyMod.Consumer()},
@@ -88,6 +90,10 @@ func NewApplication(pools database.Pools, options m1.Options) *Runtime {
 	heartbeat := &atomic.Int64{}
 	identity.SetDiagnostics(diagnostics(pools, bindings, root, scanner, heartbeat))
 	identity.SetBackupManifest(backupManifestRunner(pools, root))
+	identity.SetPurgeRunner(m1api.PurgeRunner{
+		Preflight: intake.PreflightRetentionPurge,
+		Execute:   intake.ExecuteRetentionPurge,
+	})
 
 	adapter := &intakeMediaAdapter{intake: intake}
 	knowledgeRegister := func(mux *http.ServeMux) {
@@ -421,6 +427,7 @@ func (r *Runtime) Run(ctx context.Context) {
 	go delivery.RunBindings(ctx, r.Bindings)
 	go r.Intake.RunFiles(ctx)
 	go r.RunScheduler(ctx)
+	go r.Notify.RunDispatcher(ctx)
 }
 
 func (r *Runtime) RunScheduler(ctx context.Context) {
@@ -447,24 +454,68 @@ func (r *Runtime) RunScheduler(ctx context.Context) {
 	}
 }
 
+func readSecretValue(path, envFallback string) string {
+	if raw, err := os.ReadFile(path); err == nil {
+		if trimmed := strings.TrimSpace(string(raw)); trimmed != "" {
+			return trimmed
+		}
+	}
+	return strings.TrimSpace(os.Getenv(envFallback))
+}
+
+func deliveryOptionsFromEnv(contactEmail func(context.Context, string) (string, bool, error)) m9.DeliveryOptions {
+	smtpPort, _ := strconv.Atoi(strings.TrimSpace(os.Getenv("HELPDESK_SMTP_PORT")))
+	if smtpPort <= 0 {
+		smtpPort = 587
+	}
+	return m9.DeliveryOptions{
+		TelegramEnabled:  os.Getenv("HELPDESK_NOTIFY_TELEGRAM_ENABLED") == "1",
+		TelegramBotToken: readSecretValue("/run/secrets/telegram_bot_token", "HELPDESK_TELEGRAM_BOT_TOKEN"),
+		TelegramAPIBase:  strings.TrimSpace(os.Getenv("HELPDESK_TELEGRAM_API_BASE")),
+		SMTPEnabled:      os.Getenv("HELPDESK_NOTIFY_SMTP_ENABLED") == "1",
+		SMTPHost:         strings.TrimSpace(os.Getenv("HELPDESK_SMTP_HOST")),
+		SMTPPort:         smtpPort,
+		SMTPFrom:         strings.TrimSpace(os.Getenv("HELPDESK_SMTP_FROM")),
+		SMTPUser:         strings.TrimSpace(os.Getenv("HELPDESK_SMTP_USER")),
+		SMTPPass:         readSecretValue("/run/secrets/smtp_password", "HELPDESK_SMTP_PASSWORD"),
+		SMTPUseTLS:       os.Getenv("HELPDESK_SMTP_TLS") != "0",
+		ContactEmail:     contactEmail,
+	}
+}
+
 func LabOptions() (m1.Options, error) {
-	origin := os.Getenv("HELPDESK_PUBLIC_ORIGIN")
+	origin := strings.TrimSpace(os.Getenv("HELPDESK_PUBLIC_ORIGIN"))
 	if origin == "" {
 		origin = "http://127.0.0.1:18090"
 	}
 	if !web.ValidOrigin(origin) {
 		return m1.Options{}, fmt.Errorf("invalid public origin")
 	}
-	options := m1.Options{Origin: origin, Lab: os.Getenv("HELPDESK_LAB_AUTH") == "1"}
-	if options.Lab {
-		if !web.ValidLabOrigin(origin) {
-			return options, fmt.Errorf("lab login requires loopback origin")
-		}
-		key, err := os.ReadFile("/run/secrets/session_key")
-		if err != nil || len(key) < 32 {
-			return options, fmt.Errorf("lab session key unavailable")
-		}
+	key, keyErr := os.ReadFile("/run/secrets/session_key")
+	options := m1.Options{
+		Origin:       origin,
+		Lab:          os.Getenv("HELPDESK_LAB_AUTH") == "1",
+		PublicAuth:   os.Getenv("HELPDESK_PUBLIC_AUTH") == "1",
+		PurgeEnabled: os.Getenv("HELPDESK_PURGE_ENABLED") == "1",
+		SSO: m1.SSOOptions{
+			Enabled:       os.Getenv("HELPDESK_SSO_ENABLED") == "1",
+			ProviderLabel: strings.TrimSpace(os.Getenv("HELPDESK_SSO_PROVIDER_LABEL")),
+			Issuer:        strings.TrimSpace(os.Getenv("HELPDESK_SSO_ISSUER")),
+			ClientID:      strings.TrimSpace(os.Getenv("HELPDESK_SSO_CLIENT_ID")),
+			ClientSecret:  readSecretValue("/run/secrets/sso_client_secret", "HELPDESK_SSO_CLIENT_SECRET"),
+			AuthURL:       strings.TrimSpace(os.Getenv("HELPDESK_SSO_AUTH_URL")),
+			TokenURL:      strings.TrimSpace(os.Getenv("HELPDESK_SSO_TOKEN_URL")),
+			JWKSURL:       strings.TrimSpace(os.Getenv("HELPDESK_SSO_JWKS_URL")),
+			RedirectURL:   strings.TrimSpace(os.Getenv("HELPDESK_SSO_REDIRECT_URI")),
+		},
+	}
+	if keyErr == nil && len(key) >= 32 {
 		options.Key = key
+	} else if options.Lab || options.PublicAuth || options.SSO.Enabled {
+		return options, fmt.Errorf("session_key secret unavailable or shorter than 32 bytes")
+	}
+	if options.Lab && !web.ValidLabOrigin(origin) {
+		return options, fmt.Errorf("lab login requires loopback origin")
 	}
 	return options, nil
 }

@@ -74,7 +74,7 @@ export function loginForm(admin = false) {
         </button>
       </div>
       <div class="piui-dialog__body">
-        <p class="piui-demo-notice hd-demo-notice-compact">
+        <p class="piui-demo-notice hd-demo-notice-compact" data-hd-lab-notice>
           Lingkungan lab sintetis Helpdesk TIK. Gunakan akun lab terdaftar atau pemilih identitas sintetis. SSO kedinasan belum diaktifkan; jangan masukkan kredensial produksi.
         </p>
         <div class="piui-field">
@@ -90,8 +90,11 @@ export function loginForm(admin = false) {
           <button class="piui-btn piui-btn--primary hd-flex-1" type="submit">Masuk Konsol Petugas</button>
           <a class="piui-btn piui-btn--secondary" href="/">Portal Publik</a>
         </div>
+        <div class="hd-divider-top" data-hd-sso-panel hidden>
+          <button type="button" class="piui-btn piui-btn--secondary hd-flex-1" data-hd-sso-login>Masuk SSO ASN Pemkot Depok</button>
+        </div>
         
-        <div class="hd-divider-top">
+        <div class="hd-divider-top" data-hd-lab-section>
           <p class="hd-divider-title">
             Aktivasi Cepat Peran Lab (1-Klik Tanpa Mengetik):
           </p>
@@ -127,7 +130,7 @@ export function loginForm(admin = false) {
 
     <!-- Panel Warga -->
     <form data-hd-login data-hd-auth-mode="warga" id="auth-panel-warga" role="tabpanel" aria-labelledby="auth-tab-warga" data-local-mutation data-local-ready>
-      <p class="vy-form-privacy hd-privacy-lead">
+      <p class="vy-form-privacy hd-privacy-lead" data-hd-warga-lead>
         Mode lab sintetis. Masuk menggunakan NIK atau email akun lab terdaftar untuk menyampaikan permohonan dan memantau status tiket.
       </p>
       <div class="vy-input-group">
@@ -147,7 +150,7 @@ export function loginForm(admin = false) {
 
     <!-- Panel ASN -->
     <form data-hd-login data-hd-auth-mode="asn" id="auth-panel-asn" role="tabpanel" aria-labelledby="auth-tab-asn" hidden data-local-mutation data-local-ready>
-      <div class="hd-callout--asn">
+      <div class="hd-callout--asn" data-hd-lab-callout>
         <strong>Akses ASN — lingkungan lab sintetis</strong>
         <p>Integrasi SSO kedinasan belum diaktifkan. Gunakan pemilih ASN sintetis di bawah; jangan masukkan kata sandi kedinasan.</p>
       </div>
@@ -161,12 +164,17 @@ export function loginForm(admin = false) {
       </div>
       <p class="hd-status-line" data-hd-login-status role="status" tabindex="-1"></p>
       <div class="hd-actions hd-actions--auth">
-        <button class="btn btn-primary hd-w-full" type="submit"><span class="hd-btn-icon">🏛️</span> Masuk dengan akun ASN (lab) Depok &rarr;</button>
+        <button class="btn btn-primary hd-w-full" type="submit"><span class="hd-btn-icon">🏛️</span> Masuk dengan akun ASN Depok &rarr;</button>
+      </div>
+      <div data-hd-sso-panel hidden>
+        <div class="hd-actions">
+          <button type="button" class="btn btn-secondary hd-w-full" data-hd-sso-login>Masuk dengan SSO ASN Pemerintah Kota Depok &rarr;</button>
+        </div>
       </div>
     </form>
 
     <!-- Opsi Uji Cepat Lab Penguji -->
-    <div class="hd-divider-top">
+    <div class="hd-divider-top" data-hd-lab-section>
       <p class="hd-divider-title">
         ⚡ Mode Uji Cepat Penguji / Evaluator (1-Klik):
       </p>
@@ -444,17 +452,35 @@ export function adminBusinessPage(source) {
       </div>
       <p data-hd-notif-status role="status"></p>
       <div class="hd-table-wrap"><table class="piui-table"><thead><tr><th scope="col">Judul / Ringkasan</th><th scope="col">Waktu</th><th scope="col">Status</th><th scope="col">Tindakan</th></tr></thead><tbody data-hd-notif-rows></tbody></table></div>
-      <h3>Pengikatan notifikasi sink lab</h3>
+      <h3 data-hd-tg-heading>Pengikatan saluran notifikasi (M9)</h3>
       <form data-hd-telegram-form class="hd-form-grid">
         <div class="piui-field"><label for="hd-tg-org">Organisasi Scope</label><select class="piui-input" id="hd-tg-org"></select></div>
         <div class="piui-field"><label for="hd-tg-code">Kode sekali pakai</label><input class="piui-input" id="hd-tg-code" type="text" autocomplete="off" readonly required></div>
+        <div class="piui-field" data-hd-tg-chat-wrap hidden><label for="hd-tg-chat-ref">ID Chat / Username Telegram</label><input class="piui-input" id="hd-tg-chat-ref" type="text" maxlength="64" placeholder="Contoh: 998877665"></div>
         <div class="hd-actions">
-          <button type="button" class="piui-btn piui-btn--secondary" data-hd-tg-challenge>Terbitkan kode sink</button>
-          <button type="submit" class="piui-btn piui-btn--primary" data-hd-tg-bind>Hubungkan sink</button>
+          <button type="button" class="piui-btn piui-btn--secondary" data-hd-tg-challenge>Terbitkan kode tantangan</button>
+          <button type="submit" class="piui-btn piui-btn--primary" data-hd-tg-bind>Hubungkan saluran</button>
         </div>
       </form>
       <div class="hd-actions" data-hd-sink-bound hidden><button type="button" class="piui-btn piui-btn--secondary" data-hd-tg-revoke>Cabut pengikatan</button></div>
       <p data-hd-telegram-status role="status"></p>
+      <div class="hd-divider-top" data-hd-delivery-panel hidden>
+        <div class="hd-section-bar">
+          <h3>Antrean Pengiriman Saluran (Telegram &amp; Email M9)</h3>
+          <div class="hd-actions hd-actions--flush">
+            <select class="piui-input" id="hd-delivery-state" aria-label="Filter status pengiriman">
+              <option value="">Semua status</option>
+              <option value="DEAD_LETTER">Dead Letter</option>
+              <option value="FAILED">Gagal (Retry)</option>
+              <option value="PENDING">Pending</option>
+              <option value="ACKED">Terkirim (ACKED)</option>
+            </select>
+            <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-hd-refresh-delivery>Segarkan Antrean</button>
+          </div>
+        </div>
+        <p data-hd-delivery-status role="status"></p>
+        <div class="hd-table-wrap"><table class="piui-table"><thead><tr><th scope="col">Kanal</th><th scope="col">Target Teredaksi</th><th scope="col">Status</th><th scope="col">Percobaan / Galat</th><th scope="col">Tindakan</th></tr></thead><tbody data-hd-delivery-rows></tbody></table></div>
+      </div>
     </div>
 
     <!-- Panel Audit -->
@@ -496,7 +522,7 @@ export function adminBusinessPage(source) {
       <p class="piui-demo-notice">Runner sistem beroperasi dengan daftar tindakan terbatas (allowlist). Eksekusi shell bebas, perintah sistem arbitrer, atau konsol SQL tidak diizinkan.</p>
       <form data-hd-runner-form class="hd-form-grid" data-local-mutation>
         <div class="piui-field"><label for="hd-runner-org">Organisasi Scope</label><select class="piui-input" id="hd-runner-org"></select></div>
-        <div class="piui-field"><label for="hd-runner-kind">Jenis Tugas Operasional</label><select class="piui-input" id="hd-runner-kind"><option value="BACKUP_MANIFEST">Manifest Backup (BACKUP_MANIFEST)</option><option value="HEALTH_REPORT">Laporan Diagnosa (HEALTH_REPORT)</option><option value="PURGE_REQUEST">Permintaan Purge [DISABLED - Policy Pending] (PURGE_REQUEST)</option></select></div>
+        <div class="piui-field"><label for="hd-runner-kind">Jenis Tugas Operasional</label><select class="piui-input" id="hd-runner-kind"><option value="BACKUP_MANIFEST">Manifest Backup (BACKUP_MANIFEST)</option><option value="HEALTH_REPORT">Laporan Diagnosa (HEALTH_REPORT)</option><option value="PURGE_REQUEST">Permintaan Purge Retensi (PURGE_REQUEST)</option></select></div>
         <div class="piui-field"><label for="hd-runner-reason">Alasan Operasi</label><input class="piui-input" id="hd-runner-reason" type="text" placeholder="Justifikasi operasional..." required></div>
         <div class="hd-actions hd-col-full">
           <button type="submit" class="piui-btn piui-btn--primary">Ajukan pekerjaan</button>

@@ -3,6 +3,7 @@ package m3
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -139,5 +140,16 @@ func (m *Module) ReportScope(ctx context.Context, org string, ids []string) ([]s
 		}
 		owned = append(owned, id)
 	}
+	if err != nil {
+		return nil, err
+	}
 	return owned, rows.Err()
+}
+
+func (m *Module) PreflightRetentionPurge(ctx context.Context, ticketID string) error {
+	return m.service.PreflightRetentionPurge(ctx, ticketID)
+}
+
+func (m *Module) ExecuteRetentionPurge(ctx context.Context, ticketID, actorID, reason string) (json.RawMessage, error) {
+	return m.service.ExecuteRetentionPurge(ctx, ticketID, actorID, reason)
 }

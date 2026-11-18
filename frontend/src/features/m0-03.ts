@@ -14,6 +14,7 @@ import type { Components } from './business-types.generated';
 import { setupSearchCombobox } from './search-combobox';
 import {
   loadNotificationsInbox,
+  loadDeliveryJobs,
   pollReportExport,
   loadOperationsList,
   loadSchedulerJobs,
@@ -56,10 +57,46 @@ async function loadSession(): Promise<void> {
   }); });
 }
 function intent() { let previous = '', key = ''; return (path: string, payload: unknown) => { const serialized = path + JSON.stringify(payload); if (serialized !== previous) { previous = serialized; key = crypto.randomUUID(); } return key; }; }
+type AuthState = Components['AuthConfig'] & { subjects: Components['Subject'][] };
+
+async function loadAuthBootstrap(): Promise<AuthState> {
+  try {
+    const cfg = await api<Components['AuthConfig']>('/auth/config');
+    let subjects: Components['Subject'][] = [];
+    let csrfToken = cfg.csrf_token;
+    if (cfg.lab_auth_enabled) {
+      try {
+        const boot = await api<Components['Bootstrap']>('/auth/bootstrap');
+        subjects = boot.subjects ?? [];
+        csrfToken = boot.csrf_token || csrfToken;
+      } catch {}
+    }
+    return { ...cfg, csrf_token: csrfToken, subjects };
+  } catch {
+    const boot = await api<Components['Bootstrap']>('/auth/bootstrap');
+    return {
+      mode: boot.mode || 'SYNTHETIC_LAB',
+      csrf_token: boot.csrf_token,
+      subjects: boot.subjects ?? [],
+      lab_auth_enabled: true,
+      public_auth_enabled: true,
+      sso_enabled: false,
+      sso_provider_label: 'SSO ASN Pemerintah Kota Depok',
+      sso_login_url: '/api/v1/auth/sso/login',
+      purge_enabled: false,
+    };
+  }
+}
+
 async function registerUser(form: HTMLFormElement): Promise<void> {
   try {
-    const boot = await api<Components['Bootstrap']>('/auth/bootstrap');
+    const boot = await loadAuthBootstrap();
     const submit = $('button[type=submit]', form) as HTMLButtonElement | null;
+    if (!boot.public_auth_enabled) {
+      if (submit) submit.disabled = true;
+      status('[data-hd-register-status]', 'Pendaftaran mandiri warga belum diaktifkan oleh pengelola layanan.', form);
+      return;
+    }
     status('[data-hd-register-status]', 'Siap mendaftarkan akun baru. Lengkapi formulir di atas.', form);
     const key = intent();
     let pending = false;
@@ -110,16 +147,48 @@ async function registerUser(form: HTMLFormElement): Promise<void> {
   }
 }
 
-async function login(form: HTMLFormElement, bootstrap: Promise<Components['Bootstrap']>, initializePicker: boolean): Promise<void> {
+async function login(form: HTMLFormElement, bootstrap: Promise<AuthState>, initializePicker: boolean): Promise<void> {
   try {
     const boot = await bootstrap;
     const isAdminLogin = form.hasAttribute('data-hd-admin-login');
-    const labSubjects = isAdminLogin ? adminSubjects(boot.subjects) : boot.subjects;
+    const labSubjects = boot.lab_auth_enabled ? (isAdminLogin ? adminSubjects(boot.subjects) : boot.subjects) : [];
     const submit = $('button[type=submit]', form) as HTMLButtonElement | null;
     if (submit) submit.disabled = false;
-    status('[data-hd-login-status]', 'Masukkan identitas akun atau gunakan aktivasi cepat peran lab.', form);
+    status(
+      '[data-hd-login-status]',
+      boot.lab_auth_enabled
+        ? 'Masukkan identitas akun atau gunakan aktivasi cepat peran lab.'
+        : 'Masukkan NIK/email dan kata sandi akun terdaftar.',
+      form,
+    );
 
     if (initializePicker) {
+      if (!boot.lab_auth_enabled) {
+        for (const sec of nodes('[data-hd-lab-section]')) sec.hidden = true;
+        for (const n of nodes('[data-hd-lab-notice]')) {
+          n.textContent = 'Lingkungan produksi Helpdesk TIK Kota Depok. Masuk dengan akun terdaftar atau SSO ASN.';
+        }
+        for (const c of nodes('[data-hd-lab-callout]')) {
+          const title = element('strong', 'Akses ASN Pemerintah Kota Depok');
+          const desc = element('p', 'Masuk dengan akun ASN terdaftar atau tombol SSO ASN resmi di bawah.');
+          c.replaceChildren(title, desc);
+        }
+        for (const l of nodes('[data-hd-warga-lead]')) {
+          l.textContent = 'Masuk menggunakan NIK atau email dan kata sandi akun warga terdaftar untuk menyampaikan permohonan dan memantau tiket.';
+        }
+      }
+      if (boot.sso_enabled) {
+        const ssoTarget = boot.sso_login_url || '/api/v1/auth/sso/login';
+        for (const panel of nodes('[data-hd-sso-panel]')) panel.hidden = false;
+        for (const btn of nodes<HTMLButtonElement>('[data-hd-sso-login]')) {
+          btn.disabled = false;
+          if (boot.sso_provider_label) btn.textContent = `Masuk dengan ${boot.sso_provider_label} →`;
+          btn.addEventListener('click', () => {
+            btn.disabled = true;
+            location.assign(ssoTarget);
+          });
+        }
+      }
       const tabs = nodes<HTMLButtonElement>('[data-auth-tab]');
       const selectTab = (selected: HTMLButtonElement) => {
         for (const tab of tabs) {
@@ -142,13 +211,14 @@ async function login(form: HTMLFormElement, bootstrap: Promise<Components['Boots
       });
 
       const subjectSelect = $<HTMLSelectElement>('#hd-subject') ?? $<HTMLSelectElement>('select[name=subject]', form);
-      if (subjectSelect) {
+      if (subjectSelect && boot.lab_auth_enabled) {
         options(subjectSelect, labSubjects.map(s => ({ value: s.id, label: `${s.name} · ${isAdminLogin ? roleLabels[s.role ?? ''] ?? 'Petugas' : s.role || s.kind}` })));
         subjectSelect.disabled = false;
       }
       const roleCodes: Record<string, string> = {asn:'ASN',warga:'PUBLIC',publik:'PUBLIC'};
       let switching = false;
       const labKey = intent();
+      if (boot.lab_auth_enabled) {
       for (const button of nodes<HTMLButtonElement>('[data-quick-login], [data-hd-lab-select]')) {
         button.disabled = false;
         button.addEventListener('click', async () => {
@@ -176,6 +246,7 @@ async function login(form: HTMLFormElement, bootstrap: Promise<Components['Boots
             button.disabled = false;
           }
         });
+      }
       }
     }
 
@@ -464,7 +535,12 @@ async function admin(): Promise<void> {
   try {
     if (identityAllowed || catalogAllowed) {
       orgs = (await api<Page<Components['Organization']>>('/admin/organizations?limit=100')).items;
-      subjects = (await api<Components['Bootstrap']>('/auth/bootstrap')).subjects;
+      const cfg = await api<Components['AuthConfig']>('/auth/config').catch(() => null);
+      if (cfg && !cfg.lab_auth_enabled) {
+        subjects = (await api<Page<Components['Subject']>>('/admin/subjects?limit=100')).items;
+      } else {
+        subjects = (await api<Components['Bootstrap']>('/auth/bootstrap')).subjects;
+      }
     }
   } catch {}
 
@@ -1053,6 +1129,8 @@ async function admin(): Promise<void> {
     if (target === 'notifications') void loadNotificationsInbox();
   }
   $('[data-hd-refresh-notif]')?.addEventListener('click', () => void loadNotificationsInbox());
+  $('[data-hd-refresh-delivery]')?.addEventListener('click', () => void loadDeliveryJobs());
+  $('#hd-delivery-state')?.addEventListener('change', () => void loadDeliveryJobs());
   for (const tab of m9Tabs) {
     tab.addEventListener('click', () => {
       if (tab.dataset.hdTab) switchM9Tab(tab.dataset.hdTab);
@@ -1183,15 +1261,31 @@ async function admin(): Promise<void> {
   if (tgForm) {
     const orgField = $<HTMLSelectElement>('#hd-tg-org');
     const codeField = $<HTMLInputElement>('#hd-tg-code');
+    const chatWrap = $('[data-hd-tg-chat-wrap]');
+    const chatField = $<HTMLInputElement>('#hd-tg-chat-ref');
+    const tgHead = $('[data-hd-tg-heading]');
+    const tgChallengeBtn = $<HTMLButtonElement>('[data-hd-tg-challenge]');
+    const tgBindBtn = $<HTMLButtonElement>('[data-hd-tg-bind]');
     const bound = $('[data-hd-sink-bound]');
     let binding: {id: string; version: number} | undefined;
+    let prodTgMode = false;
+    void loadAuthBootstrap().then(cfg => {
+      if (!cfg.lab_auth_enabled) {
+        prodTgMode = true;
+        if (chatWrap) chatWrap.hidden = false;
+        if (chatField) chatField.required = true;
+        if (tgHead) tgHead.textContent = 'Pengikatan Telegram Notifikasi (M9)';
+        if (tgChallengeBtn) tgChallengeBtn.textContent = 'Terbitkan kode verifikasi';
+        if (tgBindBtn) tgBindBtn.textContent = 'Hubungkan Telegram';
+      }
+    }).catch(() => {});
     orgField?.addEventListener('change', () => { if (codeField) codeField.value = ''; });
-    $('[data-hd-tg-challenge]')?.addEventListener('click', async () => {
+    tgChallengeBtn?.addEventListener('click', async () => {
       if (!orgField?.value || !codeField) return;
       try {
         const challenge = await api<{code: string}>('/notifications/sink-challenges', 'POST', {scope_org_id: orgField.value});
         codeField.value = challenge.code;
-        status('[data-hd-telegram-status]', 'Kode sink lab berlaku lima menit.');
+        status('[data-hd-telegram-status]', prodTgMode ? 'Kode tantangan berlaku 5 menit; masukkan ID Chat Telegram lalu klik Hubungkan.' : 'Kode sink lab berlaku lima menit.');
       } catch (err) {
         status('[data-hd-telegram-status]', errorText(err));
       }
@@ -1199,13 +1293,19 @@ async function admin(): Promise<void> {
     tgForm.addEventListener('submit', async e => {
       e.preventDefault();
       if (!orgField?.value || !codeField?.value) return;
+      if (prodTgMode && !chatField?.value.trim()) {
+        status('[data-hd-telegram-status]', 'Masukkan ID Chat / Username Telegram terverifikasi.');
+        return;
+      }
       try {
-        binding = await api('/notifications/telegram-bindings', 'POST', {
-          scope_org_id: orgField.value, channel: 'SINK', verification_code: codeField.value, expected_version: 1
-        });
+        const body = prodTgMode
+          ? { scope_org_id: orgField.value, channel: 'TELEGRAM', verification_code: codeField.value, chat_ref: chatField!.value.trim(), expected_version: 1 }
+          : { scope_org_id: orgField.value, channel: 'SINK', verification_code: codeField.value, expected_version: 1 };
+        binding = await api('/notifications/telegram-bindings', 'POST', body);
         codeField.value = '';
+        if (chatField) chatField.value = '';
         if (bound) bound.hidden = false;
-        status('[data-hd-telegram-status]', 'Pengikatan sink lab aktif.');
+        status('[data-hd-telegram-status]', prodTgMode ? 'Pengikatan Telegram aktif dan terverifikasi.' : 'Pengikatan sink lab aktif.');
       } catch (err) {
         status('[data-hd-telegram-status]', errorText(err));
       }
@@ -2107,7 +2207,7 @@ async function main() {
   for (const f of nodes<HTMLFormElement>('form[data-hd-register]')) void registerUser(f);
   const loginForms = nodes<HTMLFormElement>('form[data-hd-login]');
   if (loginForms.length) {
-    const bootstrap = api<Components['Bootstrap']>('/auth/bootstrap');
+    const bootstrap = loadAuthBootstrap();
     loginForms.forEach((form, index) => { void login(form, bootstrap, index === 0); });
   }
   const page = $('[data-hd-page]')?.dataset.hdPage;

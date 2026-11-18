@@ -177,10 +177,10 @@
     },
     {
       "id": "security_candidate",
-      "status": "NOT_IMPLEMENTED",
-      "command": null,
-      "working_directory": null,
-      "scope": "External container/SAST/SBOM scanner (Trivy/Syft/Grype) deferred to protected remote CI; app ACL/CSP/ClamAV 1.5.4 checks run in rm0-04/contracts/ci_local"
+      "status": "IMPLEMENTED",
+      "command": "python -X utf8 scripts/security_gate.py",
+      "working_directory": ".",
+      "scope": "Secret hygiene, pinned OCI digests, non-root/no-new-privileges compose hardening, CSP/HSTS audit, and CycloneDX 1.5 SBOM (qa/remediation/rm0-05/sbom-m0.json); paired remote CVE scan (govulncheck + Trivy) defined in .github/workflows/ci.yml security-and-sbom"
     },
     {
       "id": "local_setup",

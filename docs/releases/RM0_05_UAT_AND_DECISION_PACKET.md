@@ -1,12 +1,12 @@
 # Paket Penguncian Keputusan Domain (DEC-M01–DEC-M10) & UAT Manusia RM0-05
 
-Tanggal penyusunan: 17 November 2026.  
-Status fase: **`BLOCKED_HUMAN_UAT_AND_DOMAIN_DECISIONS`** *(teknis lab, stabilisasi Fase 1–2, & CI lokal PASS; menunggu keterlibatan pemilik layanan Diskominfo/OPD serta penguji manusia)*.  
-Identitas kandidat beku: Tag Git **`rm0-05-rc3`** *(menggantikan `rm0-05-rc2` setelah Fase 2 Penuntasan Fitur UI→Backend, UX Operasional, & Kebersihan Kontrak/Tes; rujuk SHA tepat dan hash seluruh berkas pada [source-manifest.json](../../qa/remediation/rm0-05/source-manifest.json) serta bukti CI pada [local-ci.json](../../qa/remediation/rm0-05/local-ci.json))*.  
+Tanggal penyusunan: 18 November 2026.  
+Status fase: **`BLOCKED_HUMAN_UAT_AND_DOMAIN_DECISIONS`** *(teknis lab, stabilisasi Fase 1–3, TLS/SBOM gate, & CI lokal PASS; menunggu keterlibatan pemilik layanan Diskominfo/OPD serta penguji manusia)*.  
+Identitas kandidat beku: Tag Git **`rm0-05-rc4`** *(menggantikan `rm0-05-rc3` setelah Fase 3 Hardening Produksi, Integrasi Kedinasan Nyata, & Go-Live Gate; rujuk SHA tepat dan hash seluruh berkas pada [source-manifest.json](../../qa/remediation/rm0-05/source-manifest.json), SBOM pada [sbom-m0.json](../../qa/remediation/rm0-05/sbom-m0.json), serta bukti CI pada [local-ci.json](../../qa/remediation/rm0-05/local-ci.json))*.  
 Lingkungan uji lab lokal: **`http://127.0.0.1:18090`** (`Go 1.27.4`, `Node 26.13.1`, `Nginx 1.30.6` rebuild, `PostgreSQL 18.7`, `ClamAV 1.5.4`).
-Ringkasan kesiapan lab pra-UAT `rm0-05-rc3`: melanjutkan kesiapan `rm0-05-rc2` ditambah penuntasan jalur UI→Backend (inbox notifikasi & tanda terbaca `POST /notifications/{id}/read`, polling ekspor laporan, antrean operasi & daftar/replay scheduler M7, pencabutan persetujuan reuse media M8 & pemilih visual artikel/halaman/media, filter katalog publik, pencarian antrean tiket ber-ACL + bulk archive + filter layanan, pemilih PIC internal dari `/staff/directory`, inbox handoff lintas-OPD + reject/cancel, work-log tiket & penutupan kasus vendor & resume pause SLA lebih awal, serta pengelola aturan M4–M7 + migrasi `036–037`), kartu tabel mobile-first `<640px`, sinkronisasi penuh kontrak OpenAPI/TS (`0` operasi `NOT_IMPLEMENTED` tersisa pada modul M0), serta perbaikan skrip uji historis (`test_rm0_01.py`, `smoke_local.py`, `test_m0_04.py`, `test_public_buttons.py`).
+Ringkasan kesiapan pra-UAT & pra-go-live `rm0-05-rc4`: melanjutkan seluruh pencapaian `rm0-05-rc3` ditambah kesiapan produksi terkendali di balik env gate (`038-040`, penolakan keras identitas/sesi lab saat `HELPDESK_LAB_AUTH=0`, `GET /api/v1/auth/config` + `GET /api/v1/admin/subjects`, SSO ASN OIDC/PKCE `S256` & verifikasi JWT RS256/ES256 JWKS, pengiriman notifikasi M9 Telegram Bot API & SMTP relay + `GET /api/v1/admin/delivery-jobs` + replay, pengamanan retensi/legal-hold M3 `POST /api/v1/tickets/{id}/retention` + preflight & eksekusi purge dua Super Admin `DEC-M07`, konfigurasi edge HTTPS TLSv1.2/1.3 HSTS `infra/nginx/nginx.prod.conf` + overlay `compose.prod.yml` dengan `freshclam` aktif, gerbang keamanan & CycloneDX SBOM `scripts/security_gate.py`, serta panduan cutover [production-cutover.md](../../runbooks/production-cutover.md)).
 
-> **Prinsip Kejujuran RM0-05:** Tidak satu pun nama penguji manusia, tanda tangan pejabat, atau persetujuan kebijakan organisasi boleh diisi oleh agen AI. Seluruh keputusan di bawah wajib ditetapkan langsung oleh pemilik mandat Diskominfo / Perangkat Daerah Kota Depok pada kandidat `rm0-05-rc3` sebelum otorisasi rilis produksi.
+> **Prinsip Kejujuran RM0-05:** Tidak satu pun nama penguji manusia, tanda tangan pejabat, atau persetujuan kebijakan organisasi boleh diisi oleh agen AI. Seluruh keputusan di bawah wajib ditetapkan langsung oleh pemilik mandat Diskominfo / Perangkat Daerah Kota Depok pada kandidat `rm0-05-rc4` sebelum otorisasi rilis produksi.
 
 ---
 
@@ -29,10 +29,10 @@ Ringkasan kesiapan lab pra-UAT `rm0-05-rc3`: melanjutkan kesiapan `rm0-05-rc2` d
 
 ---
 
-## 2. Protokol Eksekusi UAT Manusia di Atas Kandidat Beku (`rm0-05-rc3`)
+## 2. Protokol Eksekusi UAT Manusia di Atas Kandidat Beku (`rm0-05-rc4`)
 
 ### 2.1 Pra-syarat sebelum sesi UAT dimulai
-1. Pastikan kandidat kode tidak dimodifikasi selama sesi UAT berlangsung (`git checkout rm0-05-rc3`, verifikasi `python -X utf8 scripts/ci_local.py --with-live-browser` → **`PASS`**).
+1. Pastikan kandidat kode tidak dimodifikasi selama sesi UAT berlangsung (`git checkout rm0-05-rc4`, verifikasi `python -X utf8 scripts/ci_local.py --with-live-browser` → **`PASS`**).
 2. Akses Portal Publik: `http://127.0.0.1:18090/` dan Portal Petugas/Admin: `http://127.0.0.1:18090/admin/auth/login.html`.
 3. Gunakan matriks CSV pelacakan hasil nyata di [uat-worksheets.csv](../../qa/remediation/rm0-05/uat-worksheets.csv) agar setiap penguji mencatat **Nama Penguji, OPD, Tanggal Uji, Hasil Aktual, dan ID Defect** secara terpisah.
 

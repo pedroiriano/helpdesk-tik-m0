@@ -1112,14 +1112,19 @@ func (s Store) Archive(ctx context.Context, tx pgx.Tx, id, actor string, in api.
 func (s Store) RestoreArchive(ctx context.Context, tx pgx.Tx, id, actor string, in api.RestoreArchiveInput, now time.Time) (api.Ticket, error) {
 	var currentVersion int64
 	var isArchived bool
+	var isPurged bool
 
-	err := tx.QueryRow(ctx, `SELECT version, (archived_at IS NOT NULL) FROM intake.tickets WHERE id = $1`, id).
-		Scan(&currentVersion, &isArchived)
+	err := tx.QueryRow(ctx, `SELECT version, (archived_at IS NOT NULL), (purged_at IS NOT NULL) FROM intake.tickets WHERE id = $1`, id).
+		Scan(&currentVersion, &isArchived, &isPurged)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return api.Ticket{}, web.Fail(404, "Tiket tidak ditemukan")
 		}
 		return api.Ticket{}, err
+	}
+
+	if isPurged {
+		return api.Ticket{}, web.Fail(409, "Tiket yang sudah dimusnahkan sesuai retensi tidak dapat dipulihkan")
 	}
 
 	if !isArchived {

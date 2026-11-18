@@ -258,6 +258,27 @@
       "owner": "M6",
       "scope": "Fase 2 SLA rule active status toggle",
       "sha256": "de11a9bd51453cda2f935ed30fb31acbc3f2b3b03ff052d891df4904731fb796"
+    },
+    {
+      "id": "038",
+      "path": "migrations/m1/038-sso-and-auth-mode.sql",
+      "owner": "M1",
+      "scope": "Fase 3 additive OIDC SSO & production auth metadata",
+      "sha256": "28cdf187cc419e39bdc8b75a38ab1747225105433a180135a37eaabb3d82ef7d"
+    },
+    {
+      "id": "039",
+      "path": "migrations/m9/039-delivery-channels.sql",
+      "owner": "M9",
+      "scope": "Fase 3 additive production notification delivery channels",
+      "sha256": "cd8298b28ede72805c0a23a5d84c797c2859a747163db12024a35bdda11e04c5"
+    },
+    {
+      "id": "040",
+      "path": "migrations/m3/040-retention-legal-hold.sql",
+      "owner": "M3",
+      "scope": "Fase 3 additive ticket retention & legal hold guard",
+      "sha256": "24d0fac5d896bca9ff3f412db8eb4735bd2d7440dbb237e2955e5c39349e1c36"
     }
   ]
 }

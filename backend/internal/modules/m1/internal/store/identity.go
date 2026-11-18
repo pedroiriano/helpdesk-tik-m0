@@ -22,16 +22,18 @@ func (s Store) TeamOrganization(ctx context.Context, id string) (string, error) 
 }
 
 type Session struct {
-	ID      string
-	Version int64
-	Expires time.Time
-	CSRF    []byte
-	Actor   api.Actor
+	ID           string
+	Version      int64
+	Expires      time.Time
+	CSRF         []byte
+	Actor        api.Actor
+	LabFixture   bool
+	AuthProvider string
 }
 
 func (s Store) Session(ctx context.Context, hash []byte) (Session, error) {
 	var v Session
-	err := s.Pool.QueryRow(ctx, `SELECT x.id::text,x.version,x.expires_at,x.csrf_hash,u.id::text,u.display_name,u.kind,u.role_code FROM identity.sessions x JOIN identity.subjects u ON u.id=x.subject_id WHERE x.token_hash=$1 AND x.revoked_at IS NULL AND x.expires_at>now() AND u.active`, hash).Scan(&v.ID, &v.Version, &v.Expires, &v.CSRF, &v.Actor.ID, &v.Actor.Name, &v.Actor.Kind, &v.Actor.Role)
+	err := s.Pool.QueryRow(ctx, `SELECT x.id::text,x.version,x.expires_at,x.csrf_hash,u.id::text,u.display_name,u.kind,u.role_code,u.lab_fixture,u.auth_provider FROM identity.sessions x JOIN identity.subjects u ON u.id=x.subject_id WHERE x.token_hash=$1 AND x.revoked_at IS NULL AND x.expires_at>now() AND u.active`, hash).Scan(&v.ID, &v.Version, &v.Expires, &v.CSRF, &v.Actor.ID, &v.Actor.Name, &v.Actor.Kind, &v.Actor.Role, &v.LabFixture, &v.AuthProvider)
 	if err == pgx.ErrNoRows {
 		return v, web.Fail(401, "Sesi tidak tersedia atau sudah berakhir")
 	}

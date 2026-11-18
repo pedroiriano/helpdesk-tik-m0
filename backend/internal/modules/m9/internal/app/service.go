@@ -2,17 +2,19 @@ package app
 
 import (
 	"context"
-	"helpdesk.local/m0/internal/platform/web"
+	"strings"
 	"time"
 
 	"helpdesk.local/m0/internal/modules/m9/api"
 	"helpdesk.local/m0/internal/modules/m9/internal/domain"
 	"helpdesk.local/m0/internal/modules/m9/internal/store"
+	"helpdesk.local/m0/internal/platform/web"
 )
 
 type Service struct {
-	Lab   bool
-	store store.Store
+	Lab      bool
+	Delivery DeliveryOptions
+	store    store.Store
 }
 
 func NewService(st store.Store) *Service {
@@ -28,8 +30,8 @@ func (s *Service) MarkNotificationRead(ctx context.Context, id, recipientID stri
 }
 
 func (s *Service) IssueSinkChallenge(ctx context.Context, subject, kind string, orgs []string, org string) (*api.SinkChallenge, error) {
-	if !s.Lab {
-		return nil, web.Fail(503, "Enrollment sink hanya tersedia pada lingkungan sintetis")
+	if !s.Lab && !s.Delivery.TelegramEnabled {
+		return nil, web.Fail(503, "Enrollment saluran notifikasi belum diaktifkan (DEC-M09)")
 	}
 	if err := domain.ValidateTelegramBinding(org, kind, orgs, "SINK", "challenge"); err != nil {
 		return nil, err
@@ -38,13 +40,23 @@ func (s *Service) IssueSinkChallenge(ctx context.Context, subject, kind string, 
 }
 
 func (s *Service) VerifyTelegramBinding(ctx context.Context, subjectID, actorKind string, actorOrgs []string, in api.TelegramBindingInput) (*api.Receipt, error) {
-	if !s.Lab {
-		return nil, web.Fail(503, "Enrollment sink hanya tersedia pada lingkungan sintetis")
+	if s.Lab {
+		if err := domain.ValidateTelegramBinding(in.ScopeOrgID, actorKind, actorOrgs, in.Channel, in.VerificationCode); err != nil {
+			return nil, err
+		}
+		return s.store.CreateTelegramBinding(ctx, subjectID, in.ScopeOrgID, in.VerificationCode, in.Channel)
 	}
-	if err := domain.ValidateTelegramBinding(in.ScopeOrgID, actorKind, actorOrgs, in.Channel, in.VerificationCode); err != nil {
+	if !s.Delivery.TelegramEnabled {
+		return nil, web.Fail(503, "Saluran Telegram produksi belum diaktifkan oleh pengelola layanan (DEC-M09)")
+	}
+	if in.Channel == "SINK" {
+		return nil, web.Fail(400, "Channel SINK tidak tersedia di luar mode lab")
+	}
+	if err := domain.ValidateChannelBinding(in.ScopeOrgID, actorKind, actorOrgs, in.Channel, in.VerificationCode, in.ChatRef, true); err != nil {
 		return nil, err
 	}
-	return s.store.CreateTelegramBinding(ctx, subjectID, in.ScopeOrgID, in.VerificationCode, in.Channel)
+	masked := domain.MaskSecret(in.ChatRef)
+	return s.store.CreateChannelBinding(ctx, subjectID, in.ScopeOrgID, in.VerificationCode, "TELEGRAM", masked, strings.TrimSpace(in.ChatRef))
 }
 
 func (s *Service) RevokeTelegramBinding(ctx context.Context, id, subjectID string, orgs []string, expectedVersion int64, reason string) (*api.Receipt, error) {

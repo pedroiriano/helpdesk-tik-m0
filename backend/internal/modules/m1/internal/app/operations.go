@@ -93,7 +93,17 @@ func (s *Service) RequestSystemJob(ctx context.Context, c api.Credentials, in ap
 			return nil, err
 		}
 	case "PURGE_REQUEST":
-		state = "DISABLED"
+		if !s.Options.PurgeEnabled {
+			state = "DISABLED"
+		} else {
+			if s.Purge.Preflight == nil {
+				return nil, web.Fail(503, "Runner pemusnahan retensi belum tersedia")
+			}
+			if err := s.Purge.Preflight(ctx, in.TargetID); err != nil {
+				return nil, err
+			}
+			state = "REQUESTED"
+		}
 	}
 	res, err := database.Mutate(ctx, s.Store.Pool, database.Mutation{Owner: "M1", Actor: actor.ID, Command: "RequestSystemJob", Target: in.TargetID, Key: key, Scope: in.TargetID, Reason: in.Reason, Payload: in}, func(tx pgx.Tx) (database.Result, error) {
 		job, err := s.Store.InsertSystemJob(ctx, tx, in.Kind, actor.ID, in.TargetID, state, in.Reason, receipt)
@@ -168,8 +178,8 @@ func (s *Service) ReadSystemJob(ctx context.Context, c api.Credentials, id strin
 		return nil, err
 	}
 	scoped := actor.Can("system.job", job.TargetID) || actor.Can("operation.read", job.TargetID)
-	ownDisabled := job.Kind == "PURGE_REQUEST" && job.State == "DISABLED" && actor.Role == "SUPER_ADMIN" && job.RequestedBy == actor.ID
-	if !scoped && !ownDisabled {
+	ownPurge := job.Kind == "PURGE_REQUEST" && actor.Role == "SUPER_ADMIN"
+	if !scoped && !ownPurge {
 		return nil, web.Fail(404, "Pekerjaan sistem tidak ditemukan")
 	}
 	return job, nil
@@ -188,7 +198,11 @@ func (s *Service) ApproveSystemJob(ctx context.Context, c api.Credentials, id, k
 	if err != nil {
 		return nil, err
 	}
-	if !actor.Can("system.job", job.TargetID) || actor.ID == job.RequestedBy {
+	if job.Kind == "PURGE_REQUEST" {
+		if !s.Options.PurgeEnabled || actor.Role != "SUPER_ADMIN" || actor.ID == job.RequestedBy {
+			return nil, web.Fail(403, "Persetujuan pemusnahan memerlukan Super Admin kedua (DEC-M07)")
+		}
+	} else if !actor.Can("system.job", job.TargetID) || actor.ID == job.RequestedBy {
 		return nil, web.Fail(403, "Persetujuan memerlukan petugas kedua dengan mandat organisasi yang sama")
 	}
 	in.Reason = strings.TrimSpace(in.Reason)
@@ -196,7 +210,7 @@ func (s *Service) ApproveSystemJob(ctx context.Context, c api.Credentials, id, k
 		return nil, web.Fail(422, "Versi dan alasan persetujuan wajib diisi")
 	}
 	res, err := database.Mutate(ctx, s.Store.Pool, database.Mutation{Owner: "M1", Actor: actor.ID, Command: "ApproveSystemJob", Target: id, Key: key, Scope: job.TargetID, Reason: in.Reason, Payload: in}, func(tx pgx.Tx) (database.Result, error) {
-		updated, err := s.Store.ApproveSystemJob(ctx, tx, id, actor.ID, job.TargetID, in.ExpectedVersion)
+		updated, err := s.Store.ApproveSystemJob(ctx, tx, id, actor.ID, job.TargetID, in.ExpectedVersion, s.Options.PurgeEnabled)
 		if err != nil {
 			return database.Result{}, err
 		}
@@ -218,7 +232,11 @@ func (s *Service) ExecuteSystemJob(ctx context.Context, c api.Credentials, id, k
 	if err != nil {
 		return nil, err
 	}
-	if !actor.Can("system.job", job.TargetID) {
+	if job.Kind == "PURGE_REQUEST" {
+		if !s.Options.PurgeEnabled || actor.Role != "SUPER_ADMIN" {
+			return nil, web.Fail(403, "Eksekusi pemusnahan hanya untuk Super Admin saat DEC-M07 aktif")
+		}
+	} else if !actor.Can("system.job", job.TargetID) {
 		return nil, web.Fail(403, "Izin system.job pada organisasi sasaran diperlukan")
 	}
 	in.Reason = strings.TrimSpace(in.Reason)
@@ -232,8 +250,8 @@ func (s *Service) ExecuteSystemJob(ctx context.Context, c api.Credentials, id, k
 	if found {
 		return systemJobResult(replay, nil)
 	}
-	if job.Kind != "BACKUP_MANIFEST" {
-		return nil, web.Fail(422, "Hanya pekerjaan BACKUP_MANIFEST yang dapat dijalankan melalui runner")
+	if job.Kind != "BACKUP_MANIFEST" && (job.Kind != "PURGE_REQUEST" || !s.Options.PurgeEnabled) {
+		return nil, web.Fail(422, "Jenis pekerjaan ini tidak dapat dijalankan melalui runner")
 	}
 	if job.State != "APPROVED" || job.ApprovedBy == nil || *job.ApprovedBy == job.RequestedBy {
 		return nil, web.Fail(409, "Pekerjaan harus berstatus APPROVED dari petugas kedua sebelum dijalankan")
@@ -241,15 +259,24 @@ func (s *Service) ExecuteSystemJob(ctx context.Context, c api.Credentials, id, k
 	if job.Version != in.ExpectedVersion {
 		return nil, web.Fail(409, "Versi atau status pekerjaan berubah")
 	}
-	if s.BackupManifest.Execute == nil {
+	if job.Kind == "BACKUP_MANIFEST" && s.BackupManifest.Execute == nil {
 		return nil, web.Fail(503, "Runner manifest backup belum tersedia")
 	}
-	running, err := s.Store.ClaimSystemJobExecution(ctx, id, job.TargetID, in.ExpectedVersion)
+	if job.Kind == "PURGE_REQUEST" && (s.Purge.Execute == nil || s.Purge.Preflight == nil) {
+		return nil, web.Fail(503, "Runner pemusnahan retensi belum tersedia")
+	}
+	running, err := s.Store.ClaimSystemJobExecution(ctx, id, job.TargetID, in.ExpectedVersion, s.Options.PurgeEnabled)
 	if err != nil {
 		return nil, err
 	}
 	execCtx, cancel := context.WithTimeout(ctx, 6*time.Second)
-	receipt, execErr := s.BackupManifest.Execute(execCtx, job.TargetID, job.ID, actor.ID, running.Version)
+	var receipt []byte
+	var execErr error
+	if job.Kind == "PURGE_REQUEST" {
+		receipt, execErr = s.Purge.Execute(execCtx, job.TargetID, actor.ID, in.Reason)
+	} else {
+		receipt, execErr = s.BackupManifest.Execute(execCtx, job.TargetID, job.ID, actor.ID, running.Version)
+	}
 	cancel()
 	finalState := "SUCCEEDED"
 	if execErr != nil || len(receipt) == 0 {
@@ -268,7 +295,7 @@ func (s *Service) ExecuteSystemJob(ctx context.Context, c api.Credentials, id, k
 		})
 	}
 	res, err := database.Mutate(ctx, s.Store.Pool, database.Mutation{Owner: "M1", Actor: actor.ID, Command: "ExecuteSystemJob", Target: id, Key: key, Scope: job.TargetID, Reason: in.Reason, Payload: in}, func(tx pgx.Tx) (database.Result, error) {
-		updated, err := s.Store.FinishSystemJobExecution(ctx, tx, id, job.TargetID, running.Version, finalState, receipt)
+		updated, err := s.Store.FinishSystemJobExecution(ctx, tx, id, job.TargetID, running.Version, finalState, receipt, s.Options.PurgeEnabled)
 		if err != nil {
 			return database.Result{}, err
 		}
@@ -345,8 +372,20 @@ func (s *Service) RequestPurge(ctx context.Context, c api.Credentials, in api.Pu
 	if len(in.Reason) > 500 {
 		return nil, web.Fail(422, "Alasan maksimal 500 karakter")
 	}
-	res, err := database.Mutate(ctx, s.Store.Pool, database.Mutation{Owner: "M1", Actor: actor.ID, Command: "RequestPurge", Target: target, Key: key, Scope: "purge-disabled", Reason: in.Reason, Payload: in}, func(tx pgx.Tx) (database.Result, error) {
-		job, err := s.Store.InsertSystemJob(ctx, tx, "PURGE_REQUEST", actor.ID, target, "DISABLED", in.Reason, nil)
+	state := "DISABLED"
+	scope := "purge-disabled"
+	if s.Options.PurgeEnabled {
+		if s.Purge.Preflight == nil {
+			return nil, web.Fail(503, "Runner pemusnahan retensi belum tersedia")
+		}
+		if err := s.Purge.Preflight(ctx, target); err != nil {
+			return nil, err
+		}
+		state = "REQUESTED"
+		scope = "purge-retention"
+	}
+	res, err := database.Mutate(ctx, s.Store.Pool, database.Mutation{Owner: "M1", Actor: actor.ID, Command: "RequestPurge", Target: target, Key: key, Scope: scope, Reason: in.Reason, Payload: in}, func(tx pgx.Tx) (database.Result, error) {
+		job, err := s.Store.InsertSystemJob(ctx, tx, "PURGE_REQUEST", actor.ID, target, state, in.Reason, nil)
 		if err != nil {
 			return database.Result{}, err
 		}

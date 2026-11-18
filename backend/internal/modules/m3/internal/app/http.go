@@ -288,6 +288,11 @@ func (s *Service) Register(m *http.ServeMux) {
 			return s.RecordWorkLog(r.Context(), creds(r), r.PathValue("id"), r.Header.Get("Idempotency-Key"), *in)
 		})
 	})
+	m.HandleFunc("POST /api/v1/tickets/{id}/retention", func(w http.ResponseWriter, r *http.Request) {
+		handleCmd(w, r, func(in *tickets.RetentionInput) (database.Result, error) {
+			return s.ConfigureRetention(r.Context(), creds(r), r.PathValue("id"), r.Header.Get("Idempotency-Key"), *in)
+		})
+	})
 	m.HandleFunc("POST /api/v1/tickets/{id}/escalations", func(w http.ResponseWriter, r *http.Request) {
 		var in tickets.EscalateInput
 		if e := web.Decode(w, r, &in); e != nil {

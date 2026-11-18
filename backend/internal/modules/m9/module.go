@@ -12,9 +12,14 @@ import (
 	"helpdesk.local/m0/internal/platform/delivery"
 )
 
+type DeliveryOptions = app.DeliveryOptions
+
 type Module struct {
-	pool    *pgxpool.Pool
-	service *app.Service
+	pool               *pgxpool.Pool
+	scope              func(context.Context, string, []string) ([]string, error)
+	productionDelivery bool
+	preferTelegram     bool
+	service            *app.Service
 }
 
 func New(pool *pgxpool.Pool, scope func(context.Context, string, []string) ([]string, error)) *Module {
@@ -22,13 +27,21 @@ func New(pool *pgxpool.Pool, scope func(context.Context, string, []string) ([]st
 	svc := app.NewService(st)
 	return &Module{
 		pool:    pool,
+		scope:   scope,
 		service: svc,
 	}
 }
 
-func (m *Module) ID() string                  { return "M9" }
-func (m *Module) Service() *app.Service       { return m.service }
-func (m *Module) Consumer() delivery.Consumer { return store.Store{Pool: m.pool} }
+func (m *Module) ID() string            { return "M9" }
+func (m *Module) Service() *app.Service { return m.service }
+func (m *Module) Consumer() delivery.Consumer {
+	return store.Store{
+		Pool:               m.pool,
+		CheckScope:         m.scope,
+		ProductionDelivery: m.productionDelivery,
+		PreferTelegram:     m.preferTelegram,
+	}
+}
 func (m *Module) SourceForM3() *delivery.Source {
 	return delivery.NewForConsumer(m.pool, "M9", "M3")
 }
@@ -39,3 +52,17 @@ func (m *Module) Register(mux *http.ServeMux, authPort m1api.Port, origin string
 }
 
 func (m *Module) EnableLabSink(enabled bool) { m.service.Lab = enabled }
+
+func (m *Module) ConfigureDelivery(opts DeliveryOptions) {
+	m.service.Delivery = opts
+	if opts.TelegramEnabled || opts.SMTPEnabled {
+		m.productionDelivery = true
+		m.preferTelegram = opts.TelegramEnabled
+	}
+}
+
+func (m *Module) RunDispatcher(ctx context.Context) { m.service.RunDispatcher(ctx) }
+
+func (m *Module) ProcessDeliveryBatch(ctx context.Context, limit int) (int, error) {
+	return m.service.ProcessDeliveryBatch(ctx, limit)
+}

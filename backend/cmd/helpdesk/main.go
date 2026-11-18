@@ -61,7 +61,11 @@ func run() error {
 	server := &http.Server{Addr: ":8080", Handler: runtime.Handler, ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 20 * time.Second, WriteTimeout: 20 * time.Second, IdleTimeout: 30 * time.Second, MaxHeaderBytes: 16384}
 	done := make(chan error, 1)
 	go func() { done <- server.ListenAndServe() }()
-	slog.Info("helpdesk M0 started", "modules", len(modules), "environment", "synthetic_lab")
+	envMode := "production"
+	if options.Lab {
+		envMode = "synthetic_lab"
+	}
+	slog.Info("helpdesk M0 started", "modules", len(modules), "environment", envMode)
 	select {
 	case err := <-done:
 		if !errors.Is(err, http.ErrServerClosed) {

@@ -1,0 +1,45 @@
+services:
+  app:
+    environment:
+      HELPDESK_LAB_AUTH: '0'
+      HELPDESK_PUBLIC_AUTH: '${HELPDESK_PUBLIC_AUTH:-1}'
+      HELPDESK_PURGE_ENABLED: '${HELPDESK_PURGE_ENABLED:-0}'
+      HELPDESK_PUBLIC_ORIGIN: '${HELPDESK_PUBLIC_ORIGIN:-https://helpdesk.depok.go.id}'
+      HELPDESK_SSO_ENABLED: '${HELPDESK_SSO_ENABLED:-0}'
+      HELPDESK_SSO_PROVIDER_LABEL: '${HELPDESK_SSO_PROVIDER_LABEL:-SSO ASN Pemerintah Kota Depok}'
+      HELPDESK_SSO_ISSUER: '${HELPDESK_SSO_ISSUER:-}'
+      HELPDESK_SSO_CLIENT_ID: '${HELPDESK_SSO_CLIENT_ID:-}'
+      HELPDESK_SSO_AUTH_URL: '${HELPDESK_SSO_AUTH_URL:-}'
+      HELPDESK_SSO_TOKEN_URL: '${HELPDESK_SSO_TOKEN_URL:-}'
+      HELPDESK_SSO_JWKS_URL: '${HELPDESK_SSO_JWKS_URL:-}'
+      HELPDESK_SSO_REDIRECT_URL: '${HELPDESK_SSO_REDIRECT_URL:-}'
+      HELPDESK_NOTIFY_TELEGRAM_ENABLED: '${HELPDESK_NOTIFY_TELEGRAM_ENABLED:-0}'
+      HELPDESK_NOTIFY_SMTP_ENABLED: '${HELPDESK_NOTIFY_SMTP_ENABLED:-0}'
+      HELPDESK_SMTP_HOST: '${HELPDESK_SMTP_HOST:-}'
+      HELPDESK_SMTP_PORT: '${HELPDESK_SMTP_PORT:-587}'
+      HELPDESK_SMTP_FROM: '${HELPDESK_SMTP_FROM:-helpdesk@depok.go.id}'
+      HELPDESK_SMTP_USER: '${HELPDESK_SMTP_USER:-}'
+      HELPDESK_SMTP_TLS: '${HELPDESK_SMTP_TLS:-1}'
+
+  scanner:
+    environment:
+      CLAMAV_NO_FRESHCLAMD: 'false'
+    volumes: !override
+      - ./infra/scanner/clamd.conf:/etc/clamav/clamd.conf:ro
+      - clamav-db:/var/lib/clamav
+
+  web:
+    command: ['-c', '/etc/nginx/nginx.prod.conf']
+    ports: !override
+      - '80:8080'
+      - '443:8443'
+    volumes:
+      - ${HELPDESK_TLS_DIR:-./.local/tls}:/run/tls:ro
+    healthcheck:
+      test: [CMD-SHELL, 'wget -q -O /dev/null http://127.0.0.1:8080/healthz || exit 1']
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  clamav-db: {}

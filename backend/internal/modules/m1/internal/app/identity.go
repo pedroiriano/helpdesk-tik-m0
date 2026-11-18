@@ -19,9 +19,12 @@ import (
 )
 
 type Options struct {
-	Lab    bool
-	Key    []byte
-	Origin string
+	Lab          bool
+	PublicAuth   bool
+	PurgeEnabled bool
+	Key          []byte
+	Origin       string
+	SSO          SSOOptions
 }
 
 type Service struct {
@@ -29,6 +32,7 @@ type Service struct {
 	Options        Options
 	Diagnostics    func(context.Context) api.RedactedHealth
 	BackupManifest api.BackupManifestRunner
+	Purge          api.PurgeRunner
 }
 
 var LabIDs = []string{
@@ -54,8 +58,8 @@ var LabIDs = []string{
 
 func (s *Service) Authenticate(ctx context.Context, c api.Credentials) (api.Actor, error) {
 	var zero api.Actor
-	if !s.Options.Lab || len(c.Token) != 64 {
-		return zero, web.Fail(401, "Silakan masuk melalui identitas lab")
+	if len(c.Token) != 64 {
+		return zero, web.Fail(401, "Silakan masuk untuk melanjutkan")
 	}
 	if _, err := hex.DecodeString(c.Token); err != nil {
 		return zero, web.Fail(401, "Sesi tidak valid")
@@ -63,6 +67,9 @@ func (s *Service) Authenticate(ctx context.Context, c api.Credentials) (api.Acto
 	session, err := s.Store.Session(ctx, domain.Digest(c.Token))
 	if err != nil {
 		return zero, err
+	}
+	if session.LabFixture && !s.Options.Lab {
+		return zero, web.Fail(401, "Sesi lab dinonaktifkan pada lingkungan produksi")
 	}
 	if c.Write && !domain.EqualHash(c.CSRF, session.CSRF) {
 		return zero, web.Fail(403, "Verifikasi CSRF gagal")
@@ -111,17 +118,18 @@ type SessionView struct {
 	Mode            string    `json:"mode"`
 }
 
-func view(v store.Session) SessionView {
+func (s *Service) sessionView(v store.Session) SessionView {
 	permissions := []string{}
 	for _, m := range v.Actor.Memberships {
 		permissions = append(permissions, m.Permissions...)
 	}
-	mode := "PUBLIC_AUTH_LAB"
-	for _, id := range LabIDs {
-		if id == v.Actor.ID {
-			mode = "SYNTHETIC_LAB"
-			break
-		}
+	mode := "PRODUCTION_LOCAL"
+	if v.LabFixture {
+		mode = "SYNTHETIC_LAB"
+	} else if v.AuthProvider == "OIDC" {
+		mode = "OIDC_SSO"
+	} else if s.Options.Lab {
+		mode = "PUBLIC_AUTH_LAB"
 	}
 	return SessionView{v.ID, v.Version, v.Actor.ID, v.Expires.UTC().Format(time.RFC3339), permissions, v.Actor.Orgs(""), v.Actor, mode}
 }
@@ -136,7 +144,7 @@ func (s *Service) Me(ctx context.Context, c api.Credentials) (SessionView, error
 		return SessionView{}, err
 	}
 	v.Actor = actor
-	return view(v), nil
+	return s.sessionView(v), nil
 }
 
 type Login struct {
@@ -157,11 +165,19 @@ type RegisterInput struct {
 
 func (s *Service) RegisterUser(ctx context.Context, in RegisterInput, nonce, key string) (database.Result, string, string, error) {
 	var zero database.Result
-	if !s.Options.Lab || len(s.Options.Key) < 32 {
-		return zero, "", "", web.Fail(403, "Pendaftaran hanya tersedia pada lab yang dikonfigurasi")
+	if (!s.Options.Lab && !s.Options.PublicAuth) || len(s.Options.Key) < 32 {
+		return zero, "", "", web.Fail(403, "Pendaftaran mandiri dinonaktifkan pada konfigurasi ini")
 	}
 	if !validNonce(nonce, in.CSRF) {
 		return zero, "", "", web.Fail(403, "Verifikasi CSRF pendaftaran gagal")
+	}
+	mode := "PRODUCTION_LOCAL"
+	scopeName := "PUBLIC_REGISTRATION"
+	reasonText := "Pendaftaran akun publik"
+	if s.Options.Lab {
+		mode = "PUBLIC_AUTH_LAB"
+		scopeName = "PUBLIC_REGISTRATION_LAB"
+		reasonText = "Pendaftaran akun publik lab"
 	}
 	in.NIK, in.Name, in.Email, in.Phone = strings.TrimSpace(in.NIK), strings.TrimSpace(in.Name), strings.ToLower(strings.TrimSpace(in.Email)), strings.TrimSpace(in.Phone)
 	if len(in.NIK) != 16 || !digits(in.NIK) {
@@ -185,7 +201,7 @@ func (s *Service) RegisterUser(ctx context.Context, in RegisterInput, nonce, key
 	token := domain.Derive(s.Options.Key, "session", nonce+"|"+key+"|"+id)
 	csrf := domain.Derive(s.Options.Key, "csrf", token)
 	sessionID := derivedID(token)
-	result, err := database.Mutate(ctx, s.Store.Pool, database.Mutation{Owner: "M1", Actor: "registration:" + domain.Derive(s.Options.Key, "registration-scope", nonce), Command: "RegisterPublicSubject", Target: id, Key: key, Scope: "PUBLIC_REGISTRATION_LAB", Reason: "Pendaftaran akun publik lab", Payload: payload}, func(tx pgx.Tx) (database.Result, error) {
+	result, err := database.Mutate(ctx, s.Store.Pool, database.Mutation{Owner: "M1", Actor: "registration:" + domain.Derive(s.Options.Key, "registration-scope", nonce), Command: "RegisterPublicSubject", Target: id, Key: key, Scope: scopeName, Reason: reasonText, Payload: payload}, func(tx pgx.Tx) (database.Result, error) {
 		hash, err := domain.HashPassword(in.Password)
 		if err != nil {
 			return zero, err
@@ -201,7 +217,7 @@ func (s *Service) RegisterUser(ctx context.Context, in RegisterInput, nonce, key
 		if err = s.Store.CreateSession(ctx, tx, sessionID, id, domain.Digest(token), domain.Digest(csrf), expires); err != nil {
 			return zero, err
 		}
-		return database.Response(201, SessionView{ID: sessionID, Version: 1, SubjectID: id, ExpiresAt: expires.Format(time.RFC3339), Permissions: []string{}, OrganizationIDs: []string{}, Actor: api.Actor{ID: id, Name: in.Name, Role: "PUBLIC", Kind: "PUBLIC", Memberships: []api.Membership{}}, Mode: "PUBLIC_AUTH_LAB"})
+		return database.Response(201, SessionView{ID: sessionID, Version: 1, SubjectID: id, ExpiresAt: expires.Format(time.RFC3339), Permissions: []string{}, OrganizationIDs: []string{}, Actor: api.Actor{ID: id, Name: in.Name, Role: "PUBLIC", Kind: "PUBLIC", Memberships: []api.Membership{}}, Mode: mode})
 	})
 	if err != nil {
 		return zero, "", "", err
@@ -236,8 +252,15 @@ func derivedID(value string) string {
 
 func (s *Service) Login(ctx context.Context, input Login, nonce, key string) (database.Result, string, string, error) {
 	var zero database.Result
-	if !s.Options.Lab || len(s.Options.Key) < 32 {
-		return zero, "", "", web.Fail(403, "Login lab dinonaktifkan")
+	if len(s.Options.Key) < 32 {
+		return zero, "", "", web.Fail(403, "Kunci sesi tidak tersedia")
+	}
+	if input.SubjectID != "" {
+		if !s.Options.Lab {
+			return zero, "", "", web.Fail(403, "Login lab dinonaktifkan")
+		}
+	} else if !s.Options.Lab && !s.Options.PublicAuth {
+		return zero, "", "", web.Fail(403, "Login kredensial lokal dinonaktifkan pada lingkungan ini")
 	}
 	if !validNonce(nonce, input.CSRF) {
 		return zero, "", "", web.Fail(403, "Verifikasi awal login gagal")
@@ -245,6 +268,8 @@ func (s *Service) Login(ctx context.Context, input Login, nonce, key string) (da
 	var user api.Subject
 	var err error
 	mode := "SYNTHETIC_LAB"
+	reasonText := "Autentikasi akun lab"
+	cmdName := "CreateLabSession"
 	if input.SubjectID != "" {
 		allowed := false
 		for _, id := range LabIDs {
@@ -278,7 +303,13 @@ func (s *Service) Login(ctx context.Context, input Login, nonce, key string) (da
 				}
 			}
 		}
-		mode = "PUBLIC_AUTH_LAB"
+		if s.Options.Lab {
+			mode = "PUBLIC_AUTH_LAB"
+		} else {
+			mode = "PRODUCTION_LOCAL"
+			reasonText = "Autentikasi kredensial lokal"
+			cmdName = "CreateLocalSession"
+		}
 	}
 	if err != nil {
 		var failure *web.Error
@@ -290,7 +321,7 @@ func (s *Service) Login(ctx context.Context, input Login, nonce, key string) (da
 	token := domain.Derive(s.Options.Key, "session", nonce+"|"+key+"|"+user.ID)
 	csrf := domain.Derive(s.Options.Key, "csrf", token)
 	id := derivedID(token)
-	result, err := database.Mutate(ctx, s.Store.Pool, database.Mutation{Owner: "M1", Actor: user.ID, Command: "CreateLabSession", Target: id, Key: key, Scope: mode, Reason: "Autentikasi akun lab", Payload: map[string]any{"subject_id": user.ID, "mode": mode, "credential_fingerprint": domain.Derive(s.Options.Key, "login-password", input.Password)}}, func(tx pgx.Tx) (database.Result, error) {
+	result, err := database.Mutate(ctx, s.Store.Pool, database.Mutation{Owner: "M1", Actor: user.ID, Command: cmdName, Target: id, Key: key, Scope: mode, Reason: reasonText, Payload: map[string]any{"subject_id": user.ID, "mode": mode, "credential_fingerprint": domain.Derive(s.Options.Key, "login-password", input.Password)}}, func(tx pgx.Tx) (database.Result, error) {
 		expires := time.Now().UTC().Add(2 * time.Hour)
 		if err = s.Store.CreateSession(ctx, tx, id, user.ID, domain.Digest(token), domain.Digest(csrf), expires); err != nil {
 			return zero, err

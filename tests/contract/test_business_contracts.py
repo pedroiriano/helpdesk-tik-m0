@@ -118,6 +118,13 @@ class BusinessContracts(unittest.TestCase):
             ("/api/v1/admin/sla-rules", "post"),
             ("/api/v1/admin/escalation-rules", "get"),
             ("/api/v1/admin/escalation-rules", "post"),
+            ("/api/v1/auth/config", "get"),
+            ("/api/v1/auth/sso/login", "get"),
+            ("/api/v1/auth/sso/callback", "get"),
+            ("/api/v1/admin/subjects", "get"),
+            ("/api/v1/admin/delivery-jobs", "get"),
+            ("/api/v1/admin/delivery-jobs/{id}/replay", "post"),
+            ("/api/v1/tickets/{id}/retention", "post"),
         ]:
             self.assertEqual(paths[path][method]["x-runtime-status"], "IMPLEMENTED_RM0_05")
         self.assertEqual(

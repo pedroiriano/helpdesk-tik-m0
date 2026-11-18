@@ -25,6 +25,15 @@ func (s *Service) clearTrackingCookies(w http.ResponseWriter) {
 	s.cookie(w, "helpdesk_tracking_csrf", "", false, -1)
 }
 func (s *Service) Register(mux *http.ServeMux) {
+	mux.HandleFunc("GET /api/v1/auth/config", func(w http.ResponseWriter, r *http.Request) {
+		cfg, token, err := s.IssueAuthChallenge()
+		if err != nil {
+			web.WriteError(w, err)
+			return
+		}
+		s.cookie(w, "helpdesk_login", token, true, 300)
+		web.JSON(w, 200, cfg)
+	})
 	mux.HandleFunc("GET /api/v1/auth/bootstrap", func(w http.ResponseWriter, r *http.Request) {
 		users, err := s.Subjects(r.Context())
 		if err != nil {
@@ -39,6 +48,44 @@ func (s *Service) Register(mux *http.ServeMux) {
 		token := hex.EncodeToString(nonce)
 		s.cookie(w, "helpdesk_login", token, true, 300)
 		web.JSON(w, 200, map[string]any{"mode": "SYNTHETIC_LAB", "csrf_token": token, "subjects": users})
+	})
+	mux.HandleFunc("GET /api/v1/auth/sso/login", func(w http.ResponseWriter, r *http.Request) {
+		targetURL, sealedCookie, err := s.StartSSOLogin()
+		if err != nil {
+			web.WriteError(w, err)
+			return
+		}
+		http.SetCookie(w, &http.Cookie{
+			Name:     "helpdesk_sso",
+			Value:    sealedCookie,
+			Path:     "/api/v1/auth/sso",
+			HttpOnly: true,
+			Secure:   strings.HasPrefix(s.Options.Origin, "https://"),
+			SameSite: http.SameSiteLaxMode,
+			MaxAge:   300,
+		})
+		http.Redirect(w, r, targetURL, http.StatusFound)
+	})
+	mux.HandleFunc("GET /api/v1/auth/sso/callback", func(w http.ResponseWriter, r *http.Request) {
+		http.SetCookie(w, &http.Cookie{
+			Name:     "helpdesk_sso",
+			Value:    "",
+			Path:     "/api/v1/auth/sso",
+			HttpOnly: true,
+			Secure:   strings.HasPrefix(s.Options.Origin, "https://"),
+			SameSite: http.SameSiteLaxMode,
+			MaxAge:   -1,
+		})
+		q := r.URL.Query()
+		dest, token, csrf, err := s.CompleteSSOCallback(r.Context(), web.Cookie(r, "helpdesk_sso"), q.Get("state"), q.Get("code"), q.Get("error"))
+		if err != nil {
+			web.WriteError(w, err)
+			return
+		}
+		s.cookie(w, "helpdesk_session", token, true, 7200)
+		s.cookie(w, "helpdesk_csrf", csrf, false, 7200)
+		s.clearTrackingCookies(w)
+		http.Redirect(w, r, strings.TrimRight(s.Options.Origin, "/")+dest, http.StatusSeeOther)
 	})
 	mux.HandleFunc("POST /api/v1/auth/sessions", func(w http.ResponseWriter, r *http.Request) {
 		var in Login
@@ -155,6 +202,20 @@ func (s *Service) Register(mux *http.ServeMux) {
 			return
 		}
 		web.JSON(w, 201, res)
+	})
+
+	mux.HandleFunc("GET /api/v1/admin/subjects", func(w http.ResponseWriter, r *http.Request) {
+		p, err := web.Pagination(r)
+		if err != nil {
+			web.WriteError(w, err)
+			return
+		}
+		items, err := s.AdminSubjects(r.Context(), Credentials(r), p.Limit)
+		if err != nil {
+			web.WriteError(w, err)
+			return
+		}
+		web.JSON(w, 200, map[string]any{"items": items, "next_cursor": nil, "as_of": time.Now().UTC().Format(time.RFC3339)})
 	})
 
 	mux.HandleFunc("GET /api/v1/staff/directory", func(w http.ResponseWriter, r *http.Request) {

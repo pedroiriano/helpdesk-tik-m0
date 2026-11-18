@@ -134,8 +134,8 @@ func (s Store) GetSystemJob(ctx context.Context, id string) (*api.SystemJob, err
 
 func (s Store) ListSystemJobs(ctx context.Context, orgs []string, actorID string, superAdmin bool, limit int) ([]api.SystemJob, error) {
 	rows, err := s.Pool.Query(ctx, `SELECT `+systemJobColumns+` FROM identity.system_operation_requests
-		WHERE target_id=ANY($1::uuid[]) OR ($2 AND kind='PURGE_REQUEST' AND requested_by=$3)
-		ORDER BY created_at DESC, id DESC LIMIT $4`, orgs, superAdmin, actorID, limit)
+		WHERE target_id=ANY($1::uuid[]) OR ($2 AND kind='PURGE_REQUEST')
+		ORDER BY created_at DESC, id DESC LIMIT $3`, orgs, superAdmin, limit)
 	if err != nil {
 		return nil, err
 	}
@@ -151,33 +151,33 @@ func (s Store) ListSystemJobs(ctx context.Context, orgs []string, actorID string
 	return out, rows.Err()
 }
 
-func (s Store) ApproveSystemJob(ctx context.Context, tx pgx.Tx, id, actor, target string, version int64) (*api.SystemJob, error) {
+func (s Store) ApproveSystemJob(ctx context.Context, tx pgx.Tx, id, actor, target string, version int64, allowPurge bool) (*api.SystemJob, error) {
 	job, err := scanSystemJob(tx.QueryRow(ctx, `UPDATE identity.system_operation_requests
   SET state='APPROVED',approved_by=$2,approved_at=now(),version=version+1,updated_at=now()
-  WHERE id=$1 AND version=$3 AND target_id=$4 AND requested_by<>$2 AND kind='BACKUP_MANIFEST'
-    AND state='REQUESTED' AND approved_by IS NULL RETURNING `+systemJobColumns, id, actor, version, target))
+  WHERE id=$1 AND version=$3 AND target_id=$4 AND requested_by<>$2 AND (kind='BACKUP_MANIFEST' OR ($5 AND kind='PURGE_REQUEST'))
+    AND state='REQUESTED' AND approved_by IS NULL RETURNING `+systemJobColumns, id, actor, version, target, allowPurge))
 	if e, ok := err.(*web.Error); ok && e.Status == 404 {
 		return nil, web.Fail(409, "Versi atau status pekerjaan berubah")
 	}
 	return job, err
 }
 
-func (s Store) ClaimSystemJobExecution(ctx context.Context, id, target string, version int64) (*api.SystemJob, error) {
+func (s Store) ClaimSystemJobExecution(ctx context.Context, id, target string, version int64, allowPurge bool) (*api.SystemJob, error) {
 	job, err := scanSystemJob(s.Pool.QueryRow(ctx, `UPDATE identity.system_operation_requests
   SET state='RUNNING',version=version+1,updated_at=now()
-  WHERE id=$1 AND version=$2 AND target_id=$3 AND kind='BACKUP_MANIFEST'
-    AND state='APPROVED' AND approved_by IS NOT NULL AND approved_by<>requested_by RETURNING `+systemJobColumns, id, version, target))
+  WHERE id=$1 AND version=$2 AND target_id=$3 AND (kind='BACKUP_MANIFEST' OR ($4 AND kind='PURGE_REQUEST'))
+    AND state='APPROVED' AND approved_by IS NOT NULL AND approved_by<>requested_by RETURNING `+systemJobColumns, id, version, target, allowPurge))
 	if e, ok := err.(*web.Error); ok && e.Status == 404 {
 		return nil, web.Fail(409, "Versi atau status pekerjaan berubah")
 	}
 	return job, err
 }
 
-func (s Store) FinishSystemJobExecution(ctx context.Context, tx pgx.Tx, id, target string, version int64, state string, receipt []byte) (*api.SystemJob, error) {
+func (s Store) FinishSystemJobExecution(ctx context.Context, tx pgx.Tx, id, target string, version int64, state string, receipt []byte, allowPurge bool) (*api.SystemJob, error) {
 	job, err := scanSystemJob(tx.QueryRow(ctx, `UPDATE identity.system_operation_requests
   SET state=$4,execution_receipt=$5,version=version+1,updated_at=now()
-  WHERE id=$1 AND version=$2 AND target_id=$3 AND kind='BACKUP_MANIFEST' AND state='RUNNING'
-  RETURNING `+systemJobColumns, id, version, target, state, receipt))
+  WHERE id=$1 AND version=$2 AND target_id=$3 AND (kind='BACKUP_MANIFEST' OR ($6 AND kind='PURGE_REQUEST')) AND state='RUNNING'
+  RETURNING `+systemJobColumns, id, version, target, state, receipt, allowPurge))
 	if e, ok := err.(*web.Error); ok && e.Status == 404 {
 		return nil, web.Fail(409, "Versi atau status pekerjaan berubah")
 	}

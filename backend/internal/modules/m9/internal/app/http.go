@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	m1api "helpdesk.local/m0/internal/modules/m1/api"
@@ -445,6 +446,66 @@ func (h *Handler) Register(m *http.ServeMux) {
 		w.Header().Set("Content-Disposition", fmt.Sprintf(`attachment; filename="report-export-%s.%s"`, id, extension))
 		w.WriteHeader(200)
 		_, _ = w.Write(payload)
+	})
+
+	// GET /api/v1/admin/delivery-jobs
+	m.HandleFunc("GET /api/v1/admin/delivery-jobs", func(w http.ResponseWriter, r *http.Request) {
+		actorID, actorKind, _, perms := h.actorSession(r)
+		if actorID == "ANONYMOUS" {
+			web.WriteError(w, web.Fail(401, "Autentikasi sesi diperlukan"))
+			return
+		}
+		if actorKind != "STAFF" || (!h.hasPerm(perms, "system.job") && !h.hasPerm(perms, "operation.read")) {
+			web.WriteError(w, web.Fail(403, "Izin staf operation.read atau system.job diperlukan"))
+			return
+		}
+		p, err := web.Pagination(r)
+		if err != nil {
+			web.WriteError(w, err)
+			return
+		}
+		stateFilter := r.URL.Query().Get("state")
+		items, err := h.Service.ListDeliveryJobs(r.Context(), stateFilter, p.Limit)
+		if err != nil {
+			web.WriteError(w, err)
+			return
+		}
+		w.Header().Set("Cache-Control", "no-store")
+		web.JSON(w, 200, map[string]any{"items": items, "next_cursor": nil, "as_of": time.Now().UTC().Format(time.RFC3339)})
+	})
+
+	// POST /api/v1/admin/delivery-jobs/{id}/replay
+	m.HandleFunc("POST /api/v1/admin/delivery-jobs/{id}/replay", func(w http.ResponseWriter, r *http.Request) {
+		id := r.PathValue("id")
+		if !web.UUID(id) {
+			web.WriteError(w, web.Fail(404, "Job pengiriman tidak ditemukan"))
+			return
+		}
+		actorID, actorKind, _, perms := h.actorSession(r)
+		if actorID == "ANONYMOUS" {
+			web.WriteError(w, web.Fail(401, "Autentikasi sesi diperlukan"))
+			return
+		}
+		if actorKind != "STAFF" || (!h.hasPerm(perms, "system.job") && !h.hasPerm(perms, "operation.read")) {
+			web.WriteError(w, web.Fail(403, "Izin staf operation.read atau system.job diperlukan"))
+			return
+		}
+		idemKey := strings.TrimSpace(r.Header.Get("Idempotency-Key"))
+		if len(idemKey) < 16 || len(idemKey) > 128 {
+			web.WriteError(w, web.Fail(400, "Idempotency-Key diperlukan (16–128 karakter)"))
+			return
+		}
+		var in api.VersionedReason
+		if err := web.Decode(w, r, &in); err != nil {
+			web.WriteError(w, err)
+			return
+		}
+		rec, err := h.Service.ReplayDeliveryJob(r.Context(), id, actorID, in.Reason, in.ExpectedVersion)
+		if err != nil {
+			web.WriteError(w, err)
+			return
+		}
+		web.JSON(w, 200, rec)
 	})
 
 	// GET /api/v1/audit

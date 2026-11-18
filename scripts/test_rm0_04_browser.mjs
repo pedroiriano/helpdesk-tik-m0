@@ -1226,6 +1226,54 @@ async function main() {
       return { csirtCount, hasNotifRows, hasOpsTable, hasSchedTable, hasSlaRules, pickersReady, approvalsReady, queueControls, mobileOverflow, opsRendered };
     });
 
+    // D8. Fase 3 Production Readiness UI (/auth/config, hidden SSO panel in lab, M9 delivery-jobs admin panel)
+    await runSuite('Fase3_AuthConfig_and_DeliveryQueue', async () => {
+      await cdp.setViewport(1280, 800, false);
+      await cdp.navigate(`${BASE}/akses.html`, 700);
+      const authState = await waitFor(() => cdp.eval(`(async () => {
+        const res = await fetch('/api/v1/auth/config');
+        if (!res.ok) return null;
+        const cfg = await res.json();
+        const ssoPanel = document.querySelector('[data-hd-sso-panel]');
+        const labSection = document.querySelector('[data-hd-lab-section]');
+        const hasSubjects = document.querySelectorAll('#hd-subject option[value]:not([value=""])').length > 0;
+        if (!hasSubjects) return null;
+        return {
+          mode: cfg.mode,
+          labAuth: cfg.lab_auth_enabled,
+          ssoEnabled: cfg.sso_enabled,
+          purgeEnabled: cfg.purge_enabled,
+          ssoPanelHidden: ssoPanel ? getComputedStyle(ssoPanel).display === 'none' : false,
+          labSectionVisible: labSection ? getComputedStyle(labSection).display !== 'none' : false,
+        };
+      })()`), 8000, 'auth/config & lab panels');
+      assert.equal(authState.mode, 'SYNTHETIC_LAB');
+      assert.equal(authState.labAuth, true);
+      assert.equal(authState.ssoEnabled, false);
+      assert.equal(authState.purgeEnabled, false);
+      assert.equal(authState.ssoPanelHidden, true);
+      assert.equal(authState.labSectionVisible, true);
+
+      await cdp.navigate(`${BASE}/admin/auth/login.html`, 600);
+      const adminAuth = await waitFor(() => cdp.eval(`(() => {
+        const sso = document.querySelector('[data-hd-sso-panel]');
+        const quick = document.querySelectorAll('[data-quick-login]').length;
+        return quick >= 5 ? { quick, ssoHidden: sso ? getComputedStyle(sso).display === 'none' : false } : null;
+      })()`), 8000, 'admin login lab/sso markers');
+      assert.equal(adminAuth.ssoHidden, true);
+
+      await loginSubjectById(cdp, '20000000-0000-4000-8000-000000000017', true);
+      await cdp.navigate(`${BASE}/admin/app/helpdesk/index.html?kind=notifications`, 700);
+      const deliveryPanel = await waitFor(() => cdp.eval(`(() => {
+        const panel = document.querySelector('[data-hd-delivery-panel]');
+        const stat = document.querySelector('[data-hd-delivery-status]')?.textContent || '';
+        const filter = document.querySelector('#hd-delivery-state');
+        return panel && !panel.hidden && stat.length > 0 && Boolean(filter) ? { stat, rows: document.querySelectorAll('[data-hd-delivery-rows] tr').length } : null;
+      })()`), 8000, 'M9 delivery queue admin panel');
+      assert.ok(deliveryPanel.rows >= 1, `expected M9 delivery rows or empty indicator row, got ${JSON.stringify(deliveryPanel)}`);
+      return { authState, adminAuth, deliveryPanel };
+    });
+
     report.csp_violations = cspList;
     report.console_errors = consoleErrors;
     report.exceptions = exceptions;

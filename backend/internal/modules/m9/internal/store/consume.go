@@ -12,8 +12,10 @@ import (
 )
 
 type Store struct {
-	Pool       *pgxpool.Pool
-	CheckScope func(context.Context, string, []string) ([]string, error)
+	Pool               *pgxpool.Pool
+	CheckScope         func(context.Context, string, []string) ([]string, error)
+	ProductionDelivery bool
+	PreferTelegram     bool
 }
 
 func (s Store) Consume(ctx context.Context, v delivery.Event) error {
@@ -147,9 +149,20 @@ func (s Store) Consume(ctx context.Context, v delivery.Event) error {
 		if e != nil {
 			return e
 		}
+		jobChannel, jobState, jobAttempts := "SINK", "ACKED", 1
+		if s.ProductionDelivery {
+			jobChannel, jobState, jobAttempts = "EMAIL", "PENDING", 0
+			if s.PreferTelegram {
+				var hasTG bool
+				_ = tx.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM notify_audit.telegram_bindings WHERE subject_id=$1 AND channel='TELEGRAM' AND revoked_at IS NULL)`, recipientID).Scan(&hasTG)
+				if hasTG {
+					jobChannel = "TELEGRAM"
+				}
+			}
+		}
 		_, e = tx.Exec(ctx, `INSERT INTO notify_audit.delivery_jobs(id, version, notification_id, channel, state, attempts)
-			VALUES($1, 1, $2, 'SINK', 'ACKED', 1)`,
-			web.ID(), notifID)
+			VALUES($1, 1, $2, $3, $4, $5)`,
+			web.ID(), notifID, jobChannel, jobState, jobAttempts)
 		if e != nil {
 			return e
 		}

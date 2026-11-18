@@ -28,6 +28,7 @@ type TelegramBindingInput struct {
 	VerificationCode string `json:"verification_code"`
 	ScopeOrgID       string `json:"scope_org_id"`
 	Channel          string `json:"channel"`
+	ChatRef          string `json:"chat_ref,omitempty"`
 }
 
 type SinkChallengeInput struct {
@@ -102,4 +103,19 @@ type AuditListResponse struct {
 type Receipt struct {
 	ID      string `json:"id"`
 	Version int64  `json:"version"`
+}
+
+type DeliveryJobRecord struct {
+	ID            string     `json:"id"`
+	Version       int64      `json:"version"`
+	Notification  string     `json:"notification_id"`
+	Title         string     `json:"title"`
+	Channel       string     `json:"channel"`
+	TargetMasked  string     `json:"target_masked"`
+	State         string     `json:"state"`
+	Attempts      int        `json:"attempts"`
+	LastErrorCode *string    `json:"last_error_code,omitempty"`
+	NextAttemptAt time.Time  `json:"next_attempt_at"`
+	DeliveredAt   *time.Time `json:"delivered_at,omitempty"`
+	CreatedAt     time.Time  `json:"created_at"`
 }

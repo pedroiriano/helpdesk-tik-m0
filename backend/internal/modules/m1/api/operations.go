@@ -68,6 +68,11 @@ type BackupManifestRunner struct {
 	ReadArtifact func(ctx context.Context, jobID string, receipt json.RawMessage) (BackupManifestArtifact, error)
 }
 
+type PurgeRunner struct {
+	Preflight func(ctx context.Context, ticketID string) error
+	Execute   func(ctx context.Context, ticketID, actorID, reason string) (json.RawMessage, error)
+}
+
 // SystemJob represents an operation job record in identity.system_operation_requests.
 type SystemJob struct {
 	ID               string          `json:"id"`

@@ -6,7 +6,7 @@ export interface Components {
   'SessionCreate': ({ 'lab_subject_id': string; 'csrf_token': string }) | ({ 'identifier': string; 'password': string; 'csrf_token': string });
   'PublicRegistration': { 'nik': string; 'name': string; 'email': string; 'phone': string; 'password': string; 'csrf_token': string };
   'MediaApproval': { 'expected_version': number; 'sanitized_copy_id': string; 'target_id': string; 'target_audience': 'PUBLIC_GUEST' | 'PUBLIC_AUTH' | 'ASN_AUTH' | 'STAFF_ONLY'; 'reason': string };
-  'Session': { 'id': string; 'version': number; 'subject_id': string; 'expires_at': string; 'permissions': (string)[]; 'organization_ids': (string)[]; 'actor': { 'subject_id': string; 'name': string; 'kind': 'PUBLIC' | 'ASN' | 'STAFF'; 'role': string; 'memberships': ({ 'id': string; 'organization_id': string; 'organization_active': boolean; 'team_id': string | null; 'permissions': (string)[]; 'grant_ceiling': (string)[] })[] }; 'mode': 'SYNTHETIC_LAB' | 'PUBLIC_AUTH_LAB' };
+  'Session': { 'id': string; 'version': number; 'subject_id': string; 'expires_at': string; 'permissions': (string)[]; 'organization_ids': (string)[]; 'actor': { 'subject_id': string; 'name': string; 'kind': 'PUBLIC' | 'ASN' | 'STAFF'; 'role': string; 'memberships': ({ 'id': string; 'organization_id': string; 'organization_active': boolean; 'team_id': string | null; 'permissions': (string)[]; 'grant_ceiling': (string)[] })[] }; 'mode': string };
   'VersionedReason': { 'expected_version': number; 'reason': string };
   'ServiceWrite': { 'code': string; 'name': string; 'access_mode': 'PUBLIC_GUEST' | 'PUBLIC_AUTH' | 'ASN_AUTH' | 'STAFF_ONLY'; 'owner_org_id': string; 'form_version': number; 'active': boolean; 'category_id'?: string | null };
   'Service': { 'id': string; 'version': number; 'code': string; 'name': string; 'access_mode': 'PUBLIC_GUEST' | 'PUBLIC_AUTH' | 'ASN_AUTH' | 'STAFF_ONLY'; 'owner_org_id': string; 'form_version': number; 'active': boolean; 'category_id': string | null };
@@ -39,7 +39,7 @@ export interface Components {
   'SinkChallenge': { 'code': string; 'expires_at': string };
   'SchedulerJob': { 'id': string; 'version': number; 'state': 'PENDING' | 'LEASED' | 'ACKED' | 'DEAD_LETTER'; 'due_at': string; 'retry_at': string | null; 'attempts': number; 'last_error_code': string | null };
   'SchedulerReplay': { 'id': string; 'version': number; 'state': 'PENDING' };
-  'TelegramBinding': { 'expected_version': number; 'verification_code': string; 'scope_org_id': string; 'channel': 'SINK' };
+  'TelegramBinding': { 'expected_version': number; 'verification_code': string; 'scope_org_id': string; 'channel': 'SINK' | 'TELEGRAM'; 'chat_ref'?: string };
   'ReportQuery': { 'from': string; 'to': string; 'timezone': 'Asia/Jakarta'; 'organization_id': string; 'cohort': 'ACCEPTED' | 'RESOLVED' | 'OPEN'; 'format': 'CSV' | 'JSON' };
   'Report': { 'as_of': string; 'watermark': string | null; 'timezone': 'Asia/Jakarta'; 'policy_version': number | null; 'denominator': number; 'count': number; 'measure': 'SLA'; 'accepted': number; 'backlog': number; 'completed': number; 'breached': number; 'cancelled': number; 'unmeasured': number; 'gross_seconds': number; 'net_seconds': number; 'sla_percent': number | null };
   'Audit': { 'id': string; 'actor_id': string; 'action': string; 'object_id': string; 'scope': string; 'reason': string; 'outcome': 'SUCCESS' | 'DENIED' | 'FAILED'; 'correlation_id': string; 'occurred_at': string };
@@ -110,6 +110,11 @@ export interface Components {
   'SystemJobList': { 'items': (Components['SystemJobResult'])[] };
   'MediaApprovalItem': { 'id': string; 'version': number; 'source_id': string; 'source_owner': 'M3' | 'M8'; 'copy_id': string; 'target_id': string; 'target_audience': string; 'organization_id': string; 'approved_by': string; 'reason': string; 'expires_at': string; 'used_at'?: string; 'revoked_at'?: string; 'created_at': string };
   'MediaApprovalList': { 'items': (Components['MediaApprovalItem'])[] };
+  'AuthConfig': { 'mode': 'SYNTHETIC_LAB' | 'PRODUCTION'; 'csrf_token': string; 'lab_auth_enabled': boolean; 'public_auth_enabled': boolean; 'sso_enabled': boolean; 'sso_provider_label': string; 'sso_login_url': string; 'purge_enabled': boolean };
+  'SSORedirect': { 'location': string };
+  'DeliveryJobRecord': { 'id': string; 'version': number; 'notification_id': string; 'title': string; 'channel': 'SINK' | 'TELEGRAM' | 'EMAIL'; 'target_masked': string; 'state': 'PENDING' | 'LEASED' | 'ACKED' | 'FAILED' | 'DEAD_LETTER'; 'attempts': number; 'last_error_code'?: string | null; 'next_attempt_at': string; 'delivered_at'?: string | null; 'created_at': string };
+  'RetentionInput': { 'expected_version': number; 'legal_hold': boolean; 'retention_until'?: string | null; 'reason': string };
+  'RetentionStatus': { 'ticket_id': string; 'version': number; 'legal_hold': boolean; 'retention_until'?: string | null; 'purged_at'?: string | null };
   'AcceptResolution': { 'expected_version': number; 'attempt_id': string };
   'ServiceUpdate': { 'expected_version': number; 'code': string; 'name': string; 'access_mode': 'PUBLIC_GUEST' | 'PUBLIC_AUTH' | 'ASN_AUTH' | 'STAFF_ONLY'; 'owner_org_id': string; 'form_version': number; 'active': boolean; 'category_id': string | null };
 }

@@ -70,3 +70,58 @@ func SanitizeCSV(val string) string {
 	}
 	return val
 }
+
+func ValidateChannelBinding(scopeOrgID string, actorKind string, actorOrgs []string, channel, verificationCode, chatRef string, productionTelegram bool) error {
+	if channel == "SINK" {
+		return ValidateTelegramBinding(scopeOrgID, actorKind, actorOrgs, channel, verificationCode)
+	}
+	if channel != "TELEGRAM" || !productionTelegram {
+		return web.Fail(400, "Channel pengiriman tidak didukung atau belum diaktifkan")
+	}
+	code := strings.TrimSpace(verificationCode)
+	chat := strings.TrimSpace(chatRef)
+	if code == "" || len(code) > 128 || chat == "" || len(chat) > 64 || HasCRLF(chat) {
+		return web.Fail(400, "Kode verifikasi atau referensi chat Telegram tidak valid")
+	}
+	return ValidateTelegramBinding(scopeOrgID, actorKind, actorOrgs, "SINK", code)
+}
+
+func HasCRLF(v string) bool {
+	return strings.ContainsAny(v, "\r\n\x00")
+}
+
+func MaskEmail(addr string) string {
+	parts := strings.SplitN(strings.TrimSpace(addr), "@", 2)
+	if len(parts) != 2 || parts[0] == "" || parts[1] == "" {
+		return "MAIL-***"
+	}
+	local := parts[0]
+	prefix := local[:1]
+	return prefix + "***@" + parts[1]
+}
+
+func SanitizeErrorCode(err error, secrets ...string) string {
+	if err == nil {
+		return ""
+	}
+	msg := err.Error()
+	for _, s := range secrets {
+		if len(s) >= 4 {
+			msg = strings.ReplaceAll(msg, s, "[REDACTED]")
+		}
+	}
+	msg = strings.Map(func(r rune) rune {
+		if r == '\r' || r == '\n' {
+			return ' '
+		}
+		return r
+	}, msg)
+	msg = strings.TrimSpace(msg)
+	if len(msg) > 80 {
+		msg = msg[:80]
+	}
+	if msg == "" {
+		return "DELIVERY_ERROR"
+	}
+	return msg
+}

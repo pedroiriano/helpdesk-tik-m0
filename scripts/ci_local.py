@@ -78,12 +78,14 @@ def main():
         ("go_module_boundaries", [sys.executable, "scripts/check_boundaries.py"]),
         ("go_boundary_negative", [sys.executable, "scripts/test_boundaries.py"]),
         ("piui_build_parity", [sys.executable, "scripts/test_piui_build.py"]),
+        ("security_and_sbom", [sys.executable, "-X", "utf8", "scripts/security_gate.py"]),
     ]
     for name, cmd in static_cmds:
         steps.append(run_step(name, cmd))
 
     if not args.skip_docker:
         steps.append(run_step("compose_config_valid", ["docker", "compose", "config", "--quiet"]))
+        steps.append(run_step("compose_prod_config_valid", ["docker", "compose", "-f", "compose.yaml", "-f", "compose.prod.yml", "config", "--quiet"]))
         steps.append(run_step("go_127_vet_and_test", ["docker", "build", "--pull=false", "--target", "test", "-t", TEST_GO_IMAGE, "-f", "infra/docker/backend.Dockerfile", "."]))
         subprocess.run(["docker", "image", "rm", TEST_GO_IMAGE], cwd=ROOT, capture_output=True)
         node_cmd = (

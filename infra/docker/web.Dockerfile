@@ -10,7 +10,9 @@ COPY contracts/policy/permissions.v1.json /src/contracts/policy/permissions.v1.j
 RUN npm run build
 FROM nginx:1.30.6-alpine@sha256:901e593c95dc85f5a729f5765516321366ef4ac401821431d408897e95287d0a
 COPY infra/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY infra/nginx/routes.conf /etc/nginx/routes.conf
+COPY infra/nginx/nginx.prod.conf /etc/nginx/nginx.prod.conf
 COPY --from=build /src/frontend/dist/ /usr/share/nginx/html/
 USER 101:101
-EXPOSE 8080
+EXPOSE 8080 8443
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

@@ -75,7 +75,7 @@
                     "role": "LAB",
                     "memberships": []
                   },
-                  "mode": "SYNTHETIC_LAB"
+                  "mode": "LAB"
                 }
               }
             }
@@ -286,7 +286,7 @@
                     "role": "LAB",
                     "memberships": []
                   },
-                  "mode": "SYNTHETIC_LAB"
+                  "mode": "LAB"
                 }
               }
             }
@@ -681,7 +681,7 @@
                     "role": "LAB",
                     "memberships": []
                   },
-                  "mode": "SYNTHETIC_LAB"
+                  "mode": "LAB"
                 }
               }
             }
@@ -30858,6 +30858,1426 @@
           }
         }
       }
+    },
+    "/api/v1/auth/config": {
+      "get": {
+        "operationId": "ReadAuthConfig",
+        "summary": "ReadAuthConfig",
+        "x-command": "ReadAuthConfig",
+        "x-owner": "M1",
+        "x-permission": "session.create",
+        "x-requirements": [
+          "FR29"
+        ],
+        "x-runtime-status": "IMPLEMENTED_RM0_05",
+        "x-authorization": "Trusted principal, live object/scope/revocation checks. Hidden object 404; visible forbidden action 403; config admin has no implicit ticket read.",
+        "security": [
+          {
+            "SessionCookie": []
+          },
+          {}
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Durable primary result; downstream delivery may still be pending",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthConfig"
+                },
+                "example": {
+                  "mode": "SYNTHETIC_LAB",
+                  "csrf_token": "LAB",
+                  "lab_auth_enabled": true,
+                  "public_auth_enabled": true,
+                  "sso_enabled": true,
+                  "sso_provider_label": "LAB",
+                  "sso_login_url": "LAB",
+                  "purge_enabled": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "VALIDATION_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "DEPENDENCY_UNAVAILABLE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/sso/login": {
+      "get": {
+        "operationId": "StartSSOLogin",
+        "summary": "StartSSOLogin",
+        "x-command": "StartSSOLogin",
+        "x-owner": "M1",
+        "x-permission": "session.create",
+        "x-requirements": [
+          "FR29"
+        ],
+        "x-runtime-status": "IMPLEMENTED_RM0_05",
+        "x-authorization": "Trusted principal, live object/scope/revocation checks. Hidden object 404; visible forbidden action 403; config admin has no implicit ticket read.",
+        "security": [
+          {
+            "SessionCookie": []
+          },
+          {}
+        ],
+        "parameters": [],
+        "responses": {
+          "302": {
+            "description": "Durable primary result; downstream delivery may still be pending",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SSORedirect"
+                },
+                "example": {
+                  "location": "LAB"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "VALIDATION_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "DEPENDENCY_UNAVAILABLE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/sso/callback": {
+      "get": {
+        "operationId": "CompleteSSOCallback",
+        "summary": "CompleteSSOCallback",
+        "x-command": "CompleteSSOCallback",
+        "x-owner": "M1",
+        "x-permission": "session.create",
+        "x-requirements": [
+          "FR29"
+        ],
+        "x-runtime-status": "IMPLEMENTED_RM0_05",
+        "x-authorization": "Trusted principal, live object/scope/revocation checks. Hidden object 404; visible forbidden action 403; config admin has no implicit ticket read.",
+        "security": [
+          {
+            "SessionCookie": []
+          },
+          {}
+        ],
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4000
+            }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4000
+            }
+          },
+          {
+            "name": "error",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4000
+            }
+          }
+        ],
+        "responses": {
+          "303": {
+            "description": "Durable primary result; downstream delivery may still be pending",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SSORedirect"
+                },
+                "example": {
+                  "location": "LAB"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "VALIDATION_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "DEPENDENCY_UNAVAILABLE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/subjects": {
+      "get": {
+        "operationId": "ListAdminSubjects",
+        "summary": "ListAdminSubjects",
+        "x-command": "ListAdminSubjects",
+        "x-owner": "M1",
+        "x-permission": "identity.grant",
+        "x-requirements": [
+          "FR17",
+          "FR29"
+        ],
+        "x-runtime-status": "IMPLEMENTED_RM0_05",
+        "x-authorization": "Trusted principal, live object/scope/revocation checks. Hidden object 404; visible forbidden action 403; config admin has no implicit ticket read.",
+        "security": [
+          {
+            "SessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 512
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id_asc"
+              ]
+            },
+            "description": "Stable UUID ordering; scope filter before cursor/limit. Other sort modes are rejected."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Durable primary result; downstream delivery may still be pending",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Subject"
+                      },
+                      "maxItems": 100
+                    },
+                    "next_cursor": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 512
+                    },
+                    "as_of": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "Z$"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "next_cursor",
+                    "as_of"
+                  ],
+                  "additionalProperties": false
+                },
+                "example": {
+                  "items": [],
+                  "next_cursor": "LAB",
+                  "as_of": "2026-11-04T03:00:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "VALIDATION_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "DEPENDENCY_UNAVAILABLE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/delivery-jobs": {
+      "get": {
+        "operationId": "ListDeliveryJobs",
+        "summary": "ListDeliveryJobs",
+        "x-command": "ListDeliveryJobs",
+        "x-owner": "M9",
+        "x-permission": "operation.read|system.job",
+        "x-requirements": [
+          "FR18",
+          "FR21"
+        ],
+        "x-runtime-status": "IMPLEMENTED_RM0_05",
+        "x-authorization": "Trusted principal, live object/scope/revocation checks. Hidden object 404; visible forbidden action 403; config admin has no implicit ticket read.",
+        "security": [
+          {
+            "SessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 512
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id_asc"
+              ]
+            },
+            "description": "Stable UUID ordering; scope filter before cursor/limit. Other sort modes are rejected."
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4000
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Durable primary result; downstream delivery may still be pending",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/DeliveryJobRecord"
+                      },
+                      "maxItems": 100
+                    },
+                    "next_cursor": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 512
+                    },
+                    "as_of": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "Z$"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "next_cursor",
+                    "as_of"
+                  ],
+                  "additionalProperties": false
+                },
+                "example": {
+                  "items": [],
+                  "next_cursor": "LAB",
+                  "as_of": "2026-11-04T03:00:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "VALIDATION_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "DEPENDENCY_UNAVAILABLE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/delivery-jobs/{id}/replay": {
+      "post": {
+        "operationId": "ReplayDeliveryJob",
+        "summary": "ReplayDeliveryJob",
+        "x-command": "ReplayDeliveryJob",
+        "x-owner": "M9",
+        "x-permission": "operation.read|system.job",
+        "x-requirements": [
+          "FR18",
+          "FR21"
+        ],
+        "x-runtime-status": "IMPLEMENTED_RM0_05",
+        "x-authorization": "Trusted principal, live object/scope/revocation checks. Hidden object 404; visible forbidden action 403; config admin has no implicit ticket read.",
+        "security": [
+          {
+            "SessionCookie": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 128
+            },
+            "description": "Bound to trusted actor/capability, command, target and canonical payload hash; replay same intent, 409 for changed intent."
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4000
+            },
+            "description": "Required for cookie-authenticated mutations; verified Origin and CSRF token."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Durable primary result; downstream delivery may still be pending",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeliveryJobRecord"
+                },
+                "example": {
+                  "id": "00000000-0000-4000-8000-000000000001",
+                  "version": 1,
+                  "notification_id": "00000000-0000-4000-8000-000000000001",
+                  "title": "LAB",
+                  "channel": "SINK",
+                  "target_masked": "LAB",
+                  "state": "PENDING",
+                  "attempts": 0,
+                  "next_attempt_at": "2026-11-04T03:00:00Z",
+                  "created_at": "2026-11-04T03:00:00Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "VALIDATION_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "DEPENDENCY_UNAVAILABLE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VersionedReason"
+              },
+              "example": {
+                "expected_version": 1,
+                "reason": "LAB"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tickets/{id}/retention": {
+      "post": {
+        "operationId": "ConfigureRetention",
+        "summary": "ConfigureRetention",
+        "x-command": "ConfigureRetention",
+        "x-owner": "M3",
+        "x-permission": "ticket.archive",
+        "x-requirements": [
+          "FR22"
+        ],
+        "x-runtime-status": "IMPLEMENTED_RM0_05",
+        "x-authorization": "Trusted principal, live object/scope/revocation checks. Hidden object 404; visible forbidden action 403; config admin has no implicit ticket read.",
+        "security": [
+          {
+            "SessionCookie": []
+          },
+          {
+            "GuestCapability": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 128
+            },
+            "description": "Bound to trusted actor/capability, command, target and canonical payload hash; replay same intent, 409 for changed intent."
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4000
+            },
+            "description": "Required for cookie-authenticated mutations; verified Origin and CSRF token."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Durable primary result; downstream delivery may still be pending",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetentionStatus"
+                },
+                "example": {
+                  "ticket_id": "00000000-0000-4000-8000-000000000001",
+                  "version": 1,
+                  "legal_hold": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "VALIDATION_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "DEPENDENCY_UNAVAILABLE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "INVALID_REQUEST",
+                  "message": "LAB",
+                  "correlation_id": "00000000-0000-4000-8000-000000000001",
+                  "details": []
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RetentionInput"
+              },
+              "example": {
+                "expected_version": 1,
+                "legal_hold": true,
+                "reason": "LAB"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -31238,10 +32658,8 @@
           },
           "mode": {
             "type": "string",
-            "enum": [
-              "SYNTHETIC_LAB",
-              "PUBLIC_AUTH_LAB"
-            ]
+            "minLength": 1,
+            "maxLength": 4000
           }
         },
         "required": [
@@ -32815,8 +34233,16 @@
             "format": "uuid"
           },
           "channel": {
-            "const": "SINK",
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "SINK",
+              "TELEGRAM"
+            ]
+          },
+          "chat_ref": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
           }
         },
         "required": [
@@ -35869,6 +37295,222 @@
         },
         "required": [
           "items"
+        ],
+        "additionalProperties": false
+      },
+      "AuthConfig": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "SYNTHETIC_LAB",
+              "PRODUCTION"
+            ]
+          },
+          "csrf_token": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000
+          },
+          "lab_auth_enabled": {
+            "type": "boolean"
+          },
+          "public_auth_enabled": {
+            "type": "boolean"
+          },
+          "sso_enabled": {
+            "type": "boolean"
+          },
+          "sso_provider_label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000
+          },
+          "sso_login_url": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000
+          },
+          "purge_enabled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "mode",
+          "csrf_token",
+          "lab_auth_enabled",
+          "public_auth_enabled",
+          "sso_enabled",
+          "sso_provider_label",
+          "sso_login_url",
+          "purge_enabled"
+        ],
+        "additionalProperties": false
+      },
+      "SSORedirect": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000
+          }
+        },
+        "required": [
+          "location"
+        ],
+        "additionalProperties": false
+      },
+      "DeliveryJobRecord": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "notification_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000
+          },
+          "channel": {
+            "type": "string",
+            "enum": [
+              "SINK",
+              "TELEGRAM",
+              "EMAIL"
+            ]
+          },
+          "target_masked": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "LEASED",
+              "ACKED",
+              "FAILED",
+              "DEAD_LETTER"
+            ]
+          },
+          "attempts": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "last_error_code": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120
+          },
+          "next_attempt_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "delivered_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          }
+        },
+        "required": [
+          "id",
+          "version",
+          "notification_id",
+          "title",
+          "channel",
+          "target_masked",
+          "state",
+          "attempts",
+          "next_attempt_at",
+          "created_at"
+        ],
+        "additionalProperties": false
+      },
+      "RetentionInput": {
+        "type": "object",
+        "properties": {
+          "expected_version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "legal_hold": {
+            "type": "boolean"
+          },
+          "retention_until": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000
+          }
+        },
+        "required": [
+          "expected_version",
+          "legal_hold",
+          "reason"
+        ],
+        "additionalProperties": false
+      },
+      "RetentionStatus": {
+        "type": "object",
+        "properties": {
+          "ticket_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "legal_hold": {
+            "type": "boolean"
+          },
+          "retention_until": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "purged_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "ticket_id",
+          "version",
+          "legal_hold"
         ],
         "additionalProperties": false
       },

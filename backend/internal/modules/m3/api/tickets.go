@@ -328,3 +328,18 @@ type BulkItemResult struct {
 	Outcome string `json:"outcome"`
 	Version int64  `json:"version"`
 }
+
+type RetentionInput struct {
+	ExpectedVersion int64      `json:"expected_version"`
+	LegalHold       bool       `json:"legal_hold"`
+	RetentionUntil  *time.Time `json:"retention_until,omitempty"`
+	Reason          string     `json:"reason"`
+}
+
+type RetentionStatus struct {
+	TicketID       string     `json:"ticket_id"`
+	Version        int64      `json:"version"`
+	LegalHold      bool       `json:"legal_hold"`
+	RetentionUntil *time.Time `json:"retention_until,omitempty"`
+	PurgedAt       *time.Time `json:"purged_at,omitempty"`
+}

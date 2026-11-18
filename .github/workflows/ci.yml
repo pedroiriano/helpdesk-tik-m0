@@ -62,3 +62,42 @@ jobs:
         run: |
           docker pull postgres:18.7-alpine@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015
           python -X utf8 scripts/test_owner_migrations.py --report qa/remediation/rm0-05/ci-migrations.json
+
+  security-and-sbom:
+    runs-on: ubuntu-latest
+    needs: [governance-and-contracts, backend-go-127, frontend-node-26]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13.7'
+      - name: Run local security hygiene, compose hardening & CycloneDX SBOM gate
+        run: |
+          python -X utf8 scripts/security_gate.py --report qa/remediation/rm0-05/ci-security-gate.json --sbom qa/remediation/rm0-05/sbom-m0.json
+      - name: Verify production TLS edge config & headers
+        run: |
+          python -X utf8 scripts/test_fase3_hardening.py --report qa/remediation/rm0-05/ci-hardening.json
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.x'
+          cache-dependency-path: backend/go.sum
+      - name: Run Go vulnerability check (govulncheck)
+        working-directory: backend
+        run: |
+          go install golang.org/x/vuln/cmd/govulncheck@v1.1.4
+          govulncheck ./...
+      - name: Build OCI images for Trivy filesystem/image CVE scan
+        run: |
+          docker compose build app web
+      - name: Run Trivy vulnerability scan (HIGH,CRITICAL)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: 'image'
+          image-ref: 'helpdesk-m0-app:0.1.0'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '1'
+      - name: Upload CycloneDX SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: helpdesk-m0-sbom
+          path: qa/remediation/rm0-05/sbom-m0.json
