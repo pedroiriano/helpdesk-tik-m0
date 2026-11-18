@@ -307,14 +307,50 @@ async function run() {
     await cdp.navigate(`${BASE}/admin/app/helpdesk/index.html?kind=faqs`, 700);
     await waitFor(() => cdp.eval(`document.querySelectorAll('[data-hd-articles-rows] tr').length >= 5`), 10000, 'admin FAQ rows for SUPER_ADMIN');
 
-    const adminShellInfo = await cdp.eval(`(() => ({
-      activeNav: document.querySelector('[aria-current="page"]')?.textContent?.trim(),
-      dtShell: Boolean(document.querySelector('[data-hd-articles-section] .hd-dt-shell')),
-      faqBtnPressed: document.querySelector('[data-hd-editorial-kind="FAQ"]')?.getAttribute('aria-pressed'),
-    }))()`);
+    const adminShellInfo = await cdp.eval(`(() => {
+      const actionGroups = Array.from(document.querySelectorAll('[data-hd-articles-rows] .hd-row-actions'));
+      let minButtonGap = Infinity;
+      for (const grp of actionGroups) {
+        const btns = Array.from(grp.querySelectorAll('button, a')).map(el => el.getBoundingClientRect());
+        for (let i = 0; i < btns.length; i++) {
+          for (let j = i + 1; j < btns.length; j++) {
+            const a = btns[i], b = btns[j];
+            const dx = Math.max(0, b.left - a.right, a.left - b.right);
+            const dy = Math.max(0, b.top - a.bottom, a.top - b.bottom);
+            const gap = dy > 0 ? dy : dx;
+            if (gap < minButtonGap) minButtonGap = gap;
+          }
+        }
+      }
+      const tabsEl = document.querySelector('[data-hd-editorial-kind-tabs]');
+      const tabsMarginTop = tabsEl ? parseFloat(getComputedStyle(tabsEl).marginTop) : -1;
+      const firstRowAudienceRects = document.querySelector('[data-hd-articles-rows] tr td:nth-child(3)')?.getClientRects()?.length ?? 0;
+      const wrap = document.querySelector('[data-hd-articles-section] .hd-table-wrap');
+      const tableFitsWidth = wrap ? wrap.scrollWidth <= wrap.clientWidth + 2 : false;
+      return {
+        activeNav: document.querySelector('[aria-current="page"]')?.textContent?.trim(),
+        dtShell: Boolean(document.querySelector('[data-hd-articles-section] .hd-dt-shell')),
+        faqBtnPressed: document.querySelector('[data-hd-editorial-kind="FAQ"]')?.getAttribute('aria-pressed'),
+        actionGroupCount: actionGroups.length,
+        minButtonGap: Number.isFinite(minButtonGap) ? minButtonGap : 0,
+        tabsMarginTop,
+        audienceSingleLine: firstRowAudienceRects <= 1,
+        tableFitsWidth,
+      };
+    })()`);
     assert.equal(adminShellInfo.activeNav, 'Tanya Jawab (FAQ)', 'Sidebar active link must match FAQ menu');
     assert.equal(adminShellInfo.dtShell, true, 'Admin FAQ table must use DataTables shell');
     assert.equal(adminShellInfo.faqBtnPressed, 'true', 'FAQ tab must be active');
+    assert.ok(adminShellInfo.actionGroupCount >= 5, 'Every FAQ table row must wrap action buttons inside .hd-row-actions');
+    assert.ok(adminShellInfo.minButtonGap >= 7, `Table action buttons must not touch each other (min gap: ${adminShellInfo.minButtonGap}px)`);
+    assert.equal(adminShellInfo.tabsMarginTop, 0, 'Nested editorial tab group must not inherit double top margin');
+    assert.equal(adminShellInfo.audienceSingleLine, true, 'Audience token like PUBLIC_GUEST must stay on one line without mid-word wrapping');
+    assert.equal(adminShellInfo.tableFitsWidth, true, 'FAQ table & TINDAKAN column must fit desktop 1280px without clipping action buttons');
+
+    if (process.env.FAQ_SCREENSHOT_PATH) {
+      const shot = await cdp.send('Page.captureScreenshot', { format: 'png' });
+      fs.writeFileSync(process.env.FAQ_SCREENSHOT_PATH, Buffer.from(shot.data, 'base64'));
+    }
 
     // Click "+ Tambah FAQ Baru", fill form, save draft
     await cdp.eval(`(() => {

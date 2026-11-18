@@ -99,6 +99,7 @@ export async function loadNotificationsInbox(): Promise<void> {
       const statusText = item.read ? 'Sudah dibaca' : `Belum dibaca (${item.delivery_state})`;
       const actTd = el('td');
       if (!item.read) {
+        const actWrap = el('div', '', 'hd-row-actions');
         const markBtn = el('button', 'Tandai dibaca', 'piui-btn piui-btn--secondary piui-btn--sm');
         markBtn.type = 'button';
         markBtn.addEventListener('click', async () => {
@@ -114,7 +115,8 @@ export async function loadNotificationsInbox(): Promise<void> {
             markBtn.disabled = false;
           }
         });
-        actTd.append(markBtn);
+        actWrap.append(markBtn);
+        actTd.append(actWrap);
       } else {
         actTd.textContent = 'Dibaca';
       }
@@ -159,6 +161,7 @@ export async function loadDeliveryJobs(): Promise<void> {
       const attemptsTd = el('td', `${job.attempts}/5${errText}`);
       const actTd = el('td');
       if (job.state === 'FAILED' || job.state === 'DEAD_LETTER') {
+        const actWrap = el('div', '', 'hd-row-actions');
         const replayBtn = el('button', 'Replay', 'piui-btn piui-btn--secondary piui-btn--sm');
         replayBtn.type = 'button';
         replayBtn.addEventListener('click', async () => {
@@ -174,7 +177,8 @@ export async function loadDeliveryJobs(): Promise<void> {
             replayBtn.disabled = false;
           }
         });
-        actTd.append(replayBtn);
+        actWrap.append(replayBtn);
+        actTd.append(actWrap);
       } else {
         actTd.textContent = job.delivered_at ? fmtWib(job.delivered_at) : '-';
       }
@@ -239,6 +243,7 @@ export async function loadOperationsList(): Promise<void> {
     for (const job of res.items) {
       const tr = el('tr');
       const tdAct = el('td');
+      const actWrap = el('div', '', 'hd-row-actions');
       const pickBtn = el('button', 'Pilih ke Runner', 'piui-btn piui-btn--secondary piui-btn--sm');
       pickBtn.type = 'button';
       pickBtn.addEventListener('click', () => {
@@ -248,7 +253,8 @@ export async function loadOperationsList(): Promise<void> {
         }
         if (stat) stat.textContent = `Pekerjaan ${job.id.slice(0, 8)}… (${job.kind} · ${job.state}) dimuat ke Runner.`;
       });
-      tdAct.append(pickBtn);
+      actWrap.append(pickBtn);
+      tdAct.append(actWrap);
       tr.append(
         el('td', job.id.slice(0, 8) + '…'),
         el('td', job.kind),
@@ -286,6 +292,7 @@ export async function loadSchedulerJobs(): Promise<void> {
       ticketCell.append(link);
       const actTd = el('td');
       if (job.state === 'DEAD_LETTER') {
+        const actWrap = el('div', '', 'hd-row-actions');
         const replayBtn = el('button', 'Replay Job', 'piui-btn piui-btn--primary piui-btn--sm');
         replayBtn.type = 'button';
         replayBtn.addEventListener('click', async () => {
@@ -304,7 +311,8 @@ export async function loadSchedulerJobs(): Promise<void> {
             replayBtn.disabled = false;
           }
         });
-        actTd.append(replayBtn);
+        actWrap.append(replayBtn);
+        actTd.append(actWrap);
       } else {
         actTd.textContent = fmtWib(job.due_at);
       }
@@ -409,7 +417,8 @@ export async function loadMediaPickersAndApprovals(): Promise<void> {
       for (const a of res.items) {
         const tr = el('tr');
         const stateText = a.revoked_at ? 'Dicabut' : a.used_at ? 'Terhubung' : 'Siap dihubungkan';
-        const tdAct = el('td', '', 'hd-actions');
+        const tdAct = el('td');
+        const actWrap = el('div', '', 'hd-row-actions');
         if (!a.revoked_at && !a.used_at) {
           const useBtn = el('button', 'Gunakan ID', 'piui-btn piui-btn--secondary piui-btn--sm');
           useBtn.type = 'button';
@@ -421,7 +430,7 @@ export async function loadMediaPickersAndApprovals(): Promise<void> {
             if (audSelect) audSelect.value = a.target_audience;
             if (pubStatus) pubStatus.textContent = `Persetujuan ${a.id.slice(0, 8)}… dimuat ke formulir.`;
           });
-          tdAct.append(useBtn);
+          actWrap.append(useBtn);
         }
         if (!a.revoked_at) {
           const revBtn = el('button', 'Cabut Persetujuan', 'piui-btn piui-btn--secondary piui-btn--sm');
@@ -442,8 +451,10 @@ export async function loadMediaPickersAndApprovals(): Promise<void> {
               revBtn.disabled = false;
             }
           });
-          tdAct.append(revBtn);
+          actWrap.append(revBtn);
         }
+        if (actWrap.childElementCount > 0) tdAct.append(actWrap);
+        else tdAct.textContent = stateText;
         tr.append(
           el('td', `${a.id.slice(0, 8)}… (v${a.version})`),
           el('td', `${a.source_owner}:${a.source_id.slice(0, 6)}… -> ${a.target_id.slice(0, 6)}…`),

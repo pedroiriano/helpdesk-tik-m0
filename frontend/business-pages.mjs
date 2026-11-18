@@ -710,8 +710,8 @@ export function adminBusinessPage(source) {
         <h2>Basis Pengetahuan &amp; Editorial Portal (M8)</h2>
         <p>Manajemen siklus hidup artikel panduan dan halaman portal resmi SPBE Kota Depok (DRAFT &rarr; REVIEW &rarr; PUBLISHED &rarr; ARCHIVED).</p>
       </div>
-      <div class="hd-actions">
-        <div class="hd-actions" role="group" aria-label="Jenis konten editorial" data-hd-editorial-kind-tabs>
+      <div class="hd-actions hd-actions--flush">
+        <div class="hd-tab-group" role="group" aria-label="Jenis konten editorial" data-hd-editorial-kind-tabs>
           <button type="button" class="piui-btn piui-btn--primary" data-hd-editorial-kind="ARTICLE" aria-pressed="true">Artikel Panduan (ARTICLE)</button>
           <button type="button" class="piui-btn piui-btn--secondary" data-hd-editorial-kind="PAGE" aria-pressed="false">Halaman Portal (PAGE)</button>
           <button type="button" class="piui-btn piui-btn--secondary" data-hd-editorial-kind="FAQ" aria-pressed="false">Tanya Jawab (FAQ)</button>
@@ -721,8 +721,8 @@ export function adminBusinessPage(source) {
       </div>
     </div>
     <div class="hd-table-wrap"><table class="piui-table"><thead><tr><th scope="col">Judul / Pertanyaan</th><th scope="col">Slug URL</th><th scope="col">Audience</th><th scope="col">Status Editorial</th><th scope="col">Versi</th><th scope="col">Tindakan</th></tr></thead><tbody data-hd-articles-rows></tbody></table></div>
-    <p data-hd-editorial-status role="status"></p>
-    <nav class="hd-actions" aria-label="Halaman editorial">
+    <p data-hd-editorial-status role="status" class="hd-nav-status"></p>
+    <nav class="hd-actions hd-pager-nav" aria-label="Halaman editorial">
       <button type="button" class="piui-btn piui-btn--secondary" data-hd-editorial-prev disabled>Sebelumnya</button>
       <button type="button" class="piui-btn piui-btn--secondary" data-hd-editorial-next disabled>Berikutnya</button>
     </nav>

@@ -960,6 +960,22 @@ p[data-hd-login-status]:not(:empty) {
   margin-block: 16px 20px !important;
 }
 
+.piui-main .hd-actions--flush,
+.piui-card .hd-actions--flush,
+[data-hd-page="admin"] .hd-actions--flush {
+  margin: 0 !important;
+}
+
+.hd-tab-group,
+.piui-main .hd-actions .hd-actions,
+[data-hd-page="admin"] .hd-actions .hd-actions {
+  display: inline-flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  margin-block: 0 !important;
+}
+
 /* Tombol Admin: Anti-Menempel & Proporsional */
 .piui-main .piui-btn,
 [data-hd-page="admin"] .piui-btn {
@@ -993,7 +1009,7 @@ p[data-hd-login-status]:not(:empty) {
   gap: 10px !important;
   flex-wrap: wrap !important;
   margin-bottom: 20px !important;
-  padding-bottom: 8px !important;
+  padding-bottom: 12px !important;
   border-bottom: 1px solid var(--piui-border-subtle, #27272a) !important;
 }
 
@@ -1002,7 +1018,7 @@ p[data-hd-login-status]:not(:empty) {
 [data-hd-page="admin"] .hd-form-grid {
   display: grid !important;
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  gap: 18px 24px !important;
+  gap: 20px 24px !important;
   margin-bottom: 22px !important;
 }
 
@@ -1013,6 +1029,11 @@ p[data-hd-login-status]:not(:empty) {
   gap: 8px !important;
   margin-bottom: 16px !important;
   min-width: 0 !important;
+}
+
+.piui-main .hd-form-grid > .piui-field,
+[data-hd-page="admin"] .hd-form-grid > .piui-field {
+  margin-bottom: 0 !important;
 }
 
 .piui-main .piui-field label,
@@ -1045,7 +1066,7 @@ p[data-hd-login-status]:not(:empty) {
 .piui-main .hd-table-wrap,
 [data-hd-page="admin"] .hd-table-wrap {
   overflow-x: auto !important;
-  margin-block: 18px 22px !important;
+  margin-block: 16px 20px !important;
   border-radius: 8px !important;
   border: 1px solid var(--piui-border-subtle, #27272a) !important;
 }
@@ -1056,14 +1077,60 @@ p[data-hd-login-status]:not(:empty) {
 [data-hd-page="admin"] .piui-table td {
   padding: 12px 16px !important;
   vertical-align: middle !important;
+  word-break: normal;
 }
 
+.piui-main .piui-table th,
+[data-hd-page="admin"] .piui-table th {
+  white-space: nowrap;
+}
+
+[data-hd-articles-section] .piui-table th,
+[data-hd-articles-section] .piui-table td {
+  padding: 12px !important;
+}
+
+[data-hd-articles-section] .piui-table td:nth-child(1) {
+  min-width: 165px;
+  overflow-wrap: break-word;
+}
+
+[data-hd-articles-section] .piui-table td:nth-child(2) {
+  max-width: 155px;
+  overflow-wrap: anywhere;
+  font-size: 0.82rem;
+}
+
+[data-hd-articles-section] .piui-table td:nth-child(3),
+[data-hd-articles-section] .piui-table td:nth-child(4),
+[data-hd-articles-section] .piui-table td:nth-child(5) {
+  white-space: nowrap;
+}
+
+.piui-table td .hd-row-actions,
 .piui-main .piui-table td .hd-row-actions,
 [data-hd-page="admin"] .piui-table td .hd-row-actions {
   display: flex !important;
   align-items: center !important;
-  gap: 8px !important;
+  gap: 8px 10px !important;
   flex-wrap: wrap !important;
+  margin: 0 !important;
+  min-width: 148px;
+}
+
+.piui-table td .hd-row-actions > button,
+.piui-table td .hd-row-actions > a {
+  margin: 0 !important;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Defense-in-depth agar tombol aksi yang berada langsung di dalam sel tabel tidak pernah saling menempel */
+.piui-table td > button,
+.piui-table td > a.piui-btn,
+.piui-table td > a.btn {
+  margin: 4px !important;
+  white-space: nowrap;
 }
 
 /* Paginasi Admin */
@@ -1073,7 +1140,7 @@ nav.hd-pager-nav {
   gap: 10px !important;
   align-items: center !important;
   justify-content: flex-end !important;
-  margin-top: 18px !important;
+  margin-block: 16px 0 !important;
 }
 
 /* Role Hub di Antrean Tiket Petugas */
@@ -1593,11 +1660,11 @@ dialog .hd-actions {
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  gap: var(--piui-space-3);
-  margin-block-end: var(--piui-space-3);
+  gap: 16px 24px;
+  margin-block-end: 20px;
 }
 .hd-editorial-toolbar :is(h2, p) { margin: 0; }
-.hd-editorial-toolbar p { color: var(--piui-text-muted); }
+.hd-editorial-toolbar p { margin-top: 6px; color: var(--piui-text-muted); line-height: 1.5; }
 .hd-editorial-body { grid-column: 1 / -1; }
 
 .hd-media-dialog {
@@ -1818,14 +1885,15 @@ dialog .hd-actions {
 .hd-asn-alert__desc { color: #004085; font-size: 14px; line-height: 1.6; margin: 0 0 16px; }
 .hd-asn-alert__back { background: #f6f8fa; border: 1px solid #d0d7de; color: #24292f; text-decoration: none; padding: 10px 18px; border-radius: 6px; }
 
-.hd-faq-section { margin-top: 1.5rem; }
-.hd-faq-toolbar { margin-top: 1rem; align-items: end; }
-.hd-faq-list { margin-top: 1rem; display: flex; flex-direction: column; gap: 12px; }
-.hd-faq-item { border: 1px solid #d0d7de; border-radius: 6px; padding: 12px 16px; background: #fff; color: #24292f; }
-.hd-faq-item summary { font-weight: 600; cursor: pointer; color: #0366d6; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-.hd-faq-topic-badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 999px; font-size: 0.75rem; font-weight: 600; background: #e8f1fb; color: #0550ae; border: 1px solid #b6d4fe; }
-.hd-faq-item p, .hd-faq-answer { margin: 8px 0 0; line-height: 1.6; }
-.hd-faq-submeta { display: block; margin-top: 4px; opacity: 0.75; font-size: 0.78rem; }
+.hd-faq-section { margin-top: 24px; }
+.hd-faq-toolbar { margin-block: 16px 20px; gap: 16px 20px; align-items: end; }
+.hd-faq-list { margin-top: 16px; display: flex; flex-direction: column; gap: 12px; }
+.hd-faq-item { border: 1px solid #d0d7de; border-radius: 8px; padding: 16px 20px; background: #fff; color: #24292f; }
+.hd-faq-item summary { font-weight: 600; cursor: pointer; color: #0366d6; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; line-height: 1.45; }
+.hd-faq-topic-badge { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 600; background: #e8f1fb; color: #0550ae; border: 1px solid #b6d4fe; }
+.hd-faq-item p { margin: 8px 0 0; line-height: 1.65; }
+.hd-faq-answer { margin: 12px 0 0; padding-top: 10px; border-top: 1px solid #eef1f4; line-height: 1.65; }
+.hd-faq-submeta { display: block; margin-top: 4px; opacity: 0.78; font-size: 0.78rem; line-height: 1.4; }
 
 .hd-status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 1rem; }
 .hd-status-tile { border: 1px solid #28a745; background: #f6fff8; padding: 16px; border-radius: 8px; color: #1b2a38; }
@@ -2216,9 +2284,21 @@ dialog .hd-actions {
   .piui-app-shell .hd-dt-table tbody tr > td[colspan]::before {
     content: none;
   }
+  [data-hd-articles-section] .piui-table td:nth-child(1),
+  [data-hd-articles-section] .piui-table td:nth-child(2) {
+    min-width: 0;
+    max-width: none;
+  }
+  [data-hd-articles-section] .piui-table td:nth-child(3),
+  [data-hd-articles-section] .piui-table td:nth-child(4),
+  [data-hd-articles-section] .piui-table td:nth-child(5) {
+    white-space: normal;
+  }
   .piui-app-shell .hd-dt-table tbody tr > td .hd-row-actions,
   .piui-app-shell .hd-dt-table tbody tr > td.hd-actions {
     justify-content: flex-end;
+    min-width: 0;
+    gap: 8px;
   }
 }
 
@@ -2315,8 +2395,9 @@ dialog .hd-actions {
 }
 
 .hd-subform-card {
-  padding: 20px;
-  margin-top: 18px;
+  padding: 24px 28px;
+  margin-top: 20px;
+  margin-bottom: 8px;
   border: 1px solid var(--piui-border-subtle, #27272a);
   border-radius: 10px;
   background: var(--piui-bg-subtle, rgba(127, 127, 127, 0.03));
@@ -2450,7 +2531,7 @@ dialog .hd-actions {
   }
   .hd-subform-card,
   .hd-step-card {
-    padding: 16px;
+    padding: 18px 16px;
   }
 }
 

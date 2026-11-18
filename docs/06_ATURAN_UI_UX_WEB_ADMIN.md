@@ -27,6 +27,7 @@ Berlaku untuk ruang kerja petugas, pengelolaan, dashboard, antrean/detail tiket 
 - **Tanya Jawab (FAQ)** tersedia pada menu khusus `?kind=faqs` maupun tab `FAQ` di **Panduan dan artikel** (`M8` `/api/v1/knowledge/faqs`), lengkap dengan kolom topik (`category_label`), urutan tampil (`sort_order`), target audience, alur editorial `DRAFT -> PUBLISHED -> ARCHIVED -> RESTORE`, dan pengamanan `expected_version` CAS.
 - Pengelola berizin dapat menambah, menyunting, dan mengarsipkan master data termasuk **Akun pengguna (`?kind=subjects`)**, **Layanan**, **Kategori**, **PD / Unit Kerja** (penamaan ringkas konsisten menggantikan klausa panjang "Perangkat Daerah dan Unit Kerja"), **Bidang**, **Tim teknis**, dan **Pemeliharaan sistem** (jendela *Under Maintenance* Terjadwal maupun Tidak Terjadwal di `M1`).
 - Seluruh dropdown/combo box pada Web Admin menggunakan komponen setara **Select2** dengan pencarian instan dan navigasi keyboard, serta tabel pengelolaan menggunakan **DataTables** (`admin-datatable.ts`) untuk pencarian tabel, pengurutan kolom, dan jumlah baris tampil.
+- Konsistensi Margin, Padding, dan Gap 8-point di seluruh Web Admin: padding kartu/sub-formulir `24px 28px`, padding sel tabel `12px 16px`, setiap sel tindakan wajib membungkus tombol di dalam `.hd-row-actions` dengan `gap: 8px 10px` (tidak boleh saling menempel saat sejajar maupun ter-wrap), toolbar tidak memakai margin `.hd-actions` bersarang ganda, dan field di dalam `.hd-form-grid` mengandalkan grid `gap: 20px 24px` secara simetris.
 
 ### Lima profil tugas
 

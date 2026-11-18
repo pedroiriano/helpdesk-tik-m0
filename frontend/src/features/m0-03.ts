@@ -1696,6 +1696,7 @@ async function admin(): Promise<void> {
         );
         const tdAct = element('td');
         if (isActiveNow || isFuture) {
+          const actWrap = element('div', '', 'hd-row-actions');
           const btn = element('button', isFuture ? 'Batalkan' : 'Hentikan', 'piui-btn piui-btn--secondary piui-btn--sm hd-btn-warn-outline');
           btn.type = 'button';
           btn.addEventListener('click', () => {
@@ -1710,7 +1711,8 @@ async function admin(): Promise<void> {
               },
             });
           });
-          tdAct.append(btn);
+          actWrap.append(btn);
+          tdAct.append(actWrap);
         } else {
           tdAct.append(element('span', 'Selesai', 'hd-muted'));
         }
@@ -2559,13 +2561,14 @@ async function admin(): Promise<void> {
       for (const it of res.items) {
         const tr = element('tr');
         const actions = element('td');
+        const actWrap = element('div', '', 'hd-row-actions');
         const scoped = (permission: string) => session?.actor.memberships.some(m =>
           m.organization_active && (!it.org_id || m.organization_id === it.org_id) && m.permissions.includes(permission));
         if (scoped('content.write') && (it.state !== 'PUBLISHED' || scoped('content.publish'))) {
           const edit = element('button', 'Sunting', 'piui-btn piui-btn--secondary piui-btn--sm');
           edit.type = 'button';
           edit.addEventListener('click', () => editArticle(it));
-          actions.append(edit);
+          actWrap.append(edit);
         }
         const transition = it.state === 'PUBLISHED' ? ['ARCHIVE', 'Arsipkan'] :
           it.state === 'ARCHIVED' ? ['RESTORE', 'Pulihkan ke draft'] : ['PUBLISH', 'Terbitkan'];
@@ -2584,14 +2587,16 @@ async function admin(): Promise<void> {
               action.disabled = false;
             }
           });
-          actions.append(action);
+          actWrap.append(action);
         }
         const href = editorialPublicPrefix() + encodeURIComponent(it.slug);
         if (it.state === 'PUBLISHED') {
           const link = element('a', 'Baca', 'piui-btn piui-btn--secondary piui-btn--sm');
           link.href = href;
-          actions.append(link);
+          actWrap.append(link);
         }
+        if (actWrap.childElementCount > 0) actions.append(actWrap);
+        else actions.append(element('span', 'Hanya lihat', 'hd-muted'));
         const titleCell = element('td');
         titleCell.append(element('div', it.title));
         if (editorialKind === 'FAQ') {

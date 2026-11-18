@@ -196,12 +196,13 @@ export async function loadHandoffInbox(session: Session, onRefreshQueue: () => P
       for (const h of res.items) {
         const tr = el('tr');
         const label = h.direction === 'INCOMING' ? 'Masuk ke OPD Anda' : 'Keluar ke OPD Lain';
-        const tdAct = el('td', '', 'hd-actions');
+        const tdAct = el('td');
+        const actWrap = el('div', '', 'hd-row-actions');
         const openLink = el('a', h.ticket_number || h.ticket_id.slice(0, 8), 'piui-btn piui-btn--secondary piui-btn--sm');
         openLink.href = h.direction === 'INCOMING'
           ? `/admin/app/tickets/detail.html?id=${encodeURIComponent(h.ticket_id)}&handoff_id=${encodeURIComponent(h.id)}`
           : `/admin/app/tickets/detail.html?id=${encodeURIComponent(h.ticket_id)}`;
-        tdAct.append(openLink);
+        actWrap.append(openLink);
         if (h.direction === 'INCOMING') {
           const rejBtn = el('button', 'Tolak', 'piui-btn piui-btn--secondary piui-btn--sm');
           rejBtn.type = 'button';
@@ -210,7 +211,7 @@ export async function loadHandoffInbox(session: Session, onRefreshQueue: () => P
             `/tickets/${encodeURIComponent(h.ticket_id)}/handoffs/${encodeURIComponent(h.id)}/reject`,
             h.ticket_version, stat, 'Permohonan handoff ditolak.', async () => { await reload(); await onRefreshQueue(); }
           ));
-          tdAct.append(rejBtn);
+          actWrap.append(rejBtn);
         } else {
           const canBtn = el('button', 'Batalkan', 'piui-btn piui-btn--secondary piui-btn--sm');
           canBtn.type = 'button';
@@ -219,8 +220,9 @@ export async function loadHandoffInbox(session: Session, onRefreshQueue: () => P
             `/tickets/${encodeURIComponent(h.ticket_id)}/handoffs/${encodeURIComponent(h.id)}/cancel`,
             h.ticket_version, stat, 'Permohonan handoff dibatalkan.', async () => { await reload(); await onRefreshQueue(); }
           ));
-          tdAct.append(canBtn);
+          actWrap.append(canBtn);
         }
+        tdAct.append(actWrap);
         tr.append(el('td', label), el('td', h.ticket_title || h.ticket_number || h.ticket_id), el('td', h.reason), tdAct);
         rows.append(tr);
       }
