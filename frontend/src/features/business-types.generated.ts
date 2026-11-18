@@ -95,6 +95,21 @@ export interface Components {
   'HeroCandidate': { 'id': string; 'alt': string };
   'HeroDraftWrite': { 'expected_version': number; 'reason': string; 'banners': (Components['HeroBanner'])[] };
   'HeroPublishWrite': { 'expected_version': number; 'reason': string };
+  'RuleView': { 'id': string; 'owner': string; 'code': string; 'version': number; 'rule_version': number; 'active': boolean; 'summary': string };
+  'RuleList': { 'items': (Components['RuleView'])[] };
+  'HandoffSummary': { 'id': string; 'version': number; 'direction'?: 'INCOMING' | 'OUTGOING'; 'ticket_id': string; 'ticket_number'?: string; 'ticket_title'?: string; 'ticket_version': number; 'from_org_id': string; 'target_org_id': string; 'target_team_id': string; 'requested_by': string; 'reason': string; 'state': 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED'; 'response_reason'?: string; 'responded_at'?: string; 'created_at': string };
+  'HandoffList': { 'items': (Components['HandoffSummary'])[] };
+  'VendorCaseRecord': { 'id': string; 'version': number; 'ticket_id': string; 'vendor_id': string; 'internal_pic_id': string; 'external_reference': string; 'contract_reference': string; 'expected_return_at': string; 'next_followup_at': string; 'state': 'OPEN' | 'CLOSED'; 'closed_at'?: string; 'resolution_note'?: string; 'created_at': string };
+  'PauseRecord': { 'id': string; 'version': number; 'starts_at': string; 'ends_at': string; 'approved_by': string; 'policy_version': number; 'reason': string; 'resumed_early_at'?: string; 'resume_reason'?: string };
+  'WorkLogRecord': { 'id': string; 'version': number; 'ticket_id': string; 'actor_id': string; 'started_at': string; 'ended_at': string; 'summary': string; 'created_at': string };
+  'OperationalRecords': { 'vendor_cases': (Components['VendorCaseRecord'])[]; 'pauses': (Components['PauseRecord'])[]; 'handoffs': (Components['HandoffSummary'])[]; 'work_logs': (Components['WorkLogRecord'])[] };
+  'SchedulerJobView': { 'id': string; 'ticket_id': string; 'kind': string; 'state': 'PENDING' | 'LEASED' | 'ACKED' | 'DEAD_LETTER'; 'version': number; 'expected_version': number; 'attempts': number; 'due_at': string; 'retry_at'?: string; 'last_error_code'?: string; 'attempt_id'?: string; 'updated_at': string };
+  'SchedulerJobList': { 'items': (Components['SchedulerJobView'])[] };
+  'StaffDirectoryEntry': { 'id': string; 'name': string; 'kind': string; 'role': string };
+  'StaffDirectoryList': { 'items': (Components['StaffDirectoryEntry'])[] };
+  'SystemJobList': { 'items': (Components['SystemJobResult'])[] };
+  'MediaApprovalItem': { 'id': string; 'version': number; 'source_id': string; 'source_owner': 'M3' | 'M8'; 'copy_id': string; 'target_id': string; 'target_audience': string; 'organization_id': string; 'approved_by': string; 'reason': string; 'expires_at': string; 'used_at'?: string; 'revoked_at'?: string; 'created_at': string };
+  'MediaApprovalList': { 'items': (Components['MediaApprovalItem'])[] };
   'AcceptResolution': { 'expected_version': number; 'attempt_id': string };
   'ServiceUpdate': { 'expected_version': number; 'code': string; 'name': string; 'access_mode': 'PUBLIC_GUEST' | 'PUBLIC_AUTH' | 'ASN_AUTH' | 'STAFF_ONLY'; 'owner_org_id': string; 'form_version': number; 'active': boolean; 'category_id': string | null };
 }

@@ -114,6 +114,47 @@ func systemJobResult(res database.Result, err error) (*api.SystemJob, error) {
 	return &job, err
 }
 
+func (s *Service) ListSystemJobs(ctx context.Context, c api.Credentials, limit int) ([]api.SystemJob, error) {
+	actor, err := s.Authenticate(ctx, c)
+	if err != nil {
+		return nil, err
+	}
+	if limit <= 0 || limit > 100 {
+		limit = 25
+	}
+	seen := map[string]bool{}
+	orgs := []string{}
+	for _, perm := range []string{"system.job", "operation.read"} {
+		for _, org := range actor.Orgs(perm) {
+			if !seen[org] {
+				seen[org] = true
+				orgs = append(orgs, org)
+			}
+		}
+	}
+	if len(orgs) == 0 && actor.Role != "SUPER_ADMIN" {
+		return nil, web.Fail(403, "Izin pekerjaan sistem diperlukan")
+	}
+	return s.Store.ListSystemJobs(ctx, orgs, actor.ID, actor.Role == "SUPER_ADMIN", limit)
+}
+
+func (s *Service) ListStaffDirectory(ctx context.Context, c api.Credentials, orgID string) ([]api.Subject, error) {
+	actor, err := s.Authenticate(ctx, c)
+	if err != nil {
+		return nil, err
+	}
+	if actor.Kind != "STAFF" {
+		return nil, web.Fail(403, "Hanya petugas internal yang dapat melihat direktori staf")
+	}
+	if !web.UUID(orgID) {
+		return nil, web.Fail(400, "organization_id wajib UUID valid")
+	}
+	if !actor.Can("ticket.read", orgID) && !actor.Can("ticket.vendor", orgID) && !actor.Can("ticket.dispatch", orgID) {
+		return nil, web.Fail(403, "Organisasi di luar mandat staf")
+	}
+	return s.Store.StaffInOrg(ctx, orgID)
+}
+
 func (s *Service) ReadSystemJob(ctx context.Context, c api.Credentials, id string) (*api.SystemJob, error) {
 	actor, err := s.Authenticate(ctx, c)
 	if err != nil {

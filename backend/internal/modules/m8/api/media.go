@@ -49,6 +49,23 @@ type MediaApprovalInput struct {
 	Reason          string `json:"reason"`
 }
 
+type MediaApprovalRecord struct {
+	ID             string     `json:"id"`
+	Version        int64      `json:"version"`
+	SourceID       string     `json:"source_id"`
+	SourceOwner    string     `json:"source_owner"`
+	CopyID         string     `json:"copy_id"`
+	TargetID       string     `json:"target_id"`
+	TargetAudience string     `json:"target_audience"`
+	OrganizationID string     `json:"organization_id"`
+	ApprovedBy     string     `json:"approved_by"`
+	Reason         string     `json:"reason"`
+	ExpiresAt      time.Time  `json:"expires_at"`
+	UsedAt         *time.Time `json:"used_at,omitempty"`
+	RevokedAt      *time.Time `json:"revoked_at,omitempty"`
+	CreatedAt      time.Time  `json:"created_at"`
+}
+
 type DraftItem struct {
 	ID          string            `json:"id"`
 	Version     int64             `json:"version"`

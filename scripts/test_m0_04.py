@@ -22,7 +22,7 @@ def main():
         gate.docker('network','connect',network,'helpdesk-m0-scanner')
         gate.provision(network)
         gate.apply()
-        seed=(ROOT/'seeds/m0-03-lab.sql').read_text(encoding='utf-8')
+        seed='\n'.join((ROOT/'seeds'/f).read_text(encoding='utf-8') for f in ('m0-03-lab.sql','rm0-03-sla.sql'))
         gate.sql('BEGIN;'+seed+'COMMIT;',error='P0001')
         gate.sql("BEGIN; SET LOCAL helpdesk.environment='synthetic_lab';"+seed+'COMMIT;')
         gate.sql("BEGIN; SET LOCAL helpdesk.environment='synthetic_lab';"+seed+'COMMIT;')

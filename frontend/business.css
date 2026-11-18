@@ -1647,6 +1647,21 @@ dialog .hd-actions {
   .piui-app-shell main :is(.piui-card, .hd-actions, .hd-form-grid, fieldset) { min-inline-size: 0; }
   .piui-app-shell main :is(.hd-queue-filters, .hd-ticket-nav) { overflow-wrap: anywhere; }
   .piui-app-shell main .hd-table-wrap { max-inline-size: 100% !important; }
+  .piui-app-shell main .hd-table-wrap .piui-table { font-size: 0.875rem; }
+  .piui-app-shell main .hd-table-wrap .piui-table :is(th, td) { padding: 10px 8px; overflow-wrap: anywhere; }
+  .hd-queue-table table.piui-table thead { display: none; }
+  .hd-queue-table table.piui-table tbody tr {
+    display: block; margin-block-end: 12px; padding: 12px;
+    border: 1px solid var(--piui-border, #3f3f46); border-radius: 8px;
+  }
+  .hd-queue-table table.piui-table tbody :is(th, td) {
+    display: flex; justify-content: space-between; align-items: start; gap: 10px;
+    padding: 6px 0; border-bottom: 1px dashed rgba(161, 161, 170, 0.25);
+  }
+  .hd-queue-table table.piui-table tbody td::before {
+    content: attr(data-label); font-weight: 600; color: var(--piui-text-secondary, #a1a1aa); flex: 0 0 42%;
+  }
+  .hd-queue-table table.piui-table tbody td:last-child { border-bottom: 0; }
 }
 
 .hd-admin-login { max-inline-size: 30rem; margin-inline: auto; }
@@ -1674,7 +1689,11 @@ dialog .hd-actions {
 .hd-next-step { margin-block: 16px; line-height: 1.6; }
 
 /* Role/state availability must override legacy form display declarations. */
-[data-ticket-page] :is([data-ticket-comment], [data-ticket-upload], [data-operator-verify], [data-operator-dispatch], [data-technician-resolve], [data-requester-confirmation], [data-vendor-case], [data-pause-service], [data-handoff-request], [data-escalate-ticket], [data-archive-ticket], [data-ticket-lifecycle])[hidden] { display: none !important; }
+[data-ticket-page] :is([data-ticket-comment], [data-ticket-upload], [data-operator-verify], [data-operator-dispatch], [data-technician-resolve], [data-requester-confirmation], [data-vendor-case], [data-pause-service], [data-handoff-request], [data-escalate-ticket], [data-archive-ticket], [data-ticket-lifecycle], [data-ops-records], [data-ticket-scheduler], [data-requester-notif], [data-handoff-inbox], [data-bulk-bar])[hidden] { display: none !important; }
+[data-hd-rules-section][hidden], [data-hd-panel-m11][hidden], [data-form-worklog][hidden] { display: none !important; }
+.hd-notif-list, .hd-ops-list { list-style: none; padding: 0; margin: 12px 0; display: grid; gap: 10px; }
+.hd-ops-item { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 12px; border: 1px solid var(--piui-border, #3f3f46); border-radius: 8px; }
+.hd-catalog-filter, .hd-queue-search-bar { margin-block: 12px 16px; }
 .hd-next-step .btn { margin-block: 8px; white-space: normal; }
 
 [data-resolution-notes] { text-transform: none !important; letter-spacing: normal; font-family: inherit; font-weight: 400; line-height: 1.65; overflow-wrap: anywhere; white-space: pre-wrap; }

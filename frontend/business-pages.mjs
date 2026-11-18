@@ -337,7 +337,7 @@ export function publicBusinessPage(source, kind) {
  let main = '';
  if (kind === 'register') main = banner('Pendaftaran Akun Warga', 'Registrasi lingkungan lab sintetis. Gunakan data uji; validasi format NIK belum merupakan verifikasi identitas Dukcapil.') + registerForm();
  if (kind === 'login') main = banner('Akses Layanan TIK', 'Akses akun lab atau identitas sintetis untuk mencoba layanan. Integrasi SSO dan verifikasi identitas nyata belum diaktifkan.') + loginForm();
- if (kind === 'catalog') main = banner('Katalog Layanan TIK', 'Pilih layanan sesuai kebutuhan dan hak akses Anda. Jika belum yakin, mulai dari laporan kendala TIK umum.') + session + '<div class="hd-actions"><a class="btn btn-primary" href="/lapor.html?id=31000000-0000-4000-8000-000000000001">Laporkan kendala TIK umum</a></div><div class="hd-search-box" data-hd-search-wrap><label for="hd-public-search" class="u-sr-only">Cari layanan atau panduan</label><div class="vy-input-group hd-search-input"><input type="search" maxlength="100" id="hd-public-search" class="vy-input" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-controls="hd-search-suggestions" aria-activedescendant="" placeholder="Cari layanan, panduan, atau informasi TIK..." autocomplete="off"><ul id="hd-search-suggestions" class="hd-suggestions-list" role="listbox" aria-label="Saran layanan dan panduan" hidden></ul></div><p id="hd-search-status" role="status"></p></div><p data-hd-status role="status" tabindex="-1">Memuat katalog…</p><div class="hd-catalog" data-hd-catalog></div><nav class="hd-actions hd-pager-nav" aria-label="Halaman katalog"><button class="btn hd-btn-pager" data-hd-prev disabled><span aria-hidden="true">←</span> Halaman Sebelumnya</button><button class="btn hd-btn-pager" data-hd-next disabled>Halaman Berikutnya <span aria-hidden="true">→</span></button></nav>';
+ if (kind === 'catalog') main = banner('Katalog Layanan TIK', 'Pilih layanan sesuai kebutuhan dan hak akses Anda. Jika belum yakin, mulai dari laporan kendala TIK umum.') + session + '<div class="hd-actions"><a class="btn btn-primary" href="/lapor.html?id=31000000-0000-4000-8000-000000000001">Laporkan kendala TIK umum</a></div><div class="hd-search-box" data-hd-search-wrap><label for="hd-public-search" class="u-sr-only">Cari layanan atau panduan</label><div class="vy-input-group hd-search-input"><input type="search" maxlength="100" id="hd-public-search" class="vy-input" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-controls="hd-search-suggestions" aria-activedescendant="" placeholder="Cari layanan, panduan, atau informasi TIK..." autocomplete="off"><ul id="hd-search-suggestions" class="hd-suggestions-list" role="listbox" aria-label="Saran layanan dan panduan" hidden></ul></div><p id="hd-search-status" role="status"></p></div><form class="vy-contact-form hd-form-grid hd-catalog-filter" data-hd-catalog-filter hidden><div class="vy-input-group"><label for="hd-catalog-q">Filter kata kunci</label><input id="hd-catalog-q" class="vy-input" type="search" maxlength="100" placeholder="Nama atau kode layanan..."></div><div class="vy-input-group"><label for="hd-catalog-category">Kategori</label><select id="hd-catalog-category" class="vy-input"><option value="">Semua kategori</option></select></div><div class="vy-input-group"><label for="hd-catalog-access">Hak akses</label><select id="hd-catalog-access" class="vy-input"><option value="">Semua akses</option><option value="PUBLIC_GUEST">Publik tanpa login</option><option value="PUBLIC_AUTH">Publik dengan akun</option><option value="ASN_AUTH">Khusus ASN</option></select></div></form><p data-hd-status role="status" tabindex="-1">Memuat katalog…</p><div class="hd-catalog" data-hd-catalog></div><nav class="hd-actions hd-pager-nav" aria-label="Halaman katalog"><button class="btn hd-btn-pager" data-hd-prev disabled><span aria-hidden="true">←</span> Halaman Sebelumnya</button><button class="btn hd-btn-pager" data-hd-next disabled>Halaman Berikutnya <span aria-hidden="true">→</span></button></nav>';
  if (kind === 'detail') main = banner('Detail Spesifikasi Layanan', 'Periksa parameter SLA, persyaratan teknis, dan formulir permohonan sebelum mengajukan tiket.') + session + '<p data-hd-status role="status" tabindex="-1">Memuat layanan…</p><article class="vy-contact-form" data-hd-detail hidden><h2 data-hd-service-name></h2><p data-hd-service-meta></p><h3>Pratinjau formulir layanan</h3><div data-hd-fields></div><p data-hd-policy></p><p class="vy-form-privacy">Isian di atas adalah pratinjau. Gunakan tombol Buat laporan untuk mengisi dan mengirim tiket melalui formulir operasional.</p></article>';
  if (kind === 'faq') main = banner('Tanya Jawab (FAQ)', 'Pertanyaan yang sering diajukan seputar layanan TIK, permohonan fasilitas, dan penanganan kendala SPBE Kota Depok.') + faqSection();
  if (kind === 'status') main = banner('Status Layanan TIK', 'Informasi ketersediaan gerbang aplikasi, katalog layanan resmi, dan kalender operasional SPBE Kota Depok.') + statusSection();
@@ -438,6 +438,12 @@ export function adminBusinessPage(source) {
 
     <!-- Panel Telegram & Notifikasi -->
     <div data-hd-panel="notifications" class="piui-panel" hidden>
+      <div class="hd-section-bar">
+        <h3>Kotak Masuk Notifikasi (M9)</h3>
+        <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-hd-refresh-notif>Segarkan Notifikasi</button>
+      </div>
+      <p data-hd-notif-status role="status"></p>
+      <div class="hd-table-wrap"><table class="piui-table"><thead><tr><th scope="col">Judul / Ringkasan</th><th scope="col">Waktu</th><th scope="col">Status</th><th scope="col">Tindakan</th></tr></thead><tbody data-hd-notif-rows></tbody></table></div>
       <h3>Pengikatan notifikasi sink lab</h3>
       <form data-hd-telegram-form class="hd-form-grid">
         <div class="piui-field"><label for="hd-tg-org">Organisasi Scope</label><select class="piui-input" id="hd-tg-org"></select></div>
@@ -464,6 +470,7 @@ export function adminBusinessPage(source) {
     <div data-hd-m11-tabs class="hd-actions">
       <button type="button" class="piui-btn piui-btn--primary" data-hd-tab-m11="maintenance">Mode Pemeliharaan</button>
       <button type="button" class="piui-btn piui-btn--secondary" data-hd-tab-m11="runner">Scoped Runner</button>
+      <button type="button" class="piui-btn piui-btn--secondary" data-hd-tab-m11="scheduler">Penjadwalan (M7)</button>
       <button type="button" class="piui-btn piui-btn--secondary" data-hd-tab-m11="health">Status Redacted</button>
     </div>
 
@@ -495,6 +502,11 @@ export function adminBusinessPage(source) {
           <button type="submit" class="piui-btn piui-btn--primary">Ajukan pekerjaan</button>
         </div>
       </form>
+      <div class="hd-section-bar hd-table-mt">
+        <h4>Daftar Pekerjaan Sistem Terkini</h4>
+        <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-hd-refresh-ops>Segarkan Pekerjaan</button>
+      </div>
+      <div class="hd-table-wrap"><table class="piui-table"><thead><tr><th scope="col">ID</th><th scope="col">Jenis</th><th scope="col">Status</th><th scope="col">Alasan</th><th scope="col">Aksi</th></tr></thead><tbody data-hd-ops-rows></tbody></table></div>
       <form data-hd-review-job class="hd-form-grid">
         <div class="piui-field"><label for="hd-runner-job">ID pekerjaan</label><input class="piui-input" id="hd-runner-job" required></div>
         <div class="piui-field"><label for="hd-runner-approval-reason">Alasan persetujuan / eksekusi</label><input class="piui-input" id="hd-runner-approval-reason" maxlength="500"></div>
@@ -507,6 +519,24 @@ export function adminBusinessPage(source) {
       </div>
     </div>
 
+    <!-- Panel Penjadwalan M7 -->
+    <div data-hd-panel-m11="scheduler" class="piui-panel" hidden>
+      <div class="hd-section-bar">
+        <h3>Antrean Penjadwalan &amp; Dead-Letter (M7)</h3>
+        <div class="hd-actions hd-actions--flush">
+          <select class="piui-input" id="hd-scheduler-state" aria-label="Filter status job">
+            <option value="">Semua status</option>
+            <option value="DEAD_LETTER">Dead Letter</option>
+            <option value="PENDING">Pending</option>
+            <option value="ACKED">Selesai (ACKED)</option>
+          </select>
+          <button type="button" class="piui-btn piui-btn--secondary" data-hd-refresh-scheduler>Muat Ulang</button>
+        </div>
+      </div>
+      <p data-hd-scheduler-status role="status"></p>
+      <div class="hd-table-wrap"><table class="piui-table"><thead><tr><th scope="col">Tiket</th><th scope="col">Jenis Job</th><th scope="col">Status</th><th scope="col">Percobaan / Galat</th><th scope="col">Tindakan</th></tr></thead><tbody data-hd-scheduler-rows></tbody></table></div>
+    </div>
+
     <!-- Panel Status Redacted -->
     <div data-hd-panel-m11="health" class="piui-panel" hidden>
       <h3>Status Kesehatan Sistem Teredaksi (AC24)</h3>
@@ -514,6 +544,34 @@ export function adminBusinessPage(source) {
       <p data-hd-health-status role="status"></p>
       <div class="hd-table-wrap hd-table-mt"><table class="piui-table" data-hd-health-table><thead><tr><th>Komponen</th><th>Status</th><th>Keterangan</th></tr></thead><tbody data-hd-health-rows></tbody></table></div>
     </div>
+  </section>
+
+  <section class="piui-card" data-hd-rules-section hidden>
+    <div class="hd-section-bar">
+      <div>
+        <h2>Konfigurasi Aturan Layanan, Routing, SLA &amp; Eskalasi</h2>
+        <p class="hd-section-bar__sub">Kelola status aktif aturan operasional M4–M7 secara auditabel dan optimistik.</p>
+      </div>
+      <div class="hd-actions hd-actions--flush">
+        <select class="piui-input" id="hd-rule-owner" aria-label="Pilih domain aturan">
+          <option value="classification">Klasifikasi (M4)</option>
+          <option value="routing">Routing Teknisi (M5)</option>
+          <option value="sla">Kalender SLA (M6)</option>
+          <option value="escalation">Eskalasi (M7)</option>
+        </select>
+        <button type="button" class="piui-btn piui-btn--secondary" data-hd-refresh-rules>Muat Ulang</button>
+      </div>
+    </div>
+    <p data-hd-rules-status role="status"></p>
+    <div class="hd-table-wrap"><table class="piui-table"><thead><tr><th scope="col">Kode Aturan</th><th scope="col">Ringkasan</th><th scope="col">Versi</th><th scope="col">Status</th><th scope="col">Tindakan</th></tr></thead><tbody data-hd-rules-rows></tbody></table></div>
+    <form class="hd-form-grid hd-table-mt" data-hd-rule-form>
+      <div class="piui-field"><label for="hd-rule-code">Kode aturan</label><input class="piui-input" id="hd-rule-code" name="code" required maxlength="200"></div>
+      <div class="piui-field"><label for="hd-rule-ver">Versi saat ini</label><input class="piui-input" id="hd-rule-ver" name="expected_version" type="number" min="1" value="1" required></div>
+      <div class="piui-field"><label for="hd-rule-rv">Versi aturan</label><input class="piui-input" id="hd-rule-rv" name="rule_version" type="number" min="1" value="1" required></div>
+      <div class="piui-field"><label for="hd-rule-active">Status aktif</label><select class="piui-input" id="hd-rule-active" name="active"><option value="true">Aktif</option><option value="false">Nonaktif</option></select></div>
+      <div class="piui-field hd-col-full"><label for="hd-rule-reason">Alasan perubahan aturan (min. 5 karakter)</label><input class="piui-input" id="hd-rule-reason" name="reason" required minlength="5" maxlength="2000"></div>
+      <div class="hd-actions hd-col-full"><button type="submit" class="piui-btn piui-btn--primary">Simpan Perubahan Aturan</button></div>
+    </form>
   </section>
 
   <!-- Pengelolaan Portal & Navigasi Publik (M2) -->
@@ -671,16 +729,26 @@ export function adminBusinessPage(source) {
       <h2 id="media-publication-title">Tinjauan dan publikasi salinan media</h2>
       <p>Unggahan baru tersimpan privat. Editor menyiapkan berkas hasil redaksi yang berbeda. Penerbit lain meninjau sumber M8; untuk lampiran tiket M3, peninjau harus berhak membaca tiket dan melakukan reuse pada organisasi yang sama. Peninjau berbeda dari pengunggah salinan. Berkas tersedia untuk pembaca setelah konten tujuan diterbitkan sesuai haknya.</p>
       <form data-hd-media-publication>
-        <div class="piui-field"><label for="media-source-id">ID media sumber yang berhak Anda baca</label><input class="piui-input" id="media-source-id" name="source_id" required pattern="[a-fA-F0-9-]{36}"></div>
-        <div class="piui-field"><label for="media-source-version">Versi media sumber</label><input class="piui-input" id="media-source-version" name="expected_version" type="number" min="1" required></div>
-        <div class="piui-field"><label for="media-copy-id">ID unggahan hasil redaksi yang sudah CLEAN</label><input class="piui-input" id="media-copy-id" name="sanitized_copy_id" required pattern="[a-fA-F0-9-]{36}"></div>
-        <div class="piui-field"><label for="media-target-id">ID artikel atau halaman tujuan</label><input class="piui-input" id="media-target-id" name="target_id" required pattern="[a-fA-F0-9-]{36}"></div>
-        <div class="piui-field"><label for="media-target-audience">Audience konten tujuan</label><select class="piui-input" id="media-target-audience" name="target_audience"><option value="PUBLIC_GUEST">Publik tanpa login</option><option value="PUBLIC_AUTH">Publik dengan akun</option><option value="ASN_AUTH">ASN sesuai organisasi</option><option value="STAFF_ONLY">Petugas sesuai organisasi</option></select></div>
+        <div class="hd-form-grid">
+          <div class="piui-field"><label for="media-source-pick">Pilih media sumber CLEAN</label><select class="piui-input" id="media-source-pick"><option value="">Pilih media sumber atau isi UUID manual di bawah…</option></select></div>
+          <div class="piui-field"><label for="media-source-id">ID media sumber yang berhak Anda baca</label><input class="piui-input" id="media-source-id" name="source_id" required pattern="[a-fA-F0-9-]{36}"></div>
+          <div class="piui-field"><label for="media-source-version">Versi media sumber</label><input class="piui-input" id="media-source-version" name="expected_version" type="number" min="1" required></div>
+          <div class="piui-field"><label for="media-copy-pick">Pilih salinan hasil redaksi CLEAN</label><select class="piui-input" id="media-copy-pick"><option value="">Pilih berkas CLEAN atau isi UUID manual di bawah…</option></select></div>
+          <div class="piui-field"><label for="media-copy-id">ID unggahan hasil redaksi yang sudah CLEAN</label><input class="piui-input" id="media-copy-id" name="sanitized_copy_id" required pattern="[a-fA-F0-9-]{36}"></div>
+          <div class="piui-field"><label for="media-target-pick">Pilih artikel / halaman tujuan</label><select class="piui-input" id="media-target-pick"><option value="">Pilih konten editorial M8 atau isi UUID manual…</option></select></div>
+          <div class="piui-field"><label for="media-target-id">ID artikel atau halaman tujuan</label><input class="piui-input" id="media-target-id" name="target_id" required pattern="[a-fA-F0-9-]{36}"></div>
+          <div class="piui-field"><label for="media-target-audience">Audience konten tujuan</label><select class="piui-input" id="media-target-audience" name="target_audience"><option value="PUBLIC_GUEST">Publik tanpa login</option><option value="PUBLIC_AUTH">Publik dengan akun</option><option value="ASN_AUTH">ASN sesuai organisasi</option><option value="STAFF_ONLY">Petugas sesuai organisasi</option></select></div>
+        </div>
         <div class="piui-field"><label for="media-review-reason">Alasan dan hasil pemeriksaan redaksi</label><textarea class="piui-input" id="media-review-reason" name="reason" minlength="5" maxlength="2000" required></textarea></div>
         <div class="piui-field"><label for="media-approval-id">ID persetujuan server untuk menghubungkan salinan</label><input class="piui-input" id="media-approval-id" name="approval_id"></div>
         <div class="hd-actions"><button class="piui-btn piui-btn--secondary" type="submit" name="action" value="approve">Setujui hasil tinjauan sesuai mandat</button><button class="piui-btn piui-btn--primary" type="submit" name="action" value="reuse">Hubungkan salinan yang disetujui</button></div>
         <p data-hd-media-publication-status role="status" tabindex="-1"></p>
       </form>
+      <div class="hd-section-bar hd-table-mt">
+        <h3>Daftar Persetujuan Media</h3>
+        <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-hd-refresh-approvals>Segarkan Persetujuan</button>
+      </div>
+      <div class="hd-table-wrap"><table class="piui-table"><thead><tr><th scope="col">ID Persetujuan</th><th scope="col">Sumber &rarr; Tujuan</th><th scope="col">Status</th><th scope="col">Alasan</th><th scope="col">Tindakan</th></tr></thead><tbody data-hd-media-approvals-rows></tbody></table></div>
     </section>
     <!-- Filter & Tab Toolbar -->
     <div class="hd-media-toolbar">

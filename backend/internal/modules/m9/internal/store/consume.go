@@ -21,7 +21,7 @@ func (s Store) Consume(ctx context.Context, v delivery.Event) error {
 	if e != nil || !hmac.Equal(hash, v.Digest) || !web.UUID(v.ID) || !web.UUID(v.Aggregate) || v.Version < 1 || v.SchemaVersion != 1 {
 		return delivery.ErrIntegrity
 	}
-	valid := (v.Type == "AuditRecorded" && (v.Producer == "M1" || v.Producer == "M2" || v.Producer == "M3" || v.Producer == "M4" || v.Producer == "M5" || v.Producer == "M8")) || ((v.Type == "TicketCreated" || v.Type == "TicketVerified" || v.Type == "AssignmentChanged" || v.Type == "TicketStateChanged" || v.Type == "MediaScanCompleted" || v.Type == "ResolutionProposed" || v.Type == "ConfirmationRecorded" || v.Type == "VendorCaseRecorded" || v.Type == "PauseChanged" || v.Type == "HandoffAccepted" || v.Type == "EscalationRequested") && v.Producer == "M3") || (v.Type == "ContentPublished" && v.Producer == "M8")
+	valid := (v.Type == "AuditRecorded" && (v.Producer == "M1" || v.Producer == "M2" || v.Producer == "M3" || v.Producer == "M4" || v.Producer == "M5" || v.Producer == "M6" || v.Producer == "M7" || v.Producer == "M8")) || ((v.Type == "TicketCreated" || v.Type == "TicketVerified" || v.Type == "AssignmentChanged" || v.Type == "TicketStateChanged" || v.Type == "MediaScanCompleted" || v.Type == "ResolutionProposed" || v.Type == "ConfirmationRecorded" || v.Type == "VendorCaseRecorded" || v.Type == "PauseChanged" || v.Type == "HandoffAccepted" || v.Type == "EscalationRequested") && v.Producer == "M3") || (v.Type == "ContentPublished" && v.Producer == "M8")
 	if !valid {
 		return delivery.ErrIntegrity
 	}

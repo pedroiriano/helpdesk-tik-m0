@@ -49,8 +49,15 @@ func (s *Service) Register(m *http.ServeMux) {
 			web.WriteError(w, e)
 			return
 		}
-		v, e := s.List(r.Context(), creds(r), p)
+		state := r.URL.Query().Get("state")
+		serviceID := r.URL.Query().Get("service_id")
+		v, e := s.ListFiltered(r.Context(), creds(r), p, state, serviceID)
 		reply(w, v, e)
+	})
+	m.HandleFunc("POST /api/v1/tickets/bulk", func(w http.ResponseWriter, r *http.Request) {
+		handleCmd(w, r, func(in *tickets.BulkCommandInput) (database.Result, error) {
+			return s.BulkTicketCommand(r.Context(), creds(r), r.Header.Get("Idempotency-Key"), *in)
+		})
 	})
 	m.HandleFunc("GET /api/v1/tickets/{id}", func(w http.ResponseWriter, r *http.Request) {
 		v, _, _, e := s.Read(r.Context(), creds(r), r.PathValue("id"))
@@ -241,13 +248,45 @@ func (s *Service) Register(m *http.ServeMux) {
 		reply(w, offer, err)
 	})
 	m.HandleFunc("POST /api/v1/tickets/{id}/handoffs/{handoff_id}/accept", func(w http.ResponseWriter, r *http.Request) {
-		var in tickets.AcceptHandoffInput
-		if e := web.Decode(w, r, &in); e != nil {
-			web.WriteError(w, e)
-			return
-		}
-		v, e := s.AcceptHandoff(r.Context(), creds(r), r.PathValue("id"), r.PathValue("handoff_id"), r.Header.Get("Idempotency-Key"), in)
-		receipt(w, v, e)
+		handleCmd(w, r, func(in *tickets.AcceptHandoffInput) (database.Result, error) {
+			return s.AcceptHandoff(r.Context(), creds(r), r.PathValue("id"), r.PathValue("handoff_id"), r.Header.Get("Idempotency-Key"), *in)
+		})
+	})
+	m.HandleFunc("POST /api/v1/tickets/{id}/handoffs/{handoff_id}/reject", func(w http.ResponseWriter, r *http.Request) {
+		handleCmd(w, r, func(in *tickets.AcceptHandoffInput) (database.Result, error) {
+			return s.RejectHandoff(r.Context(), creds(r), r.PathValue("id"), r.PathValue("handoff_id"), r.Header.Get("Idempotency-Key"), *in)
+		})
+	})
+	m.HandleFunc("POST /api/v1/tickets/{id}/handoffs/{handoff_id}/cancel", func(w http.ResponseWriter, r *http.Request) {
+		handleCmd(w, r, func(in *tickets.AcceptHandoffInput) (database.Result, error) {
+			return s.CancelHandoff(r.Context(), creds(r), r.PathValue("id"), r.PathValue("handoff_id"), r.Header.Get("Idempotency-Key"), *in)
+		})
+	})
+	m.HandleFunc("GET /api/v1/handoffs", func(w http.ResponseWriter, r *http.Request) {
+		limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
+		v, e := s.ListHandoffs(r.Context(), creds(r), limit)
+		w.Header().Set("Cache-Control", "no-store")
+		reply(w, map[string]any{"items": v}, e)
+	})
+	m.HandleFunc("GET /api/v1/tickets/{id}/operational-records", func(w http.ResponseWriter, r *http.Request) {
+		v, e := s.ReadOperationalRecords(r.Context(), creds(r), r.PathValue("id"))
+		w.Header().Set("Cache-Control", "no-store")
+		reply(w, v, e)
+	})
+	m.HandleFunc("POST /api/v1/tickets/{id}/vendor-cases/{case_id}/close", func(w http.ResponseWriter, r *http.Request) {
+		handleCmd(w, r, func(in *tickets.CloseVendorCaseInput) (database.Result, error) {
+			return s.CloseVendorCase(r.Context(), creds(r), r.PathValue("id"), r.PathValue("case_id"), r.Header.Get("Idempotency-Key"), *in)
+		})
+	})
+	m.HandleFunc("POST /api/v1/tickets/{id}/pauses/{pause_id}/resume", func(w http.ResponseWriter, r *http.Request) {
+		handleCmd(w, r, func(in *tickets.ArchiveInput) (database.Result, error) {
+			return s.ResumePause(r.Context(), creds(r), r.PathValue("id"), r.PathValue("pause_id"), r.Header.Get("Idempotency-Key"), *in)
+		})
+	})
+	m.HandleFunc("POST /api/v1/tickets/{id}/work-logs", func(w http.ResponseWriter, r *http.Request) {
+		handleCmd(w, r, func(in *tickets.WorkLogInput) (database.Result, error) {
+			return s.RecordWorkLog(r.Context(), creds(r), r.PathValue("id"), r.Header.Get("Idempotency-Key"), *in)
+		})
 	})
 	m.HandleFunc("POST /api/v1/tickets/{id}/escalations", func(w http.ResponseWriter, r *http.Request) {
 		var in tickets.EscalateInput
@@ -432,4 +471,14 @@ func (s *Service) Register(m *http.ServeMux) {
 		v, e := s.RestoreArchive(r.Context(), creds(r), r.PathValue("id"), r.Header.Get("Idempotency-Key"), in)
 		receipt(w, v, e)
 	})
+}
+
+func handleCmd[T any](w http.ResponseWriter, r *http.Request, fn func(*T) (database.Result, error)) {
+	var in T
+	if e := web.Decode(w, r, &in); e != nil {
+		web.WriteError(w, e)
+		return
+	}
+	v, e := fn(&in)
+	receipt(w, v, e)
 }

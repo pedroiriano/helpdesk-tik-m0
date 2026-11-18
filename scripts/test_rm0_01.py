@@ -41,7 +41,8 @@ def main():
         gate.provision(network)
         gate.apply()
         gate.apply()
-        assert gate.sql("SELECT count(*) FROM migration_control.ledger") == '20'
+        expected_migrations = str(len(json.loads((ROOT / 'migrations/manifest.json').read_text(encoding='utf-8'))['migrations']))
+        assert gate.sql("SELECT count(*) FROM migration_control.ledger") == expected_migrations
         assert gate.sql("SET ROLE helpdesk_m8; SELECT count(*) FROM knowledge.security_version") == '1'
         seed = (ROOT / 'seeds/m0-03-lab.sql').read_text(encoding='utf-8')
         gate.sql('BEGIN;' + seed + 'COMMIT;', error='P0001')

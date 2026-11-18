@@ -244,6 +244,20 @@
       "owner": "M8",
       "scope": "hero-publication",
       "sha256": "ea2ef213bb86b19b3975b5b0f2279633abf70c38abcff4867055b768c563d45f"
+    },
+    {
+      "id": "036",
+      "path": "migrations/m3/036-operational-completion.sql",
+      "owner": "M3",
+      "scope": "Fase 2 vendor close, early pause resume, handoff reject/cancel",
+      "sha256": "ef4a81fe95cc82a479dd646fa6f1b220c82dd3b8b74a2dad6853732920393b8d"
+    },
+    {
+      "id": "037",
+      "path": "migrations/m6/037-sla-rule-active.sql",
+      "owner": "M6",
+      "scope": "Fase 2 SLA rule active status toggle",
+      "sha256": "de11a9bd51453cda2f935ed30fb31acbc3f2b3b03ff052d891df4904731fb796"
     }
   ]
 }

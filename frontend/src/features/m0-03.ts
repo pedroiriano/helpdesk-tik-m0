@@ -12,6 +12,14 @@ import { initKnowledgeBase } from "./knowledge";
 import { api, APIError, errorText, csrf } from './transport';
 import type { Components } from './business-types.generated';
 import { setupSearchCombobox } from './search-combobox';
+import {
+  loadNotificationsInbox,
+  pollReportExport,
+  loadOperationsList,
+  loadSchedulerJobs,
+  loadMediaPickersAndApprovals,
+  bindAdminRulesPanel,
+} from './fase2-admin';
 
 type Session = Components['Session'];
 type Service = Components['Service'];
@@ -215,41 +223,86 @@ async function login(form: HTMLFormElement, bootstrap: Promise<Components['Boots
   }
 }
 async function catalog(): Promise<void> {
-  const root = $('[data-hd-catalog]')!; let cursor = ''; let next: string | null = null; const history: string[] = [];
-  async function load() { status('[data-hd-status]', 'Memuat katalog sesuai hak akses…'); root.setAttribute('aria-busy', 'true'); root.replaceChildren();
-    try { const page = await api<Page<Service>>('/catalog/services?limit=12' + (cursor ? '&cursor=' + encodeURIComponent(cursor) : '')); next = page.next_cursor;
-      for (const service of page.items) {
-        const card = element('article', '', 'vy-contact-form');
-        card.classList.add('hd-service-option');
-        const topRow = element('div', '');
-        topRow.className = 'hd-service-option__meta';
-        const codeBadge = element('p', service.code, 'court-badge');
-        const isGuest = service.access_mode === 'PUBLIC_GUEST';
-        const audText = isGuest ? 'Bisa Tanpa Login (Warga)' : (service.access_mode === 'ASN_AUTH' ? 'Khusus ASN Depok' : audience(service.access_mode));
-        const audBadge = element('span', audText, 'court-badge');
+  const root = $('[data-hd-catalog]')!;
+  const filterForm = $<HTMLFormElement>('[data-hd-catalog-filter]');
+  const qInput = $<HTMLInputElement>('#hd-catalog-q');
+  const catSelect = $<HTMLSelectElement>('#hd-catalog-category');
+  const accessSelect = $<HTMLSelectElement>('#hd-catalog-access');
+  const prevBtn = $('[data-hd-prev]') as HTMLButtonElement | null;
+  const nextBtn = $('[data-hd-next]') as HTMLButtonElement | null;
+  let allServices: Service[] = [];
+  let pageIndex = 0;
+  const pageSize = 12;
 
-        topRow.append(codeBadge, audBadge);
-        const title = element('h2', service.name);
-
-        const contentDiv = element('div', '');
-        contentDiv.append(topRow, title);
-        const actDiv = element('div', '', 'hd-actions');
-
-        const btnLapor = element('a', '', 'btn btn-primary');
-        btnLapor.textContent = 'Buat laporan';
-        btnLapor.href = '/lapor.html?id=' + encodeURIComponent(service.id);
-        const btnDetail = element('a', '', 'btn btn-secondary');
-        btnDetail.textContent = 'Lihat syarat layanan';
-        btnDetail.href = '/detail-layanan.html?id=' + encodeURIComponent(service.id);
-        actDiv.append(btnLapor, btnDetail);
-        card.append(contentDiv, actDiv);
-        root.append(card);
-      }
-      status('[data-hd-status]', page.items.length ? `${page.items.length} layanan pada halaman ini.` : 'Belum ada layanan yang tersedia untuk hak akses ini.');
-    } catch (e) { next = null; status('[data-hd-status]', errorText(e)); }
-    finally { root.removeAttribute('aria-busy'); ($('[data-hd-prev]') as HTMLButtonElement).disabled = history.length === 0; ($('[data-hd-next]') as HTMLButtonElement).disabled = !next; }
+  function renderSlice() {
+    const q = qInput?.value.trim().toLowerCase() ?? '';
+    const cat = catSelect?.value ?? '';
+    const acc = accessSelect?.value ?? '';
+    const filtered = allServices.filter(s =>
+      (!q || s.name.toLowerCase().includes(q) || s.code.toLowerCase().includes(q)) &&
+      (!cat || s.category_id === cat) &&
+      (!acc || s.access_mode === acc)
+    );
+    const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+    if (pageIndex >= totalPages) pageIndex = 0;
+    const slice = filtered.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize);
+    root.replaceChildren();
+    for (const service of slice) {
+      const card = element('article', '', 'vy-contact-form');
+      card.classList.add('hd-service-option');
+      const topRow = element('div', '');
+      topRow.className = 'hd-service-option__meta';
+      const codeBadge = element('p', service.code, 'court-badge');
+      const isGuest = service.access_mode === 'PUBLIC_GUEST';
+      const audText = isGuest ? 'Bisa Tanpa Login (Warga)' : (service.access_mode === 'ASN_AUTH' ? 'Khusus ASN Depok' : audience(service.access_mode));
+      const audBadge = element('span', audText, 'court-badge');
+      topRow.append(codeBadge, audBadge);
+      const title = element('h2', service.name);
+      const contentDiv = element('div', '');
+      contentDiv.append(topRow, title);
+      const actDiv = element('div', '', 'hd-actions');
+      const btnLapor = element('a', '', 'btn btn-primary');
+      btnLapor.textContent = 'Buat laporan';
+      btnLapor.href = '/lapor.html?id=' + encodeURIComponent(service.id);
+      const btnDetail = element('a', '', 'btn btn-secondary');
+      btnDetail.textContent = 'Lihat syarat layanan';
+      btnDetail.href = '/detail-layanan.html?id=' + encodeURIComponent(service.id);
+      actDiv.append(btnLapor, btnDetail);
+      card.append(contentDiv, actDiv);
+      root.append(card);
+    }
+    status('[data-hd-status]', slice.length ? `${slice.length} layanan pada halaman ini (${filtered.length} cocok).` : 'Belum ada layanan yang cocok dengan filter atau hak akses ini.');
+    if (prevBtn) prevBtn.disabled = pageIndex === 0;
+    if (nextBtn) nextBtn.disabled = pageIndex + 1 >= totalPages;
   }
-  $('[data-hd-prev]')?.addEventListener('click', () => { cursor = history.pop() ?? ''; void load(); }); $('[data-hd-next]')?.addEventListener('click', () => { if (next) { history.push(cursor); cursor = next; void load(); } }); await load();
+
+  status('[data-hd-status]', 'Memuat katalog sesuai hak akses…');
+  root.setAttribute('aria-busy', 'true');
+  try {
+    const [svcRes, catRes] = await Promise.allSettled([
+      api<Page<Service>>('/catalog/services?limit=100'),
+      api<Page<Components['Category']>>('/catalog/categories?limit=100'),
+    ]);
+    if (svcRes.status === 'fulfilled') allServices = svcRes.value.items;
+    else throw svcRes.reason;
+    if (catSelect) {
+      const cats = catRes.status === 'fulfilled' ? catRes.value.items : [];
+      for (const c of cats) catSelect.append(new Option(c.name, c.id));
+    }
+    if (filterForm) filterForm.hidden = false;
+    qInput?.addEventListener('input', () => { pageIndex = 0; renderSlice(); });
+    catSelect?.addEventListener('change', () => { pageIndex = 0; renderSlice(); });
+    accessSelect?.addEventListener('change', () => { pageIndex = 0; renderSlice(); });
+    prevBtn?.addEventListener('click', () => { if (pageIndex > 0) { pageIndex--; renderSlice(); } });
+    nextBtn?.addEventListener('click', () => { pageIndex++; renderSlice(); });
+    renderSlice();
+  } catch (e) {
+    status('[data-hd-status]', errorText(e));
+    if (prevBtn) prevBtn.disabled = true;
+    if (nextBtn) nextBtn.disabled = true;
+  } finally {
+    root.removeAttribute('aria-busy');
+  }
 }
 const audience = (mode: string) => ({ PUBLIC_GUEST: 'Publik tanpa login', PUBLIC_AUTH: 'Publik dengan akun', ASN_AUTH: 'ASN sesuai organisasi', STAFF_ONLY: 'Petugas sesuai organisasi' })[mode] ?? mode;
 const SERVICE_SLUGS: Record<string, string> = {
@@ -533,6 +586,7 @@ async function admin(): Promise<void> {
   let selected: Master | undefined, cursor = '', next: string | null = null;
   const history: string[] = [];
   let currentForm: FormSnapshot | undefined, currentPolicy: Policy | undefined;
+  const refreshRulesPanel = bindAdminRulesPanel();
   const names: Record<string, string> = {
     services: 'layanan',
     categories: 'kategori',
@@ -675,6 +729,7 @@ async function admin(): Promise<void> {
     syncJourney(session); syncAdminShell(session);
 
     const maintSec = $('[data-hd-m11-section]');
+    const rulesSec = $('[data-hd-rules-section]');
     const m9Sec = $('[data-hd-m9-section]');
     const mediaSec = $('[data-hd-media-section]');
     const heroSec = $('[data-hd-hero-section]');
@@ -686,6 +741,7 @@ async function admin(): Promise<void> {
 
     // Hide all sub-sections first
     if (maintSec) maintSec.hidden = true;
+    if (rulesSec) rulesSec.hidden = true;
     if (m9Sec) m9Sec.hidden = true;
     if (mediaSec) mediaSec.hidden = true;
     if (heroSec) heroSec.hidden = true;
@@ -701,6 +757,15 @@ async function admin(): Promise<void> {
       if (maintSec) maintSec.hidden = false;
       status('[data-hd-caption]', 'Pemeliharaan Sistem & Scoped Runner');
       status('[data-hd-status]', 'Pilih mode pemeliharaan, ajukan job operasional scoped, atau periksa kesehatan sistem.');
+      void loadOperationsList();
+      return;
+    }
+
+    if (requestedKind === 'rules') {
+      if (rulesSec) rulesSec.hidden = false;
+      status('[data-hd-caption]', 'Aturan Layanan, Routing, SLA & Eskalasi');
+      status('[data-hd-status]', 'Kelola aturan operasional M4–M7 sesuai mandat rules.write.');
+      void refreshRulesPanel();
       return;
     }
 
@@ -708,6 +773,7 @@ async function admin(): Promise<void> {
       if (m9Sec) {
         m9Sec.hidden = false;
         switchM9Tab(requestedKind);
+        if (requestedKind === 'notifications') void loadNotificationsInbox();
       }
       status('[data-hd-caption]', `Pusat ${requestedKind}`);
       status('[data-hd-status]', 'Kelola notifikasi, laporan, dan jejak audit.');
@@ -731,6 +797,7 @@ async function admin(): Promise<void> {
       status('[data-hd-caption]', 'Pustaka Media Terpadu');
       status('[data-hd-status]', 'Pustaka media dua-owner: M3 tiket privat & M8 editorial publik.');
       void loadAdminMedia(currentMediaOwner);
+      void loadMediaPickersAndApprovals();
       return;
     }
 
@@ -983,7 +1050,9 @@ async function admin(): Promise<void> {
     for (const p of m9Panels) {
       p.hidden = p.dataset.hdPanel !== target;
     }
+    if (target === 'notifications') void loadNotificationsInbox();
   }
+  $('[data-hd-refresh-notif]')?.addEventListener('click', () => void loadNotificationsInbox());
   for (const tab of m9Tabs) {
     tab.addEventListener('click', () => {
       if (tab.dataset.hdTab) switchM9Tab(tab.dataset.hdTab);
@@ -1090,9 +1159,19 @@ async function admin(): Promise<void> {
         const dlArea = $('[data-hd-download-area]');
         const dlLink = $('[data-hd-download-link]') as HTMLAnchorElement | null;
         if (dlArea && dlLink) {
-          dlArea.hidden = false;
-          dlLink.href = `/api/v1/reports/exports/${res.id}/file`;
           dlLink.textContent = `Unduh Berkas Ekspor (${format})`;
+          if (res.state === 'SUCCEEDED') {
+            dlArea.hidden = false;
+            dlLink.hidden = false;
+            dlLink.href = `/api/v1/reports/exports/${res.id}/file`;
+          } else {
+            dlArea.hidden = true;
+            dlLink.hidden = true;
+            void pollReportExport(res.id, dlLink, msg => {
+              status('[data-hd-export-status]', msg);
+              if (!dlLink.hidden) dlArea.hidden = false;
+            });
+          }
         }
       } catch (err) {
         status('[data-hd-export-status]', errorText(err));
@@ -1188,8 +1267,13 @@ async function admin(): Promise<void> {
       for (const p of m11Panels) {
         p.hidden = p.dataset.hdPanelM11 !== target;
       }
+      if (target === 'runner') void loadOperationsList();
+      if (target === 'scheduler') void loadSchedulerJobs();
     });
   }
+  $('[data-hd-refresh-ops]')?.addEventListener('click', () => void loadOperationsList());
+  $('[data-hd-refresh-scheduler]')?.addEventListener('click', () => void loadSchedulerJobs());
+  $('#hd-scheduler-state')?.addEventListener('change', () => void loadSchedulerJobs());
 
   const maintForm = $('[data-hd-maintenance-form]') as HTMLFormElement | null;
   if (maintForm) {
@@ -1233,6 +1317,7 @@ async function admin(): Promise<void> {
         status('[data-hd-runner-status]', `Status pekerjaan ${String(res.state)}.`);
         const jobField = $<HTMLInputElement>('#hd-runner-job');
         if (jobField && typeof res.id === 'string') jobField.value = res.id;
+        void loadOperationsList();
         const artifactLink = $<HTMLAnchorElement>('[data-hd-artifact-link]');
         if (artifactLink) {
           artifactLink.hidden = true;
@@ -1477,6 +1562,7 @@ async function admin(): Promise<void> {
         const receipt = await api<{ id: string }>(path, 'POST', body, requestKey(path, body));
         if (approving) control(publication, 'approval_id').value = receipt.id;
         status('[data-hd-media-publication-status]', approving ? 'Persetujuan server tersimpan. Editor dapat menghubungkan salinan ke tujuan yang sama.' : 'Salinan terhubung. Akses pembaca mengikuti status dan audience konten tujuan.', publication);
+        void loadMediaPickersAndApprovals();
       } catch (error) {
         status('[data-hd-media-publication-status]', errorText(error), publication);
         $('[data-hd-media-publication-status]', publication)?.focus();
@@ -1486,6 +1572,7 @@ async function admin(): Promise<void> {
       }
     });
   }
+  $('[data-hd-refresh-approvals]')?.addEventListener('click', () => void loadMediaPickersAndApprovals());
   const mediaUploadForm = $('[data-hd-media-upload-form]') as HTMLFormElement | null;
   if (mediaUploadForm) {
     const mediaIntentKey = intent();

@@ -269,11 +269,14 @@ m0_11_contracts.extend(schemas,operation,obj,arr,enum,UUID,TEXT,UTC,VERSION)
 import role_hero_contracts
 role_hero_contracts.extend(schemas,operation,obj,arr,ref,UUID,TEXT)
 
+import fase2_contracts
+fase2_contracts.extend(schemas,operation,obj,arr,enum,ref,UUID,TEXT,UTC,VERSION)
+
 RUNTIME_COMMANDS={'ListReportingDirectory','ListDivision','CreateDivision','UpdateDivision','RevokeMediaApproval','RegisterPublicSubject','ApproveSanitizedMedia','CreateLabSession','RevokeSession','ReadSession','ReadLabBootstrap','ListServices','ReadService','ReadServiceForm','CreateService','UpdateService','UpdateServiceForm','GrantMembership','ListOrganization','CreateOrganization','UpdateOrganization','ListTeam','CreateTeam','UpdateTeam','ListMembership','UpdateMembership','ListAdminServices','ReadAdminService','ReadAdminServiceForm','ListCategories','CreateCategory','UpdateCategory','ReadCatalogServicePolicy','ReadAdminServicePolicy','UpdateServicePolicy'}
 
 def build_openapi():
     spec = {"openapi": "3.1.0", "info": {"title": "Helpdesk M0 business contract", "version": "1.2.0",
-            "description": "M0-04 synthetic lab: IMPLEMENTED_M0_03 and IMPLEMENTED_M0_04 operations have runtime handlers; remaining business operations are NOT_IMPLEMENTED. Lab defaults are not official organizational policy."},
+            "description": "Helpdesk M0 RM0-05 contract: all business operations have runtime handlers across M1-M9. Lab defaults are not official organizational policy."},
             "servers": [{"url": "/"}], "paths": {}, "components": {"schemas": schemas, "securitySchemes": {
                 "SessionCookie": {"type": "apiKey", "in": "cookie", "name": "helpdesk_session"},
                 "GuestCapability": {"type": "apiKey", "in": "header", "name": "X-Guest-Capability"}, "GuestTracking": {"type":"apiKey","in":"cookie","name":"helpdesk_tracking"}}}}
@@ -306,7 +309,7 @@ def build_openapi():
             schemas[body_name] = obj({"expected_version": VERSION, "attempt_id": UUID})
         entry = {"operationId": op["command"] + ("Alias"+str(index) if op["alias"] else ""), "summary": op["command"],
                  "x-command": op["command"], "x-owner": op["owner"], "x-permission": op["permission"], "x-requirements": op["fr"],
-                 "x-runtime-status": "IMPLEMENTED_RM0_04" if op['command'] in role_hero_contracts.COMMANDS else "IMPLEMENTED_M0_11" if op['command'] in m0_11_contracts.COMMANDS else "IMPLEMENTED_M0_10" if op['command'] in m0_10_contracts.COMMANDS else "IMPLEMENTED_M0_09" if op['command'] in m0_09_contracts.COMMANDS else "IMPLEMENTED_M0_08" if op['command'] in m0_08_contracts.COMMANDS else "IMPLEMENTED_M0_07" if op['command'] in m0_07_contracts.COMMANDS else "IMPLEMENTED_M0_06" if op['command'] in m0_06_contracts.COMMANDS else "IMPLEMENTED_M0_05" if op['command'] in m0_05_contracts.COMMANDS else "IMPLEMENTED_M0_04" if op['command'] in m0_04_contracts.COMMANDS else "IMPLEMENTED_M0_03" if op['command'] in RUNTIME_COMMANDS else "NOT_IMPLEMENTED", "x-authorization": "Trusted principal, live object/scope/revocation checks. Hidden object 404; visible forbidden action 403; config admin has no implicit ticket read.",
+                 "x-runtime-status": "IMPLEMENTED_RM0_05" if op['command'] in fase2_contracts.COMMANDS else "IMPLEMENTED_RM0_04" if op['command'] in role_hero_contracts.COMMANDS else "IMPLEMENTED_M0_11" if op['command'] in m0_11_contracts.COMMANDS else "IMPLEMENTED_M0_10" if op['command'] in m0_10_contracts.COMMANDS else "IMPLEMENTED_M0_09" if op['command'] in m0_09_contracts.COMMANDS else "IMPLEMENTED_M0_08" if op['command'] in m0_08_contracts.COMMANDS else "IMPLEMENTED_M0_07" if op['command'] in m0_07_contracts.COMMANDS else "IMPLEMENTED_M0_06" if op['command'] in m0_06_contracts.COMMANDS else "IMPLEMENTED_M0_05" if op['command'] in m0_05_contracts.COMMANDS else "IMPLEMENTED_M0_04" if op['command'] in m0_04_contracts.COMMANDS else "IMPLEMENTED_M0_03" if op['command'] in RUNTIME_COMMANDS else "NOT_IMPLEMENTED", "x-authorization": "Trusted principal, live object/scope/revocation checks. Hidden object 404; visible forbidden action 403; config admin has no implicit ticket read.",
                  "security": [{"SessionCookie": []}], "parameters": params,
                  "responses": {str(op["status"]): {"description": "Accepted job with scope-bound polling" if op["status"] == 202 else "Durable primary result; downstream delivery may still be pending", "content": {"application/json": {"schema": response, "example": sample(response)}}}}}
         if op["public"]:

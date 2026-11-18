@@ -59,3 +59,15 @@ func (s *Service) AuthorizeScheduler(ctx context.Context, id, token, csrf string
 	}
 	return actor.ID, nil
 }
+
+func (s *Service) AuthorizeSchedulerBatch(ctx context.Context, token string, ticketIDs []string) ([]string, error) {
+	actor, err := s.Identity.Authenticate(ctx, identity.Credentials{Token: token})
+	if err != nil {
+		return nil, err
+	}
+	orgs := actor.Orgs("system.job")
+	if actor.Kind != "STAFF" || len(orgs) == 0 {
+		return nil, web.Fail(403, "Mandat pekerjaan sistem diperlukan")
+	}
+	return s.Store.FilterTicketsInOrgs(ctx, orgs, ticketIDs)
+}

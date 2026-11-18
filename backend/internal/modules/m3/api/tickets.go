@@ -239,3 +239,92 @@ type RestoreArchiveInput struct {
 	ExpectedVersion int64  `json:"expected_version"`
 	Reason          string `json:"reason"`
 }
+
+type CloseVendorCaseInput struct {
+	ExpectedVersion int64  `json:"expected_version"`
+	Reason          string `json:"reason"`
+}
+
+type VendorCaseRecord struct {
+	ID                string     `json:"id"`
+	Version           int64      `json:"version"`
+	TicketID          string     `json:"ticket_id"`
+	VendorID          string     `json:"vendor_id"`
+	InternalPICID     string     `json:"internal_pic_id"`
+	ExternalReference string     `json:"external_reference"`
+	ContractReference string     `json:"contract_reference"`
+	ExpectedReturnAt  time.Time  `json:"expected_return_at"`
+	NextFollowupAt    time.Time  `json:"next_followup_at"`
+	State             string     `json:"state"`
+	ClosedAt          *time.Time `json:"closed_at,omitempty"`
+	ResolutionNote    string     `json:"resolution_note,omitempty"`
+	CreatedAt         time.Time  `json:"created_at"`
+}
+
+type PauseRecord struct {
+	ID             string     `json:"id"`
+	Version        int64      `json:"version"`
+	StartsAt       time.Time  `json:"starts_at"`
+	EndsAt         time.Time  `json:"ends_at"`
+	ApprovedBy     string     `json:"approved_by"`
+	PolicyVersion  int64      `json:"policy_version"`
+	Reason         string     `json:"reason"`
+	ResumedEarlyAt *time.Time `json:"resumed_early_at,omitempty"`
+	ResumeReason   string     `json:"resume_reason,omitempty"`
+}
+
+type HandoffSummary struct {
+	ID             string     `json:"id"`
+	Version        int64      `json:"version"`
+	Direction      string     `json:"direction,omitempty"`
+	TicketID       string     `json:"ticket_id"`
+	TicketNumber   string     `json:"ticket_number,omitempty"`
+	TicketTitle    string     `json:"ticket_title,omitempty"`
+	TicketVersion  int64      `json:"ticket_version"`
+	FromOrgID      string     `json:"from_org_id"`
+	TargetOrgID    string     `json:"target_org_id"`
+	TargetTeamID   string     `json:"target_team_id"`
+	RequestedBy    string     `json:"requested_by"`
+	Reason         string     `json:"reason"`
+	State          string     `json:"state"`
+	ResponseReason string     `json:"response_reason,omitempty"`
+	RespondedAt    *time.Time `json:"responded_at,omitempty"`
+	CreatedAt      time.Time  `json:"created_at"`
+}
+
+type WorkLogInput struct {
+	ExpectedVersion int64     `json:"expected_version"`
+	StartedAt       time.Time `json:"started_at"`
+	EndedAt         time.Time `json:"ended_at"`
+	Summary         string    `json:"summary"`
+}
+
+type WorkLogRecord struct {
+	ID        string    `json:"id"`
+	Version   int64     `json:"version"`
+	TicketID  string    `json:"ticket_id"`
+	ActorID   string    `json:"actor_id"`
+	StartedAt time.Time `json:"started_at"`
+	EndedAt   time.Time `json:"ended_at"`
+	Summary   string    `json:"summary"`
+	CreatedAt time.Time `json:"created_at"`
+}
+
+type BulkTargetInput struct {
+	ID              string `json:"id"`
+	ExpectedVersion int64  `json:"expected_version"`
+}
+
+type BulkCommandInput struct {
+	Action     string            `json:"action"`
+	Targets    []BulkTargetInput `json:"targets"`
+	Reason     string            `json:"reason"`
+	TeamID     string            `json:"team_id,omitempty"`
+	AssigneeID string            `json:"assignee_id,omitempty"`
+}
+
+type BulkItemResult struct {
+	ID      string `json:"id"`
+	Outcome string `json:"outcome"`
+	Version int64  `json:"version"`
+}

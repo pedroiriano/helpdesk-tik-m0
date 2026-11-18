@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"net/http"
 	"strings"
+	"time"
 
 	"helpdesk.local/m0/internal/modules/m1/api"
 	"helpdesk.local/m0/internal/platform/web"
@@ -154,6 +155,29 @@ func (s *Service) Register(mux *http.ServeMux) {
 			return
 		}
 		web.JSON(w, 201, res)
+	})
+
+	mux.HandleFunc("GET /api/v1/staff/directory", func(w http.ResponseWriter, r *http.Request) {
+		items, err := s.ListStaffDirectory(r.Context(), Credentials(r), r.URL.Query().Get("organization_id"))
+		if err != nil {
+			web.WriteError(w, err)
+			return
+		}
+		web.JSON(w, 200, map[string]any{"items": items})
+	})
+
+	mux.HandleFunc("GET /api/v1/admin/operations", func(w http.ResponseWriter, r *http.Request) {
+		p, err := web.Pagination(r)
+		if err != nil {
+			web.WriteError(w, err)
+			return
+		}
+		items, err := s.ListSystemJobs(r.Context(), Credentials(r), p.Limit)
+		if err != nil {
+			web.WriteError(w, err)
+			return
+		}
+		web.JSON(w, 200, map[string]any{"items": items, "next_cursor": nil, "as_of": time.Now().UTC().Format(time.RFC3339)})
 	})
 
 	mux.HandleFunc("POST /api/v1/admin/operations", func(w http.ResponseWriter, r *http.Request) {

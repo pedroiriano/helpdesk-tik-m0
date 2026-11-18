@@ -13,6 +13,7 @@ COMMANDS = {
     'TransitionPortalPage',
     'SearchScopedOwners',
     'ConfigureNavigation',
+    'IssueSinkChallenge',
 }
 
 def extend(s, operation, obj, arr, enum, UUID, TEXT, UTC, VERSION):

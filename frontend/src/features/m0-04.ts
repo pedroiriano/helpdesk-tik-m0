@@ -6,6 +6,15 @@ import { syncJourney, serviceLoginHref, ticketState, priorityLabel, requesterGui
 import { api, APIError, csrf, durableIntent, errorText, intent, json } from './transport';
 
 import type { Components } from './business-types.generated';
+import {
+  loadRequesterNotifications,
+  loadHandoffInbox,
+  loadQueueServiceFilter,
+  searchTicketsAcl,
+  runBulkArchive,
+  populateVendorPicSelect,
+  loadOperationalRecordsAndScheduler,
+} from './fase2-ticket';
 
 
 
@@ -1713,12 +1722,14 @@ function createCursorPager<T>(
 
 
 
-function queueTable(items: Ticket[]) {
+function queueTable(items: Ticket[], bulk?: { enabled: boolean; selected: Map<string, number>; onSelect: () => void }) {
   const wrapper = el('div', '', 'piui-table-scroll hd-queue-table');
   const table = document.createElement('table');
   table.className = 'piui-table';
   table.setAttribute('aria-label', 'Antrean tiket');
-  const labels = ['Tiket', 'Status', 'Prioritas', 'Diterima', 'Target penyelesaian', 'Penugasan', 'Tindakan'];
+  const labels = bulk?.enabled
+    ? ['Pilih', 'Tiket', 'Status', 'Prioritas', 'Diterima', 'Target penyelesaian', 'Penugasan', 'Tindakan']
+    : ['Tiket', 'Status', 'Prioritas', 'Diterima', 'Target penyelesaian', 'Penugasan', 'Tindakan'];
   const header = table.createTHead().insertRow();
   for (const label of labels) {
     const th = document.createElement('th');
@@ -1736,8 +1747,28 @@ function queueTable(items: Ticket[]) {
     node.textContent = format.format(date) + ' WIB';
     return node;
   };
+  const labelOffset = bulk?.enabled ? 2 : 1;
   for (const ticket of items) {
     const row = body.insertRow();
+    if (bulk?.enabled) {
+      const selCell = row.insertCell();
+      selCell.dataset.label = 'Pilih';
+      const terminalUnarchived = ['CLOSED', 'CANCELLED'].includes(ticket.state) && !ticket.archived_at;
+      if (terminalUnarchived) {
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.setAttribute('aria-label', `Pilih ${ticket.number} untuk arsip massal`);
+        cb.checked = bulk.selected.has(ticket.id);
+        cb.addEventListener('change', () => {
+          if (cb.checked) bulk.selected.set(ticket.id, ticket.version);
+          else bulk.selected.delete(ticket.id);
+          bulk.onSelect();
+        });
+        selCell.append(cb);
+      } else {
+        selCell.textContent = '-';
+      }
+    }
     const heading = document.createElement('th');
     heading.scope = 'row';
     heading.append(el('strong', ticket.title), el('span', ticket.number, 'hd-queue-number'));
@@ -1753,7 +1784,7 @@ function queueTable(items: Ticket[]) {
     ];
     columns.forEach((value, index) => {
       const cell = row.insertCell();
-      cell.dataset.label = labels[index + 1];
+      cell.dataset.label = labels[index + labelOffset];
       cell.append(value);
     });
   }
@@ -1797,10 +1828,26 @@ async function list(): Promise<void> {
     return Object.hasOwn(endpoints, requested) ? requested : defaultFilter;
   };
   let filter = adminQueue ? filterForRoute() : 'all';
-  const pager = createCursorPager<Ticket>('tiket', () => endpoints[filter], items => {
+
+  const searchForm = $<HTMLFormElement>('[data-queue-search-form]');
+  const searchQ = $<HTMLInputElement>('#queue-search-q');
+  const filterState = $<HTMLSelectElement>('#queue-filter-state');
+  const filterService = $<HTMLSelectElement>('#queue-filter-service');
+  const bulkBar = $('[data-bulk-bar]');
+  const bulkReason = $<HTMLInputElement>('#bulk-reason');
+  const bulkBtn = $<HTMLButtonElement>('[data-bulk-archive-btn]');
+  const bulkCount = $('[data-bulk-count]');
+  const bulkStatus = $('[data-bulk-status]');
+  const selectedBulk = new Map<string, number>();
+  const bulkEnabled = adminQueue && can('ticket.bulk') && can('ticket.archive');
+  if (bulkBar) bulkBar.hidden = !bulkEnabled;
+  const syncBulkCount = () => { if (bulkCount) bulkCount.textContent = String(selectedBulk.size); };
+  const bulkCfg = { enabled: bulkEnabled, selected: selectedBulk, onSelect: syncBulkCount };
+
+  const renderTickets = (items: Ticket[]) => {
     root.replaceChildren();
     if (adminQueue) {
-      if (items.length) root.append(queueTable(items));
+      if (items.length) root.append(queueTable(items, bulkCfg));
       return;
     }
     for (const ticket of items) {
@@ -1809,7 +1856,86 @@ async function list(): Promise<void> {
         el('p', ticketState(ticket), 'court-badge'), el('p', requesterGuidance(ticket)), ticketLink(ticket.id));
       root.append(card);
     }
+  };
+
+  const buildEndpoint = () => {
+    const base = endpoints[filter];
+    if (filter !== 'all') return base;
+    const params = new URLSearchParams();
+    if (filterState?.value) params.set('state', filterState.value);
+    if (filterService?.value) params.set('service_id', filterService.value);
+    const qs = params.toString();
+    return qs ? `${base}?${qs}` : base;
+  };
+
+  const pager = createCursorPager<Ticket>('tiket', buildEndpoint, items => {
+    renderTickets(items);
   });
+
+  if (searchForm) {
+    searchForm.hidden = false;
+    void loadQueueServiceFilter();
+    const runSearchOrFilter = async () => {
+      const q = searchQ?.value.trim() ?? '';
+      const st = filterState?.value ?? '';
+      const svcId = filterService?.value ?? '';
+      if (q.length >= 2) {
+        setStatus('Mencari tiket sesuai hak akses…');
+        try {
+          const matched = await searchTicketsAcl(q, st, svcId);
+          renderTickets(matched);
+          setStatus(matched.length ? `${matched.length} tiket ditemukan dari pencarian aman.` : 'Tidak ada tiket yang cocok dengan kata kunci dan filter ini.');
+        } catch (err) {
+          setStatus(errorText(err));
+        }
+        return;
+      }
+      if ((st || svcId) && filter !== 'all') {
+        filter = 'all';
+      }
+      await pager(true);
+    };
+    searchForm.addEventListener('submit', e => { e.preventDefault(); void runSearchOrFilter(); });
+    $('[data-queue-search-reset]', searchForm)?.addEventListener('click', () => {
+      if (searchQ) searchQ.value = '';
+      if (filterState) filterState.value = '';
+      if (filterService) filterService.value = '';
+      void pager(true);
+    });
+  }
+
+  bulkBtn?.addEventListener('click', async () => {
+    if (!bulkEnabled || !selectedBulk.size) {
+      if (bulkStatus) bulkStatus.textContent = 'Pilih minimal satu tiket berstatus terminal (CLOSED/CANCELLED) terlebih dahulu.';
+      return;
+    }
+    const reason = bulkReason?.value.trim() ?? '';
+    if (reason.length < 5) {
+      if (bulkStatus) bulkStatus.textContent = 'Alasan pengarsipan massal minimal 5 karakter.';
+      bulkReason?.focus();
+      return;
+    }
+    bulkBtn.disabled = true;
+    try {
+      const targets = [...selectedBulk.entries()].map(([id, expected_version]) => ({ id, expected_version }));
+      const summary = await runBulkArchive(targets, reason);
+      selectedBulk.clear();
+      syncBulkCount();
+      if (bulkReason) bulkReason.value = '';
+      if (bulkStatus) bulkStatus.textContent = summary;
+      await pager(true);
+    } catch (err) {
+      if (bulkStatus) bulkStatus.textContent = errorText(err);
+    } finally {
+      bulkBtn.disabled = false;
+    }
+  });
+
+  if (!adminQueue) {
+    void loadRequesterNotifications(session);
+  } else {
+    void loadHandoffInbox(session, () => pager(true));
+  }
 
   const queueFilters = $('[data-queue-filters]');
   if (queueFilters && adminQueue) {
@@ -2666,6 +2792,7 @@ async function ticketDetail(): Promise<void> {
           const pic = $<HTMLInputElement>('#vendor-pic', vendorSec);
           const defaultPic = currentTicket.assignee_id || session?.actor.subject_id || '';
           if (pic && !pic.value && defaultPic) pic.value = defaultPic;
+          void populateVendorPicSelect(currentTicket, session);
           const retInput = $<HTMLInputElement>('#vendor-return', vendorSec);
           if (retInput && !retInput.value) retInput.value = toWibDatetimeInput(new Date(Date.now() + 24 * 3600000));
           const folInput = $<HTMLInputElement>('#vendor-followup', vendorSec);
@@ -2736,6 +2863,7 @@ async function ticketDetail(): Promise<void> {
       const uploadForm = $('[data-ticket-upload]');
       if (uploadForm) uploadForm.hidden = !available.attach;
       updateNextAction(available);
+      void loadOperationalRecordsAndScheduler(currentTicket, session, isInternal, parseWibDatetimeInput, refresh);
 
       await Promise.all([historyPager(true), commentPager(true), filePager(true)]);
 

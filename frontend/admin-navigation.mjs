@@ -23,6 +23,7 @@ export const adminGroups = [
   {label:'Pengawasan dan sistem', items:[
     {id:'reports',kind:'reports',label:'Laporan kinerja',icon:'analytics',permissions:['report.read'],description:'Tinjau capaian, periode laporan dan ekspor yang diizinkan.'},
     {id:'audit',kind:'audit',label:'Jejak audit',icon:'audit',permissions:['audit.read'],description:'Telusuri catatan aktivitas untuk pemeriksaan.',footer:true},
+    {id:'rules',kind:'rules',label:'Aturan layanan dan SLA',icon:'settings',permissions:['rules.write'],description:'Kelola status aktif aturan klasifikasi, routing, kalender SLA, dan eskalasi.'},
     {id:'maintenance',kind:'maintenance',label:'Pemeliharaan sistem',icon:'settings',permissions:['system.health','system.maintenance','system.job'],description:'Periksa kesehatan dan jalankan pekerjaan sistem sesuai mandat.'},
   ]},
   {label:'Bantuan dan portal', items:[

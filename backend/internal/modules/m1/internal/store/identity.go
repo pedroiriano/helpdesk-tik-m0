@@ -269,3 +269,29 @@ func (s Store) ActiveTeamInOrg(ctx context.Context, team, org string) (bool, err
 		WHERE t.id=$1 AND o.id=$2 AND t.active AND o.active)`, team, org).Scan(&active)
 	return active, err
 }
+
+func (s Store) StaffInOrg(ctx context.Context, org string) ([]api.Subject, error) {
+	rows, err := s.Pool.Query(ctx, `SELECT s.id::text,s.display_name,s.kind,s.role_code
+		FROM identity.subjects s
+		WHERE s.kind='STAFF' AND s.active AND EXISTS (
+			SELECT 1 FROM identity.memberships m
+			JOIN identity.organizations o ON o.id=m.org_id
+			WHERE m.subject_id=s.id AND o.active AND m.org_id=$1
+			  AND m.revoked_at IS NULL AND m.valid_until>now()
+			  AND ('ticket.read'=ANY(m.permissions) OR 'ticket.resolve'=ANY(m.permissions) OR 'ticket.vendor'=ANY(m.permissions))
+		)
+		ORDER BY s.display_name,s.id`, org)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	out := []api.Subject{}
+	for rows.Next() {
+		var u api.Subject
+		if err := rows.Scan(&u.ID, &u.Name, &u.Kind, &u.Role); err != nil {
+			return nil, err
+		}
+		out = append(out, u)
+	}
+	return out, rows.Err()
+}

@@ -513,6 +513,7 @@ func TestM004Integration(t *testing.T) {
 			}
 		}}
 		intake := m3.NewRuntime(pools[2], identity.Port(), catalog.Port(), classifier, m5.NewRuntime(pools[4], identity.Port()).Port(), m6.New(pools[5]).Port(), []byte("synthetic-m004-key-not-a-production-secret"), base, root, os.Getenv("HELPDESK_TEST_SCANNER"))
+		intake.Service().LabLifecycle = true
 		mux := http.NewServeMux()
 		intake.Register(mux)
 		server.Config.Handler = web.Guard(mux, base)

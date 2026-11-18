@@ -71,7 +71,7 @@ class BusinessContracts(unittest.TestCase):
         for path, methods in paths.items():
             for method, op in methods.items():
                 ids.append(op["operationId"])
-                self.assertIn(op["x-runtime-status"], ("NOT_IMPLEMENTED", "IMPLEMENTED_M0_03", "IMPLEMENTED_M0_04", "IMPLEMENTED_M0_05", "IMPLEMENTED_M0_06", "IMPLEMENTED_M0_07", "IMPLEMENTED_M0_08", "IMPLEMENTED_M0_09", "IMPLEMENTED_M0_10", "IMPLEMENTED_M0_11", "IMPLEMENTED_RM0_04"))
+                self.assertIn(op["x-runtime-status"], ("IMPLEMENTED_M0_03", "IMPLEMENTED_M0_04", "IMPLEMENTED_M0_05", "IMPLEMENTED_M0_06", "IMPLEMENTED_M0_07", "IMPLEMENTED_M0_08", "IMPLEMENTED_M0_09", "IMPLEMENTED_M0_10", "IMPLEMENTED_M0_11", "IMPLEMENTED_RM0_04", "IMPLEMENTED_RM0_05"))
                 if method != "get":
                     self.assertTrue(any(p["name"] == "Idempotency-Key" and p["required"] for p in op["parameters"]))
                 if "202" in op["responses"]:
@@ -102,6 +102,28 @@ class BusinessContracts(unittest.TestCase):
         for path in ["/api/v1/media", "/api/v1/drafts"]:
             self.assertEqual(paths[path]["get"]["x-runtime-status"], "IMPLEMENTED_M0_08")
         self.assertEqual(paths["/api/v1/media/{id}/reuse"]["post"]["x-runtime-status"], "IMPLEMENTED_M0_08")
+        for path, method in [
+            ("/api/v1/tickets/bulk", "post"),
+            ("/api/v1/tickets/{id}/work-logs", "post"),
+            ("/api/v1/handoffs", "get"),
+            ("/api/v1/staff/directory", "get"),
+            ("/api/v1/admin/operations", "get"),
+            ("/api/v1/media/approvals", "get"),
+            ("/api/v1/admin/scheduler-jobs", "get"),
+            ("/api/v1/admin/classification-rules", "get"),
+            ("/api/v1/admin/classification-rules", "post"),
+            ("/api/v1/admin/routing-rules", "get"),
+            ("/api/v1/admin/routing-rules", "post"),
+            ("/api/v1/admin/sla-rules", "get"),
+            ("/api/v1/admin/sla-rules", "post"),
+            ("/api/v1/admin/escalation-rules", "get"),
+            ("/api/v1/admin/escalation-rules", "post"),
+        ]:
+            self.assertEqual(paths[path][method]["x-runtime-status"], "IMPLEMENTED_RM0_05")
+        self.assertEqual(
+            [op["x-command"] for ms in paths.values() for op in ms.values() if op.get("x-runtime-status") == "NOT_IMPLEMENTED"],
+            [],
+        )
 
     def test_traceability_uses_real_requirements_and_owners(self):
         rows = list(csv.DictReader((ROOT / "contracts/business_traceability.csv").read_text(encoding="utf-8").splitlines()))

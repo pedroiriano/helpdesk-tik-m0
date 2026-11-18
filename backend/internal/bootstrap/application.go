@@ -60,7 +60,8 @@ func NewApplication(pools database.Pools, options m1.Options) *Runtime {
 	}
 	assignment := m5.NewRuntime(pools[4], identity.Port())
 	slaMod := m6.New(pools[5])
-	intake := m3.NewRuntime(pools[2], identity.Port(), catalog.Port(), m4.New(pools[3]).Port(), assignment.Port(), slaMod.Port(), options.Key, options.Origin, root, scanner)
+	classifyMod := m4.New(pools[3])
+	intake := m3.NewRuntime(pools[2], identity.Port(), catalog.Port(), classifyMod.Port(), assignment.Port(), slaMod.Port(), options.Key, options.Origin, root, scanner)
 	escalationMod := m7.New(pools[6])
 	knowledgeMod := m8.NewRuntime(pools[7], root, scanner)
 	// One shared-volume collector checks references through each owner public boundary.
@@ -78,6 +79,9 @@ func NewApplication(pools database.Pools, options m1.Options) *Runtime {
 		{Source: intake.SourceForM6(), Consumer: slaMod.Consumer()},
 		{Source: intake.SourceForM7(), Consumer: escalationMod.Consumer()},
 		{Source: notifyMod.SourceForM3(), Consumer: intake.Consumer()},
+		{Source: classifyMod.Source(), Consumer: notifyMod.Consumer()},
+		{Source: slaMod.Source(), Consumer: notifyMod.Consumer()},
+		{Source: escalationMod.Source(), Consumer: notifyMod.Consumer()},
 		{Source: knowledgeMod.Source(), Consumer: notifyMod.Consumer()},
 	}
 
@@ -93,6 +97,11 @@ func NewApplication(pools database.Pools, options m1.Options) *Runtime {
 	notifyRegister := func(mux *http.ServeMux) {
 		notifyMod.Register(mux, identity.Port(), options.Origin)
 		escalationMod.RegisterScheduler(mux, intake.Service().AuthorizeScheduler)
+		escalationMod.RegisterSchedulerListing(mux, intake.Service().AuthorizeScheduler, intake.Service().AuthorizeSchedulerBatch)
+		registerRuleRoutes(mux, identity.Port(), "/api/v1/admin/classification-rules", classifyMod)
+		registerRuleRoutes(mux, identity.Port(), "/api/v1/admin/routing-rules", assignment)
+		registerRuleRoutes(mux, identity.Port(), "/api/v1/admin/sla-rules", slaMod)
+		registerRuleRoutes(mux, identity.Port(), "/api/v1/admin/escalation-rules", escalationMod)
 	}
 
 	searchRegister := func(mux *http.ServeMux) {
@@ -263,7 +272,7 @@ func NewApplication(pools database.Pools, options m1.Options) *Runtime {
 		schedulerHeartbeat: heartbeat,
 		Handler:            web.Guard(maintenanceHandler, options.Origin),
 		Bindings:           bindings,
-		Sources:            []*delivery.Source{identity.Source(), catalog.Source(), intake.Source(), knowledgeMod.Source()},
+		Sources:            []*delivery.Source{identity.Source(), catalog.Source(), intake.Source(), classifyMod.Source(), assignment.Source(), slaMod.Source(), escalationMod.Source(), knowledgeMod.Source()},
 		Consumer:           notifyMod.Consumer(),
 		Intake:             intake,
 		SLA:                slaMod,

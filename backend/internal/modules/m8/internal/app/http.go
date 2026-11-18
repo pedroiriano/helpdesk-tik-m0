@@ -376,6 +376,31 @@ func (h *Handler) Register(m *http.ServeMux) {
 		web.JSON(w, result.Status, result.Body)
 	})
 
+	handle("GET /api/v1/media/approvals", func(w http.ResponseWriter, r *http.Request) {
+		scope := h.scope(r)
+		orgs := append([]string{}, scope.Publish...)
+		for _, o := range scope.Reuse {
+			if !api.Contains(orgs, o) {
+				orgs = append(orgs, o)
+			}
+		}
+		if len(orgs) == 0 {
+			web.WriteError(w, web.Fail(403, "Izin penerbit atau reuse media diperlukan"))
+			return
+		}
+		p, err := web.Pagination(r)
+		if err != nil {
+			web.WriteError(w, err)
+			return
+		}
+		items, err := h.Service.Store.ListApprovals(r.Context(), orgs, p.Limit)
+		if err != nil {
+			web.WriteError(w, err)
+			return
+		}
+		web.JSON(w, 200, map[string]any{"items": items})
+	})
+
 	handle("POST /api/v1/media/{id}/approvals", func(w http.ResponseWriter, r *http.Request) {
 		id := r.PathValue("id")
 		if !web.UUID(id) {

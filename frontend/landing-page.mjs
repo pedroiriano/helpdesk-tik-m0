@@ -151,7 +151,8 @@ export function landingPage(source) {
     .replaceAll('aria-label="Filter court plays"', 'aria-label="Filter kategori bantuan"')
     .replaceAll('aria-label="CourtSpec — back to top"', 'aria-label="Helpdesk TIK — kembali ke atas"')
     .replace('Apakah data pada grafik merupakan data warga?', 'Apakah ilustrasi menampilkan data warga?')
-    .replace('Tidak. Grafik dan kartu menggunakan data contoh untuk memeriksa tampilan dan interaksi.', 'Tidak. Ilustrasi merupakan aset kreatif dan contoh laporan memakai data sintetis.');
+    .replace('Tidak. Grafik dan kartu menggunakan data contoh untuk memeriksa tampilan dan interaksi.', 'Tidak. Ilustrasi merupakan aset kreatif dan contoh laporan memakai data sintetis.')
+    .replace('Pilih kategori untuk melihat contoh informasi yang perlu disiapkan. Seluruh contoh memakai data sintetis.', 'Pilih kategori layanan TIK Kota Depok untuk melihat informasi yang perlu disiapkan saat melapor.');
   const guideLabels = ['akun','jaringan','aplikasi','perangkat'];
   let labelIndex = 0;
   source = source.replace(/(aria-label=")Open [^"]+ detail(")/g, (_, start, end) => start+'Buka panduan '+guideLabels[labelIndex++ % 4]+end);

@@ -19,6 +19,29 @@ func (s *Store) ApprovalAuthority(ctx context.Context, id string) (string, strin
 	return actor, org, err
 }
 
+func (s *Store) ListApprovals(ctx context.Context, orgs []string, limit int) ([]api.MediaApprovalRecord, error) {
+	if limit <= 0 || limit > 100 {
+		limit = 30
+	}
+	rows, err := s.pool.Query(ctx, `SELECT id::text,version,source_id::text,source_owner,copy_id::text,target_id::text,target_audience,org_id::text,approved_by::text,reason,expires_at,used_at,revoked_at,created_at
+		FROM knowledge.media_approvals
+		WHERE org_id=ANY($1::uuid[])
+		ORDER BY created_at DESC, id DESC LIMIT $2`, orgs, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	out := []api.MediaApprovalRecord{}
+	for rows.Next() {
+		var r api.MediaApprovalRecord
+		if err := rows.Scan(&r.ID, &r.Version, &r.SourceID, &r.SourceOwner, &r.CopyID, &r.TargetID, &r.TargetAudience, &r.OrganizationID, &r.ApprovedBy, &r.Reason, &r.ExpiresAt, &r.UsedAt, &r.RevokedAt, &r.CreatedAt); err != nil {
+			return nil, err
+		}
+		out = append(out, r)
+	}
+	return out, rows.Err()
+}
+
 func (s *Store) RevokeApproval(ctx context.Context, id string, scope api.Scope, version int64, reason, key string) (database.Result, error) {
 	return database.Mutate(ctx, s.pool, database.Mutation{Owner: "M8", Actor: scope.Principal, Command: "RevokeMediaApproval", Target: id, Key: key, Scope: "KNOWLEDGE", Reason: reason, Payload: map[string]any{"expected_version": version, "reason": reason}}, func(tx pgx.Tx) (database.Result, error) {
 		tag, err := tx.Exec(ctx, `UPDATE knowledge.media_approvals SET revoked_at=now(),version=version+1 WHERE id=$1 AND version=$2 AND used_at IS NULL AND revoked_at IS NULL AND org_id=ANY($3::uuid[])`, id, version, scope.Publish)

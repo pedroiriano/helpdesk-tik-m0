@@ -1167,6 +1167,65 @@ async function main() {
       return { zoomChecks, reducedMotion, footerInfo };
     });
 
+    // D7. Fase 2 UI->Backend Flows, Instant Search/Filters, Rules, Approvals, Scheduler, Ops Records & Mobile
+    await runSuite('Fase2_UI_and_Ops', async () => {
+      // 1. Public catalog instant search & access filter
+      await cdp.setViewport(1280, 800, false);
+      await cdp.navigate(`${BASE}/layanan.html`, 700);
+      await waitFor(() => cdp.eval(`document.querySelectorAll('[data-hd-catalog] .hd-service-option').length > 0`), 8000, 'catalog loaded');
+      const totalVisible = await cdp.eval(`document.querySelectorAll('[data-hd-catalog] .hd-service-option').length`);
+      await cdp.eval(`(() => {
+        const q = document.querySelector('#hd-catalog-q');
+        q.value = 'CSIRT';
+        q.dispatchEvent(new Event('input', { bubbles: true }));
+      })()`);
+      await sleep(150);
+      const csirtCount = await cdp.eval(`document.querySelectorAll('[data-hd-catalog] .hd-service-option').length`);
+      assert.ok(csirtCount >= 1 && csirtCount <= totalVisible, `Catalog search filter expected narrow match, got ${csirtCount}/${totalVisible}`);
+
+      // 2. Super Admin: notifications, maintenance operations & M7 scheduler tab, rules panel, media pickers/approvals
+      await loginSubjectById(cdp, '20000000-0000-4000-8000-000000000017', true);
+      await cdp.navigate(`${BASE}/admin/app/helpdesk/index.html?kind=notifications`, 700);
+      const hasNotifRows = await waitFor(() => cdp.eval(`Boolean(document.querySelector('[data-hd-notif-rows] tr'))`), 8000, 'notifications inbox rendered');
+
+      await cdp.navigate(`${BASE}/admin/app/helpdesk/index.html?kind=maintenance`, 700);
+      await cdp.eval(`document.querySelector('[data-hd-tab-m11="runner"]')?.click()`);
+      const hasOpsTable = await waitFor(() => cdp.eval(`Boolean(document.querySelector('[data-hd-ops-rows] tr'))`), 8000, 'operations list rendered');
+      await cdp.eval(`document.querySelector('[data-hd-tab-m11="scheduler"]')?.click()`);
+      const hasSchedTable = await waitFor(() => cdp.eval(`Boolean(document.querySelector('[data-hd-scheduler-rows] tr'))`), 8000, 'scheduler list rendered');
+
+      await cdp.navigate(`${BASE}/admin/app/helpdesk/index.html?kind=rules`, 700);
+      await cdp.eval(`(() => { const s = document.querySelector('#hd-rule-owner'); s.value = 'sla'; s.dispatchEvent(new Event('change')); })()`);
+      const hasSlaRules = await waitFor(() => cdp.eval(`Boolean(document.querySelector('[data-hd-rules-rows] button'))`), 8000, 'SLA rules rendered');
+
+      // Super Admin sees its uploaded CLEAN media & M8 articles/pages in media pickers
+      await cdp.navigate(`${BASE}/admin/app/helpdesk/index.html?kind=media`, 700);
+      const pickersReady = await waitFor(() => cdp.eval(`(() => {
+        const s = document.querySelector('#media-source-pick');
+        const t = document.querySelector('#media-target-pick');
+        return Boolean(s && t && s.options.length > 1 && t.options.length > 1);
+      })()`), 8000, 'media pickers populated');
+
+      // Publisher OPD A loads media approvals list (200) and M8 content picker
+      await loginSubjectById(cdp, '20000000-0000-4000-8000-000000000015', true);
+      await cdp.navigate(`${BASE}/admin/app/helpdesk/index.html?kind=media`, 700);
+      const approvalsReady = await waitFor(() => cdp.eval(`Boolean(document.querySelector('[data-hd-media-approvals-rows] tr') && document.querySelector('#media-target-pick')?.options.length > 1)`), 8000, 'media approvals table populated');
+
+      // 3. Coordinator OPD A: Queue search, Handoff inbox, Bulk toolbar + Detail operational records & Mobile check
+      await loginSubjectById(cdp, '20000000-0000-4000-8000-000000000011', true);
+      await cdp.navigate(`${BASE}/admin/app/tickets/index.html`, 700);
+      const queueControls = await waitFor(() => cdp.eval(`Boolean(document.querySelector('[data-queue-search-form]') && !document.querySelector('[data-queue-search-form]').hidden && !document.querySelector('[data-handoff-inbox]').hidden && !document.querySelector('[data-bulk-bar]').hidden)`), 8000, 'queue search, handoff inbox, and bulk bar visible');
+      await cdp.setViewport(375, 812, true);
+      await sleep(300);
+      const mobileOverflow = await cdp.eval(`document.documentElement.scrollWidth - document.documentElement.clientWidth`);
+      assert.ok(mobileOverflow <= 2, `Admin tickets mobile 375px overflow: ${mobileOverflow}`);
+      await cdp.setViewport(1280, 800, false);
+
+      await cdp.navigate(`${BASE}/admin/app/tickets/detail.html?id=${encodeURIComponent(testTicketId)}`, 800);
+      const opsRendered = await waitFor(() => cdp.eval(`Boolean(document.querySelector('[data-ops-records]') && !document.querySelector('[data-ops-records]').hidden)`), 8000, 'detail operational records visible');
+      return { csirtCount, hasNotifRows, hasOpsTable, hasSchedTable, hasSlaRules, pickersReady, approvalsReady, queueControls, mobileOverflow, opsRendered };
+    });
+
     report.csp_violations = cspList;
     report.console_errors = consoleErrors;
     report.exceptions = exceptions;

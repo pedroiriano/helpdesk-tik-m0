@@ -30,8 +30,14 @@ func ownerSchema(owner string) (string, error) {
 		return "catalog", nil
 	case "M3":
 		return "intake", nil
+	case "M4":
+		return "classification", nil
 	case "M5":
 		return "assignment", nil
+	case "M6":
+		return "sla", nil
+	case "M7":
+		return "escalation", nil
 	case "M8":
 		return "knowledge", nil
 	default:

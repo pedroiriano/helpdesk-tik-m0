@@ -3,9 +3,12 @@ COMMANDS = {
     'RecordVendorCase',
     'ApprovePause',
     'RequestHandoff',
+    'ReadHandoffOffer',
     'AcceptHandoff',
     'RequestEscalation',
     'ReadOperation',
+    'ReadSchedulerJob',
+    'ReplaySchedulerJob',
 }
 
 def extend(s, operation, obj, arr, enum, UUID, TEXT, UTC, VERSION):

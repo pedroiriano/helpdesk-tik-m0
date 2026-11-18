@@ -33,3 +33,5 @@ cea481d4296bc5a9523470e417d0fd4df7ee2137a32b9eed4181fc9e9414bf28  migrations/m3/
 ec44b52aafbda1e5dde1d5d1b9027b5eb90ceb7415056f9e04b5e7e4dbc6aef9  migrations/m5/033-category-routing.sql
 0746c122639b7587da328eba5683547ce3c3ce7a0bcf005c10983c8e2ec55df6  migrations/m1/034-role-module-policy.sql
 ea2ef213bb86b19b3975b5b0f2279633abf70c38abcff4867055b768c563d45f  migrations/m8/035-hero-publication.sql
+ef4a81fe95cc82a479dd646fa6f1b220c82dd3b8b74a2dad6853732920393b8d  migrations/m3/036-operational-completion.sql
+de11a9bd51453cda2f935ed30fb31acbc3f2b3b03ff052d891df4904731fb796  migrations/m6/037-sla-rule-active.sql

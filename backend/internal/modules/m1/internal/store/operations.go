@@ -132,6 +132,25 @@ func (s Store) GetSystemJob(ctx context.Context, id string) (*api.SystemJob, err
 	return scanSystemJob(s.Pool.QueryRow(ctx, `SELECT `+systemJobColumns+` FROM identity.system_operation_requests WHERE id=$1`, id))
 }
 
+func (s Store) ListSystemJobs(ctx context.Context, orgs []string, actorID string, superAdmin bool, limit int) ([]api.SystemJob, error) {
+	rows, err := s.Pool.Query(ctx, `SELECT `+systemJobColumns+` FROM identity.system_operation_requests
+		WHERE target_id=ANY($1::uuid[]) OR ($2 AND kind='PURGE_REQUEST' AND requested_by=$3)
+		ORDER BY created_at DESC, id DESC LIMIT $4`, orgs, superAdmin, actorID, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	out := []api.SystemJob{}
+	for rows.Next() {
+		job, err := scanSystemJob(rows)
+		if err != nil {
+			return nil, err
+		}
+		out = append(out, *job)
+	}
+	return out, rows.Err()
+}
+
 func (s Store) ApproveSystemJob(ctx context.Context, tx pgx.Tx, id, actor, target string, version int64) (*api.SystemJob, error) {
 	job, err := scanSystemJob(tx.QueryRow(ctx, `UPDATE identity.system_operation_requests
   SET state='APPROVED',approved_by=$2,approved_at=now(),version=version+1,updated_at=now()
