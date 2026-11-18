@@ -327,6 +327,12 @@ async function run() {
       const firstRowAudienceRects = document.querySelector('[data-hd-articles-rows] tr td:nth-child(3)')?.getClientRects()?.length ?? 0;
       const wrap = document.querySelector('[data-hd-articles-section] .hd-table-wrap');
       const tableFitsWidth = wrap ? wrap.scrollWidth <= wrap.clientWidth + 2 : false;
+      const desktopNav = document.querySelector('nav[aria-label="Navigasi Utama"]');
+      const submenus = Array.from(desktopNav?.querySelectorAll('[data-admin-submenu]') || []);
+      const activeSub = submenus.find(s => s.dataset.adminSubmenu === 'sub-content');
+      const closedSub = submenus.find(s => s.dataset.adminSubmenu === 'sub-org');
+      const visibleUses = Array.from(desktopNav?.querySelectorAll('a[data-admin-nav-id] svg use, .hd-nav-submenu__toggle > svg:first-of-type use') || []).map(u => u.getAttribute('href'));
+      const uniqueUsesCount = new Set(visibleUses).size;
       return {
         activeNav: document.querySelector('[aria-current="page"]')?.textContent?.trim(),
         dtShell: Boolean(document.querySelector('[data-hd-articles-section] .hd-dt-shell')),
@@ -336,6 +342,11 @@ async function run() {
         tabsMarginTop,
         audienceSingleLine: firstRowAudienceRects <= 1,
         tableFitsWidth,
+        submenuCount: submenus.length,
+        activeSubOpen: activeSub?.dataset.open === 'true' && !activeSub.querySelector('.piui-nav-sublist')?.hidden,
+        closedSubCollapsed: closedSub?.dataset.open === 'false' && Boolean(closedSub.querySelector('.piui-nav-sublist')?.hidden),
+        iconCount: visibleUses.length,
+        uniqueIconCount: uniqueUsesCount,
       };
     })()`);
     assert.equal(adminShellInfo.activeNav, 'Tanya Jawab (FAQ)', 'Sidebar active link must match FAQ menu');
@@ -346,6 +357,23 @@ async function run() {
     assert.equal(adminShellInfo.tabsMarginTop, 0, 'Nested editorial tab group must not inherit double top margin');
     assert.equal(adminShellInfo.audienceSingleLine, true, 'Audience token like PUBLIC_GUEST must stay on one line without mid-word wrapping');
     assert.equal(adminShellInfo.tableFitsWidth, true, 'FAQ table & TINDAKAN column must fit desktop 1280px without clipping action buttons');
+    assert.equal(adminShellInfo.submenuCount, 5, 'Sidebar must render 5 structured submenus');
+    assert.equal(adminShellInfo.activeSubOpen, true, 'Active submenu (Konten & Media) must auto-open on ?kind=faqs');
+    assert.equal(adminShellInfo.closedSubCollapsed, true, 'Inactive submenu (Struktur Organisasi) must start collapsed to keep sidebar concise');
+    assert.equal(adminShellInfo.uniqueIconCount, adminShellInfo.iconCount, `All sidebar icons must be 100% unique (${adminShellInfo.uniqueIconCount}/${adminShellInfo.iconCount})`);
+
+    // Test interactive toggle of collapsed submenu & restore
+    const toggledOrg = await cdp.eval(`(() => {
+      const btn = document.querySelector('nav[aria-label="Navigasi Utama"] [data-admin-submenu="sub-org"] .hd-nav-submenu__toggle');
+      btn?.click();
+      const sub = btn?.closest('[data-admin-submenu]');
+      const opened = sub?.dataset.open === 'true' && !sub?.querySelector('.piui-nav-sublist')?.hidden && btn?.getAttribute('aria-expanded') === 'true';
+      btn?.click();
+      const closedAgain = sub?.dataset.open === 'false' && Boolean(sub?.querySelector('.piui-nav-sublist')?.hidden);
+      return { opened, closedAgain };
+    })()`);
+    assert.equal(toggledOrg.opened, true, 'Clicking submenu toggle must expand children');
+    assert.equal(toggledOrg.closedAgain, true, 'Clicking submenu toggle again must collapse children');
 
     if (process.env.FAQ_SCREENSHOT_PATH) {
       const shot = await cdp.send('Page.captureScreenshot', { format: 'png' });

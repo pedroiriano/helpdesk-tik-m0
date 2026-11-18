@@ -2,13 +2,16 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 import {stripTypeScriptTypes} from 'node:module';
-import {adminItems,adminGroups,canNavigate,canOpenAdminPage,adminPageContext,roleLabels,adminSubjects} from '../frontend/admin-navigation.mjs';
+import {adminItems,adminGroups,adminSubgroups,adminIconHref,canNavigate,canOpenAdminPage,adminPageContext,roleLabels,adminSubjects} from '../frontend/admin-navigation.mjs';
 
 const actor=(role,permissions=[],active=true,kind='STAFF',org='A')=>({version:3,actor:{name:'Akun sintetis',kind,role,memberships:[{organization_id:org,organization_active:active,permissions}]}});
 const operator=actor('OPERATOR',['ticket.read','media.read','ticket.verify']);
 const administrator=actor('PLATFORM_ADMIN',['catalog.write','identity.grant']);
 assert.equal(new Set(adminItems.map(i=>i.id)).size,adminItems.length);
 assert.equal(new Set(adminItems.map(i=>i.href)).size,adminItems.length);
+assert.equal(new Set(adminItems.map(i=>i.icon)).size,adminItems.length,'Every admin sidebar menu item must use a distinct icon (zero duplicate icons)');
+const allSidebarIcons=[...adminItems.map(i=>i.icon),...adminSubgroups.map(s=>s.icon)];
+assert.equal(new Set(allSidebarIcons).size,allSidebarIcons.length,'Submenu toggles and items must not share icons');
 for(const item of adminItems) {
   assert.ok(item.href.startsWith('/')&&!item.href.startsWith('//'));
   if(item.permissions) {
@@ -126,3 +129,13 @@ console.log('PASS native palette Escape closes instead of only clearing search')
 const footer=html.match(/<ul class="piui-footer__links">([\s\S]*?)<\/ul>/)[1];
 assert.deepEqual([...footer.matchAll(/data-admin-nav-id="([^"]+)"/g)].map(m=>m[1]),adminItems.filter(i=>i.footer).map(i=>i.id));
 console.log('PASS footer uses the canonical task map');
+
+const piuiSprite = await read('frontend/dist/admin/assets/icons/piui-sprite.svg');
+const hdSprite = await read('frontend/dist/helpdesk/admin-icons.svg');
+for (const icon of allSidebarIcons) {
+  const href = adminIconHref(icon);
+  const symbolId = href.split('#')[1];
+  const src = href.startsWith('/helpdesk/admin-icons.svg') ? hdSprite : piuiSprite;
+  assert.ok(src.includes(`id="${symbolId}"`), `Missing SVG symbol ${href}`);
+}
+console.log(`PASS sidebar sub-menus & 100% unique SVG icons (${allSidebarIcons.length}/${allSidebarIcons.length} distinct)`);

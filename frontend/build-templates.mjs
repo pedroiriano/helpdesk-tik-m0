@@ -208,8 +208,8 @@ function adminPage(file, source) {
   if (file === 'manifest.webmanifest') source = source.replaceAll('"/"', '"/admin/"');
   if (file === 'sw.js') {
     source=replaceRequired(source,'const CACHE_VERSION="2.2.2";','const CACHE_VERSION="2.2.2-m004";');
-    source = source.replace('const PRECACHE=[', 'const PRECACHE=["/helpdesk/admin-accent.js",')
-      .replace('STATIC_SHELL_ALLOWLIST=new Set([', 'STATIC_SHELL_ALLOWLIST=new Set(["/helpdesk/admin-accent.js",');
+    source = source.replace('const PRECACHE=[', 'const PRECACHE=["/helpdesk/admin-accent.js","/helpdesk/admin-icons.svg",')
+      .replace('STATIC_SHELL_ALLOWLIST=new Set([', 'STATIC_SHELL_ALLOWLIST=new Set(["/helpdesk/admin-accent.js","/helpdesk/admin-icons.svg",');
   }
   if (file === 'auth/login.html') return adminLoginPage(source);
   if (file === 'app/dashboard/index.html') return adminDashboard(source, health);
@@ -262,6 +262,7 @@ await mkdir(join(output,'admin/app/helpdesk'),{recursive:true});
 await writeFile(join(output,'admin/app/helpdesk/index.html'),adminBusinessPage(adminPage('app/users/index.html',await readFile(join(references,'piui-zero/app/users/index.html'),'utf8'))));
 await writeFile(join(output,'helpdesk/business.css'),await readFile(new URL('./business.css',import.meta.url)));
 await writeFile(join(output, 'helpdesk/admin-accent.js'), await readFile(new URL('./admin-accent.js', import.meta.url)));
+await writeFile(join(output, 'helpdesk/admin-icons.svg'), await readFile(new URL('./helpdesk-admin-icons.svg', import.meta.url)));
 await writeFile(join(output, 'helpdesk/landing.css'), await readFile(new URL('./landing.css', import.meta.url)));
 await writeFile(join(output, 'helpdesk/hero-public.js'), await readFile(new URL('./hero-public.js', import.meta.url)));
 await writeFile(join(output, 'helpdesk/public-ui.css'), await readFile(new URL('./public-ui.css', import.meta.url)));

@@ -40,6 +40,19 @@ export function syncAdminShell(session: Session | undefined) {
     else link.removeAttribute('aria-current');
   }
   for (const nav of document.querySelectorAll<HTMLElement>('[data-admin-navigation]')) {
+    if (!nav.dataset.submenuBound) {
+      nav.dataset.submenuBound = '1';
+      nav.addEventListener('click', (event) => {
+        const toggle = event.target instanceof Element ? event.target.closest<HTMLButtonElement>('.hd-nav-submenu__toggle') : null;
+        const sub = toggle?.closest<HTMLElement>('[data-admin-submenu]');
+        if (!toggle || !sub) return;
+        const nextOpen = sub.dataset.open !== 'true';
+        sub.dataset.open = String(nextOpen);
+        toggle.setAttribute('aria-expanded', String(nextOpen));
+        const sublist = sub.querySelector<HTMLElement>('.piui-nav-sublist');
+        if (sublist) sublist.hidden = !nextOpen;
+      });
+    }
     let summary = nav.previousElementSibling as HTMLElement | null;
     if (!summary?.hasAttribute('data-admin-context')) {
       summary = node('div','', 'hd-admin-context');
@@ -48,8 +61,22 @@ export function syncAdminShell(session: Session | undefined) {
     }
     summary.replaceChildren(node('strong',role),node('span',session?.actor.name ?? 'Masuk untuk membuka pekerjaan Anda.'),node('small',staff ? `${scopes.size} organisasi aktif · Lab sintetis` : 'Helpdesk TIK Kota Depok'));
     summary.title = `${role} · ${session?.actor.name ?? 'Belum masuk'}`;
+    for (const sub of nav.querySelectorAll<HTMLElement>('[data-admin-submenu]')) {
+      const visibleItems = [...sub.querySelectorAll<HTMLAnchorElement>('a[data-admin-nav-id]:not([hidden])')];
+      const hasVisible = visibleItems.length > 0;
+      sub.hidden = !hasVisible;
+      const row = sub.closest<HTMLElement>('.hd-nav-submenu-row');
+      if (row) row.hidden = !hasVisible;
+      const hasCurrent = Boolean(sub.querySelector('a[aria-current="page"], a[aria-current="location"]'));
+      const openSub = hasCurrent || (staff && visibleItems.length > 0 && visibleItems.length <= 2);
+      sub.dataset.open = String(openSub);
+      const toggle = sub.querySelector<HTMLButtonElement>('.hd-nav-submenu__toggle');
+      const sublist = sub.querySelector<HTMLElement>('.piui-nav-sublist');
+      if (toggle) toggle.setAttribute('aria-expanded', String(openSub));
+      if (sublist) sublist.hidden = !openSub;
+    }
     for (const list of nav.querySelectorAll<HTMLElement>('.piui-nav-list')) {
-      list.hidden = !list.querySelector('a:not([hidden])');
+      list.hidden = !list.querySelector('a[data-admin-nav-id]:not([hidden])');
       const heading = list.previousElementSibling;
       if (heading instanceof HTMLElement) heading.hidden = list.hidden;
     }

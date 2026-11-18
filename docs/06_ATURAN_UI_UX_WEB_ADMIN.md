@@ -5,7 +5,8 @@ Berlaku untuk ruang kerja petugas, pengelolaan, dashboard, antrean/detail tiket 
 ## Peta menu tunggal
 
 - `frontend/admin-navigation.mjs` menjadi sumber label, URL, kelompok, deskripsi halaman, permission dan konteks navigasi. Desktop, drawer mobile, footer, navigasi kerja tiket, pemilih halaman dan pencarian menu mengambil data dari sumber ini.
-- Gunakan kelompok Pekerjaan, Layanan dan konten, Organisasi dan akses, Pengawasan dan sistem, serta Bantuan dan portal. Kelompok tanpa menu yang diizinkan disembunyikan.
+- Gunakan kelompok Pekerjaan, Layanan dan konten, Organisasi dan akses, Pengawasan dan sistem, serta Bantuan dan portal. Kelompok Layanan dan konten disederhanakan ke sub menu **Katalog & Portal** dan **Konten & Media**; Organisasi dan akses disederhanakan ke **Struktur Organisasi** dan **Pengguna & Akses**; serta Bantuan dan portal memakai sub menu **Portal & Bantuan**. Sub menu aktif terbuka otomatis, dan kelompok/sub menu tanpa izin disembunyikan.
+- Setiap menu maupun induk sub menu wajib memakai **ikon SVG unik tanpa duplikasi** (gabungan `/admin/assets/icons/piui-sprite.svg` untuk shell standar dan `/helpdesk/admin-icons.svg` untuk ikon semantik Helpdesk), agar tetap terbaca meski sidebar diciutkan ke mode ikon.
 - Label memakai Bahasa Indonesia yang menjelaskan tugas. ID modul M1–M9, kode role, nama tabel dan rincian implementasi tidak menjadi nama menu.
 - Menu mengikuti jenis akun serta permission pada organisasi aktif. Administrator konfigurasi tidak otomatis memperoleh `ticket.read`. API tetap memeriksa izin per objek dan tindakan.
 - Jangan mengaktifkan launcher/badge notifikasi fixture pada halaman kerja nyata. Jumlah notifikasi hanya boleh berasal dari API berizin.
