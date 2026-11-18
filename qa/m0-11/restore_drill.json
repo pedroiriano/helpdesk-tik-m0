@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-11-17T04:54:54.418522+00:00",
+  "timestamp": "2026-11-18T01:39:45.368612+00:00",
   "scope": "M0-11 Isolated database backup and restore drill; RTO/RPO verification; zero impact on working DB",
   "command": "python scripts/drill_m0_11_restore.py",
   "isolated_target": "helpdesk_restore_drill",
-  "rpo_point_in_time": "2026-11-17T04:54:57.854742+00:00",
-  "rto_seconds": 0.884,
+  "rpo_point_in_time": "2026-11-18T01:39:49.237165+00:00",
+  "rto_seconds": 0.862,
   "schemas_restored": [
     "assignment",
     "catalog",
@@ -23,7 +23,7 @@
     "identity.memberships": 16,
     "catalog.services": 22,
     "catalog.categories": 6,
-    "migration_control.ledger": 35
+    "migration_control.ledger": 40
   },
   "checksum_verification": "PASS",
   "result": "PASS",

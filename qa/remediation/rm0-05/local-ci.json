@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-11-18T00:31:04.142934+00:00",
+  "timestamp": "2026-11-18T01:34:30.883711+00:00",
   "scope": "Reproducible local CI pipeline before/during RM0-05",
-  "git_commit": "bf7a14eb362d2c9caf45b219e27ade386abebff2",
+  "git_commit": "68b9922af7695e545fcb161bd6498b4579cba5b4",
   "git_working_tree_dirty": true,
   "source_manifest": "qa/remediation/rm0-05/source-manifest.json",
-  "source_manifest_sha256": "fc607611dd933ceed2f3076e7ad0f07369ae307a36528b8c58b7e3b35f36d17a",
+  "source_manifest_sha256": "b964ed0c85abcac438bed1dfbaa56760c61a5b593b9684c1516f3f4f80ec99be",
   "with_live_browser": true,
   "skip_docker": false,
   "steps": [
@@ -22,7 +22,7 @@
       "name": "package_consistency",
       "command": "C:\\Python313\\python.exe scripts/verify_package.py",
       "exit_code": 0,
-      "duration_s": 0.167,
+      "duration_s": 0.078,
       "result": "PASS",
       "tail": [
         "PASS package consistency: 9 modules, 13 tasks, 25 acceptance, 29 source groups, 21 chapters",
@@ -33,12 +33,12 @@
       "name": "package_validator_tests",
       "command": "C:\\Python313\\python.exe -m unittest discover -s scripts -p test_verify_package.py",
       "exit_code": 0,
-      "duration_s": 0.301,
+      "duration_s": 0.158,
       "result": "PASS",
       "tail": [
         "......",
         "----------------------------------------------------------------------",
-        "Ran 6 tests in 0.005s",
+        "Ran 6 tests in 0.002s",
         "",
         "OK"
       ]
@@ -47,7 +47,7 @@
       "name": "business_contracts_check",
       "command": "C:\\Python313\\python.exe scripts/build_business_contracts.py --check",
       "exit_code": 0,
-      "duration_s": 0.206,
+      "duration_s": 0.114,
       "result": "PASS",
       "tail": [
         "PASS business contract generation consistency"
@@ -57,12 +57,12 @@
       "name": "business_contracts_tests",
       "command": "C:\\Python313\\python.exe -X utf8 -m unittest tests/contract/test_business_contracts.py",
       "exit_code": 0,
-      "duration_s": 9.645,
+      "duration_s": 6.634,
       "result": "PASS",
       "tail": [
         "........",
         "----------------------------------------------------------------------",
-        "Ran 8 tests in 8.030s",
+        "Ran 8 tests in 5.905s",
         "",
         "OK"
       ]
@@ -71,7 +71,7 @@
       "name": "go_module_boundaries",
       "command": "C:\\Python313\\python.exe scripts/check_boundaries.py",
       "exit_code": 0,
-      "duration_s": 24.654,
+      "duration_s": 1.126,
       "result": "PASS",
       "tail": [
         "PASS module boundaries (53 Go packages)"
@@ -81,12 +81,12 @@
       "name": "go_boundary_negative",
       "command": "C:\\Python313\\python.exe scripts/test_boundaries.py",
       "exit_code": 0,
-      "duration_s": 0.29,
+      "duration_s": 0.161,
       "result": "PASS",
       "tail": [
         "..",
         "----------------------------------------------------------------------",
-        "Ran 2 tests in 0.001s",
+        "Ran 2 tests in 0.000s",
         "",
         "OK"
       ]
@@ -95,17 +95,35 @@
       "name": "piui_build_parity",
       "command": "C:\\Python313\\python.exe scripts/test_piui_build.py",
       "exit_code": 0,
-      "duration_s": 0.62,
+      "duration_s": 0.259,
       "result": "PASS",
       "tail": [
         "PASS PIUI (runtime files, HTML pages, byte-identical files) {'piui-modern': (60, 51), 'piui-zero': (73, 52)}"
       ]
     },
     {
+      "name": "security_and_sbom",
+      "command": "C:\\Python313\\python.exe -X utf8 scripts/security_gate.py",
+      "exit_code": 0,
+      "duration_s": 0.705,
+      "result": "PASS",
+      "tail": [
+        "PASS security gate (1356 files audited, 104 SBOM components) -> qa/remediation/rm0-05/security-gate.json"
+      ]
+    },
+    {
       "name": "compose_config_valid",
       "command": "docker compose config --quiet",
       "exit_code": 0,
-      "duration_s": 0.395,
+      "duration_s": 0.243,
+      "result": "PASS",
+      "tail": []
+    },
+    {
+      "name": "compose_prod_config_valid",
+      "command": "docker compose -f compose.yaml -f compose.prod.yml config --quiet",
+      "exit_code": 0,
+      "duration_s": 0.275,
       "result": "PASS",
       "tail": []
     },
@@ -113,41 +131,41 @@
       "name": "go_127_vet_and_test",
       "command": "docker build --pull=false --target test -t helpdesk-m0-ci-go-test:0.1.0 -f infra/docker/backend.Dockerfile .",
       "exit_code": 0,
-      "duration_s": 49.375,
+      "duration_s": 2.278,
       "result": "PASS",
       "tail": [
-        "#12 exporting layers 10.7s done",
-        "#12 exporting manifest sha256:1ec96964fa9d0c892e9008fe7c209d42e93808d5286017dbad43ff4200644160 0.1s done",
-        "#12 exporting config sha256:917f17cc693a2e6c0c9ec9e7427052399567ae198fb18a9197034e5f45081e3e 0.0s done",
-        "#12 exporting attestation manifest sha256:22be1b780b5dcdc4248fe366f7f785d7452f90ca90e306eb011b0856daa66c5f 0.1s done",
-        "#12 exporting manifest list sha256:e0366a4d443b40575fd3a53f55a67f971f80a10e19993671a59ecc1d9bb7c9bf",
-        "#12 exporting manifest list sha256:e0366a4d443b40575fd3a53f55a67f971f80a10e19993671a59ecc1d9bb7c9bf 0.1s done",
-        "#12 naming to docker.io/library/helpdesk-m0-ci-go-test:0.1.0 0.0s done",
+        "#12 exporting to image",
+        "#12 exporting layers done",
+        "#12 exporting manifest sha256:12ab5fcb7f2fe2c980753bfaed7f0c15e8b83538c3744b15a5bb890681edbaa8 done",
+        "#12 exporting config sha256:937be7cba450205cc0b4ba7880b570f24d524845530c45dc3d0158a60da484ea done",
+        "#12 exporting attestation manifest sha256:243c24b40f07da9b9e25828379517280f0a92a512342cba1080464784b6ea035 0.0s done",
+        "#12 exporting manifest list sha256:7b709b82b47925be8dfffdd2e127ff29d977501305d7466e8504902d8b0f8023 0.0s done",
+        "#12 naming to docker.io/library/helpdesk-m0-ci-go-test:0.1.0 done",
         "#12 unpacking to docker.io/library/helpdesk-m0-ci-go-test:0.1.0",
-        "#12 unpacking to docker.io/library/helpdesk-m0-ci-go-test:0.1.0 2.1s done",
-        "#12 DONE 13.1s",
+        "#12 unpacking to docker.io/library/helpdesk-m0-ci-go-test:0.1.0 1.2s done",
+        "#12 DONE 1.3s",
         "",
-        "View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/gv1p0zn81kpp91hkx4c8grp8u"
+        "View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/meyuv58bjtorldx1pvyas5a29"
       ]
     },
     {
       "name": "node_26_frontend_mjs_suites",
       "command": "docker run --rm -v C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith:/work:ro -w /work node:26.13.1-alpine@sha256:6bd9ab43c0ec0190ca7b2d193906cb8b7edf6e7f4afa43ddeccd6452710bffb5 sh -c set -e; node scripts/test_admin_navigation.mjs; node scripts/test_admin_profiles.mjs; node scripts/test_ticket_actions.mjs; node scripts/test_ux_flow.mjs; node scripts/test_business_intent.mjs; node scripts/test_public_cache.mjs",
       "exit_code": 0,
-      "duration_s": 3.341,
+      "duration_s": 1.863,
       "result": "PASS",
       "tail": [
         "PASS rendered ticket text/attribute escaping and server confirmation deadline",
         "PASS unknown-commit intent holds key/payload/version across refresh, rejects changed intent, and resets after receipt or definite rejection",
         "PASS public stale-image refresh, offline fallback, scoped cleanup, private-route bypass and one-time client update",
         "",
-        "(node:7) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time",
+        "(node:8) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time",
         "(Use `node --trace-warnings ...` to show where the warning was created)",
-        "(node:18) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time",
+        "(node:19) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time",
         "(Use `node --trace-warnings ...` to show where the warning was created)",
-        "(node:29) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time",
+        "(node:30) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time",
         "(Use `node --trace-warnings ...` to show where the warning was created)",
-        "(node:40) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time",
+        "(node:41) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time",
         "(Use `node --trace-warnings ...` to show where the warning was created)"
       ]
     },
@@ -155,7 +173,7 @@
       "name": "pg_18_disposable_migrations",
       "command": "C:\\Python313\\python.exe -X utf8 scripts/test_owner_migrations.py --report qa/remediation/rm0-05/ci-migrations.json",
       "exit_code": 0,
-      "duration_s": 45.794,
+      "duration_s": 24.881,
       "result": "PASS",
       "tail": [
         "PASS isolated migrations; report qa/remediation/rm0-05/ci-migrations.json"
@@ -165,7 +183,7 @@
       "name": "live_link_audit",
       "command": "C:\\Python313\\python.exe -X utf8 scripts/test_m0_13_links.py",
       "exit_code": 0,
-      "duration_s": 0.677,
+      "duration_s": 0.44,
       "result": "PASS",
       "tail": [
         "   - /masuk                                   : HTTP 200",
@@ -186,7 +204,7 @@
       "name": "live_modal_and_mobile",
       "command": "C:\\Python313\\python.exe -X utf8 scripts/test_modal_and_mobile.py",
       "exit_code": 0,
-      "duration_s": 0.589,
+      "duration_s": 0.369,
       "result": "PASS",
       "tail": [
         "[PASS] HTTP GET /admin/app/helpdesk/index.html?kind=services [Master Layanan TIK] -> 200",
@@ -207,10 +225,9 @@
       "name": "live_edge_cdp_browser",
       "command": "node scripts/test_rm0_04_browser.mjs",
       "exit_code": 0,
-      "duration_s": 143.064,
+      "duration_s": 107.902,
       "result": "PASS",
       "tail": [
-        "[PASS] R4-B_csp_routes_overflow_faq",
         "[PASS] candidate_access_profiles",
         "[PASS] candidate_catalog_routing",
         "[PASS] candidate_role_hero",
@@ -221,7 +238,8 @@
         "[PASS] R4-G_m8_page_editorial_search_reader",
         "[PASS] R4-H_lightbox_and_media",
         "[PASS] R4-I_footer_zoom_reduced_motion",
-        "[PASS] Fase2_UI_and_Ops"
+        "[PASS] Fase2_UI_and_Ops",
+        "[PASS] Fase3_AuthConfig_and_DeliveryQueue"
       ]
     }
   ],

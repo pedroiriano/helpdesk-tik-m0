@@ -1,23 +1,23 @@
 {
-  "timestamp": "2026-11-17T04:52:19.374737+00:00",
+  "timestamp": "2026-11-18T01:39:52.610269+00:00",
   "scope": "Two Docker tmpfs PostgreSQL instances, one synthetic ticket/private blob/event/job; no working DB",
   "host_ports": [],
   "persistent_volumes": [],
   "backup_manifest": {
-    "metadata_sha256": "1bdeb26b2b16d035f2a44b0a885019a0decfc22e050c9d2f3985a1d6605e5ac1",
-    "metadata_bytes": 272826,
+    "metadata_sha256": "7706743fade763fc08904e202a8ae5bf6be6922abd04b9b3fa7f4f28721b8877",
+    "metadata_bytes": 277173,
     "blob_sha256": "01179c19a190d7c0f8c5a4837edca8872ed2eebe1e96ec9eaf65d88ca03f21ef",
     "blob_bytes": 44,
-    "migration_manifest_sha256": "f96f4ba37b06461f9d8239235deca2b6f59d0027a03c61c01b8a7f493055d25f",
+    "migration_manifest_sha256": "9ff68fd5e9a0e58b28a2fdd94fd57dfeb765eab0112d548716148f413d4409a6",
     "config_sha256": {
-      "compose.yaml": "bde980294508320d2116a3d283a61161d22c27b68a5ababe799df788a3bb5813",
-      "planning/technology-lock.json": "0ee324bedf69e562d1291e06f8b6247953f0efa49cab4b365f4c38660446be4d"
+      "compose.yaml": "14433224c5d78865fe26e1f34913341ec62614c998e0ed19bb7124c004f94a72",
+      "planning/technology-lock.json": "ee6efdaf6bfa0ebf4cdee12eeb4b2351e99b5663b286e10176ab4a700837cc0a"
     }
   },
   "rpo_fixture_missing_commits": 0,
-  "source_latest_fixture_commit_ms": 1794891147737,
+  "source_latest_fixture_commit_ms": 1794966002074,
   "fresh_app_process_1": "PASS",
-  "rto_seconds_to_first_http_read": 74.02,
+  "rto_seconds_to_first_http_read": 82.23,
   "fresh_app_process_2": "PASS",
   "result": "PASS",
   "cleanup": "PASS"
