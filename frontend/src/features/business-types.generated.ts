@@ -31,8 +31,8 @@ export interface Components {
   'Escalate': { 'expected_version': number; 'level': 'L2' | 'COORDINATOR' | 'LEADERSHIP'; 'reason': string };
   'DraftWrite': { 'expected_version': number; 'form_version': number; 'title': string; 'description': string; 'expires_at': string };
   'Draft': { 'id': string; 'version': number; 'form_version': number; 'title': string; 'description': string; 'updated_at': string; 'expires_at': string };
-  'ContentWrite': { 'expected_version': number; 'title': string; 'slug': string; 'body': string; 'audience': 'PUBLIC_GUEST' | 'PUBLIC_AUTH' | 'ASN_AUTH' | 'STAFF_ONLY'; 'alt': string };
-  'Content': { 'id': string; 'version': number; 'title': string; 'slug': string; 'body': string; 'audience': 'PUBLIC_GUEST' | 'PUBLIC_AUTH' | 'ASN_AUTH' | 'STAFF_ONLY'; 'state': 'DRAFT' | 'REVIEW' | 'PUBLISHED' | 'ARCHIVED' };
+  'ContentWrite': { 'expected_version': number; 'title': string; 'slug': string; 'body': string; 'audience': 'PUBLIC_GUEST' | 'PUBLIC_AUTH' | 'ASN_AUTH' | 'STAFF_ONLY'; 'alt': string; 'category_label'?: string; 'sort_order'?: number };
+  'Content': { 'id': string; 'version': number; 'title': string; 'slug': string; 'body': string; 'audience': 'PUBLIC_GUEST' | 'PUBLIC_AUTH' | 'ASN_AUTH' | 'STAFF_ONLY'; 'state': 'DRAFT' | 'REVIEW' | 'PUBLISHED' | 'ARCHIVED'; 'kind'?: 'ARTICLE' | 'PAGE' | 'FAQ'; 'category_label'?: string; 'sort_order'?: number };
   'EditorialTransition': { 'expected_version': number; 'action': 'REVIEW' | 'PUBLISH' | 'ARCHIVE' | 'RESTORE'; 'reason': string };
   'Notification': { 'id': string; 'version': number; 'title': string; 'created_at': string; 'read': boolean; 'delivery_state': 'STORED' | 'SINK_ACCEPTED' | 'FAILED' | 'DEAD_LETTER' };
   'SinkChallengeInput': { 'scope_org_id': string };
@@ -43,7 +43,7 @@ export interface Components {
   'ReportQuery': { 'from': string; 'to': string; 'timezone': 'Asia/Jakarta'; 'organization_id': string; 'cohort': 'ACCEPTED' | 'RESOLVED' | 'OPEN'; 'format': 'CSV' | 'JSON' };
   'Report': { 'as_of': string; 'watermark': string | null; 'timezone': 'Asia/Jakarta'; 'policy_version': number | null; 'denominator': number; 'count': number; 'measure': 'SLA'; 'accepted': number; 'backlog': number; 'completed': number; 'breached': number; 'cancelled': number; 'unmeasured': number; 'gross_seconds': number; 'net_seconds': number; 'sla_percent': number | null };
   'Audit': { 'id': string; 'actor_id': string; 'action': string; 'object_id': string; 'scope': string; 'reason': string; 'outcome': 'SUCCESS' | 'DENIED' | 'FAILED'; 'correlation_id': string; 'occurred_at': string };
-  'SearchHit': { 'id': string; 'owner': 'M2' | 'M3' | 'M8'; 'kind': 'SERVICE' | 'TICKET' | 'ARTICLE' | 'PAGE' | 'MEDIA'; 'title': string; 'snippet': string };
+  'SearchHit': { 'id': string; 'owner': 'M2' | 'M3' | 'M8'; 'kind': 'SERVICE' | 'TICKET' | 'ARTICLE' | 'PAGE' | 'FAQ' | 'MEDIA'; 'title': string; 'snippet': string };
   'NavigationWrite': { 'expected_version': number; 'route': string; 'label': string; 'audience': 'PUBLIC_GUEST' | 'PUBLIC_AUTH' | 'ASN_AUTH' | 'STAFF_ONLY'; 'position': number };
   'MembershipWrite': { 'expected_version'?: number; 'subject_id': string; 'organization_id': string; 'team_id'?: string | null; 'permissions': (string)[]; 'expires_at': string; 'revoked'?: boolean; 'reason': string };
   'RuleWrite': { 'expected_version': number; 'code': string; 'rule_version': number; 'active': boolean; 'reason': string };

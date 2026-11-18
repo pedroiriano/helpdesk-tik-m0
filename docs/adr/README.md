@@ -1,6 +1,6 @@
 # Indeks Architecture Decision Records (ADR) Helpdesk M0
 
-Penomoran ADR bersifat unik berurutan (`0001`–`0011`) dan diperiksa oleh gerbang CI lokal (`scripts/ci_local.py`).
+Penomoran ADR bersifat unik berurutan (`0001`–`0012`) dan diperiksa oleh gerbang CI lokal (`scripts/ci_local.py`).
 
 | Nomor | Dokumen | Lingkup Keputusan | Status |
 |---|---|---|---|
@@ -15,3 +15,4 @@ Penomoran ADR bersifat unik berurutan (`0001`–`0011`) dan diperiksa oleh gerba
 | ADR 0009 | [0009-resource-envelope-and-rpo-rto-dec-m10.md](0009-resource-envelope-and-rpo-rto-dec-m10.md) | `DEC-M10` anggaran sumber daya dua-tier (R1/R2) & RPO/RTO lab | `DECIDED_LAB_ENVELOPE` |
 | ADR 0010 | [0010-technology-stack-upgrade-and-pinning-dec-m11.md](0010-technology-stack-upgrade-and-pinning-dec-m11.md) | `DEC-M11` pembaruan stack terpin (Go 1.27.4, Node 26.13.1, PG 18.7, ClamAV 1.5.4) | `DECIDED_PINNED_STACK` |
 | ADR 0011 | [0011-reporting-directory-and-category-routing.md](0011-reporting-directory-and-category-routing.md) | Kategori pelaporan, direktori instansi/Bidang & Smart Dispatch *(rekonsiliasi nomor dari duplikat `0007` 13 Nov 2026)* | Diterapkan (Lab) |
+| ADR 0012 | [0012-faq-management-and-m0-c3-f9-architecture-parity.md](0012-faq-management-and-m0-c3-f9-architecture-parity.md) | Pengelolaan FAQ dinamis (`M8`) & kesetaraan rancangan arsitektur `M0`, `C3`, `F9` | Diterapkan di M0 (Riset Multi-Model `DEFERRED_RESEARCH`) |

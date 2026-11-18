@@ -286,6 +286,13 @@
       "owner": "M1",
       "scope": "Additive maintenance schedule kind and public Under Maintenance display mode",
       "sha256": "d2096fb6ee3a2c9032fc8bc4c630c4c6df572233611d692ec22c51e967b3af67"
+    },
+    {
+      "id": "042",
+      "path": "migrations/m8/042-faq-management.sql",
+      "owner": "M8",
+      "scope": "Additive FAQ content kind, category grouping, sort order and canonical seed FAQs",
+      "sha256": "53716c3c6af6c759332c00554c50b2ab3a39cacf21803a0bd21e6f47824b241b"
     }
   ]
 }

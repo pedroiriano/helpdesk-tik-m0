@@ -59,6 +59,13 @@ func ValidateContentWrite(in api.ContentWriteInput) error {
 	if _, err := SanitizeContentBody(in.Body); err != nil {
 		return err
 	}
+	cat := strings.TrimSpace(in.CategoryLabel)
+	if len(cat) > 80 || strings.ContainsAny(cat, "<>") {
+		return web.Fail(422, "Kategori konten maksimal 80 karakter dan tidak boleh memuat tag HTML")
+	}
+	if in.SortOrder != nil && (*in.SortOrder < 0 || *in.SortOrder > 9999) {
+		return web.Fail(422, "Urutan tampil konten harus antara 0 sampai 9999")
+	}
 	return nil
 }
 

@@ -206,6 +206,9 @@ Deployment tetap mengikuti otorisasi dan runbook proyek. Bukti lokal UI dipisahk
 - Slug detail stabil dan dapat dibagikan. Tautan lama yang terpetakan menyelesaikan slug artikel M8 yang sama. API detail mengembalikan 404 untuk artikel yang hilang atau di luar cakupan. Konten diproses lewat allowlist elemen dan atribut; tautan eksternal menggunakan HTTPS.
 - Cakupan publikasi dan audiens diputuskan server. Browser mengambil ulang respons saat kembali ke halaman dan mengosongkan konten saat kehilangan jaringan. Respons editorial memakai `Cache-Control: no-store`. Aplikasi dapat memuat shell offline dengan pesan yang sesuai.
 - Editor dan penerbit memakai aksi yang sesuai izin organisasi serta versi artikel. Setelah publikasi, perubahan atau pengarsipan, pembacaan ulang publik mengikuti keadaan M8.
+- Halaman Tanya Jawab (`/faq.html`) dan akordeon FAQ beranda (`#vy-faq`) dihidrasi langsung dari `GET /api/v1/knowledge/faqs?view=published` (`Cache-Control: no-store`), mendukung filter kata kunci, dropdown topik setara **Select2**, tautan jangkar `#<slug>`, sanitasi konten allowlist, serta mempertahankan daftar ringkas bawaan saat server tidak dapat dijangkau.
+- Seluruh `<select>` fungsional pada Web Publik (pemilihan layanan, kategori/topik FAQ, wilayah/instansi `PD / Unit Kerja`, dan form filter) menggunakan komponen combobox aksesibel keyboard setara **Select2** (`select2-combobox.ts`) tanpa menghilangkan kontrol `<select>` native yang dapat dipulihkan.
+- Saat **Pemeliharaan Sistem** aktif atau terjadwal dari M1 (`GET /api/v1/maintenance/status`), portal menampilkan informasi *Under Maintenance* (banner jadwal atau halaman pemberitahuan sesuai mode terjadwal/tidak terjadwal) tanpa membocorkan detail infrastruktur.
 
 ## Identitas produk
 

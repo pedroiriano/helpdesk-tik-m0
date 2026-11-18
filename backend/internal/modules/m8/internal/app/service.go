@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"io"
+	"strings"
 	"time"
 
 	"helpdesk.local/m0/internal/modules/m8/api"
@@ -200,21 +201,31 @@ func (s *Service) CreateContent(ctx context.Context, actorID string, kind string
 	if err != nil {
 		return api.ContentItem{}, err
 	}
+	cat := strings.TrimSpace(in.CategoryLabel)
+	if cat == "" {
+		cat = "Umum"
+	}
+	order := 100
+	if in.SortOrder != nil {
+		order = *in.SortOrder
+	}
 	id := web.ID()
 	now := time.Now().UTC()
 	item := api.ContentItem{
-		ID:          id,
-		Version:     1,
-		Kind:        kind,
-		Slug:        in.Slug,
-		Title:       in.Title,
-		Body:        cleanBody,
-		Audience:    in.Audience,
-		State:       "DRAFT",
-		OrgID:       in.OrgID,
-		PrincipalID: actorID,
-		CreatedAt:   now,
-		UpdatedAt:   now,
+		ID:            id,
+		Version:       1,
+		Kind:          kind,
+		Slug:          in.Slug,
+		Title:         in.Title,
+		Body:          cleanBody,
+		Audience:      in.Audience,
+		State:         "DRAFT",
+		CategoryLabel: cat,
+		SortOrder:     order,
+		OrgID:         in.OrgID,
+		PrincipalID:   actorID,
+		CreatedAt:     now,
+		UpdatedAt:     now,
 	}
 	if err := s.Store.InsertContent(ctx, item, cleanBody); err != nil {
 		return api.ContentItem{}, err
@@ -254,14 +265,12 @@ func (s *Service) TransitionContent(ctx context.Context, id string, in api.Edito
 	if err != nil {
 		return api.ContentItem{}, err
 	}
-	if in.Action == "PUBLISH" && !hasPublishPerm {
-		return api.ContentItem{}, web.Fail(403, "Izin content.publish diperlukan untuk mempublikasikan konten")
+	needsPublish := in.Action == "PUBLISH" || in.Action == "ARCHIVE" || in.Action == "RESTORE"
+	if needsPublish && !hasPublishPerm {
+		return api.ContentItem{}, web.Fail(403, "Izin content.publish diperlukan untuk mengubah status publikasi konten")
 	}
 	scope := api.ScopeValue(scopes)
-	if in.Action == "PUBLISH" {
-		scope.Write = scope.Publish
-	}
-	if !scope.WriteContent(cur, in.Action == "PUBLISH") {
+	if !scope.WriteContent(cur, needsPublish) {
 		return api.ContentItem{}, web.Fail(404, "Konten tidak ditemukan")
 	}
 	return s.Store.TransitionContent(ctx, id, in.ExpectedVersion, nextState, in.Reason, actorID, scope)

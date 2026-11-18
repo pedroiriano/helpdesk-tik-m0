@@ -11,7 +11,7 @@ import { syncAdminShell, bindAdminPagePicker } from './admin-shell';
 import { adminItems, canNavigate, canOpenAdminPage, adminPageContext, roleLabels, adminSubjects } from '../../admin-navigation.mjs';
 import { syncJourney, serviceLoginHref, loginDestination } from './journey';
 import { initDashboard } from './dashboard';
-import { initKnowledgeBase } from "./knowledge";
+import { initKnowledgeBase, safeArticle } from "./knowledge";
 import { api, APIError, errorText, csrf } from './transport';
 import type { Components } from './business-types.generated';
 import { setupSearchCombobox } from './search-combobox';
@@ -702,6 +702,7 @@ async function admin(): Promise<void> {
     memberships: 'akses pengguna',
     navigation: 'navigasi portal',
     articles: 'artikel panduan',
+    faqs: 'tanya jawab (FAQ)',
     notifications: 'notifikasi',
     reports: 'laporan',
     audit: 'audit',
@@ -977,10 +978,17 @@ async function admin(): Promise<void> {
       return;
     }
 
-    if (requestedKind === 'articles') {
+    if (requestedKind === 'articles' || requestedKind === 'faqs') {
       if (artSec) artSec.hidden = false;
-      status('[data-hd-caption]', 'Basis Pengetahuan & Editorial Artikel');
-      status('[data-hd-status]', 'Kelola siklus hidup panduan operasional SPBE Kota Depok.');
+      const isFaq = requestedKind === 'faqs';
+      status('[data-hd-caption]', isFaq ? 'Tanya Jawab Resmi (FAQ)' : 'Basis Pengetahuan & Editorial Artikel');
+      status(
+        '[data-hd-status]',
+        isFaq
+          ? 'Kelola daftar Tanya Jawab (FAQ) publik dan internal Kota Depok beserta topik dan urutan tampil.'
+          : 'Kelola siklus hidup panduan operasional SPBE Kota Depok.',
+      );
+      setEditorialKind(isFaq ? 'FAQ' : 'ARTICLE');
       void loadArticles();
       return;
     }
@@ -2422,23 +2430,29 @@ async function admin(): Promise<void> {
   // =========================================================================
   // Basis Pengetahuan & Editorial Artikel (M8) Handlers
   // =========================================================================
-  type EditorialArticle = {id: string; version: number; title: string; slug: string; audience: string; state: string; body: string; org_id?: string};
+  type EditorialArticle = {
+    id: string; version: number; title: string; slug: string; audience: string;
+    state: string; body: string; category_label?: string; sort_order?: number; org_id?: string;
+  };
+  type EditorialKind = 'ARTICLE' | 'PAGE' | 'FAQ';
   const artForm = $<HTMLFormElement>('[data-hd-article-form]');
   const articlePanel = $('[data-hd-articles-section]');
   const editorialPrev = $<HTMLButtonElement>('[data-hd-editorial-prev]');
   const editorialNext = $<HTMLButtonElement>('[data-hd-editorial-next]');
   const editorialStatus = (message: string) => status('[data-hd-editorial-status]', message);
-  let editorialKind: 'ARTICLE' | 'PAGE' = 'ARTICLE';
+  let editorialKind: EditorialKind = 'ARTICLE';
   let articleDraft: EditorialArticle | undefined;
   let articleCursors = [''];
   let editorialCursor: string | null = null;
 
-  const editorialApiBase = () => (editorialKind === 'PAGE' ? '/portal/pages' : '/knowledge/articles');
-  const editorialPublicPrefix = () => (editorialKind === 'PAGE' ? '/halaman/' : '/panduan/');
-  const editorialNoun = () => (editorialKind === 'PAGE' ? 'halaman portal' : 'artikel');
+  const editorialApiBase = () => (editorialKind === 'PAGE' ? '/portal/pages' : editorialKind === 'FAQ' ? '/knowledge/faqs' : '/knowledge/articles');
+  const editorialPublicPrefix = () => (editorialKind === 'PAGE' ? '/halaman/' : editorialKind === 'FAQ' ? '/faq.html#' : '/panduan/');
+  const editorialNoun = () => (editorialKind === 'PAGE' ? 'halaman portal' : editorialKind === 'FAQ' ? 'tanya jawab (FAQ)' : 'artikel');
 
   const artTitleEl = $<HTMLInputElement>('#hd-art-title');
+  const artBodyEl = $<HTMLTextAreaElement>('#hd-art-body');
   const artSlugEl = $<HTMLInputElement>('#hd-art-slug');
+  const newArticle = $<HTMLButtonElement>('[data-hd-new-article]');
   let slugEditedManually = false;
   artSlugEl?.addEventListener('input', () => {
     slugEditedManually = Boolean(artSlugEl.value.trim());
@@ -2449,16 +2463,78 @@ async function admin(): Promise<void> {
     }
   });
 
+  function syncEditorialFormFields() {
+    const isFaq = editorialKind === 'FAQ';
+    const isPage = editorialKind === 'PAGE';
+    if (articlePanel) {
+      for (const fieldWrap of nodes('[data-hd-faq-only]', articlePanel)) {
+        fieldWrap.hidden = !isFaq;
+        for (const ctrl of nodes<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>('input, select, textarea', fieldWrap)) {
+          ctrl.disabled = !isFaq;
+        }
+      }
+    }
+    status('[data-hd-art-title-label]', isFaq ? 'Pertanyaan (FAQ) *' : isPage ? 'Judul Halaman Portal *' : 'Judul Panduan *');
+    status('[data-hd-art-body-label]', isFaq ? 'Jawaban Resmi FAQ (teks atau HTML dasar) *' : isPage ? 'Isi halaman (teks atau HTML dasar) *' : 'Isi panduan (teks atau HTML dasar) *');
+    if (artTitleEl) {
+      artTitleEl.placeholder = isFaq
+        ? 'Contoh: Bagaimana cara mengajukan akun email resmi @depok.go.id?'
+        : isPage
+          ? 'Contoh: Profil Layanan Diskominfo Kota Depok'
+          : 'Contoh: Panduan Akses Jaringan Intra Pemerintah Daerah';
+    }
+    if (artBodyEl) {
+      artBodyEl.placeholder = isFaq
+        ? 'Tuliskan jawaban resmi yang ringkas dan jelas untuk pemohon...'
+        : 'Tuliskan langkah-langkah panduan operasional dengan bahasa yang mudah dipahami...';
+    }
+    if (newArticle) {
+      newArticle.textContent = isFaq ? '+ Tambah FAQ Baru' : isPage ? '+ Tulis Halaman Baru' : '+ Tulis Konten Baru';
+    }
+    const saveBtn = artForm ? $<HTMLButtonElement>('button[type="submit"]', artForm) : null;
+    if (saveBtn) {
+      saveBtn.textContent = isFaq ? 'Simpan Draft FAQ' : isPage ? 'Simpan Draft Halaman' : 'Simpan Draft Artikel';
+    }
+  }
+
+  function setEditorialKind(nextKind: EditorialKind) {
+    editorialKind = nextKind;
+    articleDraft = undefined;
+    articleCursors = [''];
+    if (artForm) artForm.hidden = true;
+    for (const peer of nodes<HTMLButtonElement>('[data-hd-editorial-kind]')) {
+      const active = peer.dataset.hdEditorialKind === nextKind;
+      peer.setAttribute('aria-pressed', String(active));
+      peer.classList.toggle('piui-btn--primary', active);
+      peer.classList.toggle('piui-btn--secondary', !active);
+    }
+    syncEditorialFormFields();
+  }
+
   function editArticle(item?: EditorialArticle) {
     if (!artForm) return;
     articleDraft = item;
     slugEditedManually = Boolean(item);
     artForm.reset();
+    syncEditorialFormFields();
     status('[data-hd-article-form-title]', item ? `Sunting ${editorialNoun()}` : `Tulis ${editorialNoun()} baru`, artForm);
     status('[data-hd-article-badge]', item ? `Mengedit · v${item.version}` : 'Draft Baru', artForm);
     for (const key of ['title', 'slug', 'audience', 'body'] as const) {
       const input = artForm.elements.namedItem(key);
-      if (item && (input instanceof HTMLInputElement || input instanceof HTMLSelectElement || input instanceof HTMLTextAreaElement)) input.value = item[key];
+      if (item && (input instanceof HTMLInputElement || input instanceof HTMLSelectElement || input instanceof HTMLTextAreaElement)) {
+        input.value = item[key];
+      }
+      if (input instanceof HTMLSelectElement) {
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    }
+    const categoryInput = artForm.elements.namedItem('category_label');
+    if (categoryInput instanceof HTMLInputElement) {
+      categoryInput.value = item?.category_label || (editorialKind === 'FAQ' ? 'Umum' : '');
+    }
+    const orderInput = artForm.elements.namedItem('sort_order');
+    if (orderInput instanceof HTMLInputElement) {
+      orderInput.value = String(item?.sort_order ?? 100);
     }
     status('[data-hd-article-status]', '', artForm);
     artForm.hidden = false;
@@ -2516,7 +2592,12 @@ async function admin(): Promise<void> {
           link.href = href;
           actions.append(link);
         }
-        tr.append(element('td', it.title), element('td', href), element('td', it.audience),
+        const titleCell = element('td');
+        titleCell.append(element('div', it.title));
+        if (editorialKind === 'FAQ') {
+          titleCell.append(element('small', `Topik: ${it.category_label || 'Umum'} · Urutan #${it.sort_order ?? 100}`, 'hd-faq-submeta'));
+        }
+        tr.append(titleCell, element('td', href), element('td', it.audience),
           element('td', it.state), element('td', `v${it.version}`), actions);
         tbody.append(tr);
       }
@@ -2530,29 +2611,21 @@ async function admin(): Promise<void> {
 
   for (const kindBtn of nodes<HTMLButtonElement>('[data-hd-editorial-kind]')) {
     kindBtn.addEventListener('click', () => {
-      const nextKind = kindBtn.dataset.hdEditorialKind === 'PAGE' ? 'PAGE' : 'ARTICLE';
+      const rawKind = kindBtn.dataset.hdEditorialKind;
+      const nextKind: EditorialKind = rawKind === 'PAGE' ? 'PAGE' : rawKind === 'FAQ' ? 'FAQ' : 'ARTICLE';
       if (editorialKind === nextKind) return;
-      editorialKind = nextKind;
-      articleDraft = undefined;
-      articleCursors = [''];
-      if (artForm) artForm.hidden = true;
-      for (const peer of nodes<HTMLButtonElement>('[data-hd-editorial-kind]')) {
-        const active = peer === kindBtn;
-        peer.setAttribute('aria-pressed', String(active));
-        peer.classList.toggle('piui-btn--primary', active);
-        peer.classList.toggle('piui-btn--secondary', !active);
-      }
+      setEditorialKind(nextKind);
       void loadArticles();
     });
   }
 
   editorialPrev?.addEventListener('click', () => { if (articleCursors.length > 1) { articleCursors.pop(); void loadArticles(); } });
   editorialNext?.addEventListener('click', () => { if (editorialCursor) { articleCursors.push(editorialCursor); void loadArticles(); } });
-  const newArticle = $<HTMLButtonElement>('[data-hd-new-article]');
   if (newArticle) {
     newArticle.hidden = !can('content.write');
     newArticle.addEventListener('click', () => editArticle());
   }
+  syncEditorialFormFields();
   $('[data-hd-close-art-form]')?.addEventListener('click', () => {
     if (artForm) artForm.hidden = true;
     newArticle?.focus();
@@ -2571,13 +2644,19 @@ async function admin(): Promise<void> {
     if (submit) submit.disabled = true;
     status('[data-hd-article-status]', `Menyimpan ${editorialNoun()}…`, artForm);
     try {
-      await api(path, articleDraft ? 'PUT' : 'POST', {
+      const payload: Record<string, unknown> = {
         expected_version: articleDraft?.version ?? 1, org_id: articleDraft?.org_id,
         title: text('title'), slug: text('slug'), audience: text('audience'), body: text('body'), alt: text('alt'),
-      });
+      };
+      if (editorialKind === 'FAQ') {
+        payload.category_label = text('category_label') || 'Umum';
+        const parsedOrder = Number.parseInt(text('sort_order') || '100', 10);
+        payload.sort_order = Number.isFinite(parsedOrder) && parsedOrder >= 0 ? parsedOrder : 100;
+      }
+      await api(path, articleDraft ? 'PUT' : 'POST', payload);
       artForm.hidden = true;
       await loadArticles();
-      editorialStatus(`${editorialKind === 'PAGE' ? 'Halaman portal' : 'Artikel'} disimpan.`);
+      editorialStatus(`${editorialKind === 'PAGE' ? 'Halaman portal' : editorialKind === 'FAQ' ? 'Tanya jawab (FAQ)' : 'Artikel'} disimpan.`);
     } catch (error) {
       status('[data-hd-article-status]', errorText(error), artForm);
     } finally {
@@ -2592,6 +2671,84 @@ async function admin(): Promise<void> {
     focusMasterForm();
   }
   if (adminPanel) adminPanel.hidden = false;
+}
+
+async function publicFaqPage(): Promise<void> {
+  type FaqItem = { id: string; title: string; slug: string; body: string; category_label?: string; sort_order?: number };
+  const listEl = $('[data-hd-faq-list]');
+  if (!listEl) return;
+  const searchEl = $<HTMLInputElement>('#hd-faq-q');
+  const topicEl = $<HTMLSelectElement>('#hd-faq-topic');
+  const filterForm = $<HTMLFormElement>('[data-hd-faq-filter]');
+  filterForm?.addEventListener('submit', event => event.preventDefault());
+  let loadedItems: FaqItem[] = [];
+
+  const openTargetFromHash = () => {
+    const hash = decodeURIComponent(location.hash.replace(/^#/, '')).trim();
+    if (!hash) return;
+    for (const item of nodes<HTMLDetailsElement>('.hd-faq-item', listEl)) {
+      if (item.id === hash) {
+        item.open = true;
+        item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  };
+
+  const renderFaqs = () => {
+    const keyword = (searchEl?.value ?? '').trim().toLowerCase();
+    const topic = (topicEl?.value ?? '').trim();
+    const filtered = loadedItems.filter(it => {
+      if (topic && (it.category_label || 'Umum') !== topic) return false;
+      if (!keyword) return true;
+      const plain = (safeArticle(it.body).textContent ?? '').toLowerCase();
+      return it.title.toLowerCase().includes(keyword) || (it.category_label || '').toLowerCase().includes(keyword) || plain.includes(keyword);
+    });
+    if (!filtered.length) {
+      listEl.replaceChildren();
+      status('[data-hd-faq-status]', 'Tidak ada FAQ yang cocok dengan filter atau kata kunci Anda.');
+      return;
+    }
+    const items = filtered.map(it => {
+      const details = document.createElement('details');
+      details.className = 'hd-faq-item';
+      details.name = 'hd-faq';
+      if (/^[a-z0-9-]{1,100}$/.test(it.slug)) details.id = it.slug;
+      const summary = document.createElement('summary');
+      const topicBadge = element('span', it.category_label || 'Umum', 'hd-faq-topic-badge');
+      summary.append(topicBadge, document.createTextNode(' ' + it.title));
+      const answer = document.createElement('div');
+      answer.className = 'hd-faq-answer';
+      answer.append(safeArticle(it.body));
+      details.append(summary, answer);
+      return details;
+    });
+    listEl.replaceChildren(...items);
+    status('[data-hd-faq-status]', `Menampilkan ${filtered.length} dari ${loadedItems.length} Tanya Jawab resmi Kota Depok.`);
+    openTargetFromHash();
+  };
+
+  try {
+    const res = await api<Page<FaqItem>>('/knowledge/faqs?view=published&limit=100');
+    loadedItems = (res.items ?? []).slice().sort((a, b) => (a.sort_order ?? 100) - (b.sort_order ?? 100));
+    if (topicEl) {
+      const current = topicEl.value;
+      const topics = [...new Set(loadedItems.map(it => it.category_label || 'Umum').filter(Boolean))].sort((a, b) => a.localeCompare(b, 'id'));
+      const opts = [new Option('Semua topik', '')].concat(topics.map(t => new Option(t, t)));
+      topicEl.replaceChildren(...opts);
+      if (topics.includes(current)) topicEl.value = current;
+      topicEl.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    if (loadedItems.length) {
+      renderFaqs();
+      searchEl?.addEventListener('input', renderFaqs);
+      topicEl?.addEventListener('change', renderFaqs);
+      window.addEventListener('hashchange', openTargetFromHash);
+    } else {
+      status('[data-hd-faq-status]', 'Belum ada FAQ diterbitkan dari server; menampilkan panduan ringkas bawaan.');
+    }
+  } catch {
+    status('[data-hd-faq-status]', 'Menampilkan daftar Tanya Jawab bawaan (koneksi server tidak tersedia).');
+  }
 }
 
 async function statusPage(): Promise<void> {
@@ -2636,6 +2793,7 @@ async function main() {
     if (location.pathname.startsWith('/admin/')) initAdminDataTables();
     if (page === 'catalog') await catalog();
     if (page === 'detail') await detail();
+    if (page === 'faq') await publicFaqPage();
     if (page === 'status') await statusPage();
     if (page === 'admin') await admin();
     if (page === 'dashboard') initDashboard(session?.actor.memberships ?? [], session?.actor.role);

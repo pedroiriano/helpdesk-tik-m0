@@ -9,6 +9,7 @@ export const adminGroups = [
     {id:'services',kind:'services',label:'Layanan TIK',icon:'components',permissions:['catalog.write'],description:'Kelola layanan, persyaratan, formulir dan kebijakan layanan.'},
     {id:'categories',kind:'categories',label:'Kategori layanan',icon:'components',permissions:['catalog.write'],description:'Kelola kategori yang digunakan saat memeriksa laporan.'},
     {id:'articles',kind:'articles',label:'Panduan dan artikel',icon:'info',permissions:['content.read','content.write','content.publish'],description:'Susun, tinjau dan terbitkan panduan sesuai mandat Anda.'},
+    {id:'faqs',kind:'faqs',label:'Tanya Jawab (FAQ)',icon:'info',permissions:['content.read','content.write','content.publish'],description:'Kelola pertanyaan umum (FAQ), topik kategori, urutan tampil dan publikasi ke portal.'},
     {id:'media',kind:'media',label:'Pustaka media',icon:'gallery',permissions:['media.read','media.write'],description:'Temukan berkas yang boleh diakses dan kelola media sesuai izin.'},
     {id:'hero',kind:'hero',label:'Banner Hero',icon:'gallery',permissions:['hero.write','hero.publish'],organization:'10000000-0000-4000-8000-000000000001',description:'Atur lima banner beranda, simpan draf, lalu terbitkan.'},
     {id:'navigation',kind:'navigation',label:'Menu portal publik',icon:'settings',permissions:['catalog.write'],description:'Atur susunan menu pada portal publik.'},

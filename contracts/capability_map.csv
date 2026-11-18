@@ -6,5 +6,5 @@ M4,classification,"text_classification;category_proposal;priority_proposal;class
 M5,assignment,"skills;roster;L1_L2_routing;assignment_proposal","Requires verified ticket; final commit in M3"
 M6,sla,"stage_targets;business_calendars;pause_calculation;SLO_definitions","Original accepted_at retained across reassignment"
 M7,escalation,"functional_escalation;hierarchical_escalation;vendor_followup;auto_close","Idempotent versioned command to M3"
-M8,knowledge,"articles;portal_content;editorial_media;content_drafts;public_SEO","Private ticket media require sanitized approved copy before publication"
+M8,knowledge,"articles;faq;portal_content;editorial_media;content_drafts;public_SEO","Private ticket media require sanitized approved copy before publication"
 M9,notify_audit,"notification_center;telegram_bindings;audit;reporting;exports;visitor_aggregates","Separate queues; live authorization on reads and downloads"

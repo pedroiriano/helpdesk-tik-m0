@@ -13,6 +13,8 @@ type ContentItem struct {
 	Body           string    `json:"body"`
 	Audience       string    `json:"audience"`
 	State          string    `json:"state"`
+	CategoryLabel  string    `json:"category_label,omitempty"`
+	SortOrder      int       `json:"sort_order,omitempty"`
 	OrgID          *string   `json:"org_id,omitempty"`
 	PrincipalID    string    `json:"principal_id,omitempty"`
 	CreatedAt      time.Time `json:"created_at,omitempty"`
@@ -27,6 +29,8 @@ type ContentWriteInput struct {
 	Body            string  `json:"body"`
 	Audience        string  `json:"audience"`
 	Alt             string  `json:"alt"`
+	CategoryLabel   string  `json:"category_label,omitempty"`
+	SortOrder       *int    `json:"sort_order,omitempty"`
 	OrgID           *string `json:"org_id,omitempty"`
 }
 

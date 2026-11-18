@@ -761,9 +761,9 @@ func (h *Handler) Register(m *http.ServeMux) {
 				web.WriteError(w, err)
 				return
 			}
-			if in.Action == "PUBLISH" {
+			if in.Action == "PUBLISH" || in.Action == "ARCHIVE" || in.Action == "RESTORE" {
 				if !h.hasPerm(perms, "content.publish") {
-					web.WriteError(w, web.Fail(403, "Izin content.publish diperlukan untuk mempublikasikan konten"))
+					web.WriteError(w, web.Fail(403, "Izin content.publish diperlukan untuk mengubah status publikasi konten"))
 					return
 				}
 			} else {
@@ -783,6 +783,7 @@ func (h *Handler) Register(m *http.ServeMux) {
 
 	registerContentEndpoints("/api/v1/knowledge/articles", "ARTICLE")
 	registerContentEndpoints("/api/v1/portal/pages", "PAGE")
+	registerContentEndpoints("/api/v1/knowledge/faqs", "FAQ")
 }
 
 func allowedAudience(kind string, staff bool) []string {

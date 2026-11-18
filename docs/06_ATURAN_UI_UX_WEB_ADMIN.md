@@ -24,6 +24,9 @@ Berlaku untuk ruang kerja petugas, pengelolaan, dashboard, antrean/detail tiket 
 
 - Super Admin mengelola batas tindakan per peran di **Peran dan Akses Modul**. Penugasan izin akun tetap melalui **Akun dan hak akses** pada OPD yang dipilih. Pilihan izin diambil dari kebijakan server. Cantumkan alasan dan versi saat menyimpan perubahan.
 - **Banner Hero** berada dalam **Layanan dan konten**. Gunakan lima slot, judul dan teks alternatif setiap gambar, serta kontrol urutan yang dapat dipakai dengan keyboard. Pustaka media menandai calon gambar Hero pada saat unggah. Draf dan terbit memiliki tindakan dan izin terpisah.
+- **Tanya Jawab (FAQ)** tersedia pada menu khusus `?kind=faqs` maupun tab `FAQ` di **Panduan dan artikel** (`M8` `/api/v1/knowledge/faqs`), lengkap dengan kolom topik (`category_label`), urutan tampil (`sort_order`), target audience, alur editorial `DRAFT -> PUBLISHED -> ARCHIVED -> RESTORE`, dan pengamanan `expected_version` CAS.
+- Pengelola berizin dapat menambah, menyunting, dan mengarsipkan master data termasuk **Akun pengguna (`?kind=subjects`)**, **Layanan**, **Kategori**, **PD / Unit Kerja** (penamaan ringkas konsisten menggantikan klausa panjang "Perangkat Daerah dan Unit Kerja"), **Bidang**, **Tim teknis**, dan **Pemeliharaan sistem** (jendela *Under Maintenance* Terjadwal maupun Tidak Terjadwal di `M1`).
+- Seluruh dropdown/combo box pada Web Admin menggunakan komponen setara **Select2** dengan pencarian instan dan navigasi keyboard, serta tabel pengelolaan menggunakan **DataTables** (`admin-datatable.ts`) untuk pencarian tabel, pengurutan kolom, dan jumlah baris tampil.
 
 ### Lima profil tugas
 

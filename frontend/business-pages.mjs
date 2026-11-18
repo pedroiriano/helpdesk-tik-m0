@@ -199,7 +199,12 @@ function faqSection() {
   return `<section class="vy-contact-form hd-faq-section">
     <h2>Pertanyaan Umum &amp; Solusi Cepat (FAQ)</h2>
     <p>Temukan jawaban langsung untuk pertanyaan umum seputar layanan teknologi informasi dan komunikasi Pemerintah Kota Depok.</p>
-    <div class="hd-faq-list">
+    <form class="hd-form-grid hd-faq-toolbar" data-hd-faq-filter>
+      <div class="vy-input-group"><label for="hd-faq-q">Cari pertanyaan atau jawaban</label><input id="hd-faq-q" class="vy-input" type="search" maxlength="100" placeholder="Kata kunci (misal: email, SLA, CSIRT, TTE)..."></div>
+      <div class="vy-input-group"><label for="hd-faq-topic">Topik layanan</label><select id="hd-faq-topic" class="vy-input"><option value="">Semua topik</option></select></div>
+    </form>
+    <p data-hd-faq-status role="status">Memuat daftar FAQ resmi…</p>
+    <div class="hd-faq-list" data-hd-faq-list>
       <details class="hd-faq-item" name="hd-faq">
         <summary>Bagaimana cara mengajukan akun email resmi @depok.go.id?</summary>
         <p>Permohonan akun email kedinasan dapat diajukan oleh ASN melalui menu <strong>Katalog Layanan &rarr; Layanan Penerbitan Akun Email Kedinasan</strong>. Lampirkan Surat Keputusan (SK) Pengangkatan atau Surat Tugas resmi dari Kepala OPD yang bersangkutan.</p>
@@ -709,12 +714,13 @@ export function adminBusinessPage(source) {
         <div class="hd-actions" role="group" aria-label="Jenis konten editorial" data-hd-editorial-kind-tabs>
           <button type="button" class="piui-btn piui-btn--primary" data-hd-editorial-kind="ARTICLE" aria-pressed="true">Artikel Panduan (ARTICLE)</button>
           <button type="button" class="piui-btn piui-btn--secondary" data-hd-editorial-kind="PAGE" aria-pressed="false">Halaman Portal (PAGE)</button>
+          <button type="button" class="piui-btn piui-btn--secondary" data-hd-editorial-kind="FAQ" aria-pressed="false">Tanya Jawab (FAQ)</button>
         </div>
-        <button type="button" class="piui-btn piui-btn--primary" data-hd-new-article>+ Tulis Artikel / Halaman Baru</button>
+        <button type="button" class="piui-btn piui-btn--primary" data-hd-new-article>+ Tulis Konten Baru</button>
         <button type="button" class="piui-btn piui-btn--secondary" data-hd-refresh-articles>Muat Ulang</button>
       </div>
     </div>
-    <div class="hd-table-wrap"><table class="piui-table"><thead><tr><th scope="col">Judul Artikel</th><th scope="col">Slug URL</th><th scope="col">Audience</th><th scope="col">Status Editorial</th><th scope="col">Versi</th><th scope="col">Tindakan</th></tr></thead><tbody data-hd-articles-rows></tbody></table></div>
+    <div class="hd-table-wrap"><table class="piui-table"><thead><tr><th scope="col">Judul / Pertanyaan</th><th scope="col">Slug URL</th><th scope="col">Audience</th><th scope="col">Status Editorial</th><th scope="col">Versi</th><th scope="col">Tindakan</th></tr></thead><tbody data-hd-articles-rows></tbody></table></div>
     <p data-hd-editorial-status role="status"></p>
     <nav class="hd-actions" aria-label="Halaman editorial">
       <button type="button" class="piui-btn piui-btn--secondary" data-hd-editorial-prev disabled>Sebelumnya</button>
@@ -729,11 +735,13 @@ export function adminBusinessPage(source) {
         <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-hd-close-art-form>Tutup</button>
       </div>
       <div class="hd-form-grid">
-        <div class="piui-field"><label for="hd-art-title">Judul Panduan *</label><input class="piui-input" id="hd-art-title" name="title" required maxlength="200" placeholder="Contoh: Panduan Akses Jaringan Intra Pemerintah Daerah"></div>
+        <div class="piui-field"><label for="hd-art-title" data-hd-art-title-label>Judul Panduan *</label><input class="piui-input" id="hd-art-title" name="title" required maxlength="200" placeholder="Contoh: Panduan Akses Jaringan Intra Pemerintah Daerah"></div>
         <div class="piui-field"><label for="hd-art-slug">Slug URL *</label><input class="piui-input" id="hd-art-slug" name="slug" required maxlength="100" placeholder="otomatis-dari-judul-panduan"><small>Otomatis terbentuk dari judul saat menulis baru (dapat disesuaikan).</small></div>
+        <div class="piui-field" data-hd-faq-only hidden><label for="hd-art-category">Topik / Kategori FAQ</label><input class="piui-input" id="hd-art-category" name="category_label" maxlength="80" placeholder="Contoh: Akun &amp; Email Dinas, Jaringan &amp; SLA" disabled></div>
+        <div class="piui-field" data-hd-faq-only hidden><label for="hd-art-order">Urutan Tampil</label><input class="piui-input" id="hd-art-order" name="sort_order" type="number" min="0" max="9999" value="10" disabled><small>Angka kecil tampil lebih atas pada halaman FAQ.</small></div>
         <div class="piui-field"><label for="hd-art-audience">Audience</label><select class="piui-input" id="hd-art-audience" name="audience"><option value="PUBLIC_GUEST">Publik (PUBLIC_GUEST)</option><option value="PUBLIC_AUTH">Publik Terdaftar (PUBLIC_AUTH)</option><option value="ASN_AUTH">Khusus ASN (ASN_AUTH)</option><option value="STAFF_ONLY">Internal Petugas (STAFF_ONLY)</option></select></div>
         <div class="piui-field"><label for="hd-art-alt">Ringkasan / Alt Deskripsi</label><input class="piui-input" id="hd-art-alt" name="alt" maxlength="200" placeholder="Ringkasan singkat isi panduan..."></div>
-        <div class="piui-field hd-col-full hd-editorial-body"><label for="hd-art-body">Isi panduan (teks atau HTML dasar) *</label><textarea class="piui-input" id="hd-art-body" name="body" rows="7" required placeholder="Tuliskan langkah-langkah panduan operasional dengan bahasa yang mudah dipahami..."></textarea></div>
+        <div class="piui-field hd-col-full hd-editorial-body"><label for="hd-art-body" data-hd-art-body-label>Isi panduan (teks atau HTML dasar) *</label><textarea class="piui-input" id="hd-art-body" name="body" rows="7" required placeholder="Tuliskan langkah-langkah panduan operasional dengan bahasa yang mudah dipahami..."></textarea></div>
       </div>
       <p data-hd-article-status role="status"></p>
       <div class="hd-form-footer">

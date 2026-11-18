@@ -41,6 +41,66 @@
   }
 })();
 
+// Hydrate landing FAQ accordion cleanly from M8 published FAQs with bundled fallback.
+(async () => {
+  const faqRoot = document.getElementById('vy-faq');
+  if (!faqRoot) return;
+  try {
+    const res = await fetch('/api/v1/knowledge/faqs?view=published&limit=6', {
+      credentials: 'omit',
+      cache: 'no-store',
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+    if (!Array.isArray(data.items) || data.items.length === 0) return;
+    const nodes = data.items.map((item, idx) => {
+      const box = document.createElement('div');
+      box.className = 'vy-faq__item';
+      const panelId = 'faq-m8-' + (idx + 1);
+      const btn = document.createElement('button');
+      btn.className = 'vy-faq__q';
+      btn.type = 'button';
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-controls', panelId);
+      const qSpan = document.createElement('span');
+      qSpan.textContent = item.title || '';
+      const icon = document.createElement('span');
+      icon.className = 'vy-faq__icon';
+      icon.setAttribute('aria-hidden', 'true');
+      btn.append(qSpan, icon);
+
+      const ansWrap = document.createElement('div');
+      ansWrap.className = 'vy-faq__a';
+      ansWrap.id = panelId;
+      ansWrap.setAttribute('data-open', '0');
+      ansWrap.setAttribute('aria-hidden', 'true');
+      ansWrap.inert = true;
+      const inner = document.createElement('div');
+      inner.className = 'vy-faq__inner';
+      const p = document.createElement('p');
+      p.textContent = String(item.body || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+      inner.append(p);
+      ansWrap.append(inner);
+
+      btn.addEventListener('click', () => {
+        const wasOpen = btn.getAttribute('aria-expanded') === 'true';
+        const nextOpen = !wasOpen;
+        btn.setAttribute('aria-expanded', String(nextOpen));
+        ansWrap.setAttribute('data-open', nextOpen ? '1' : '0');
+        ansWrap.setAttribute('aria-hidden', String(!nextOpen));
+        ansWrap.inert = !nextOpen;
+      });
+
+      box.append(btn, ansWrap);
+      return box;
+    });
+    faqRoot.replaceChildren(...nodes);
+  } catch {
+    // Offline or unavailable API preserves bundled fallback FAQ items.
+  }
+})();
+
 // Close sibling FAQ items in the same landing accordion while keeping upstream faq.js unmodified.
 document.addEventListener('click', event => {
   const btn = event.target instanceof Element ? event.target.closest('.vy-faq__q') : null;

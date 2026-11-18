@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-18T01:32:12.327197Z",
+  "generated_at": "2026-11-18T07:03:17.394359Z",
   "suite": "security-and-sbom-local-gate",
   "command": "python -X utf8 scripts/security_gate.py --report qa/remediation/rm0-05/security-gate.json --sbom qa/remediation/rm0-05/sbom-m0.json",
-  "tracked_files_audited": 1356,
+  "tracked_files_audited": 1368,
   "sbom_path": "qa/remediation/rm0-05/sbom-m0.json",
   "sbom_components": 104,
   "secret_findings": [],

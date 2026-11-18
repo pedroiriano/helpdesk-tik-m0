@@ -40,13 +40,15 @@ export function setupSearchCombobox(): void {
     pending = request;
     const q = encodeURIComponent(query);
     const signal = request.signal;
-    status.textContent = 'Mencari layanan dan panduan…';
-    const [services, guides, pages] = await Promise.allSettled([
+    status.textContent = 'Mencari layanan, FAQ, dan panduan…';
+    const [services, guides, pages, faqs] = await Promise.allSettled([
       api<{items: {id:string; title:string; snippet:string}[]}>('/search?owner=M2&q=' + q + '&limit=5',
         'GET', undefined, undefined, undefined, {}, signal),
       api<{items: {slug:string; title:string}[]}>('/knowledge/articles?view=published&q=' + q + '&limit=5',
         'GET', undefined, undefined, undefined, {}, signal),
       api<{items: {slug:string; title:string}[]}>('/portal/pages?view=published&q=' + q + '&limit=3',
+        'GET', undefined, undefined, undefined, {}, signal),
+      api<{items: {slug:string; title:string; category_label?:string}[]}>('/knowledge/faqs?view=published&q=' + q + '&limit=4',
         'GET', undefined, undefined, undefined, {}, signal),
     ]);
     if (signal.aborted) return;
@@ -55,6 +57,11 @@ export function setupSearchCombobox(): void {
         title: service.title,
         description: 'Layanan · ' + service.snippet,
         href: '/detail-layanan.html?id=' + encodeURIComponent(service.id),
+      })) : []),
+      ...(faqs.status === 'fulfilled' ? faqs.value.items.map(faq => ({
+        title: faq.title,
+        description: 'FAQ · ' + (faq.category_label || 'Umum'),
+        href: '/faq.html#' + encodeURIComponent(faq.slug),
       })) : []),
       ...(guides.status === 'fulfilled' ? guides.value.items.map(guide => ({
         title: guide.title,
@@ -67,7 +74,7 @@ export function setupSearchCombobox(): void {
         href: '/halaman/' + encodeURIComponent(page.slug),
       })) : []),
     ];
-    const partial = services.status !== 'fulfilled' || guides.status !== 'fulfilled' || pages.status !== 'fulfilled';
+    const partial = services.status !== 'fulfilled' || guides.status !== 'fulfilled' || pages.status !== 'fulfilled' || faqs.status !== 'fulfilled';
     status.textContent = options.length
       ? options.length + ' saran tersedia.' + (partial ? ' Salah satu sumber gagal dimuat.' : '')
       : partial ? 'Pencarian gagal dimuat sepenuhnya. Ubah kueri atau coba lagi.' : 'Tidak ada layanan atau panduan yang cocok.';

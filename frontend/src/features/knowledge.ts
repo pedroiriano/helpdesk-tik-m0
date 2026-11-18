@@ -31,7 +31,7 @@ function create<K extends keyof HTMLElementTagNameMap>(tag: K, text = '', classN
   return node;
 }
 
-function safeArticle(body: string) {
+export function safeArticle(body: string) {
   const inert = document.createElement('template');
   inert.innerHTML = body;
   const output = document.createDocumentFragment();

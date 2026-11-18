@@ -7,6 +7,11 @@ COMMANDS = {
     'UpdateSubject',
     'ReadPublicMaintenanceStatus',
     'ListMaintenanceWindows',
+    'ListKnowledgeFAQs',
+    'CreateKnowledgeFAQ',
+    'ReadKnowledgeFAQ',
+    'UpdateKnowledgeFAQ',
+    'TransitionKnowledgeFAQ',
     'ListDeliveryJobs',
     'ReplayDeliveryJob',
     'ConfigureRetention',
@@ -138,6 +143,16 @@ def extend(schemas, operation, obj, arr, enum, ref, UUID, TEXT, UTC, VERSION):
             'observed_at': UTC,
         }
     )
+    schemas['Content']['properties'].update({
+        'kind': enum('ARTICLE', 'PAGE', 'FAQ'),
+        'category_label': {'type': 'string', 'maxLength': 80},
+        'sort_order': {'type': 'integer', 'minimum': 0, 'maximum': 9999},
+    })
+    schemas['ContentWrite']['properties'].update({
+        'category_label': {'type': 'string', 'maxLength': 80},
+        'sort_order': {'type': 'integer', 'minimum': 0, 'maximum': 9999},
+    })
+    schemas['SearchHit']['properties']['kind'] = enum('SERVICE', 'TICKET', 'ARTICLE', 'PAGE', 'FAQ', 'MEDIA')
 
     operation('get', '/auth/config', 'ReadAuthConfig', 'M1', 'session.create', 'AuthConfig', fr='FR29', public=True)
     operation('get', '/auth/sso/login', 'StartSSOLogin', 'M1', 'session.create', 'SSORedirect', status=302, fr='FR29', public=True)
@@ -178,6 +193,11 @@ def extend(schemas, operation, obj, arr, enum, ref, UUID, TEXT, UTC, VERSION):
     )
     operation('get', '/maintenance/status', 'ReadPublicMaintenanceStatus', 'M1', 'catalog.read', 'PublicMaintenanceStatus', fr='FR18', public=True)
     operation('get', '/admin/maintenance', 'ListMaintenanceWindows', 'M1', 'system.maintenance', 'AdminMaintenanceOverview', fr='FR18', query=('organization_id',))
+    operation('get', '/knowledge/faqs', 'ListKnowledgeFAQs', 'M8', 'content.read', 'Content', fr='FR05 FR12 FR18', public=True, query=('view', 'q'))
+    operation('get', '/knowledge/faqs/{id}', 'ReadKnowledgeFAQ', 'M8', 'content.read', 'Content', fr='FR05 FR12 FR18', public=True, query=('view',))
+    operation('post', '/knowledge/faqs', 'CreateKnowledgeFAQ', 'M8', 'content.write', 'Content', 'ContentWrite', 201, 'FR05 FR12 FR18')
+    operation('put', '/knowledge/faqs/{id}', 'UpdateKnowledgeFAQ', 'M8', 'content.write', 'Content', 'ContentWrite', fr='FR05 FR12 FR18')
+    operation('post', '/knowledge/faqs/{id}/transitions', 'TransitionKnowledgeFAQ', 'M8', 'content.publish', 'Content', 'EditorialTransition', fr='FR05 FR12 FR18')
     operation(
         'post',
         '/tickets/{id}/retention',

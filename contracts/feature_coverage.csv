@@ -3,20 +3,20 @@ FR01,P003–P033 sembilan modul,3 4 12,"AC01, AC09, AC25; backend/internal/modul
 FR02,P036.1 tabel dan bulk/export,9 10,"AC20, AC23; frontend/src/features/{m0-03,m0-04}.ts, qa/remediation/rm0-04/browser-final.json (R4-E queue & R4-F CSV export)",DONE_VERIFIED_LAB
 FR03,P036.2 grafik interaktif,9 10 11,"AC20, AC23; frontend/src/features/dashboard.ts & m0-03.ts (M9 KPI & tabel aksesibel setara), qa/remediation/rm0-04/browser-final.json",DONE_VERIFIED_LAB
 FR04,P036.3 kartu bento masonry,10,"frontend/public-ui.css, frontend/business.css, qa/remediation/rm0-04/mobile/completion.json (grid 3/2/1 responsif & urutan baca DOM)",DONE_VERIFIED_LAB
-FR05,P036.4 accordion tunggal,10,"frontend/hero-public.js, frontend/faq.js, qa/remediation/rm0-04/browser-final.json (R4-B homeFaqCheck & pageFaqCheck)",DONE_VERIFIED_LAB
+FR05,P036.4 accordion tunggal,10,"frontend/hero-public.js, frontend/business-pages.mjs, frontend/src/features/m0-03.ts (/api/v1/knowledge/faqs?view=published & #vy-faq), qa/remediation/rm0-04/browser-final.json (R4-B homeFaqCheck & pageFaqCheck)",DONE_VERIFIED_LAB
 FR06,P036.5 pencarian global,10,"AC23; frontend/src/features/search-combobox.ts, M2/M3/M8 /api/v1/search, qa/remediation/rm0-04/browser-final.json (R4-G)",DONE_VERIFIED_LAB
 FR07,P036.6 toast,10,"frontend/src/features/m0-04.ts & m0-03.ts status/callout persisten; error & konflik 409 terlihat tanpa tertutup toast",DONE_VERIFIED_LAB
 FR08,P036.7 scrollbar,10,"frontend/business.css (.hd-table-wrap overflow horizontal aman mobile), scripts/test_modal_and_mobile.py, browser-final.json",DONE_VERIFIED_LAB
-FR09,P036.8 Select2,10,"frontend/src/features/search-combobox.ts & report-context combobox WAI-ARIA, qa/remediation/rm0-04/browser-final.json",DONE_VERIFIED_LAB
+FR09,P036.8 Select2,10,"frontend/src/features/select2-combobox.ts, frontend/src/features/search-combobox.ts & report-context combobox WAI-ARIA (Web Publik & Web Admin, #hd-faq-topic), qa/remediation/rm0-04/browser-final.json",DONE_VERIFIED_LAB
 FR10,P036.9 draft,10,"AC19; frontend/src/features/m0-04.ts, backend/internal/modules/m3/internal/app/drafts.go, qa/remediation/rm0-04/browser-final.json (R4-D)",DONE_VERIFIED_LAB
 FR11,P036.10 validasi,9 10,"contracts/openapi/business.json, frontend/src/features/m0-04.ts noValidate + [data-validation-summary], qa/remediation/rm0-04/browser-final.json (R4-D)",DONE_VERIFIED_LAB
-FR12,P036.11 editor,10,"backend/internal/modules/m8/internal/store/content.go (ARTICLE/PAGE), frontend/src/features/knowledge.ts, qa/remediation/rm0-04/editorial-integration.json",DONE_VERIFIED_LAB
+FR12,P036.11 editor,10,"backend/internal/modules/m8/internal/store/content.go (ARTICLE/PAGE/FAQ), migrations/m8/042-faq-management.sql, frontend/src/features/{knowledge,m0-03}.ts, qa/remediation/rm0-04/editorial-integration.json",DONE_VERIFIED_LAB
 FR13,P036.12 dropzone,8 10,"AC18; frontend/ticket-pages.mjs (#hd-create-dropzone), frontend/business-pages.mjs (M3/M8 upload), browser-final.json (R4-D & R4-H)",DONE_VERIFIED_LAB
 FR14,P036.13 modal,10,"AC20; frontend/public-ui.css & business.css dialog terpusat + Focus/Esc, scripts/test_modal_and_mobile.py, browser-final.json (R4-H)",DONE_VERIFIED_LAB
 FR15,P036.14 komponen lain,10,"frontend/ticket-pages.mjs (timeline progres, guest card, review modal), browser-final.json (R4-D & R4-E)",DONE_VERIFIED_LAB
 FR16,P037 dasbor dan pengunjung,9 11,"AC23; backend/internal/modules/m9, frontend/src/features/{dashboard,m0-03}.ts (denominator, watermark, scope), browser-final.json (R4-F)",DONE_VERIFIED_LAB
-FR17,P038 master,3 11,"M1/M2 master OPD/Bidang/Tim/Layanan/Kategori berversi, qa/remediation/rm0-04/catalog-routing/completion.json & browser-final.json (katalog resmi menunggu DEC-M01)",DONE_VERIFIED_LAB
-FR18,P039 sistem dan portal,10 11 12,"AC24; backend/internal/bootstrap/backup_manifest.go, frontend/admin-navigation.mjs, qa/remediation/rm0-03/completion.json (R3-H BACKUP_MANIFEST)",DONE_VERIFIED_LAB
+FR17,P038 master,3 11,"M1/M2 master Akun/Subjek (?kind=subjects), PD / Unit Kerja/Bidang/Tim/Layanan/Kategori berversi, frontend/src/features/admin-datatable.ts, qa/remediation/rm0-04/catalog-routing/completion.json & browser-final.json (katalog resmi menunggu DEC-M01)",DONE_VERIFIED_LAB
+FR18,P039 sistem dan portal,10 11 12,"AC24; backend/internal/bootstrap/backup_manifest.go, migrations/m1/041-maintenance-display.sql (Under Maintenance terjadwal/tak terjadwal), frontend/maintenance-banner.js, frontend/admin-navigation.mjs, qa/remediation/rm0-03/completion.json (R3-H BACKUP_MANIFEST)",DONE_VERIFIED_LAB
 FR19,P040 media dan SEO,8 10,"AC18; M3/M8 media, sanitize reuse, SEO slug (/panduan/{slug}, /halaman/{slug}), qa/remediation/rm0-01 & rm0-04 browser-final.json (DEC-M08 pending)",DONE_VERIFIED_LAB
 FR20,P041 audit,8 11,"AC05, AC21; M9 append-only audit_entries & outbox durable semua owner, qa/remediation/rm0-03/integration-final.json & browser-final.json",DONE_VERIFIED_LAB
 FR21,P042 Telegram,11,"AC21; M9 telegram_bindings & delivery_jobs sink sintetis terverifikasi; kanal Telegram produksi menunggu DEC-M09",DONE_VERIFIED_LAB

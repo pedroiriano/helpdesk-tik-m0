@@ -38,10 +38,14 @@ func (s *Store) InsertContent(ctx context.Context, item api.ContentItem, body st
 	defer tx.Rollback(ctx)
 
 	now := time.Now().UTC()
+	cat := strings.TrimSpace(item.CategoryLabel)
+	if cat == "" {
+		cat = "Umum"
+	}
 	_, err = tx.Exec(ctx, `
-		INSERT INTO knowledge.content(id, version, kind, slug, title, audience, state, org_id, principal_id, created_at, updated_at)
-		VALUES($1, 1, $2, $3, $4, $5, 'DRAFT', $6, $7, $8, $8)
-	`, item.ID, item.Kind, item.Slug, item.Title, item.Audience, item.OrgID, item.PrincipalID, now)
+		INSERT INTO knowledge.content(id, version, kind, slug, title, audience, state, org_id, principal_id, category_label, sort_order, created_at, updated_at)
+		VALUES($1, 1, $2, $3, $4, $5, 'DRAFT', $6, $7, $8, $9, $10, $10)
+	`, item.ID, item.Kind, item.Slug, item.Title, item.Audience, item.OrgID, item.PrincipalID, cat, item.SortOrder, now)
 	if err != nil {
 		if strings.Contains(err.Error(), "duplicate key") || strings.Contains(err.Error(), "unique") {
 			return web.Fail(409, "Slug konten sudah digunakan")
@@ -66,7 +70,7 @@ func (s *Store) GetContent(ctx context.Context, idOrSlug string, viewerAudience 
 	var orgID *string
 
 	err := s.pool.QueryRow(ctx, `
-		SELECT c.id::text, c.version, c.kind, c.slug, c.title, c.audience, c.state, c.org_id::text, c.principal_id::text, c.created_at, c.updated_at,
+		SELECT c.id::text, c.version, c.kind, c.slug, c.title, c.audience, c.state, c.category_label, c.sort_order, c.org_id::text, c.principal_id::text, c.created_at, c.updated_at,
 		       COALESCE(r.revision, 1), COALESCE(r.sanitized_body, '')
 		FROM knowledge.content c
 		LEFT JOIN LATERAL (
@@ -78,7 +82,7 @@ func (s *Store) GetContent(ctx context.Context, idOrSlug string, viewerAudience 
 		) r ON true
 		WHERE (c.id::text = $1 OR c.slug = $1)
 	`, idOrSlug).Scan(
-		&item.ID, &item.Version, &item.Kind, &item.Slug, &item.Title, &item.Audience, &item.State, &orgID, &item.PrincipalID,
+		&item.ID, &item.Version, &item.Kind, &item.Slug, &item.Title, &item.Audience, &item.State, &item.CategoryLabel, &item.SortOrder, &orgID, &item.PrincipalID,
 		&item.CreatedAt, &item.UpdatedAt, &item.LatestRevision, &item.Body,
 	)
 	if err != nil {
@@ -102,7 +106,7 @@ func (s *Store) ListContent(ctx context.Context, kind string, viewerAudience str
 	}
 
 	query := `
-		SELECT c.id::text, c.version, c.kind, c.slug, c.title, c.audience, c.state, c.org_id::text, c.principal_id::text, c.created_at, c.updated_at,
+		SELECT c.id::text, c.version, c.kind, c.slug, c.title, c.audience, c.state, c.category_label, c.sort_order, c.org_id::text, c.principal_id::text, c.created_at, c.updated_at,
 		       COALESCE(r.revision, 1), COALESCE(r.sanitized_body, '')
 		FROM knowledge.content c
 		LEFT JOIN LATERAL (
@@ -120,17 +124,33 @@ func (s *Store) ListContent(ctx context.Context, kind string, viewerAudience str
 	argIdx := 6
 
 	if cursor != "" {
-		query += fmt.Sprintf(" AND c.id::text > $%d", argIdx)
-		args = append(args, cursor)
-		argIdx++
+		if kind == "FAQ" {
+			if parts := strings.SplitN(cursor, "|", 2); len(parts) == 2 {
+				query += fmt.Sprintf(" AND (c.sort_order, c.id::text) > ($%d::int, $%d)", argIdx, argIdx+1)
+				args = append(args, parts[0], parts[1])
+				argIdx += 2
+			} else {
+				query += fmt.Sprintf(" AND c.id::text > $%d", argIdx)
+				args = append(args, cursor)
+				argIdx++
+			}
+		} else {
+			query += fmt.Sprintf(" AND c.id::text > $%d", argIdx)
+			args = append(args, cursor)
+			argIdx++
+		}
 	}
 
 	if search != "" {
-		query += fmt.Sprintf(" AND (strpos(lower(c.title), lower($%d))>0 OR strpos(lower(c.slug), lower($%d))>0)", argIdx, argIdx)
+		query += fmt.Sprintf(" AND (strpos(lower(c.title), lower($%d))>0 OR strpos(lower(c.slug), lower($%d))>0 OR strpos(lower(c.category_label), lower($%d))>0 OR strpos(lower(COALESCE(r.sanitized_body, '')), lower($%d))>0)", argIdx, argIdx, argIdx, argIdx)
 		args = append(args, search)
 	}
 
-	query += fmt.Sprintf(" ORDER BY c.id ASC LIMIT %d", limit+1)
+	if kind == "FAQ" {
+		query += fmt.Sprintf(" ORDER BY c.sort_order ASC, c.id ASC LIMIT %d", limit+1)
+	} else {
+		query += fmt.Sprintf(" ORDER BY c.id ASC LIMIT %d", limit+1)
+	}
 
 	rows, err := s.pool.Query(ctx, query, args...)
 	if err != nil {
@@ -143,7 +163,7 @@ func (s *Store) ListContent(ctx context.Context, kind string, viewerAudience str
 		var item api.ContentItem
 		var orgID *string
 		if err := rows.Scan(
-			&item.ID, &item.Version, &item.Kind, &item.Slug, &item.Title, &item.Audience, &item.State, &orgID, &item.PrincipalID,
+			&item.ID, &item.Version, &item.Kind, &item.Slug, &item.Title, &item.Audience, &item.State, &item.CategoryLabel, &item.SortOrder, &orgID, &item.PrincipalID,
 			&item.CreatedAt, &item.UpdatedAt, &item.LatestRevision, &item.Body,
 		); err != nil {
 			return nil, nil, err
@@ -159,7 +179,11 @@ func (s *Store) ListContent(ctx context.Context, kind string, viewerAudience str
 	var nextCursor *string
 	if len(items) > limit {
 		items = items[:limit]
-		c := items[len(items)-1].ID
+		last := items[len(items)-1]
+		c := last.ID
+		if kind == "FAQ" {
+			c = fmt.Sprintf("%d|%s", last.SortOrder, last.ID)
+		}
 		nextCursor = &c
 	}
 
@@ -174,10 +198,11 @@ func (s *Store) UpdateContent(ctx context.Context, id string, in api.ContentWrit
 	defer tx.Rollback(ctx)
 
 	var curVersion int64
-	var kind, curState string
+	var kind, curState, curCat string
+	var curSort int
 	var org *string
 	scope := api.ScopeValue(scopes)
-	err = tx.QueryRow(ctx, `SELECT version, kind, state, org_id::text FROM knowledge.content WHERE id = $1 AND (org_id=ANY($2::uuid[]) OR (org_id IS NULL AND principal_id::text=$3 AND cardinality($2::uuid[])>0)) FOR UPDATE`, id, scope.Write, scope.Principal).Scan(&curVersion, &kind, &curState, &org)
+	err = tx.QueryRow(ctx, `SELECT version, kind, state, category_label, sort_order, org_id::text FROM knowledge.content WHERE id = $1 AND (org_id=ANY($2::uuid[]) OR (org_id IS NULL AND principal_id::text=$3 AND cardinality($2::uuid[])>0)) FOR UPDATE`, id, scope.Write, scope.Principal).Scan(&curVersion, &kind, &curState, &curCat, &curSort, &org)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return api.ContentItem{}, web.Fail(404, "Konten tidak ditemukan")
@@ -192,15 +217,24 @@ func (s *Store) UpdateContent(ctx context.Context, id string, in api.ContentWrit
 		return api.ContentItem{}, web.Fail(409, "Versi konten telah berubah (konflik versi)")
 	}
 
+	nextCat := strings.TrimSpace(in.CategoryLabel)
+	if nextCat == "" {
+		nextCat = curCat
+	}
+	nextSort := curSort
+	if in.SortOrder != nil {
+		nextSort = *in.SortOrder
+	}
+
 	now := time.Now().UTC()
 	var newVersion int64
 	var updatedTime time.Time
 	err = tx.QueryRow(ctx, `
 		UPDATE knowledge.content
-		SET title = $1, slug = $2, audience = $3, org_id = $4, version = version + 1, updated_at = $5
-		WHERE id = $6
+		SET title = $1, slug = $2, audience = $3, org_id = $4, category_label = $5, sort_order = $6, version = version + 1, updated_at = $7
+		WHERE id = $8
 		RETURNING version, updated_at
-	`, in.Title, in.Slug, in.Audience, in.OrgID, now, id).Scan(&newVersion, &updatedTime)
+	`, in.Title, in.Slug, in.Audience, in.OrgID, nextCat, nextSort, now, id).Scan(&newVersion, &updatedTime)
 	if err != nil {
 		if strings.Contains(err.Error(), "duplicate key") || strings.Contains(err.Error(), "unique") {
 			return api.ContentItem{}, web.Fail(409, "Slug konten sudah digunakan")
@@ -236,6 +270,8 @@ func (s *Store) UpdateContent(ctx context.Context, id string, in api.ContentWrit
 		Body:           in.Body,
 		Audience:       in.Audience,
 		State:          curState,
+		CategoryLabel:  nextCat,
+		SortOrder:      nextSort,
 		OrgID:          in.OrgID,
 		UpdatedAt:      updatedTime,
 		LatestRevision: nextRev,
@@ -250,15 +286,16 @@ func (s *Store) TransitionContent(ctx context.Context, id string, expectedVersio
 	defer tx.Rollback(ctx)
 
 	var curVersion int64
-	var kind, slug, title, audience, curState string
+	var kind, slug, title, audience, curState, catLabel string
+	var sortOrder int
 	var orgID *string
 	var createdAt time.Time
 	err = tx.QueryRow(ctx, `
-		SELECT version, kind, slug, title, audience, state, org_id::text, created_at
+		SELECT version, kind, slug, title, audience, state, category_label, sort_order, org_id::text, created_at
 		FROM knowledge.content
 		WHERE id = $1 AND (org_id=ANY($2::uuid[]) OR (org_id IS NULL AND principal_id::text=$3 AND cardinality($2::uuid[])>0))
 		FOR UPDATE
-	`, id, api.ScopeValue(scopes).Write, api.ScopeValue(scopes).Principal).Scan(&curVersion, &kind, &slug, &title, &audience, &curState, &orgID, &createdAt)
+	`, id, api.ScopeValue(scopes).Write, api.ScopeValue(scopes).Principal).Scan(&curVersion, &kind, &slug, &title, &audience, &curState, &catLabel, &sortOrder, &orgID, &createdAt)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return api.ContentItem{}, web.Fail(404, "Konten tidak ditemukan")
@@ -341,6 +378,8 @@ func (s *Store) TransitionContent(ctx context.Context, id string, expectedVersio
 		Body:           body,
 		Audience:       audience,
 		State:          nextState,
+		CategoryLabel:  catLabel,
+		SortOrder:      sortOrder,
 		OrgID:          orgID,
 		CreatedAt:      createdAt,
 		UpdatedAt:      updatedTime,

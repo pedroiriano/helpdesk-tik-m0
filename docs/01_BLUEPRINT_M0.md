@@ -43,7 +43,7 @@ Patch version, image digest, tool migration, library form/chart dan scanner belu
 | M5 | Assignment / assignment | Routing, skill, roster, ketersediaan, proposal tim/L1/L2 dan projection beban; final assignment ditulis M3 |
 | M6 | SLA Management / sla | Target respons/resolusi/tahap, kalender/libur, kalkulasi pause/due date, projection clock serta definisi SLO |
 | M7 | Escalation / escalation | Aturan eskalasi fungsional/hierarkis, scheduler, reminder, vendor follow-up dan auto-close melalui command ke M3 |
-| M8 | Knowledge Base / knowledge | Artikel, revisi, taksonomi, halaman portal, draft konten, media editorial, metadata SEO serta publikasi |
+| M8 | Knowledge Base / knowledge | Artikel, FAQ (tanya jawab resmi & topik), revisi, taksonomi, halaman portal, draft konten, media editorial, metadata SEO serta publikasi |
 | M9 | Notification and Audit / notify_audit | Pusat notifikasi, delivery/sink/Telegram, audit append-only, report facts, export jobs dan agregat pengunjung |
 
 Menu bukan owner data. Dasbor memakai projection M9 dan query berizin ke owner. Pustaka Media menampilkan tab M3 dan M8, dengan pagination/count per owner. Pengelolaan portal memisahkan struktur navigasi M2 dari isi editorial M8. Pengelolaan sistem memanggil port yang sesuai; runner backup tidak mendapat jalur shell arbitrer dari browser. M9 memisahkan queue notification, audit dan report agar kegagalan satu jenis pekerjaan tidak menghambat semua consumer.
@@ -165,7 +165,7 @@ Base API /api/v1, JSON envelope error berisi code, message, correlation_id dan d
 | /tickets/{id}/vendor-cases dan /handoffs | Koordinasi vendor, permintaan/penerimaan transfer | M3 |
 | /tickets/{id}/escalations dan /operations/{id} | POST 202 dengan operation ID dan polling scope | M3/M7 |
 | /guest/tracking-session | Tukar capability via POST | M3 dengan session terbatas |
-| /knowledge/articles dan /portal/pages | Draft/review/publish/archive serta read audience | M8 |
+| /knowledge/articles, /knowledge/faqs dan /portal/pages | Draft/review/publish/archive/restore FAQ & artikel serta read audience | M8 |
 | /media dan /drafts | Query/update sesuai owner yang di-allowlist | M3 atau M8 |
 | /notifications dan /reports | Inbox, summary, export 202 dan download berizin | M9 |
 | /admin dan /health | Master per owner, operasi sistem allowlist, live/ready teredaksi | Owner masing-masing dan platform |
@@ -197,7 +197,7 @@ Draft akun berada di owner konteks dengan principal, form_version, revision, upd
 
 Pustaka Media terpadu membedakan media tiket M3 dan editorial M8. Unggah langsung melalui form juga muncul di pustaka dengan ACL owner. Reuse mensyaratkan permission serta audience kompatibel; lampiran privat untuk artikel publik memerlukan salinan tersanitasi, approval dan provenance. Metadata memuat label, alt/caption, pemilik, sumber/lisensi, checksum, dimensi, tipe/ukuran, audience dan referensi pemakaian. SEO hanya pada publikasi yang sah. Unggah menguji ekstensi, MIME/signature, batas, nama acak dan quarantine [S25]. Video publik memiliki poster/caption dan job berat dicatat resource-nya.
 
-M2 mengelola fitur terdaftar, menu/urutan/route/audience; M8 mengelola halaman/bagian/konten dengan DRAFT, REVIEW, PUBLISHED dan ARCHIVED. Menu tidak memberi permission. Preview dan rollback versi berizin, tanpa HTML/JavaScript bebas. Pencarian global bertab Layanan, Tiket, Artikel dan Media menerapkan scope sebelum snippet, suggestion, count dan pagination. Query per owner memakai debounce dan pembatalan query stale. Indeks publik tidak berisi konten privat.
+M2 mengelola fitur terdaftar, menu/urutan/route/audience; M8 mengelola artikel, halaman portal dan Tanya Jawab (FAQ) dengan varian `ARTICLE | PAGE | FAQ`, topik/kategori (`category_label`), urutan tampil (`sort_order`), serta status DRAFT, REVIEW, PUBLISHED dan ARCHIVED. Menu tidak memberi permission. Preview dan rollback versi berizin, tanpa HTML/JavaScript bebas. Pencarian global bertab Layanan, Tiket, Artikel, FAQ dan Media menerapkan scope sebelum snippet, suggestion, count dan pagination. Query per owner memakai debounce dan pembatalan query stale. Indeks publik tidak berisi konten privat.
 
 ## 11 Notifikasi laporan dan administrasi
 
@@ -249,4 +249,4 @@ Urutan ini tidak mengharuskan setiap kemampuan selesai sekaligus sebelum feedbac
 
 Katalog resmi, provider identitas, verifikasi kontak guest, scope pimpinan, kalender/target tahap, pause vendor, reopen, retensi/purge, batas upload, Telegram binding organisasi, RPO/RTO dan ukuran server masih memerlukan pemilik keputusan. planning/decisions.csv mencatat default lab, owner, gate dan status. Agent boleh membangun fixture sintetis serta adapter tanpa menunggu keputusan produksi, tetapi tidak menganggap fixture sebagai kebijakan Pemerintah Kota Depok.
 
-M0 tetap baseline yang sah untuk penelitian. Jangan menyisipkan delay, query buruk atau tambahan panggilan hanya untuk menunjukkan keuntungan microservices. Jangan pula membuat JOIN lintas owner atau special business fast path yang merusak kesetaraan kontrak. Optimasi lokal yang sah dicatat serta harus ditinjau untuk penerapan setara pada studi lanjutan. Paket ini tidak menghasilkan benchmark, novelty empiris atau klaim kesiapan produksi.
+M0 tetap baseline yang sah untuk penelitian. Pemetaan paritas rancangan lintas model **M0** (`G1 = {M1..M9}`), **C3** (`Platform = {M1, M2, M8}`, `Case = {M3, M4, M5}`, `Operations = {M6, M7, M9}`) dan **F9** (`M1..M9` layanan independen) — mencakup perluasan pengelolaan FAQ M8, layar pemeliharaan terjadwal/tak terjadwal M1, CRUD subjek/akun M1, label `PD / Unit Kerja` dan standar Select2/DataTables UI — dirinci dalam `docs/ARCHITECTURE_M0_C3_F9.md` serta ADR 0012 (`docs/adr/0012-faq-management-and-m0-c3-f9-architecture-parity.md`). Jangan menyisipkan delay, query buruk atau tambahan panggilan hanya untuk menunjukkan keuntungan microservices. Jangan pula membuat JOIN lintas owner atau special business fast path yang merusak kesetaraan kontrak. Optimasi lokal yang sah dicatat serta harus ditinjau untuk penerapan setara pada studi lanjutan. Paket ini tidak menghasilkan benchmark, novelty empiris atau klaim kesiapan produksi.
