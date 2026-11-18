@@ -15,8 +15,8 @@ export const adminGroups = [
   ]},
   {label:'Organisasi dan akses', items:[
     {id:'subjects',kind:'subjects',label:'Daftar akun pengguna',icon:'users',permissions:['identity.grant'],description:'Tambahkan akun staf, ASN, atau pengguna baru dan kelola peran serta status aktif.'},
-    {id:'organizations',kind:'organizations',label:'Perangkat daerah dan unit kerja',icon:'users',permissions:['identity.grant'],description:'Kelola perangkat daerah dan unit kerja yang dapat dipilih pelapor.'},
-    {id:'divisions',kind:'divisions',label:'Bidang',icon:'users',permissions:['identity.grant'],description:'Kelola bidang aktif di masing-masing perangkat daerah atau unit kerja.'},
+    {id:'organizations',kind:'organizations',label:'PD / Unit Kerja',icon:'users',permissions:['identity.grant'],description:'Kelola PD / Unit Kerja yang dapat dipilih pelapor.'},
+    {id:'divisions',kind:'divisions',label:'Bidang',icon:'users',permissions:['identity.grant'],description:'Kelola bidang aktif di masing-masing PD / Unit Kerja.'},
     {id:'memberships',kind:'memberships',label:'Akun dan hak akses',icon:'users',permissions:['identity.grant'],description:'Kelola keanggotaan dan hak akses sesuai mandat organisasi Anda.'},
     {id:'role-policies',kind:'role-policies',label:'Peran dan Akses Modul',icon:'users',permissions:['identity.role.manage'],role:'SUPER_ADMIN',description:'Atur tindakan yang boleh diberikan kepada setiap peran.'},
     {id:'teams',kind:'teams',label:'Tim teknis',icon:'users',permissions:['identity.grant'],description:'Kelola tim teknis dan organisasi penanggung jawabnya.'},

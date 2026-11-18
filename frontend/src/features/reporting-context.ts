@@ -55,13 +55,13 @@ export async function bindReportingContext(form: HTMLFormElement, service: Compo
   async function loadOrganizations(reset: boolean) {
     const epoch = ++orgEpoch;
     if (reset) {
-      org.replaceChildren(new Option('Pilih perangkat daerah atau unit kerja', ''));
+      org.replaceChildren(new Option('Pilih PD / Unit Kerja', ''));
       orgCursor = null;
       void loadDivisions(true);
     }
     org.disabled = true;
     more.hidden = true;
-    state.textContent = 'Memuat perangkat daerah dan unit kerja…';
+    state.textContent = 'Memuat PD / Unit Kerja…';
     try {
       const page = await api<DirectoryPage>(listPath({ q:query.value.trim(), cursor:orgCursor ?? '' }));
       if (epoch !== orgEpoch) return;
@@ -69,7 +69,7 @@ export async function bindReportingContext(form: HTMLFormElement, service: Compo
       orgCursor = page.next_cursor;
       more.hidden = !orgCursor;
       org.disabled = false;
-      state.textContent = org.options.length > 1 ? '' : 'Tidak ada perangkat daerah atau unit kerja yang cocok.';
+      state.textContent = org.options.length > 1 ? '' : 'Tidak ada PD / Unit Kerja yang cocok.';
       if (loggedASN && !orgCursor && org.options.length === 2 && !query.value && !org.value) {
         org.selectedIndex = 1;
         void loadDivisions(true);
@@ -118,7 +118,7 @@ export async function bindReportingContext(form: HTMLFormElement, service: Compo
   return {
     valid() {
       if (!enabled() || (org.value && !org.disabled)) return true;
-      state.textContent = 'Pilih perangkat daerah atau unit kerja sebelum melanjutkan.';
+      state.textContent = 'Pilih PD / Unit Kerja sebelum melanjutkan.';
       (org.disabled ? query : org).focus();
       return false;
     },

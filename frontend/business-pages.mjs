@@ -370,7 +370,7 @@ export function publicBusinessPage(source, kind) {
 }
 const field = (label, name, type = 'text', placeholder = '', hint = '') => `<div class="piui-field" data-hd-field="${name}"><label for="hd-${name}">${label}</label><input class="piui-input" id="hd-${name}" name="${name}" type="${type}" maxlength="200"${placeholder ? ` placeholder="${placeholder}"` : ''}>${hint ? `<small>${hint}</small>` : ''}</div>`;
 const select = (label, name, options = '', hint = '', extra = '') => `<div class="piui-field" data-hd-field="${name}"><label for="hd-${name}">${label}</label><select class="piui-input" id="hd-${name}" name="${name}">${options}</select>${hint ? `<small>${hint}</small>` : ''}${extra}</div>`;
-const orgShortcut = '<div class="hd-field-shortcuts"><a class="hd-field-shortcut" href="/admin/app/helpdesk/index.html?kind=organizations#new" data-hd-shortcut="organizations">+ Tambah Perangkat Daerah Baru</a></div>';
+const orgShortcut = '<div class="hd-field-shortcuts"><a class="hd-field-shortcut" href="/admin/app/helpdesk/index.html?kind=organizations#new" data-hd-shortcut="organizations">+ Tambah PD / Unit Kerja Baru</a></div>';
 const subjectShortcut = '<div class="hd-field-shortcuts"><a class="hd-field-shortcut" href="/admin/app/helpdesk/index.html?kind=subjects#new" data-hd-shortcut="subjects">+ Buat Akun Pengguna Baru</a></div>';
 export function adminBusinessPage(source) {
  const main = `<main id="main-content" class="piui-main" data-hd-page="admin">

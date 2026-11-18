@@ -232,12 +232,16 @@ async function main() {
         creating: f.classList.contains('is-creating'),
         title: document.querySelector('[data-hd-editor-title]')?.textContent?.trim(),
         masterPickerOptgroups: document.querySelectorAll('#hd-master-kind optgroup').length,
+        orgMenuLabel: Array.from(document.querySelectorAll('#hd-master-kind option')).find(o => o.value === 'organizations')?.textContent?.trim(),
+        sidebarOrgLabel: document.querySelector('a[href$="kind=organizations"]')?.textContent?.trim(),
       };
     })()`);
     assert.equal(formInit.hidden, false, '#new hash must show master form');
     assert.equal(formInit.creating, true, '#new hash must open form in is-creating mode');
     assert.match(formInit.title, /Tambah akun pengguna/i);
     assert.ok(formInit.masterPickerOptgroups >= 2, 'Master picker should render optgroups in Select2');
+    assert.equal(formInit.orgMenuLabel, 'PD / Unit Kerja', 'Master picker should use concise PD / Unit Kerja label');
+    assert.equal(formInit.sidebarOrgLabel, 'PD / Unit Kerja', 'Sidebar nav should use concise PD / Unit Kerja label');
 
     // Test dynamic subject-kind -> subject-role option sync
     const roleFilterCheck = await cdp.eval(`(() => {
@@ -593,6 +597,12 @@ async function main() {
     })()`);
     await waitFor(() => cdp.eval(`document.querySelector('#report-organization')?.options.length >= 1`), 10000, '/lapor.html organization picker');
     await checkAllSelectsEnhanced(cdp, 'Web Publik (/lapor.html)');
+    const publicLabels = await cdp.eval(`({
+      orgLabel: document.querySelector('label[for="report-organization"]')?.textContent?.trim(),
+      orgFirstOpt: document.querySelector('#report-organization option[value=""]')?.textContent?.trim(),
+    })`);
+    assert.equal(publicLabels.orgLabel, 'PD / Unit Kerja');
+    assert.equal(publicLabels.orgFirstOpt, 'Pilih PD / Unit Kerja');
 
     // Check /lapor.html mobile 390x844
     await cdp.setViewport(390, 844, true);
