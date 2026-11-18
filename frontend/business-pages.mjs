@@ -164,7 +164,7 @@ export function loginForm(admin = false) {
       </div>
       <p class="hd-status-line" data-hd-login-status role="status" tabindex="-1"></p>
       <div class="hd-actions hd-actions--auth">
-        <button class="btn btn-primary hd-w-full" type="submit"><span class="hd-btn-icon">🏛️</span> Masuk dengan akun ASN Depok &rarr;</button>
+        <button class="btn btn-primary hd-w-full" type="submit"><span class="hd-btn-icon">🏛️</span> Masuk dengan akun ASN (lab) Depok &rarr;</button>
       </div>
       <div data-hd-sso-panel hidden>
         <div class="hd-actions">

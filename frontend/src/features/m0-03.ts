@@ -176,6 +176,8 @@ async function login(form: HTMLFormElement, bootstrap: Promise<AuthState>, initi
         for (const l of nodes('[data-hd-warga-lead]')) {
           l.textContent = 'Masuk menggunakan NIK atau email dan kata sandi akun warga terdaftar untuk menyampaikan permohonan dan memantau tiket.';
         }
+        const asnSubmit = $('#auth-panel-asn button[type="submit"]');
+        if (asnSubmit) asnSubmit.textContent = 'Masuk dengan akun ASN Depok →';
       }
       if (boot.sso_enabled) {
         const ssoTarget = boot.sso_login_url || '/api/v1/auth/sso/login';
