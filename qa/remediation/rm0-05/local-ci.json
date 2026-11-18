@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-11-17T07:36:05.900435+00:00",
+  "timestamp": "2026-11-18T00:31:04.142934+00:00",
   "scope": "Reproducible local CI pipeline before/during RM0-05",
-  "git_commit": "4cf9c8c9856000ae6545d4037416cecc594e974f",
+  "git_commit": "bf7a14eb362d2c9caf45b219e27ade386abebff2",
   "git_working_tree_dirty": true,
   "source_manifest": "qa/remediation/rm0-05/source-manifest.json",
-  "source_manifest_sha256": "d86c5a823c0bf6b159d59c4d8c2dc4c58abe008b27cd8c20f2af899c950628d4",
+  "source_manifest_sha256": "fc607611dd933ceed2f3076e7ad0f07369ae307a36528b8c58b7e3b35f36d17a",
   "with_live_browser": true,
   "skip_docker": false,
   "steps": [
@@ -22,7 +22,7 @@
       "name": "package_consistency",
       "command": "C:\\Python313\\python.exe scripts/verify_package.py",
       "exit_code": 0,
-      "duration_s": 0.148,
+      "duration_s": 0.167,
       "result": "PASS",
       "tail": [
         "PASS package consistency: 9 modules, 13 tasks, 25 acceptance, 29 source groups, 21 chapters",
@@ -33,12 +33,12 @@
       "name": "package_validator_tests",
       "command": "C:\\Python313\\python.exe -m unittest discover -s scripts -p test_verify_package.py",
       "exit_code": 0,
-      "duration_s": 0.35,
+      "duration_s": 0.301,
       "result": "PASS",
       "tail": [
         "......",
         "----------------------------------------------------------------------",
-        "Ran 6 tests in 0.004s",
+        "Ran 6 tests in 0.005s",
         "",
         "OK"
       ]
@@ -47,7 +47,7 @@
       "name": "business_contracts_check",
       "command": "C:\\Python313\\python.exe scripts/build_business_contracts.py --check",
       "exit_code": 0,
-      "duration_s": 0.224,
+      "duration_s": 0.206,
       "result": "PASS",
       "tail": [
         "PASS business contract generation consistency"
@@ -57,12 +57,12 @@
       "name": "business_contracts_tests",
       "command": "C:\\Python313\\python.exe -X utf8 -m unittest tests/contract/test_business_contracts.py",
       "exit_code": 0,
-      "duration_s": 19.764,
+      "duration_s": 9.645,
       "result": "PASS",
       "tail": [
         "........",
         "----------------------------------------------------------------------",
-        "Ran 8 tests in 17.470s",
+        "Ran 8 tests in 8.030s",
         "",
         "OK"
       ]
@@ -71,7 +71,7 @@
       "name": "go_module_boundaries",
       "command": "C:\\Python313\\python.exe scripts/check_boundaries.py",
       "exit_code": 0,
-      "duration_s": 23.851,
+      "duration_s": 24.654,
       "result": "PASS",
       "tail": [
         "PASS module boundaries (53 Go packages)"
@@ -81,7 +81,7 @@
       "name": "go_boundary_negative",
       "command": "C:\\Python313\\python.exe scripts/test_boundaries.py",
       "exit_code": 0,
-      "duration_s": 0.327,
+      "duration_s": 0.29,
       "result": "PASS",
       "tail": [
         "..",
@@ -95,7 +95,7 @@
       "name": "piui_build_parity",
       "command": "C:\\Python313\\python.exe scripts/test_piui_build.py",
       "exit_code": 0,
-      "duration_s": 0.436,
+      "duration_s": 0.62,
       "result": "PASS",
       "tail": [
         "PASS PIUI (runtime files, HTML pages, byte-identical files) {'piui-modern': (60, 51), 'piui-zero': (73, 52)}"
@@ -105,7 +105,7 @@
       "name": "compose_config_valid",
       "command": "docker compose config --quiet",
       "exit_code": 0,
-      "duration_s": 0.228,
+      "duration_s": 0.395,
       "result": "PASS",
       "tail": []
     },
@@ -113,41 +113,41 @@
       "name": "go_127_vet_and_test",
       "command": "docker build --pull=false --target test -t helpdesk-m0-ci-go-test:0.1.0 -f infra/docker/backend.Dockerfile .",
       "exit_code": 0,
-      "duration_s": 5.456,
+      "duration_s": 49.375,
       "result": "PASS",
       "tail": [
-        "#13 exporting layers done",
-        "#13 exporting manifest sha256:6f5d019476d7e41d36a12e157e485f19e9740b5e744027ac3185ccca549588ea done",
-        "#13 exporting config sha256:8cf445138c785c2297d28fda414f30a44e365d42a4cc692db35f2a6dea58b4f3 done",
-        "#13 exporting attestation manifest sha256:252ddc5b33008d939e140bd779bbe0bb01cd0b0396d4402f0e32f2f8760daaec",
-        "#13 exporting attestation manifest sha256:252ddc5b33008d939e140bd779bbe0bb01cd0b0396d4402f0e32f2f8760daaec 0.0s done",
-        "#13 exporting manifest list sha256:7a56a05c0bb9ac943e86ef3437eefae979945a74f55d5a427f338365861d6f0a 0.0s done",
-        "#13 naming to docker.io/library/helpdesk-m0-ci-go-test:0.1.0 done",
-        "#13 unpacking to docker.io/library/helpdesk-m0-ci-go-test:0.1.0",
-        "#13 unpacking to docker.io/library/helpdesk-m0-ci-go-test:0.1.0 2.0s done",
-        "#13 DONE 2.2s",
+        "#12 exporting layers 10.7s done",
+        "#12 exporting manifest sha256:1ec96964fa9d0c892e9008fe7c209d42e93808d5286017dbad43ff4200644160 0.1s done",
+        "#12 exporting config sha256:917f17cc693a2e6c0c9ec9e7427052399567ae198fb18a9197034e5f45081e3e 0.0s done",
+        "#12 exporting attestation manifest sha256:22be1b780b5dcdc4248fe366f7f785d7452f90ca90e306eb011b0856daa66c5f 0.1s done",
+        "#12 exporting manifest list sha256:e0366a4d443b40575fd3a53f55a67f971f80a10e19993671a59ecc1d9bb7c9bf",
+        "#12 exporting manifest list sha256:e0366a4d443b40575fd3a53f55a67f971f80a10e19993671a59ecc1d9bb7c9bf 0.1s done",
+        "#12 naming to docker.io/library/helpdesk-m0-ci-go-test:0.1.0 0.0s done",
+        "#12 unpacking to docker.io/library/helpdesk-m0-ci-go-test:0.1.0",
+        "#12 unpacking to docker.io/library/helpdesk-m0-ci-go-test:0.1.0 2.1s done",
+        "#12 DONE 13.1s",
         "",
-        "View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/ibqufgt64l22dj030htjd6drg"
+        "View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/gv1p0zn81kpp91hkx4c8grp8u"
       ]
     },
     {
       "name": "node_26_frontend_mjs_suites",
       "command": "docker run --rm -v C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith:/work:ro -w /work node:26.13.1-alpine@sha256:6bd9ab43c0ec0190ca7b2d193906cb8b7edf6e7f4afa43ddeccd6452710bffb5 sh -c set -e; node scripts/test_admin_navigation.mjs; node scripts/test_admin_profiles.mjs; node scripts/test_ticket_actions.mjs; node scripts/test_ux_flow.mjs; node scripts/test_business_intent.mjs; node scripts/test_public_cache.mjs",
       "exit_code": 0,
-      "duration_s": 3.077,
+      "duration_s": 3.341,
       "result": "PASS",
       "tail": [
         "PASS rendered ticket text/attribute escaping and server confirmation deadline",
         "PASS unknown-commit intent holds key/payload/version across refresh, rejects changed intent, and resets after receipt or definite rejection",
         "PASS public stale-image refresh, offline fallback, scoped cleanup, private-route bypass and one-time client update",
         "",
-        "(node:8) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time",
+        "(node:7) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time",
         "(Use `node --trace-warnings ...` to show where the warning was created)",
-        "(node:19) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time",
+        "(node:18) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time",
         "(Use `node --trace-warnings ...` to show where the warning was created)",
-        "(node:30) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time",
+        "(node:29) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time",
         "(Use `node --trace-warnings ...` to show where the warning was created)",
-        "(node:41) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time",
+        "(node:40) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time",
         "(Use `node --trace-warnings ...` to show where the warning was created)"
       ]
     },
@@ -155,7 +155,7 @@
       "name": "pg_18_disposable_migrations",
       "command": "C:\\Python313\\python.exe -X utf8 scripts/test_owner_migrations.py --report qa/remediation/rm0-05/ci-migrations.json",
       "exit_code": 0,
-      "duration_s": 44.899,
+      "duration_s": 45.794,
       "result": "PASS",
       "tail": [
         "PASS isolated migrations; report qa/remediation/rm0-05/ci-migrations.json"
@@ -165,7 +165,7 @@
       "name": "live_link_audit",
       "command": "C:\\Python313\\python.exe -X utf8 scripts/test_m0_13_links.py",
       "exit_code": 0,
-      "duration_s": 0.595,
+      "duration_s": 0.677,
       "result": "PASS",
       "tail": [
         "   - /masuk                                   : HTTP 200",
@@ -186,7 +186,7 @@
       "name": "live_modal_and_mobile",
       "command": "C:\\Python313\\python.exe -X utf8 scripts/test_modal_and_mobile.py",
       "exit_code": 0,
-      "duration_s": 0.582,
+      "duration_s": 0.589,
       "result": "PASS",
       "tail": [
         "[PASS] HTTP GET /admin/app/helpdesk/index.html?kind=services [Master Layanan TIK] -> 200",
@@ -207,7 +207,7 @@
       "name": "live_edge_cdp_browser",
       "command": "node scripts/test_rm0_04_browser.mjs",
       "exit_code": 0,
-      "duration_s": 120.683,
+      "duration_s": 143.064,
       "result": "PASS",
       "tail": [
         "[PASS] R4-B_csp_routes_overflow_faq",
@@ -220,7 +220,8 @@
         "[PASS] R4-F_m9_reports_export",
         "[PASS] R4-G_m8_page_editorial_search_reader",
         "[PASS] R4-H_lightbox_and_media",
-        "[PASS] R4-I_footer_zoom_reduced_motion"
+        "[PASS] R4-I_footer_zoom_reduced_motion",
+        "[PASS] Fase2_UI_and_Ops"
       ]
     }
   ],

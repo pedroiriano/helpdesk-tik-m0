@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-11-17T07:34:04.612910+00:00",
+  "timestamp": "2026-11-18T00:28:40.464836+00:00",
   "task_id": "M0-13",
   "scope": "frontend_link_audit",
   "result": "PASS",
   "scanned_files_count": 25,
-  "total_links_checked": 580,
+  "total_links_checked": 586,
   "broken_links_count": 0,
   "broken_links": [],
   "placeholder_matches_count": 0,
@@ -16,14 +16,14 @@
       "path": "/",
       "url": "http://127.0.0.1:18090/",
       "status": 200,
-      "size_bytes": 36217,
+      "size_bytes": 36208,
       "ok": true
     },
     {
       "path": "/layanan",
       "url": "http://127.0.0.1:18090/layanan",
       "status": 200,
-      "size_bytes": 10902,
+      "size_bytes": 11710,
       "ok": true
     },
     {
@@ -65,7 +65,7 @@
       "path": "/tiket",
       "url": "http://127.0.0.1:18090/tiket",
       "status": 200,
-      "size_bytes": 10986,
+      "size_bytes": 13728,
       "ok": true
     },
     {
@@ -135,21 +135,21 @@
       "path": "/admin/app/helpdesk/index.html",
       "url": "http://127.0.0.1:18090/admin/app/helpdesk/index.html",
       "status": 200,
-      "size_bytes": 63561,
+      "size_bytes": 70218,
       "ok": true
     },
     {
       "path": "/admin/app/tickets/index.html",
       "url": "http://127.0.0.1:18090/admin/app/tickets/index.html",
       "status": 200,
-      "size_bytes": 27639,
+      "size_bytes": 31156,
       "ok": true
     },
     {
       "path": "/admin/auth/login.html",
       "url": "http://127.0.0.1:18090/admin/auth/login.html",
       "status": 200,
-      "size_bytes": 19919,
+      "size_bytes": 20254,
       "ok": true
     }
   ],

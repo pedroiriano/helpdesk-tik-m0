@@ -1,8 +1,8 @@
 {
-  "timestamp": "2026-11-17T07:33:19.417021+00:00",
+  "timestamp": "2026-11-18T00:27:54.208786+00:00",
   "scope": "disposable PostgreSQL DDL/ledger/role integration only",
   "image": "postgres:18.7-alpine@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015",
-  "container": "helpdesk-m0-contract-1e757302ad",
+  "container": "helpdesk-m0-contract-5d8eb5344a",
   "host_ports": [],
   "persistent_volumes": [],
   "command": "python scripts/test_owner_migrations.py",
@@ -47,8 +47,8 @@
     }
   ],
   "source_hashes": {
-    "migrations/manifest.json": "f96f4ba37b06461f9d8239235deca2b6f59d0027a03c61c01b8a7f493055d25f",
-    "migrations/checksums.sha256": "9296a112fed77ca4d6e8a769e992282298af9a912294e5ef590ca781b0a9cf29",
+    "migrations/manifest.json": "dca2cc253cd5190844d00fb878fd09d2e7cf66b7c74faf4abee13055b09fd7b8",
+    "migrations/checksums.sha256": "64bb0fbbbbb2da34b7f1a97236b97a5c165af5b64bef6a13dbef1e9001e25d60",
     "migrations/apply.sh": "8827c18e4f0266917e962dbff7fa8f2a1c215d4e090c36d73256024020283960",
     "infra/postgres/001-foundation.sql": "9d87f326cbec57bdf8950337bb7646a8fef04ccfcfba06b3491f2d7cecbfb3b9",
     "infra/postgres/migrate.sh": "ed8a91609a78626f58b9a9c81ba4946e92d49ed4cf118fd90738c4d5fe92a56d",
@@ -87,6 +87,8 @@
     "migrations/m3/032-report-context.sql": "cea481d4296bc5a9523470e417d0fd4df7ee2137a32b9eed4181fc9e9414bf28",
     "migrations/m5/033-category-routing.sql": "ec44b52aafbda1e5dde1d5d1b9027b5eb90ceb7415056f9e04b5e7e4dbc6aef9",
     "migrations/m1/034-role-module-policy.sql": "0746c122639b7587da328eba5683547ce3c3ce7a0bcf005c10983c8e2ec55df6",
-    "migrations/m8/035-hero-publication.sql": "ea2ef213bb86b19b3975b5b0f2279633abf70c38abcff4867055b768c563d45f"
+    "migrations/m8/035-hero-publication.sql": "ea2ef213bb86b19b3975b5b0f2279633abf70c38abcff4867055b768c563d45f",
+    "migrations/m3/036-operational-completion.sql": "ef4a81fe95cc82a479dd646fa6f1b220c82dd3b8b74a2dad6853732920393b8d",
+    "migrations/m6/037-sla-rule-active.sql": "de11a9bd51453cda2f935ed30fb31acbc3f2b3b03ff052d891df4904731fb796"
   }
 }
