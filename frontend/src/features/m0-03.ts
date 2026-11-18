@@ -1,5 +1,6 @@
 import { sessionBus } from './session-events';
 import { initAdminDataTables } from './admin-datatable';
+import { openAdminConfirmDialog } from './admin-confirm';
 import { primaryProfiles, quickLoginSubject } from '../../admin-profiles.mjs';
 import { bindAccessEditor } from './admin-access';
 import { showRolePolicies } from './role-policy-editor';
@@ -33,6 +34,18 @@ type Master = Partial<Service & Components['Category'] & Components['Organizatio
 const $ = <T extends HTMLElement = HTMLElement>(selector: string, parent: ParentNode = document): T | null => parent.querySelector<T>(selector);
 const nodes = <T extends HTMLElement = HTMLElement>(selector: string, parent: ParentNode = document): T[] => [...parent.querySelectorAll<T>(selector)];
 const element = <K extends keyof HTMLElementTagNameMap>(tag: K, text = '', className = '') => { const el = document.createElement(tag); el.textContent = text; el.className = className; return el; };
+const toWibDateTimeInput = (ms = Date.now()) => new Date(ms + 7 * 3600000).toISOString().slice(0, 16);
+const clampMembershipExpiresIso = (raw?: string) => {
+  const now = Date.now();
+  const maxAllowed = now + 700 * 86400000;
+  const fallback = new Date(now + 365 * 86400000).toISOString();
+  if (!raw) return fallback;
+  const t = new Date(raw).getTime();
+  if (!Number.isFinite(t) || t <= now + 60000 || t > maxAllowed) return fallback;
+  return new Date(t).toISOString();
+};
+const slugifyTitle = (raw: string) =>
+  raw.toLowerCase().normalize('NFKD').replace(/[^a-z0-9\s-]/g, '').trim().replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 100);
 const status = (selector: string, message: string, parent: ParentNode = document) => { const el = $(selector, parent); if (el) el.textContent = message; };
 const control = (form: HTMLFormElement, name: string) => form.elements.namedItem(name) as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 const value = (form: HTMLFormElement, name: string) => control(form, name).value.trim();
@@ -538,11 +551,13 @@ async function admin(): Promise<void> {
   try {
     if (identityAllowed || catalogAllowed) {
       orgs = (await api<Page<Components['Organization']>>('/admin/organizations?limit=100')).items;
-      const cfg = await api<Components['AuthConfig']>('/auth/config').catch(() => null);
-      if (cfg && !cfg.lab_auth_enabled) {
+      if (identityAllowed) {
         subjects = (await api<Page<Components['Subject']>>('/admin/subjects?limit=100')).items;
       } else {
-        subjects = (await api<Components['Bootstrap']>('/auth/bootstrap')).subjects;
+        const cfg = await api<Components['AuthConfig']>('/auth/config').catch(() => null);
+        if (cfg?.lab_auth_enabled) {
+          subjects = (await api<Components['Bootstrap']>('/auth/bootstrap')).subjects;
+        }
       }
     }
   } catch {}
@@ -591,12 +606,13 @@ async function admin(): Promise<void> {
   }
 
   function remotePicker<T extends { id: string; name: string }>(path: string, target: HTMLSelectElement, accept: (rows: T[]) => void, scope: () => string, blank = false) {
-    const row = element('div', '', 'hd-actions');
-    const prev = element('button', 'Pilihan sebelumnya', 'piui-btn piui-btn--secondary piui-btn--sm');
-    const nextBtn = element('button', 'Pilihan berikutnya', 'piui-btn piui-btn--secondary piui-btn--sm');
-    const reload = element('button', 'Muat ulang pilihan', 'piui-btn piui-btn--secondary piui-btn--sm');
+    const row = element('div', '', 'hd-picker-actions');
+    const prev = element('button', '‹ Sebelumnya', 'piui-btn piui-btn--secondary piui-btn--sm');
+    const nextBtn = element('button', 'Berikutnya ›', 'piui-btn piui-btn--secondary piui-btn--sm');
+    const reload = element('button', '↻ Segarkan opsi', 'piui-btn piui-btn--secondary piui-btn--sm hd-picker-reload');
     for (const button of [prev, nextBtn, reload]) button.type = 'button';
-    prev.disabled = true; nextBtn.disabled = true;
+    prev.disabled = true; prev.hidden = true;
+    nextBtn.disabled = true; nextBtn.hidden = true;
     row.append(prev, nextBtn, reload);
     target.parentElement?.append(row);
 
@@ -611,7 +627,7 @@ async function admin(): Promise<void> {
         if (scope !== unscoped && !org) {
           after = null; options(target, [], blank); accept([]); return;
         }
-        const page = await api<Page<T>>(path + '?limit=20' + (cursor ? '&cursor=' + encodeURIComponent(cursor) : '') + (org ? '&organization_id=' + encodeURIComponent(org) : ''));
+        const page = await api<Page<T>>(path + '?limit=100' + (cursor ? '&cursor=' + encodeURIComponent(cursor) : '') + (org ? '&organization_id=' + encodeURIComponent(org) : ''));
         if (requestEpoch !== epoch) return;
         accept(page.items);
         options(target, page.items.map(v => ({ value: v.id, label: v.name })), blank);
@@ -636,7 +652,9 @@ async function admin(): Promise<void> {
       } finally {
         if (requestEpoch === epoch) {
           prev.disabled = !history.length;
+          prev.hidden = !history.length;
           nextBtn.disabled = !after;
+          nextBtn.hidden = !after;
           reload.disabled = false;
         }
       }
@@ -714,7 +732,10 @@ async function admin(): Promise<void> {
         });
       });
       status('[data-hd-editor-title]', `${row ? 'Ubah' : 'Tambah'} ${names[kind] ?? kind}`);
-      status('[data-hd-editor-version]', row ? `Versi ${row.version}. Perubahan hanya diterima jika versi masih sama.` : 'Data baru');
+      status('[data-hd-editor-version]', row ? `Versi ${row.version}. Perubahan hanya diterima jika versi masih sama.` : 'Isi formulir di bawah lalu klik Simpan ke server.');
+      status('[data-hd-editor-badge]', row ? `Mengedit · v${row.version}` : 'Data Baru');
+      form.classList.toggle('is-editing', Boolean(row));
+      form.classList.toggle('is-creating', !row);
       status('[data-hd-save-status]', '');
       if (row) {
         control(form, 'code').value = row.code ?? '';
@@ -745,7 +766,9 @@ async function admin(): Promise<void> {
         (control(form, 'active') as HTMLInputElement).checked = row.active ?? false;
         (control(form, 'reporting-visible') as HTMLInputElement).checked = row.reporting_visible ?? false;
         (control(form, 'revoked') as HTMLInputElement).checked = row.revoked ?? false;
-        control(form, 'expires').value = row.expires_at ? new Date(new Date(row.expires_at).getTime() + 7 * 3600000).toISOString().slice(0, 16) : '';
+        control(form, 'expires').value = row.expires_at ? toWibDateTimeInput(new Date(row.expires_at).getTime()) : '';
+      } else if (kind === 'memberships') {
+        control(form, 'expires').value = toWibDateTimeInput(Date.now() + 365 * 86400000);
       }
       if (kind === 'memberships') accessEditor?.reset(row);
       if (kind === 'teams') {
@@ -755,13 +778,22 @@ async function admin(): Promise<void> {
         division.value = row?.division_id ?? '';
         void refreshDivision(true);
       }
-      if (submit) submit.disabled = kind === 'organizations' && !row && !can('identity.organization.create');
+      const orgCreateLocked = kind === 'organizations' && !row && !can('identity.organization.create');
+      if (submit) submit.disabled = orgCreateLocked;
+      if (orgCreateLocked) {
+        status('[data-hd-save-status]', 'Pembuatan organisasi baru hanya tersedia bagi Platform Admin / Super Admin. Klik Ubah pada tabel untuk menyunting organisasi Anda.');
+      }
       const serviceEditors = $('[data-hd-service-editors]');
       if (serviceEditors) serviceEditors.hidden = kind !== 'services' || !row;
       currentForm = undefined; currentPolicy = undefined;
       void showRouting?.(kind === 'services' && row?.owner_org_id ? {id:row.id,owner_org_id:row.owner_org_id} : undefined);
       if (kind === 'services' && row) void loadEditors(row);
     }
+  }
+  function focusMasterForm() {
+    if (!form || form.hidden) return;
+    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    $<HTMLElement>('input:not([disabled]):not([type="checkbox"]),select:not([disabled]),textarea:not([disabled])', form)?.focus({ preventScroll: true });
   }
 
   async function loadEditors(row: Master) {
@@ -896,10 +928,14 @@ async function admin(): Promise<void> {
       return;
     }
 
-    // Standard Master (services, categories, organizations, teams, memberships)
+    // Standard Master (services, categories, organizations, divisions, teams, memberships)
     if (masterCard) masterCard.hidden = false;
     if (form) form.hidden = false;
-    $('[data-hd-new]')!.hidden = false;
+    const newBtn = $<HTMLButtonElement>('[data-hd-new]');
+    if (newBtn) {
+      newBtn.hidden = false;
+      newBtn.textContent = `+ Tambah ${names[requestedKind] ?? 'data'}`;
+    }
     $('[data-hd-refresh]')!.hidden = false;
     $('[data-hd-prev]')!.parentElement!.hidden = false;
 
@@ -913,31 +949,100 @@ async function admin(): Promise<void> {
       for (const row of page.items) {
         const tr = element('tr');
         const subject = subjects.find(s => s.id === row.subject_id);
-        const label = row.name ?? (subject ? `${subject.name} · ${roleLabels[subject.role] ?? 'Akses khusus'}` : 'Akses pengguna');
+        const label = row.name ?? (subject
+          ? `${subject.name} · ${roleLabels[subject.role] ?? subject.role}`
+          : (row.subject_id ? `Akun (${row.subject_id.slice(0, 8)}…)` : 'Akses pengguna'));
         tr.append(
           element('td', label),
           element('td', orgLabel(row.owner_org_id ?? row.organization_id ?? row.id)),
           element('td', `${row.revoked ? 'Dicabut' : row.active === false ? 'Nonaktif' : 'Aktif'} · v${row.version}`)
         );
-        const action = element('td'), edit = element('button', 'Ubah', 'piui-btn piui-btn--secondary piui-btn--sm');
+        const action = element('td');
+        const actWrap = element('div', '', 'hd-row-actions');
+        const edit = element('button', 'Ubah', 'piui-btn piui-btn--secondary piui-btn--sm');
         edit.type = 'button';
         edit.addEventListener('click', () => {
           configure(row);
-          form.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          $('input:not([disabled]),select:not([disabled])', form)?.focus({ preventScroll: true });
+          focusMasterForm();
         });
-        action.append(edit);
+        actWrap.append(edit);
+
+        const isMembership = requestedKind === 'memberships';
+        const currentlyRevokedOrInactive = isMembership ? Boolean(row.revoked) : row.active === false;
+        const toggleLabel = isMembership
+          ? (currentlyRevokedOrInactive ? 'Pulihkan' : 'Cabut')
+          : (currentlyRevokedOrInactive ? 'Aktifkan' : 'Nonaktifkan');
+        const toggleBtn = element(
+          'button',
+          toggleLabel,
+          currentlyRevokedOrInactive
+            ? 'piui-btn piui-btn--secondary piui-btn--sm'
+            : 'piui-btn piui-btn--secondary piui-btn--sm hd-btn-warn-outline'
+        );
+        toggleBtn.type = 'button';
+        toggleBtn.addEventListener('click', () => {
+          openAdminConfirmDialog({
+            title: isMembership
+              ? (currentlyRevokedOrInactive ? `Pulihkan akses ${label}?` : `Cabut akses ${label}?`)
+              : (currentlyRevokedOrInactive ? `Aktifkan kembali ${label}?` : `Arsipkan / nonaktifkan ${label}?`),
+            description: isMembership
+              ? (currentlyRevokedOrInactive
+                ? `Akses keanggotaan "${label}" pada ${orgLabel(row.organization_id ?? '')} akan diaktifkan kembali.`
+                : `Seluruh izin "${label}" pada ${orgLabel(row.organization_id ?? '')} akan dicabut sementara menjaga jejak audit historis.`)
+              : (currentlyRevokedOrInactive
+                ? `Master "${label}" (v${row.version}) akan diaktifkan kembali agar tampil di pilihan operasional.`
+                : `Master "${label}" (v${row.version}) akan dinonaktifkan/diarsipkan. Riwayat tiket dan jejak audit lama tetap aman.`),
+            confirmLabel: isMembership
+              ? (currentlyRevokedOrInactive ? 'Ya, Pulihkan Akses' : 'Ya, Cabut Akses')
+              : (currentlyRevokedOrInactive ? 'Ya, Aktifkan' : 'Ya, Nonaktifkan'),
+            confirmTone: currentlyRevokedOrInactive ? 'primary' : 'warn',
+            requireReason: isMembership,
+            defaultReason: isMembership ? (currentlyRevokedOrInactive ? 'Pemulihan keanggotaan organisasi' : 'Pencabutan akses organisasi') : '',
+            onConfirm: async (reasonText: string) => {
+              const togglePath = `/admin/${requestedKind}/${row.id}`;
+              let payload: Record<string, unknown> = { expected_version: row.version };
+              if (requestedKind === 'organizations') {
+                payload = { ...payload, code: row.code, name: row.name, active: currentlyRevokedOrInactive, reporting_visible: Boolean(row.reporting_visible) };
+              } else if (requestedKind === 'categories') {
+                payload = { ...payload, code: row.code, name: row.name, owner_org_id: row.owner_org_id ?? row.organization_id, active: currentlyRevokedOrInactive };
+              } else if (requestedKind === 'services') {
+                payload = { ...payload, code: row.code, name: row.name, owner_org_id: row.owner_org_id ?? row.organization_id, access_mode: row.access_mode ?? 'PUBLIC_GUEST', category_id: row.category_id ?? null, form_version: row.form_version ?? 1, active: currentlyRevokedOrInactive };
+              } else if (requestedKind === 'divisions') {
+                payload = { ...payload, organization_id: row.organization_id, name: row.name, active: currentlyRevokedOrInactive };
+              } else if (requestedKind === 'teams') {
+                payload = { ...payload, organization_id: row.organization_id, division_id: row.division_id ?? null, name: row.name, active: currentlyRevokedOrInactive };
+              } else if (requestedKind === 'memberships') {
+                payload = {
+                  ...payload,
+                  organization_id: row.organization_id,
+                  subject_id: row.subject_id,
+                  team_id: row.team_id ?? null,
+                  permissions: row.permissions ?? [],
+                  expires_at: clampMembershipExpiresIso(row.expires_at),
+                  revoked: !currentlyRevokedOrInactive,
+                  reason: reasonText,
+                };
+              }
+              const res = await api<{ id: string; version: number }>(togglePath, 'PUT', payload, crypto.randomUUID());
+              if (selected?.id === row.id) configure();
+              await load();
+              status('[data-hd-status]', `${label} berhasil ${currentlyRevokedOrInactive ? 'diaktifkan/dipulihkan' : 'dinonaktifkan/dicabut'} (v${res.version}).`);
+            }
+          });
+        });
+        actWrap.append(toggleBtn);
+        action.append(actWrap);
         tr.append(action);
         root.append(tr);
       }
       if (!page.items.length) {
-        const tr = element('tr'), td = element('td', 'Belum ada data pada scope ini.');
+        const tr = element('tr'), td = element('td', 'Belum ada data pada scope ini. Klik tombol "+ Tambah" di atas untuk membuat data baru.');
         td.colSpan = 4;
         tr.append(td);
         root.append(tr);
       }
       status('[data-hd-caption]', `Master ${names[requestedKind]} · Halaman ${history.length + 1}`);
-      status('[data-hd-status]', `${page.items.length} data pada halaman ini. Gunakan navigasi halaman dan navigasi pilihan untuk data berikutnya sesuai scope.`);
+      status('[data-hd-status]', `${page.items.length} data pada halaman ini. Gunakan pencarian, filter, urutkan kolom, atau tombol Tambah/Ubah/Nonaktifkan.`);
     } catch (e) {
       next = null;
       status('[data-hd-status]', errorText(e));
@@ -946,7 +1051,8 @@ async function admin(): Promise<void> {
     ($('[data-hd-next]') as HTMLButtonElement).disabled = !next;
   }
 
-  $('[data-hd-new]')?.addEventListener('click', () => configure());
+  $('[data-hd-new]')?.addEventListener('click', () => { configure(); focusMasterForm(); });
+  nodes('[data-hd-cancel-master]').forEach(btn => btn.addEventListener('click', () => configure()));
   $('[data-hd-refresh]')?.addEventListener('click', () => { configure(); void load(); });
   $('[data-hd-prev]')?.addEventListener('click', () => { cursor = history.pop() ?? ''; void load(); });
   $('[data-hd-next]')?.addEventListener('click', () => { if (next) { history.push(cursor); cursor = next; void load(); } });
@@ -1387,6 +1493,10 @@ async function admin(): Promise<void> {
 
   const maintForm = $('[data-hd-maintenance-form]') as HTMLFormElement | null;
   if (maintForm) {
+    const maintStart = $<HTMLInputElement>('#hd-maint-start');
+    const maintEnd = $<HTMLInputElement>('#hd-maint-end');
+    if (maintStart && !maintStart.value) maintStart.value = toWibDateTimeInput(Date.now());
+    if (maintEnd && !maintEnd.value) maintEnd.value = toWibDateTimeInput(Date.now() + 2 * 3600000);
     maintForm.addEventListener('submit', async e => {
       e.preventDefault();
       const org = ($('#hd-maint-org') as HTMLSelectElement).value;
@@ -1992,7 +2102,10 @@ async function admin(): Promise<void> {
   $('[data-hd-new-nav]')?.addEventListener('click', () => {
     if (navForm) {
       navForm.hidden = !navForm.hidden;
-      if (!navForm.hidden) navForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (!navForm.hidden) {
+        navForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        $('#hd-nav-label', navForm)?.focus({ preventScroll: true });
+      }
     }
   });
   $('[data-hd-close-nav-form]')?.addEventListener('click', () => {
@@ -2048,18 +2161,33 @@ async function admin(): Promise<void> {
   const editorialPublicPrefix = () => (editorialKind === 'PAGE' ? '/halaman/' : '/panduan/');
   const editorialNoun = () => (editorialKind === 'PAGE' ? 'halaman portal' : 'artikel');
 
+  const artTitleEl = $<HTMLInputElement>('#hd-art-title');
+  const artSlugEl = $<HTMLInputElement>('#hd-art-slug');
+  let slugEditedManually = false;
+  artSlugEl?.addEventListener('input', () => {
+    slugEditedManually = Boolean(artSlugEl.value.trim());
+  });
+  artTitleEl?.addEventListener('input', () => {
+    if (!articleDraft && !slugEditedManually && artSlugEl) {
+      artSlugEl.value = slugifyTitle(artTitleEl.value);
+    }
+  });
+
   function editArticle(item?: EditorialArticle) {
     if (!artForm) return;
     articleDraft = item;
+    slugEditedManually = Boolean(item);
     artForm.reset();
     status('[data-hd-article-form-title]', item ? `Sunting ${editorialNoun()}` : `Tulis ${editorialNoun()} baru`, artForm);
+    status('[data-hd-article-badge]', item ? `Mengedit · v${item.version}` : 'Draft Baru', artForm);
     for (const key of ['title', 'slug', 'audience', 'body'] as const) {
       const input = artForm.elements.namedItem(key);
       if (item && (input instanceof HTMLInputElement || input instanceof HTMLSelectElement || input instanceof HTMLTextAreaElement)) input.value = item[key];
     }
     status('[data-hd-article-status]', '', artForm);
     artForm.hidden = false;
-    $<HTMLInputElement>('#hd-art-title')?.focus();
+    artForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    artTitleEl?.focus({ preventScroll: true });
   }
 
   async function loadArticles() {

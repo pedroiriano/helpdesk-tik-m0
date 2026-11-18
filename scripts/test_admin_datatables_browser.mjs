@@ -423,6 +423,7 @@ async function main() {
     // A. SUPER_ADMIN: Master Services, Notifications, Maintenance, Rules, Navigation, Articles, Media + Mobile
     await loginRoleKeyword(cdp, 'super admin');
 
+    // Check Master Services Data Table + UX Form + Archive/Restore round-trip
     await cdp.navigate(`${BASE}/admin/app/helpdesk/index.html?kind=services`, 700);
     await waitFor(() => cdp.eval(`document.querySelectorAll('[data-hd-rows] tr').length > 0`), 10000, 'master services loaded');
     await inspectVisibleDataTables(cdp, 'Master Services');
@@ -431,13 +432,112 @@ async function main() {
       const btn = document.querySelector('[data-hd-rows] tr:not([hidden]) button');
       if (!btn) return false;
       btn.click();
-      return Boolean(document.querySelector('#hd-name')?.value);
+      return Boolean(document.querySelector('#hd-name')?.value) &&
+        document.querySelector('[data-hd-master-form]').classList.contains('is-editing');
     })()`);
-    assert.equal(editWorked, true, 'Master row Ubah button listener must stay active after DataTable operations');
+    assert.equal(editWorked, true, 'Master row Ubah button listener and edit mode badge must work');
 
+    // Check + Tambah data focus + grid column count (<=2 cols) + no cluttered picker pagination buttons
+    const masterFormUx = await cdp.eval(`(() => {
+      document.querySelector('[data-hd-new]').click();
+      const form = document.querySelector('[data-hd-master-form]');
+      const gridStyle = getComputedStyle(form.querySelector('.hd-form-grid'));
+      const colCount = gridStyle.gridTemplateColumns.split(/\s+/).filter(Boolean).length;
+      const hiddenPrevNext = Array.from(form.querySelectorAll('.hd-picker-actions button'))
+        .filter(b => b.textContent.includes('Sebelumnya') || b.textContent.includes('Berikutnya'))
+        .every(b => b.hidden);
+      return {
+        isCreating: form.classList.contains('is-creating'),
+        badge: document.querySelector('[data-hd-editor-badge]')?.textContent || '',
+        colCount,
+        hiddenPrevNext,
+      };
+    })()`);
+    assert.equal(masterFormUx.isCreating, true, 'Clicking Tambah must switch master form into is-creating');
+    assert.equal(masterFormUx.badge, 'Data Baru', 'Badge must read Data Baru');
+    assert.ok(masterFormUx.colCount <= 2, `Form grid should be max 2 columns (got ${masterFormUx.colCount})`);
+    assert.equal(masterFormUx.hiddenPrevNext, true, 'Unused picker Prev/Next pagination buttons should be hidden');
+
+    // Check Memberships: real subject names shown (not all "Akses pengguna"), default expiry prefilled, full subject dropdown
+    await cdp.navigate(`${BASE}/admin/app/helpdesk/index.html?kind=memberships`, 700);
+    await waitFor(() => cdp.eval(`document.querySelectorAll('[data-hd-rows] tr').length > 0`), 10000, 'memberships rows loaded');
+    const membUx = await cdp.eval(`(() => {
+      const names = Array.from(document.querySelectorAll('[data-hd-rows] tr')).map(r => r.cells[0]?.textContent?.trim() || '');
+      const hasRealNames = names.some(n => n !== 'Akses pengguna' && n.includes('·'));
+      document.querySelector('[data-hd-new]').click();
+      const subjectCount = document.querySelector('#hd-member-subject')?.options?.length || 0;
+      const defaultExpires = document.querySelector('#hd-expires')?.value || '';
+      const hasRevokeAction = Array.from(document.querySelectorAll('[data-hd-rows] tr button')).some(b => /Cabut|Pulihkan/.test(b.textContent));
+      return { hasRealNames, subjectCount, defaultExpires, hasRevokeAction, sample: names.slice(0, 3) };
+    })()`);
+    assert.equal(membUx.hasRealNames, true, `Memberships should display real subject names & roles (sample: ${JSON.stringify(membUx.sample)})`);
+    assert.ok(membUx.subjectCount > 10, `Add membership dropdown should immediately list active subjects without forcing profile pre-filter (got ${membUx.subjectCount})`);
+    assert.ok(membUx.defaultExpires.length >= 16, 'Add membership must auto-fill default 1-year expiry');
+    assert.equal(membUx.hasRevokeAction, true, 'Memberships table must expose quick Cabut/Pulihkan action');
+
+    // Non-destructive Category Archive -> Restore round-trip via Confirm Dialog + Toggle button
+    await cdp.navigate(`${BASE}/admin/app/helpdesk/index.html?kind=categories`, 700);
+    await waitFor(() => cdp.eval(`document.querySelectorAll('[data-hd-rows] tr button').length >= 2`), 10000, 'category rows loaded');
+    const targetCatIdx = await cdp.eval(`(() => {
+      const rows = Array.from(document.querySelectorAll('[data-hd-rows] tr:not([hidden])'));
+      const activeIdx = rows.findIndex(r => r.cells[2]?.textContent?.startsWith('Aktif'));
+      const pickIdx = activeIdx >= 0 ? activeIdx : 0;
+      const row = rows[pickIdx];
+      const wasActive = row.cells[2]?.textContent?.startsWith('Aktif');
+      row.querySelectorAll('button')[1].click();
+      return { pickIdx, wasActive };
+    })()`);
+    await waitFor(() => cdp.eval(`document.querySelector('[data-hd-archive-confirm]')?.open === true`), 5000, 'archive confirm modal open');
+    await cdp.eval(`document.querySelector('[data-hd-arch-submit]').click()`);
+    await waitFor(async () => {
+      const s = await cdp.eval(`({ open: Boolean(document.querySelector('[data-hd-archive-confirm]')?.open), msg: document.querySelector('[data-hd-status]')?.textContent || '' })`);
+      return !s.open && s.msg.includes('berhasil');
+    }, 10000, 'category toggle completed');
+    // Immediately restore back to original state
+    await cdp.eval(`(() => {
+      const rows = Array.from(document.querySelectorAll('[data-hd-rows] tr:not([hidden])'));
+      rows[${targetCatIdx.pickIdx}].querySelectorAll('button')[1].click();
+    })()`);
+    await waitFor(() => cdp.eval(`document.querySelector('[data-hd-archive-confirm]')?.open === true`), 5000, 'restore confirm modal open');
+    await cdp.eval(`document.querySelector('[data-hd-arch-submit]').click()`);
+    await waitFor(async () => {
+      const state = await cdp.eval(`(() => {
+        const rows = Array.from(document.querySelectorAll('[data-hd-rows] tr:not([hidden])'));
+        return {
+          open: Boolean(document.querySelector('[data-hd-archive-confirm]')?.open),
+          cell: rows[${targetCatIdx.pickIdx}]?.cells[2]?.textContent || '',
+        };
+      })()`);
+      return !state.open && (targetCatIdx.wasActive ? state.cell.startsWith('Aktif') : state.cell.startsWith('Nonaktif'));
+    }, 10000, 'category status restored symmetrically');
+
+    // Check Rules "+ Tambah Aturan Baru" + Toggle Nonaktifkan button + Articles auto-slugify
     for (const kind of ['notifications', 'rules', 'navigation', 'articles', 'maintenance', 'media']) {
       await cdp.navigate(`${BASE}/admin/app/helpdesk/index.html?kind=${kind}`, 700);
       await waitFor(() => cdp.eval(`Array.from(document.querySelectorAll('table.piui-table')).some(t => t.closest('.hd-dt-shell'))`), 8000, `kind=${kind} datatable shell`);
+      if (kind === 'rules') {
+        const hasRuleBtns = await cdp.eval(`(() => {
+          document.querySelector('[data-hd-new-rule]')?.click();
+          const hasRowsBtn = Array.from(document.querySelectorAll('[data-hd-rules-rows] tr button')).some(b => /Nonaktifkan|Aktifkan/.test(b.textContent));
+          return {
+            creating: document.querySelector('[data-hd-rule-form]')?.classList.contains('is-creating'),
+            hasRowsBtn,
+          };
+        })()`);
+        assert.equal(hasRuleBtns.creating, true, 'Rules + Tambah Aturan Baru must switch rule form into is-creating');
+      }
+      if (kind === 'articles') {
+        const autoSlug = await cdp.eval(`(() => {
+          document.querySelector('[data-hd-new-article]')?.click();
+          const t = document.querySelector('#hd-art-title');
+          t.value = 'Panduan Layanan Jaringan Depok 2026';
+          t.dispatchEvent(new Event('input', { bubbles: true }));
+          const slugVal = document.querySelector('#hd-art-slug')?.value || '';
+          document.querySelector('[data-hd-close-art-form]')?.click();
+          return slugVal;
+        })()`);
+        assert.equal(autoSlug, 'panduan-layanan-jaringan-depok-2026', 'Articles form must auto-generate URL slug');
+      }
       if (kind === 'maintenance') {
         await cdp.eval(`document.querySelector('[data-hd-tab-m11="scheduler"]')?.click()`);
         await sleep(500);

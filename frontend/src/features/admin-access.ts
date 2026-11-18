@@ -90,10 +90,13 @@ export function bindAccessEditor(form: HTMLFormElement, session: Session, subjec
     const blocked = selected.filter(p=>!allowed.includes(p));
     if (livePermissions && blocked.length) feedback.textContent=`${blocked.length} izin berada di luar kebijakan atau mandat delegasi saat ini. Sesuaikan pilihan sebelum menyimpan.`;
   }
+  const allAssignableSubjects = () => subjects.filter(s => s.role !== 'VENDOR');
   function filterAccounts() {
-    const list = subjectsForProfile(subjects,primary.value || special.value);
-    account.replaceChildren(new Option('Pilih akun pengguna',''),...list.map(s=>new Option(`${s.name} · ${roleLabels[s.role] ?? 'Akses khusus'}`,s.id)));
-    permissions.value=''; feedback.textContent=list.length ? 'Pilih akun, lalu gunakan akses standar atau pengaturan lanjutan.' : 'Belum ada akun untuk profil ini. Peran akun harus disiapkan melalui pengelolaan identitas yang berwenang.';
+    const profileKey = primary.value || special.value;
+    const list = profileKey ? subjectsForProfile(subjects, profileKey) : allAssignableSubjects();
+    account.replaceChildren(new Option('Pilih akun pengguna', ''), ...list.map(s => new Option(`${s.name} · ${roleLabels[s.role] ?? 'Akses khusus'}`, s.id)));
+    permissions.value = '';
+    feedback.textContent = list.length ? 'Pilih akun, lalu gunakan akses standar atau pengaturan lanjutan.' : 'Belum ada akun untuk profil ini. Peran akun harus disiapkan melalui pengelolaan identitas yang berwenang.';
     void loadPolicy();
   }
   primary.addEventListener('change',()=>{special.value='';filterAccounts();});
@@ -116,7 +119,8 @@ export function bindAccessEditor(form: HTMLFormElement, session: Session, subjec
       special.value=profile && specialProfiles.some(p=>p.id===profile.id) ? profile.id : '';
       get<HTMLDetailsElement>('[data-hd-field="access-special"]').open=Boolean(special.value);
       primary.disabled=special.disabled=account.disabled=organization.disabled=editing;
-      const list=subjectsForProfile(subjects,primary.value || special.value);
+      const profileKey = primary.value || special.value;
+      const list = profileKey ? subjectsForProfile(subjects, profileKey) : allAssignableSubjects();
       account.replaceChildren(new Option('Pilih akun pengguna',''),...list.map(s=>new Option(`${s.name} · ${roleLabels[s.role] ?? 'Akses khusus'}`,s.id)));
       if(row?.subject_id && !subject) account.add(new Option('Akun tersimpan · identitas belum tersedia',row.subject_id));
       account.value=row?.subject_id ?? '';

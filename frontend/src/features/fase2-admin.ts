@@ -1,5 +1,6 @@
 import { api, errorText } from './transport';
 import type { Components } from './business-types.generated';
+import { openAdminConfirmDialog } from './admin-confirm';
 
 type Page<T> = { items: T[]; next_cursor: string | null; as_of: string };
 type DeliveryJobItem = Components['DeliveryJobRecord'];
@@ -464,11 +465,30 @@ export function bindAdminRulesPanel(): () => Promise<void> {
   const rows = $('[data-hd-rules-rows]');
   const stat = $('[data-hd-rules-status]');
   const form = $<HTMLFormElement>('[data-hd-rule-form]');
+  const formTitle = $('[data-hd-rule-form-title]');
+  const formBadge = $('[data-hd-rule-badge]');
   const codeEl = $<HTMLInputElement>('#hd-rule-code');
   const verEl = $<HTMLInputElement>('#hd-rule-ver');
   const rvEl = $<HTMLInputElement>('#hd-rule-rv');
   const actEl = $<HTMLSelectElement>('#hd-rule-active');
   const reasonEl = $<HTMLInputElement>('#hd-rule-reason');
+
+  const resetRuleForm = (focusForm = false) => {
+    form?.reset();
+    if (codeEl) codeEl.value = '';
+    if (verEl) verEl.value = '1';
+    if (rvEl) rvEl.value = '1';
+    if (actEl) actEl.value = 'true';
+    if (reasonEl) reasonEl.value = '';
+    if (formTitle) formTitle.textContent = 'Tambah Aturan Baru';
+    if (formBadge) formBadge.textContent = 'Data Baru';
+    form?.classList.remove('is-editing');
+    form?.classList.add('is-creating');
+    if (focusForm) {
+      form?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      codeEl?.focus({ preventScroll: true });
+    }
+  };
 
   const loadRules = async () => {
     if (!sec || sec.hidden || !ownerSel || !rows) return;
@@ -478,23 +498,60 @@ export function bindAdminRulesPanel(): () => Promise<void> {
       const res = await api<{ items: RuleItem[] }>(`/admin/${encodeURIComponent(owner)}-rules`);
       rows.replaceChildren();
       if (!res.items.length) {
-        rows.append(emptyRow(5, 'Belum ada aturan tersimpan untuk domain ini. Tambahkan aturan baru melalui formulir di bawah.'));
+        rows.append(emptyRow(5, 'Belum ada aturan tersimpan untuk domain ini. Klik "+ Tambah Aturan Baru" untuk membuat aturan.'));
         if (stat) stat.textContent = `0 aturan ditemukan pada ${owner}.`;
         return;
       }
       for (const r of res.items) {
         const tr = el('tr');
         const tdAct = el('td');
+        const actWrap = el('div', '', 'hd-row-actions');
         const pickBtn = el('button', 'Ubah', 'piui-btn piui-btn--secondary piui-btn--sm');
         pickBtn.type = 'button';
         pickBtn.addEventListener('click', () => {
           if (codeEl) codeEl.value = r.code;
           if (verEl) verEl.value = String(r.version);
           if (rvEl) rvEl.value = String(r.rule_version);
-          if (actEl) actEl.value = String(!r.active);
-          if (reasonEl) reasonEl.focus();
+          if (actEl) actEl.value = String(r.active);
+          if (formTitle) formTitle.textContent = `Ubah Aturan: ${r.code}`;
+          if (formBadge) formBadge.textContent = `Mengedit · v${r.version}`;
+          form?.classList.remove('is-creating');
+          form?.classList.add('is-editing');
+          form?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          reasonEl?.focus({ preventScroll: true });
         });
-        tdAct.append(pickBtn);
+        const nextActive = !r.active;
+        const toggleBtn = el(
+          'button',
+          r.active ? 'Nonaktifkan' : 'Aktifkan',
+          r.active ? 'piui-btn piui-btn--secondary piui-btn--sm hd-btn-warn-outline' : 'piui-btn piui-btn--secondary piui-btn--sm'
+        );
+        toggleBtn.type = 'button';
+        toggleBtn.addEventListener('click', () => {
+          openAdminConfirmDialog({
+            title: r.active ? `Nonaktifkan aturan ${r.code}?` : `Aktifkan kembali aturan ${r.code}?`,
+            description: r.active
+              ? `Aturan "${r.code}" (v${r.version}) akan dinonaktifkan/diarsipkan dari pemrosesan otomatis domain ${owner}.`
+              : `Aturan "${r.code}" (v${r.version}) akan diaktifkan kembali pada domain ${owner}.`,
+            confirmLabel: r.active ? 'Ya, Nonaktifkan' : 'Ya, Aktifkan',
+            confirmTone: r.active ? 'warn' : 'primary',
+            requireReason: true,
+            defaultReason: r.active ? 'Penonaktifan aturan operasional sementara' : 'Aktivasi kembali aturan operasional',
+            onConfirm: async (reasonText: string) => {
+              await api(`/admin/${encodeURIComponent(owner)}-rules`, 'POST', {
+                expected_version: r.version,
+                code: r.code,
+                rule_version: r.rule_version,
+                active: nextActive,
+                reason: reasonText
+              });
+              if (stat) stat.textContent = `Aturan ${r.code} berhasil ${nextActive ? 'diaktifkan' : 'dinonaktifkan'}.`;
+              await loadRules();
+            }
+          });
+        });
+        actWrap.append(pickBtn, toggleBtn);
+        tdAct.append(actWrap);
         tr.append(
           el('td', r.code),
           el('td', r.summary),
@@ -510,7 +567,12 @@ export function bindAdminRulesPanel(): () => Promise<void> {
     }
   };
 
-  ownerSel?.addEventListener('change', () => void loadRules());
+  ownerSel?.addEventListener('change', () => {
+    resetRuleForm(false);
+    void loadRules();
+  });
+  $('[data-hd-new-rule]')?.addEventListener('click', () => resetRuleForm(true));
+  $('[data-hd-cancel-rule]')?.addEventListener('click', () => resetRuleForm(false));
   $('[data-hd-refresh-rules]')?.addEventListener('click', () => void loadRules());
   form?.addEventListener('submit', async e => {
     e.preventDefault();
