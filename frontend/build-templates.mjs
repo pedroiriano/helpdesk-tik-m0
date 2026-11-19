@@ -93,12 +93,12 @@ function publicPage(file, source) {
   if (file !== 'index.html') return source;
   source = replaceRequired(source, '<span>COURT</span><span>SPEC</span>', '<span>HELP</span><span>DESK</span>');
   source = replaceRequired(source, '( Basketball Intelligence Studio )', '( Layanan TIK Kota Depok )');
-  source = replaceRequired(source, 'Frame-linked court telemetry for clearer coaching decisions.', 'Portal pengembangan layanan TIK untuk masyarakat, ASN, dan petugas Kota Depok.');
+  source = replaceRequired(source, 'Frame-linked court telemetry for clearer coaching decisions.', 'Portal resmi layanan bantuan TIK untuk masyarakat, ASN, dan perangkat daerah Kota Depok.');
   source = replaceRequired(source, 'href="gallery.html">Open playbook', 'href="/admin/">Ruang petugas');
   source = replaceRequired(source, 'href="contact.html" aria-label="Contact Court Studio"', 'href="/kontak.html" aria-label="Kontak dan Layanan Pengaduan TIK" title="Kontak &amp; Layanan TIK"');
   source = source.replace('<title>COURTSPEC — Elite Basketball Biomechanics, Scouting & Court Telemetry Studio</title>', '<title>Helpdesk TIK Kota Depok</title>')
     .replace('aria-label="Courtspec Home">COURTSPEC', 'aria-label="Beranda Helpdesk">HELPDESK TIK');
-  return replaceRequired(source, '<p><span aria-hidden="true"></span> Combine desk accepting Q4 programs</p>', '<p>Helpdesk TIK Kota Depok · Pengembangan lokal. Galeri dan metrik menampilkan data contoh template.</p><a href="/admin/">Ruang petugas →</a>' + health);
+  return replaceRequired(source, '<p><span aria-hidden="true"></span> Combine desk accepting Q4 programs</p>', '<p>Helpdesk TIK Kota Depok · Portal layanan dan bantuan teknologi informasi.</p><a href="/admin/">Ruang petugas →</a>' + health);
 }
 
 function adminPage(file, source) {
@@ -110,6 +110,7 @@ function adminPage(file, source) {
     source = source
       .replaceAll('src="/admin/assets/icons/piui-mark.svg" alt="" width="32" height="32"><span class="piui-brand__name">PIUI Zero™</span>',
         `src="${brandAssets}/logo-pastel-mark.png" alt="" width="32" height="32"><span class="piui-brand__name">Helpdesk TIK Kota Depok</span>`)
+      .replaceAll('<span class="piui-badge piui-badge--env" title="Lingkungan demo lokal">DEMO</span>', '')
       .replace(/<link rel="icon" href="\/admin\/assets\/icons\/favicon\.ico[^"]*"[^>]*>/g,
         `<link rel="icon" type="image/png" href="${brandAssets}/logo-favicon.png">`)
       .replace(/<link rel="icon" href="\/admin\/assets\/icons\/piui-favicon\.svg[^"]*"[^>]*>/g, '')
@@ -143,7 +144,7 @@ function adminPage(file, source) {
 
     source = source.replace(/<strong>budi\.sec@piui-zero\.internal<\/strong>/g, '<strong data-admin-profile-name>Memeriksa sesi…</strong>')
       .replaceAll('Peran: Super Admin &amp; AppSec Lead', '<span data-admin-profile-role>Peran belum tersedia</span>')
-      .replaceAll('Mode prototipe', 'Lab sintetis')
+      .replaceAll('Mode prototipe', 'Aktif')
       .replaceAll('id="btn-session-logout"', 'id="hd-admin-logout" data-admin-logout hidden')
       .replaceAll('Akhiri Sesi (Logout)', 'Keluar akun')
       .replaceAll('sesi administrator', 'sesi petugas')

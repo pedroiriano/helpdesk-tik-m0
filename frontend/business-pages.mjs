@@ -23,23 +23,23 @@ export function registerForm() {
   return `<form class="vy-contact-form hd-auth-card" data-hd-register data-local-mutation data-local-ready>
     <div class="hd-callout hd-callout--info">
       <p>
-        <strong>Pendaftaran akun warga di lab.</strong> Isi data sintetis dengan format yang benar. Verifikasi identitas dan pemberitahuan ke nomor telepon belum aktif.
+        <strong>Pendaftaran Akun Warga.</strong> Lengkapi data sesuai identitas yang berlaku untuk mengajukan permohonan dan memantau progres tiket layanan TIK Pemerintah Kota Depok.
       </p>
     </div>
     <div class="vy-input-group">
-      <label for="reg-nik">NIK Uji (16 Digit) <span class="hd-req-mark">*</span></label>
-      <input class="vy-input" id="reg-nik" name="nik" type="text" pattern="[0-9]{16}" inputmode="numeric" maxlength="16" placeholder="16 digit angka sintetis" required autocomplete="off">
+      <label for="reg-nik">NIK (16 Digit) <span class="hd-req-mark">*</span></label>
+      <input class="vy-input" id="reg-nik" name="nik" type="text" pattern="[0-9]{16}" inputmode="numeric" maxlength="16" placeholder="Masukkan 16 digit NIK sesuai KTP" required autocomplete="off">
     </div>
     <div class="vy-input-group">
-      <label for="reg-name">Nama Uji <span class="hd-req-mark">*</span></label>
-      <input class="vy-input" id="reg-name" name="name" type="text" maxlength="200" placeholder="Nama sintetis" required autocomplete="name">
+      <label for="reg-name">Nama Lengkap <span class="hd-req-mark">*</span></label>
+      <input class="vy-input" id="reg-name" name="name" type="text" maxlength="200" placeholder="Nama lengkap sesuai KTP" required autocomplete="name">
     </div>
     <div class="vy-input-group">
-      <label for="reg-email">Alamat Email Uji <span class="hd-req-mark">*</span></label>
-      <input class="vy-input" id="reg-email" name="email" type="email" maxlength="254" placeholder="contoh@example.invalid" required autocomplete="email">
+      <label for="reg-email">Alamat Email <span class="hd-req-mark">*</span></label>
+      <input class="vy-input" id="reg-email" name="email" type="email" maxlength="254" placeholder="nama@email.com" required autocomplete="email">
     </div>
     <div class="vy-input-group">
-      <label for="reg-phone">Nomor Telepon Uji <span class="hd-req-mark">*</span></label>
+      <label for="reg-phone">Nomor Telepon / WhatsApp <span class="hd-req-mark">*</span></label>
       <input class="vy-input" id="reg-phone" name="phone" type="tel" maxlength="16" placeholder="Contoh: 081234567890" required autocomplete="tel">
     </div>
     <div class="vy-input-group">
@@ -53,7 +53,7 @@ export function registerForm() {
     <div class="hd-check-group">
       <label class="hd-check-label">
         <input class="hd-check-input" type="checkbox" name="agreement" required>
-        <span>Saya hanya menggunakan data sintetis untuk pengujian lab.</span>
+        <span>Saya menyatakan data yang diisi benar dan menyetujui ketentuan layanan Helpdesk TIK Kota Depok.</span>
       </label>
     </div>
     <p class="hd-status-line" data-hd-register-status role="status" tabindex="-1"></p>
@@ -75,14 +75,14 @@ export function loginForm(admin = false) {
       </div>
       <div class="piui-dialog__body">
         <p class="piui-demo-notice hd-demo-notice-compact" data-hd-lab-notice>
-          Lingkungan lab sintetis Helpdesk TIK. Gunakan akun lab terdaftar atau pemilih identitas sintetis. SSO kedinasan belum diaktifkan; jangan masukkan kredensial produksi.
+          Masuk menggunakan akun petugas terdaftar atau SSO ASN Pemerintah Kota Depok sesuai kewenangan peran Anda.
         </p>
         <div class="piui-field">
-          <label for="hd-admin-identifier">NIK / Email Akun Lab</label>
-          <input class="piui-input" id="hd-admin-identifier" name="identifier" type="text" placeholder="NIK atau email akun lab terdaftar" required autocomplete="username">
+          <label for="hd-admin-identifier">NIK / Email Petugas</label>
+          <input class="piui-input" id="hd-admin-identifier" name="identifier" type="text" placeholder="Masukkan NIK atau email terdaftar" required autocomplete="username">
         </div>
         <div class="piui-field">
-          <label for="hd-admin-password">Kata Sandi Akun Lab</label>
+          <label for="hd-admin-password">Kata Sandi</label>
           <input class="piui-input" id="hd-admin-password" name="password" type="password" placeholder="Masukkan kata sandi" required autocomplete="current-password">
         </div>
         <p class="hd-status-line--sm" data-hd-login-status role="status" tabindex="-1"></p>
@@ -96,9 +96,9 @@ export function loginForm(admin = false) {
         
         <div class="hd-divider-top" data-hd-lab-section>
           <p class="hd-divider-title">
-            Aktivasi Cepat Peran Lab (1-Klik Tanpa Mengetik):
+            Akses Cepat Peran Petugas (Mode UAT):
           </p>
-          <p class="hd-profile-intro">Pilih satu dari lima profil tugas. Akun lab diaktifkan hanya untuk pengujian sintetis.</p>
+          <p class="hd-profile-intro">Pilih salah satu dari lima profil tugas petugas untuk sesi uji UAT.</p>
           <div class="hd-lab-role-grid" aria-label="Lima profil utama petugas">
             ${primaryProfiles.map(profile => `<button type="button" class="piui-btn piui-btn--secondary hd-profile-choice" disabled data-quick-login="${profile.id}"><strong>${profile.label}</strong><span>${profile.description}</span></button>`).join('')}
           </div>
@@ -106,9 +106,9 @@ export function loginForm(admin = false) {
           <div class="piui-field hd-field-mt">
             <label for="hd-subject">Pilih akun dan lingkup kewenangannya:</label>
             <select class="piui-input hd-select-compact" id="hd-subject" name="subject" disabled>
-              <option value="">Memuat identitas lab…</option>
+              <option value="">Memuat daftar akun…</option>
             </select>
-            <button type="button" class="piui-btn piui-btn--secondary" data-hd-lab-select disabled>Masuk sebagai identitas lab terpilih</button>
+            <button type="button" class="piui-btn piui-btn--secondary" data-hd-lab-select disabled>Masuk sebagai akun terpilih</button>
           </div>
           </details>
           <p role="status" tabindex="-1" data-hd-lab-status></p>
@@ -131,7 +131,7 @@ export function loginForm(admin = false) {
     <!-- Panel Warga -->
     <form data-hd-login data-hd-auth-mode="warga" id="auth-panel-warga" role="tabpanel" aria-labelledby="auth-tab-warga" data-local-mutation data-local-ready>
       <p class="vy-form-privacy hd-privacy-lead" data-hd-warga-lead>
-        Mode lab sintetis. Masuk menggunakan NIK atau email akun lab terdaftar untuk menyampaikan permohonan dan memantau status tiket.
+        Masuk menggunakan NIK atau email terdaftar untuk menyampaikan permohonan dan memantau status tiket Anda.
       </p>
       <div class="vy-input-group">
         <label for="hd-warga-identifier">NIK / Email <span class="hd-req-mark">*</span></label>
@@ -151,20 +151,20 @@ export function loginForm(admin = false) {
     <!-- Panel ASN -->
     <form data-hd-login data-hd-auth-mode="asn" id="auth-panel-asn" role="tabpanel" aria-labelledby="auth-tab-asn" hidden data-local-mutation data-local-ready>
       <div class="hd-callout--asn" data-hd-lab-callout>
-        <strong>Akses ASN — lingkungan lab sintetis</strong>
-        <p>Integrasi SSO kedinasan belum diaktifkan. Gunakan pemilih ASN sintetis di bawah; jangan masukkan kata sandi kedinasan.</p>
+        <strong>Akses ASN Pemerintah Kota Depok</strong>
+        <p>Masuk menggunakan akun ASN terdaftar atau melalui tombol SSO ASN resmi Pemerintah Kota Depok.</p>
       </div>
       <div class="vy-input-group">
-        <label for="hd-asn-identifier">NIK / Email Akun Lab <span class="hd-req-mark">*</span></label>
-        <input class="vy-input" id="hd-asn-identifier" name="identifier" type="text" placeholder="NIK atau email akun lab terdaftar" required autocomplete="username">
+        <label for="hd-asn-identifier">NIK / Email ASN <span class="hd-req-mark">*</span></label>
+        <input class="vy-input" id="hd-asn-identifier" name="identifier" type="text" placeholder="Masukkan NIK atau email kedinasan" required autocomplete="username">
       </div>
       <div class="vy-input-group">
-        <label for="hd-asn-password">Kata Sandi Akun Lab <span class="hd-req-mark">*</span></label>
-        <input class="vy-input" id="hd-asn-password" name="password" type="password" placeholder="Kata sandi akun lab terdaftar" required autocomplete="current-password">
+        <label for="hd-asn-password">Kata Sandi <span class="hd-req-mark">*</span></label>
+        <input class="vy-input" id="hd-asn-password" name="password" type="password" placeholder="Masukkan kata sandi" required autocomplete="current-password">
       </div>
       <p class="hd-status-line" data-hd-login-status role="status" tabindex="-1"></p>
       <div class="hd-actions hd-actions--auth">
-        <button class="btn btn-primary hd-w-full" type="submit"><span class="hd-btn-icon">🏛️</span> Masuk dengan akun ASN (lab) Depok &rarr;</button>
+        <button class="btn btn-primary hd-w-full" type="submit"><span class="hd-btn-icon">🏛️</span> Masuk dengan Akun ASN Depok &rarr;</button>
       </div>
       <div data-hd-sso-panel hidden>
         <div class="hd-actions">
@@ -173,21 +173,21 @@ export function loginForm(admin = false) {
       </div>
     </form>
 
-    <!-- Opsi Uji Cepat Lab Penguji -->
+    <!-- Opsi Akses Cepat UAT (hanya tampil saat mode UAT / HELPDESK_LAB_AUTH=1) -->
     <div class="hd-divider-top" data-hd-lab-section>
       <p class="hd-divider-title">
-        ⚡ Mode Uji Cepat Penguji / Evaluator (1-Klik):
+        ⚡ Akses Cepat Sesi UAT / Penguji (1-Klik):
       </p>
       <div class="hd-quick-row">
         <button type="button" class="btn btn-secondary hd-quick-btn" disabled data-quick-login="warga"><span class="hd-btn-icon">👤</span> Warga Mandiri (Publik A)</button>
         <button type="button" class="btn btn-secondary hd-quick-btn" disabled data-quick-login="asn"><span class="hd-btn-icon">🏛️</span> ASN Pemohon (Bappeda)</button>
       </div>
       <div class="vy-input-group hd-field-flush">
-        <label class="hd-label-sm" for="hd-subject">Atau pilih dari seluruh akun sintetis server:</label>
+        <label class="hd-label-sm" for="hd-subject">Atau pilih akun penguji terdaftar:</label>
         <select class="vy-input hd-select-compact" id="hd-subject" name="subject" disabled>
-          <option value="">Memuat identitas lab…</option>
+          <option value="">Memuat daftar akun…</option>
         </select>
-        <button type="button" class="btn btn-secondary" data-hd-lab-select disabled>Masuk sebagai identitas lab terpilih</button>
+        <button type="button" class="btn btn-secondary" data-hd-lab-select disabled>Masuk sebagai akun terpilih</button>
         <p role="status" tabindex="-1" data-hd-lab-status></p>
       </div>
     </div>
@@ -352,8 +352,8 @@ function knowledgeSection(pageKind = 'knowledge') {
 
 export function publicBusinessPage(source, kind) {
  let main = '';
- if (kind === 'register') main = banner('Pendaftaran Akun Warga', 'Registrasi lingkungan lab sintetis. Gunakan data uji; validasi format NIK belum merupakan verifikasi identitas Dukcapil.') + registerForm();
- if (kind === 'login') main = banner('Akses Layanan TIK', 'Akses akun lab atau identitas sintetis untuk mencoba layanan. Integrasi SSO dan verifikasi identitas nyata belum diaktifkan.') + loginForm();
+ if (kind === 'register') main = banner('Pendaftaran Akun Warga', 'Daftar akun mandiri untuk mengajukan permohonan dan memantau progres tiket layanan TIK Pemerintah Kota Depok.') + registerForm();
+ if (kind === 'login') main = banner('Akses Layanan TIK', 'Masuk menggunakan akun Warga atau ASN Pemerintah Kota Depok untuk mengajukan dan memantau layanan TIK.') + loginForm();
  if (kind === 'catalog') main = banner('Katalog Layanan TIK', 'Pilih layanan sesuai kebutuhan dan hak akses Anda. Jika belum yakin, mulai dari laporan kendala TIK umum.') + session + '<div class="hd-actions"><a class="btn btn-primary" href="/lapor.html?id=31000000-0000-4000-8000-000000000001">Laporkan kendala TIK umum</a></div><div class="hd-search-box" data-hd-search-wrap><label for="hd-public-search" class="u-sr-only">Cari layanan atau panduan</label><div class="vy-input-group hd-search-input"><input type="search" maxlength="100" id="hd-public-search" class="vy-input" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-controls="hd-search-suggestions" aria-activedescendant="" placeholder="Cari layanan, panduan, atau informasi TIK..." autocomplete="off"><ul id="hd-search-suggestions" class="hd-suggestions-list" role="listbox" aria-label="Saran layanan dan panduan" hidden></ul></div><p id="hd-search-status" role="status"></p></div><form class="vy-contact-form hd-form-grid hd-catalog-filter" data-hd-catalog-filter hidden><div class="vy-input-group"><label for="hd-catalog-q">Filter kata kunci</label><input id="hd-catalog-q" class="vy-input" type="search" maxlength="100" placeholder="Nama atau kode layanan..."></div><div class="vy-input-group"><label for="hd-catalog-category">Kategori</label><select id="hd-catalog-category" class="vy-input"><option value="">Semua kategori</option></select></div><div class="vy-input-group"><label for="hd-catalog-access">Hak akses</label><select id="hd-catalog-access" class="vy-input"><option value="">Semua akses</option><option value="PUBLIC_GUEST">Publik tanpa login</option><option value="PUBLIC_AUTH">Publik dengan akun</option><option value="ASN_AUTH">Khusus ASN</option></select></div></form><p data-hd-status role="status" tabindex="-1">Memuat katalog…</p><div class="hd-catalog" data-hd-catalog></div><nav class="hd-actions hd-pager-nav" aria-label="Halaman katalog"><button class="btn hd-btn-pager" data-hd-prev disabled><span aria-hidden="true">←</span> Halaman Sebelumnya</button><button class="btn hd-btn-pager" data-hd-next disabled>Halaman Berikutnya <span aria-hidden="true">→</span></button></nav>';
  if (kind === 'detail') main = banner('Detail Spesifikasi Layanan', 'Periksa parameter SLA, persyaratan teknis, dan formulir permohonan sebelum mengajukan tiket.') + session + '<p data-hd-status role="status" tabindex="-1">Memuat layanan…</p><article class="vy-contact-form" data-hd-detail hidden><h2 data-hd-service-name></h2><p data-hd-service-meta></p><h3>Pratinjau formulir layanan</h3><div data-hd-fields></div><p data-hd-policy></p><p class="vy-form-privacy">Isian di atas adalah pratinjau. Gunakan tombol Buat laporan untuk mengisi dan mengirim tiket melalui formulir operasional.</p></article>';
  if (kind === 'faq') main = banner('Tanya Jawab (FAQ)', 'Pertanyaan yang sering diajukan seputar layanan TIK, permohonan fasilitas, dan penanganan kendala SPBE Kota Depok.') + faqSection();
@@ -384,7 +384,7 @@ const subjectShortcut = '<div class="hd-field-shortcuts"><a class="hd-field-shor
 export function adminBusinessPage(source) {
  const main = `<main id="main-content" class="piui-main" data-hd-page="admin">
  <div class="piui-page-header"><div class="piui-page-header__titles"><h1>Master layanan dan akses</h1><p class="piui-page-subtitle">Kelola master sesuai mandat organisasi. Perubahan disimpan pada server.</p></div></div>
- <div class="piui-card hd-session"><div class="hd-session-inner"><div class="hd-session-identity"><p data-hd-session role="status" class="hd-session-name">Memeriksa sesi…</p><span class="hd-session-desc">Lingkungan lab sintetis Helpdesk TIK Kota Depok.</span></div><div class="hd-actions"><a class="piui-btn piui-btn--secondary piui-btn--sm" href="/admin/auth/login.html" data-admin-account-switch>Masuk petugas</a><button class="piui-btn piui-btn--secondary piui-btn--sm" data-admin-logout hidden type="button">Keluar akun</button></div></div><p data-hd-login-status role="status" tabindex="-1"></p></div>
+ <div class="piui-card hd-session"><div class="hd-session-inner"><div class="hd-session-identity"><p data-hd-session role="status" class="hd-session-name">Memeriksa sesi…</p><span class="hd-session-desc">Portal operasional petugas Helpdesk TIK Pemerintah Kota Depok.</span></div><div class="hd-actions"><a class="piui-btn piui-btn--secondary piui-btn--sm" href="/admin/auth/login.html" data-admin-account-switch>Masuk petugas</a><button class="piui-btn piui-btn--secondary piui-btn--sm" data-admin-logout hidden type="button">Keluar akun</button></div></div><p data-hd-login-status role="status" tabindex="-1"></p></div>
  <p data-hd-status role="status" tabindex="-1"></p>
  <section data-hd-admin hidden>
  <div class="piui-card"><div class="court-badge hd-callout--admin-violet"><strong>Konsol Administrator Helpdesk TIK Kota Depok:</strong> Pilih halaman pengelolaan sesuai tugas Anda. Periksa isian sebelum menyimpan perubahan.</div><div class="hd-master-toolbar"><div class="piui-field hd-master-picker-field"><label for="hd-master-kind">Halaman pengelolaan</label><select class="piui-input" id="hd-master-kind" disabled>${renderMasterOptions()}</select></div><div class="hd-actions hd-master-actions"><button class="piui-btn piui-btn--primary" type="button" data-hd-new>+ Tambah data</button><button class="piui-btn piui-btn--secondary" type="button" data-hd-refresh>Muat ulang</button></div></div>
@@ -916,11 +916,11 @@ export function adminBusinessPage(source) {
 }
 export function adminLoginPage(source) {
  const copy = {
-  'Prototipe tanpa autentikasi server. Gunakan data contoh; jangan masukkan kredensial nyata.':'Pilih akun petugas untuk lingkungan lab sintetis. Integrasi identitas kedinasan nyata belum diaktifkan.',
+  'Prototipe tanpa autentikasi server. Gunakan data contoh; jangan masukkan kredensial nyata.':'Masuk menggunakan akun petugas berwenang sesuai peran dan lingkup kerja Anda pada Helpdesk TIK Pemerintah Kota Depok.',
   'Masuk ke Akun Administrator':'Masuk ruang petugas',
-  'Buka Formulir Masuk &amp; MFA (Modal Kanan)':'Pilih akun lab',
-  'Buka Form Login (Modal Kanan)':'Pilih akun lab',
-  'AUTH GATE':'LAB SINTETIS',
+  'Buka Formulir Masuk &amp; MFA (Modal Kanan)':'Buka formulir masuk petugas',
+  'Buka Form Login (Modal Kanan)':'Buka formulir masuk petugas',
+  'AUTH GATE':'PORTAL PETUGAS',
   'Masuk Akun Admin':'Masuk petugas',
   'Standar Keamanan Sesi':'Panduan peran petugas',
   'Protokol Transportasi':'Operator','Terenkripsi':'Verifikasi','TLS 1.3 + mTLS':'Laporan masuk',
@@ -936,7 +936,7 @@ export function adminLoginPage(source) {
 
  source=source.replace(/Patuh WCAG[^<]+/,'Buka pekerjaan sesuai peran dan hak akses akun Anda.');
  for(const [before,after] of Object.entries(copy))source=source.replaceAll(before,after);
- return source.replace(/<form data-demo-login[\s\S]*?<\/form>/, loginForm(true)).replace(/<title>[\s\S]*?<\/title>/, '<title>Masuk lab · Helpdesk TIK</title>').replace('</head>', businessAssets + '</head>');
+ return source.replace(/<form data-demo-login[\s\S]*?<\/form>/, loginForm(true)).replace(/<title>[\s\S]*?<\/title>/, '<title>Masuk Petugas · Helpdesk TIK Kota Depok</title>').replace('</head>', businessAssets + '</head>');
 }
 
 export function adminDashboard(source, health) {

@@ -59,7 +59,7 @@ export function syncAdminShell(session: Session | undefined) {
       summary.setAttribute('data-admin-context','');
       nav.before(summary);
     }
-    summary.replaceChildren(node('strong',role),node('span',session?.actor.name ?? 'Masuk untuk membuka pekerjaan Anda.'),node('small',staff ? `${scopes.size} organisasi aktif · Lab sintetis` : 'Helpdesk TIK Kota Depok'));
+    summary.replaceChildren(node('strong',role),node('span',session?.actor.name ?? 'Masuk untuk membuka pekerjaan Anda.'),node('small',staff ? `${scopes.size} organisasi aktif · Diskominfo Depok` : 'Helpdesk TIK Kota Depok'));
     summary.title = `${role} · ${session?.actor.name ?? 'Belum masuk'}`;
     for (const sub of nav.querySelectorAll<HTMLElement>('[data-admin-submenu]')) {
       const visibleItems = [...sub.querySelectorAll<HTMLAnchorElement>('a[data-admin-nav-id]:not([hidden])')];
@@ -93,7 +93,7 @@ export function syncAdminShell(session: Session | undefined) {
       link.href=start.href;link.textContent=start.action;
     }
   }
-  for (const link of document.querySelectorAll('[data-admin-account-switch]')) link.textContent = session ? 'Ganti akun lab' : 'Masuk petugas';
+  for (const link of document.querySelectorAll('[data-admin-account-switch]')) link.textContent = session ? 'Ganti akun' : 'Masuk petugas';
   for (const button of document.querySelectorAll<HTMLButtonElement>('[data-admin-logout]')) {
     button.hidden = !session;
     if (button.dataset.bound) continue;
@@ -155,7 +155,7 @@ export function syncAdminShell(session: Session | undefined) {
     const title=node('h1',staff ? 'Halaman di luar tugas Anda' : 'Masuk ruang petugas');
     document.title = `${title.textContent} · Helpdesk TIK Kota Depok`;
     const explanation=node('p',staff ? 'Pilih menu yang tersedia sesuai mandat akun Anda.' : 'Gunakan akun petugas untuk membuka ruang kerja ini. Tiket pemohon tersedia melalui portal publik.');
-    const login=node('a',session ? 'Ganti akun lab' : 'Masuk petugas','piui-btn piui-btn--primary') as HTMLAnchorElement;login.href='/admin/auth/login.html';
+    const login=node('a',session ? 'Ganti akun' : 'Masuk petugas','piui-btn piui-btn--primary') as HTMLAnchorElement;login.href='/admin/auth/login.html';
     const portal=node('a',staff ? 'Dasbor petugas' : 'Portal publik','piui-btn piui-btn--secondary') as HTMLAnchorElement;portal.href=staff ? '/admin/app/dashboard/index.html' : '/';
     const actions=node('div','', 'hd-actions');actions.append(login,portal);access.replaceChildren(title,explanation,actions);
   } else {

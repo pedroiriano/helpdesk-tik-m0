@@ -63,7 +63,7 @@ document.addEventListener('hd:unauthorized', () => { session = undefined; syncJo
 async function loadSession(): Promise<void> {
   try { session = await api<Session>('/auth/me'); } catch (e) { if (!(e instanceof APIError && e.status === 401)) { status('[data-hd-session]', errorText(e)); throw e; } }
   syncJourney(session); syncAdminShell(session);
-  const message = session ? `${session.actor.name} · ${roleLabels[session.actor.role] ?? 'Petugas'} · Lab sintetis` : 'Anda sedang mengakses sebagai tamu.';
+  const message = session ? `${session.actor.name} · ${roleLabels[session.actor.role] ?? 'Petugas'}` : 'Anda sedang mengakses sebagai tamu.';
   nodes('[data-hd-session]').forEach(el => el.textContent = message);
   const profile = $('#popover-profile strong'); if (profile) profile.textContent = session?.actor.name ?? 'Belum masuk';
   nodes<HTMLButtonElement>('[data-hd-logout]').forEach(button => { button.hidden = !session; button.addEventListener('click', async () => {
@@ -89,11 +89,12 @@ async function loadAuthBootstrap(): Promise<AuthState> {
     return { ...cfg, csrf_token: csrfToken, subjects };
   } catch {
     const boot = await api<Components['Bootstrap']>('/auth/bootstrap');
+    const isLab = boot.mode === 'SYNTHETIC_LAB';
     return {
-      mode: boot.mode || 'SYNTHETIC_LAB',
+      mode: boot.mode || 'PRODUCTION',
       csrf_token: boot.csrf_token,
-      subjects: boot.subjects ?? [],
-      lab_auth_enabled: true,
+      subjects: isLab ? (boot.subjects ?? []) : [],
+      lab_auth_enabled: isLab,
       public_auth_enabled: true,
       sso_enabled: false,
       sso_provider_label: 'SSO ASN Pemerintah Kota Depok',
@@ -134,7 +135,7 @@ async function registerUser(form: HTMLFormElement): Promise<void> {
       pending = true;
       if (submit) submit.disabled = true;
       form.setAttribute('aria-busy', 'true');
-      status('[data-hd-register-status]', 'Memvalidasi format dan mendaftarkan akun lab…', form);
+      status('[data-hd-register-status]', 'Memvalidasi data dan mendaftarkan akun…', form);
       const payload = {
         nik,
         name: value(form, 'name'),
@@ -172,7 +173,7 @@ async function login(form: HTMLFormElement, bootstrap: Promise<AuthState>, initi
     status(
       '[data-hd-login-status]',
       boot.lab_auth_enabled
-        ? 'Masukkan identitas akun atau gunakan aktivasi cepat peran lab.'
+        ? 'Masukkan NIK/email dan kata sandi, atau gunakan akses cepat sesi UAT di bawah.'
         : 'Masukkan NIK/email dan kata sandi akun terdaftar.',
       form,
     );
@@ -451,7 +452,7 @@ async function detail(): Promise<void> {
         detailContainer.replaceChildren();
         const alertBox = element('div', '', 'vy-contact-form hd-asn-alert');
         const h2 = element('h2', 'Autentikasi ASN Diperlukan', 'hd-asn-alert__title');
-        const p = element('p', 'Spesifikasi layanan ini dikhususkan bagi Perangkat Daerah dan Aparatur Sipil Negara (ASN) Pemerintah Kota Depok. Gunakan identitas ASN sintetis pada halaman akses lab untuk melihat spesifikasi lengkap. Integrasi SSO nyata belum diaktifkan.', 'hd-asn-alert__desc');
+        const p = element('p', 'Spesifikasi layanan ini dikhususkan bagi Perangkat Daerah dan Aparatur Sipil Negara (ASN) Pemerintah Kota Depok. Silakan masuk menggunakan akun ASN Pemerintah Kota Depok untuk melihat spesifikasi lengkap.', 'hd-asn-alert__desc');
         const act = element('div', '', 'hd-actions');
         const loginA = element('a', 'Masuk dan kembali ke layanan', 'btn btn-primary');
         loginA.href = serviceLoginHref(id, 'detail');
@@ -1912,7 +1913,7 @@ async function admin(): Promise<void> {
         tr.append(element('td', comp), element('td', st), element('td', note));
         rows.append(tr);
       };
-      addRow('Pemindai ClamAV', health.scanner, 'Uji pemindaian berkas sintetis');
+      addRow('Pemindai ClamAV', health.scanner, 'Pemeriksaan ketersediaan pemindai antivirus');
       addRow('Penyimpanan privat', health.storage, 'Uji tulis, baca, dan hapus berkas probe');
       addRow('Scheduler', health.worker, 'Heartbeat eksekusi auto-close');
       addRow('Outbox', health.outbox_lag == null ? 'UNAVAILABLE' : String(health.outbox_lag),

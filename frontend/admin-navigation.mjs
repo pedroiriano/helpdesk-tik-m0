@@ -17,7 +17,7 @@ export const adminGroups = [
     items: [
       {id:'dashboard',label:'Dasbor petugas',href:'/admin/app/dashboard/index.html',icon:'dashboard',description:'Pilih pekerjaan dan pantau ringkasan sesuai tugas Anda.',footer:true},
       {id:'tickets',label:'Antrean tiket',href:'/admin/app/tickets/index.html',icon:'ticket',permissions:['ticket.read'],description:'Periksa laporan masuk dan lanjutkan penanganan sesuai tugas Anda.',footer:true},
-      {id:'notifications',kind:'notifications',label:'Notifikasi',icon:'bell',permissions:['notification.read'],description:'Periksa pemberitahuan dan pengaturan saluran notifikasi lab.'},
+      {id:'notifications',kind:'notifications',label:'Notifikasi',icon:'bell',permissions:['notification.read'],description:'Periksa pemberitahuan dan pengaturan saluran notifikasi.'},
     ],
   },
   {

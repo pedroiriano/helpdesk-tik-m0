@@ -146,12 +146,12 @@ export function landingPage(source) {
     .replace(/>Simulasi(?: beban| layanan)?</g,'>Akses layanan<')
     .replace(/(<a class="btn btn-primary" href="#akses">)[^<]*/,'$1Kenali akses layanan')
     .replace('Gunakan panduan kategori dan contoh laporan sebelum menghubungi petugas melalui kanal resmi yang berlaku.','Siapkan uraian kendala, waktu kejadian, dan bukti yang aman dibagikan. Ajukan tiket baru melalui katalog layanan atau pantau tiket Anda secara transparan.')
-    .replace('Helpdesk TIK Kota Depok · Pengembangan lokal. Galeri dan metrik menampilkan data contoh template.','Helpdesk TIK Kota Depok · Portal bantuan teknologi informasi.');
+    .replace('Helpdesk TIK Kota Depok · Portal layanan dan bantuan teknologi informasi.','Helpdesk TIK Kota Depok · Portal bantuan teknologi informasi.');
   source = source.replaceAll('aria-label="CourtSpec analysis workflow"', 'aria-label="Alur penanganan laporan"')
     .replaceAll('aria-label="Filter court plays"', 'aria-label="Filter kategori bantuan"')
     .replaceAll('aria-label="CourtSpec — back to top"', 'aria-label="Helpdesk TIK — kembali ke atas"')
     .replace('Apakah data pada grafik merupakan data warga?', 'Apakah ilustrasi menampilkan data warga?')
-    .replace('Tidak. Grafik dan kartu menggunakan data contoh untuk memeriksa tampilan dan interaksi.', 'Tidak. Ilustrasi merupakan aset kreatif dan contoh laporan memakai data sintetis.')
+    .replace('Tidak. Grafik dan kartu menggunakan data contoh untuk memeriksa tampilan dan interaksi.', 'Tidak. Ilustrasi merupakan aset visual panduan layanan dan tidak memuat data pribadi warga.')
     .replace('Pilih kategori untuk melihat contoh informasi yang perlu disiapkan. Seluruh contoh memakai data sintetis.', 'Pilih kategori layanan TIK Kota Depok untuk melihat informasi yang perlu disiapkan saat melapor.');
   const guideLabels = ['akun','jaringan','aplikasi','perangkat'];
   let labelIndex = 0;

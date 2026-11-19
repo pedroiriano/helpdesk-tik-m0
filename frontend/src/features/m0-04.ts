@@ -503,7 +503,7 @@ async function create(): Promise<void> {
 
         const alertBox = el('div', '', 'vy-contact-form hd-asn-alert');
         const h2 = el('h2', 'Autentikasi ASN Diperlukan', 'hd-asn-alert__title');
-        const p = el('p', 'Layanan ini dikhususkan bagi Aparatur Sipil Negara (ASN) Pemerintah Kota Depok. Gunakan akun ASN lab untuk melanjutkan formulir. Integrasi SSO kedinasan belum diaktifkan.', 'hd-asn-alert__desc');
+        const p = el('p', 'Layanan ini dikhususkan bagi Aparatur Sipil Negara (ASN) Pemerintah Kota Depok. Silakan masuk menggunakan akun ASN Pemerintah Kota Depok untuk melanjutkan pengisian formulir.', 'hd-asn-alert__desc');
         const act = el('div', '', 'hd-actions');
         const loginLink = el('a', 'Masuk dan lanjutkan laporan', 'btn btn-primary') as HTMLAnchorElement;
         loginLink.href = serviceLoginHref(id, 'report');
