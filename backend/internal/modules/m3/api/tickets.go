@@ -20,6 +20,7 @@ type Create struct {
 	ReportedCategoryID  string            `json:"reported_category_id,omitempty"`
 }
 type Ticket struct {
+	AssignmentNeedsReview  bool                       `json:"assignment_needs_review,omitempty"`
 	ID                     string                     `json:"id"`
 	Version                int64                      `json:"version"`
 	Number                 string                     `json:"number"`
@@ -82,6 +83,7 @@ type DispatchInput struct {
 	ProposalVersion int64  `json:"proposal_version"`
 	Reason          string `json:"reason"`
 	Tier            string `json:"tier,omitempty"`
+	Manual          bool   `json:"manual,omitempty"`
 }
 type RejectInput struct {
 	ExpectedVersion int64  `json:"expected_version"`

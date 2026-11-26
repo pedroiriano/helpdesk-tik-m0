@@ -20,15 +20,19 @@ type RoutingRule struct {
 }
 
 type RosterEntry struct {
-	Version        int64      `json:"version"`
-	AvailableFrom  time.Time  `json:"available_from"`
-	AvailableUntil time.Time  `json:"available_until"`
-	ActiveTickets  int        `json:"active_tickets"`
-	ProjectionAsOf *time.Time `json:"projection_as_of,omitempty"`
-	ID             string     `json:"id"`
-	SubjectID      string     `json:"subject_id"`
-	TeamID         string     `json:"team_id"`
-	Skills         []string   `json:"skills"`
+	Capacity        *int       `json:"capacity"`
+	Availability    string     `json:"availability"`
+	WaitingVendor   *int       `json:"waiting_vendor"`
+	WaitingReporter *int       `json:"waiting_reporter"`
+	Version         int64      `json:"version"`
+	AvailableFrom   time.Time  `json:"available_from"`
+	AvailableUntil  time.Time  `json:"available_until"`
+	ActiveTickets   int        `json:"active_tickets"`
+	ProjectionAsOf  *time.Time `json:"projection_as_of,omitempty"`
+	ID              string     `json:"id"`
+	SubjectID       string     `json:"subject_id"`
+	TeamID          string     `json:"team_id"`
+	Skills          []string   `json:"skills"`
 }
 
 type Proposal struct {
@@ -47,8 +51,9 @@ type Proposal struct {
 }
 
 type Candidate struct {
-	Roster RosterEntry `json:"roster"`
-	Name   string      `json:"name"`
+	Roster   RosterEntry `json:"roster"`
+	Name     string      `json:"name"`
+	TeamName string      `json:"team_name,omitempty"`
 }
 type Technician struct {
 	ID     string   `json:"id"`
@@ -71,6 +76,8 @@ type Port interface {
 	WriteRouting(context.Context, identity.Actor, string, string, string, string, string, RoutingInput) (database.Result, error)
 	Propose(ctx context.Context, ticketID string, ticketVersion int64, serviceID, org, level, category string) (Proposal, error)
 	ListTechnicians(ctx context.Context, teamID string) ([]Technician, error)
+	ManualCandidates(context.Context, identity.Actor, string) ([]Candidate, error)
+	AbsentTechnicians(context.Context, []string) (map[string]bool, error)
 }
 
 // DispatchFact is an optional part of the complete committed M3 ticket snapshot.

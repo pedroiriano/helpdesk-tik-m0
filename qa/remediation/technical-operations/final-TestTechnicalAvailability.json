@@ -1,0 +1,7 @@
+{
+  "suite": "TestTechnicalAvailability",
+  "timestamp": "2026-11-24T08:12:56.852463+00:00",
+  "result": "FAIL",
+  "baseline_migration": "043",
+  "target": "disposable PostgreSQL"
+}

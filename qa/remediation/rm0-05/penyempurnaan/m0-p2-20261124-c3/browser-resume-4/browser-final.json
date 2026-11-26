@@ -1,0 +1,44 @@
+{
+  "timestamp": "2026-11-24T04:55:31.124Z",
+  "base_url": "http://127.0.0.1:18191",
+  "browser": "Microsoft Edge Headless (CDP)",
+  "suites": {
+    "Fase2_UI_and_Ops": {
+      "status": "PASS",
+      "csirtCount": 1,
+      "hasNotifRows": true,
+      "hasOpsTable": true,
+      "hasSchedTable": true,
+      "hasSlaRules": true,
+      "pickersReady": true,
+      "approvalsReady": true,
+      "queueControls": true,
+      "mobileOverflow": 0,
+      "opsRendered": true
+    },
+    "Fase3_AuthConfig_and_DeliveryQueue": {
+      "status": "PASS",
+      "authState": {
+        "mode": "SYNTHETIC_LAB",
+        "labAuth": true,
+        "ssoEnabled": false,
+        "purgeEnabled": false,
+        "ssoPanelHidden": true,
+        "labSectionVisible": true
+      },
+      "adminAuth": {
+        "quick": 5,
+        "ssoHidden": true
+      },
+      "deliveryPanel": {
+        "stat": "Menampilkan 1 job pengiriman saluran (target teredaksi).",
+        "rows": 1
+      }
+    }
+  },
+  "from_suite": "Fase2_UI_and_Ops",
+  "csp_violations": [],
+  "console_errors": [],
+  "exceptions": [],
+  "result": "PASS"
+}

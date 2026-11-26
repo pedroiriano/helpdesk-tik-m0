@@ -114,6 +114,7 @@ type RedactedHealth struct {
 	Status                string            `json:"status"`
 	Modules               map[string]string `json:"modules"`
 	Scanner               string            `json:"scanner"`
+	ScannerSignatureAge   *int64            `json:"scanner_signature_age_seconds"`
 	Storage               string            `json:"storage"`
 	OutboxLag             *int64            `json:"outbox_lag"`
 	InboxLag              *int64            `json:"inbox_lag"`

@@ -14,6 +14,17 @@ const node = (tag:string, text:string, cls = '') => {
   return element;
 };
 
+function syncSubmenu(sub: HTMLElement, rail: boolean) {
+  const expanded = !sub.hidden && (rail || sub.dataset.open === 'true');
+  const toggle = sub.querySelector<HTMLButtonElement>('.hd-nav-submenu__toggle');
+  const list = sub.querySelector<HTMLElement>('.piui-nav-sublist');
+  if (list) {
+    if (!expanded && list.contains(document.activeElement) && toggle?.getClientRects().length) toggle.focus();
+    list.hidden = !expanded;
+  }
+  toggle?.setAttribute('aria-expanded', String(expanded));
+}
+
 export function bindAdminPagePicker(select: HTMLSelectElement, session: Session | undefined) {
   if (select.dataset.adminNavBound) return;
   select.dataset.adminNavBound = 'true';
@@ -40,18 +51,25 @@ export function syncAdminShell(session: Session | undefined) {
     else link.removeAttribute('aria-current');
   }
   for (const nav of document.querySelectorAll<HTMLElement>('[data-admin-navigation]')) {
+    const shell = nav.closest('#piui-sidebar')?.closest<HTMLElement>('.piui-app-shell');
     if (!nav.dataset.submenuBound) {
       nav.dataset.submenuBound = '1';
       nav.addEventListener('click', (event) => {
         const toggle = event.target instanceof Element ? event.target.closest<HTMLButtonElement>('.hd-nav-submenu__toggle') : null;
         const sub = toggle?.closest<HTMLElement>('[data-admin-submenu]');
-        if (!toggle || !sub) return;
-        const nextOpen = sub.dataset.open !== 'true';
-        sub.dataset.open = String(nextOpen);
-        toggle.setAttribute('aria-expanded', String(nextOpen));
-        const sublist = sub.querySelector<HTMLElement>('.piui-nav-sublist');
-        if (sublist) sublist.hidden = !nextOpen;
+        if (!toggle || !sub || shell?.dataset.sidebar === 'collapsed') return;
+        sub.dataset.open = String(sub.dataset.open !== 'true');
+        syncSubmenu(sub, false);
       });
+      if (shell) {
+        // The native shell owns the rail preference. Keep disclosure state for the expanded sidebar.
+        const observer = new MutationObserver(() => {
+          for (const sub of nav.querySelectorAll<HTMLElement>('[data-admin-submenu]')) {
+            syncSubmenu(sub, shell.dataset.sidebar === 'collapsed');
+          }
+        });
+        observer.observe(shell, { attributes:true, attributeFilter:['data-sidebar'] });
+      }
     }
     let summary = nav.previousElementSibling as HTMLElement | null;
     if (!summary?.hasAttribute('data-admin-context')) {
@@ -70,10 +88,7 @@ export function syncAdminShell(session: Session | undefined) {
       const hasCurrent = Boolean(sub.querySelector('a[aria-current="page"], a[aria-current="location"]'));
       const openSub = hasCurrent || (staff && visibleItems.length > 0 && visibleItems.length <= 2);
       sub.dataset.open = String(openSub);
-      const toggle = sub.querySelector<HTMLButtonElement>('.hd-nav-submenu__toggle');
-      const sublist = sub.querySelector<HTMLElement>('.piui-nav-sublist');
-      if (toggle) toggle.setAttribute('aria-expanded', String(openSub));
-      if (sublist) sublist.hidden = !openSub;
+      syncSubmenu(sub, shell?.dataset.sidebar === 'collapsed');
     }
     for (const list of nav.querySelectorAll<HTMLElement>('.piui-nav-list')) {
       list.hidden = !list.querySelector('a[data-admin-nav-id]:not([hidden])');
@@ -85,9 +100,10 @@ export function syncAdminShell(session: Session | undefined) {
   for (const label of document.querySelectorAll('[data-admin-profile-role]')) label.textContent = `Peran: ${role}`;
   for (const panel of document.querySelectorAll<HTMLElement>('[data-admin-work-start]')) {
     panel.hidden = !staff;
+    const identity = panel.querySelector('[data-admin-work-identity]');
+    if (identity) identity.textContent = staff ? `${session.actor.name} · ${role}` : '';
     if (staff) {
       const start = workStart(session);
-      panel.querySelector('[data-admin-work-title]')!.textContent = `Mulai sebagai ${start.label}`;
       panel.querySelector('[data-admin-work-description]')!.textContent = start.description;
       const link=panel.querySelector<HTMLAnchorElement>('[data-admin-work-link]')!;
       link.href=start.href;link.textContent=start.action;
@@ -137,6 +153,7 @@ export function syncAdminShell(session: Session | undefined) {
   }
   const current = node('li',context.title); current.setAttribute('aria-current','page');crumbs.append(current);
   breadcrumb.replaceChildren(crumbs);
+  breadcrumb.hidden = context.item?.id === 'dashboard';
   const heading = main.querySelector('h1'); if (heading) heading.textContent=context.title;
   const description=main.querySelector('.piui-page-subtitle');
   if (description && context.item?.description) description.textContent=context.item.description;
@@ -161,5 +178,7 @@ export function syncAdminShell(session: Session | undefined) {
   } else {
     for (const [element,hidden] of hiddenByGuard) { element.hidden=hidden; element.removeAttribute('data-admin-blocked'); }
     hiddenByGuard.clear();if (access) access.hidden=true;
+    const fallback = main.querySelector<HTMLElement>('[data-admin-session-fallback]');
+    if (fallback) fallback.hidden = staff;
   }
 }

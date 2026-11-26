@@ -252,7 +252,11 @@ func (s Store) Dispatch(ctx context.Context, tx pgx.Tx, before api.Ticket, actor
 		}
 		return api.Ticket{}, e
 	}
-	if e = History(ctx, tx, id, nextVersion, actor, command, "Tiket ditugaskan ke teknisi"); e != nil {
+	history := "Tiket ditugaskan ke teknisi"
+	if in.Manual {
+		history = "Tiket ditugaskan secara manual"
+	}
+	if e = History(ctx, tx, id, nextVersion, actor, command, history); e != nil {
 		return api.Ticket{}, e
 	}
 	if e = Event(ctx, tx, "AssignmentChanged", id, nextVersion, map[string]any{"team_id": in.TeamID, "assignee_id": in.AssigneeID}, []string{"M9"}); e != nil {
@@ -261,6 +265,11 @@ func (s Store) Dispatch(ctx context.Context, tx pgx.Tx, before api.Ticket, actor
 	ticket, e := scan(tx.QueryRow(ctx, `SELECT `+columns+` FROM intake.tickets t WHERE id=$1`, id))
 	if e != nil {
 		return api.Ticket{}, e
+	}
+	// Manual assignment still emits the full ticket snapshot. There is no
+	// recommendation fact to persist or validate in M5.
+	if in.Manual {
+		return ticket, emitStateSnapshot(ctx, tx, ticket, nil)
 	}
 	fact := assignment.DispatchFact{TeamID: in.TeamID, AssigneeID: in.AssigneeID, Explanation: in.Reason, Tier: proposal.Level, ProposalDigest: proposal.Digest, RecommendedAssigneeID: proposal.AssigneeID}
 	return ticket, emitStateSnapshot(ctx, tx, ticket, &fact)
@@ -713,7 +722,10 @@ func (s Store) RecordVendorCase(ctx context.Context, tx pgx.Tx, id string, actor
 	}
 
 	ticket, err := scan(tx.QueryRow(ctx, `SELECT `+columns+` FROM intake.tickets t WHERE id=$1`, id))
-	return ticket, caseID, err
+	if err != nil {
+		return api.Ticket{}, "", err
+	}
+	return ticket, caseID, emitState(ctx, tx, ticket)
 }
 
 func (s Store) ApprovePause(ctx context.Context, tx pgx.Tx, id string, actor string, in api.PauseInput, now time.Time) (api.Ticket, string, error) {
@@ -999,8 +1011,8 @@ func (s Store) ListPauses(ctx context.Context, ticketID string) ([]api.PauseInte
 	return pauses, rows.Err()
 }
 
-func (s Store) SearchTickets(ctx context.Context, actorID string, isGuest bool, guestCapHash []byte, orgIDs []string, query string, limit int, roles ...string) ([]api.SearchHit, error) {
-	if limit <= 0 || limit > 100 {
+func (s Store) SearchTickets(ctx context.Context, actorID string, isGuest bool, guestCapHash []byte, orgIDs []string, query string, limit int, after string, roles ...string) ([]api.SearchHit, error) {
+	if limit <= 0 || limit > 101 {
 		limit = 20
 	}
 	pattern := "%" + query + "%"
@@ -1018,15 +1030,16 @@ func (s Store) SearchTickets(ctx context.Context, actorID string, isGuest bool, 
 			  AND gc.revoked_at IS NULL
  AND 'ticket.read'=ANY(gc.scopes)
 			  AND (t.title ILIKE $2 OR t.description ILIKE $2)
+			AND (NULLIF($4,'')::uuid IS NULL OR t.id>NULLIF($4,'')::uuid)
 			ORDER BY t.id ASC
 			LIMIT $3
-		`, guestCapHash, pattern, limit)
+		`, guestCapHash, pattern, limit, after)
 	} else if actorID != "" {
 		role := "PUBLIC"
 		if len(roles) == 1 {
 			role = roles[0]
 		}
-		rows, err = s.Pool.Query(ctx, `SELECT t.id::text,t.title,t.description FROM intake.tickets t WHERE `+visible+` AND (t.title ILIKE $5 OR t.description ILIKE $5) ORDER BY t.id LIMIT $6`, actorID, "", orgIDs, role, pattern, limit)
+		rows, err = s.Pool.Query(ctx, `SELECT t.id::text,t.title,t.description FROM intake.tickets t WHERE `+visible+` AND (t.title ILIKE $5 OR t.description ILIKE $5) AND (NULLIF($7,'')::uuid IS NULL OR t.id>NULLIF($7,'')::uuid) ORDER BY t.id LIMIT $6`, actorID, "", orgIDs, role, pattern, limit, after)
 
 	} else {
 		return []api.SearchHit{}, nil

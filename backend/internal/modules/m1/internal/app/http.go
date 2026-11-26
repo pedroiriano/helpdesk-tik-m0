@@ -157,6 +157,7 @@ func (s *Service) Register(mux *http.ServeMux) {
 		web.JSON(w, result.Status, result.Body)
 	})
 	s.registerReportingDirectory(mux)
+	s.registerRosterTeams(mux)
 	s.registerRolePolicies(mux)
 	for _, kind := range []string{"organizations", "divisions", "teams", "memberships"} {
 		mux.HandleFunc("GET /api/v1/admin/"+kind, func(w http.ResponseWriter, r *http.Request) {
@@ -164,6 +165,13 @@ func (s *Service) Register(mux *http.ServeMux) {
 			if err != nil {
 				web.WriteError(w, err)
 				return
+			}
+			if kind == "teams" {
+				page.Division = strings.ToLower(r.URL.Query().Get("division_id"))
+				if page.Division != "" && !web.UUID(page.Division) {
+					web.WriteError(w, web.Fail(400, "Filter bidang tidak valid"))
+					return
+				}
 			}
 			value, err := s.List(r.Context(), Credentials(r), kind, page)
 			if err != nil {
@@ -219,7 +227,7 @@ func (s *Service) Register(mux *http.ServeMux) {
 			web.WriteError(w, err)
 			return
 		}
-		web.JSON(w, 201, res)
+		web.JSON(w, res.Status, res.Body)
 	})
 
 	mux.HandleFunc("GET /api/v1/admin/subjects", func(w http.ResponseWriter, r *http.Request) {
@@ -254,7 +262,7 @@ func (s *Service) Register(mux *http.ServeMux) {
 	mux.HandleFunc("PUT /api/v1/admin/subjects/{id}", saveSubject)
 
 	mux.HandleFunc("GET /api/v1/staff/directory", func(w http.ResponseWriter, r *http.Request) {
-		items, err := s.ListStaffDirectory(r.Context(), Credentials(r), r.URL.Query().Get("organization_id"))
+		items, err := s.ListStaffDirectory(r.Context(), Credentials(r), r.URL.Query().Get("organization_id"), r.URL.Query().Get("team_id"))
 		if err != nil {
 			web.WriteError(w, err)
 			return

@@ -3,6 +3,7 @@ package m8
 
 import (
 	"context"
+	"helpdesk.local/m0/internal/platform/web"
 	"net/http"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -38,8 +39,8 @@ func (m *Module) ID() string               { return "M8" }
 func (m *Module) Service() *app.Service    { return m.service }
 func (m *Module) Source() *delivery.Source { return delivery.New(m.pool, "M8") }
 
-func (m *Module) SearchArticles(ctx context.Context, query string, audience string, isStaff bool, limit int, scopes ...api.Scope) ([]api.SearchHit, error) {
-	return m.service.SearchArticles(ctx, query, audience, isStaff, limit, scopes...)
+func (m *Module) SearchArticles(ctx context.Context, query string, audience string, isStaff bool, limit int, after string, scopes ...api.Scope) ([]api.SearchHit, error) {
+	return m.service.SearchArticles(ctx, query, audience, isStaff, limit, after, scopes...)
 }
 
 func (m *Module) Register(mux *http.ServeMux, intake app.IntakeMediaPort, identity app.IdentityPort, origin string) {
@@ -50,4 +51,8 @@ func (m *Module) Register(mux *http.ServeMux, intake app.IntakeMediaPort, identi
 // BlobReferenced exposes only an infrastructure reference check for the shared private volume.
 func (m *Module) BlobReferenced(ctx context.Context, key string) (bool, error) {
 	return m.service.Store.BlobReferenced(ctx, key)
+}
+
+func (m *Module) SearchMedia(ctx context.Context, q string, p web.Page, scope api.Scope) ([]api.MediaItem, *string, error) {
+	return m.service.ListMedia(ctx, scope.Principal, false, p.Limit, p.Cursor, true, q, scope)
 }

@@ -1,0 +1,33 @@
+{
+  "result": "PASS",
+  "scope": "Signed bundled CVD replay using freshclam without external network",
+  "without_mirror_exit": 11,
+  "with_mirror_exit": 0,
+  "output": [
+    "OK",
+    "daily database available for download (remote version: 28184)",
+    "Testing database: '/tmp/cvd/tmp.4c19a18e99/daily.cvd' ...",
+    "[LibClamAV] **************************************************",
+    "[LibClamAV] ***  The virus database is older than 7 days!  ***",
+    "[LibClamAV] ***   Please update it as soon as possible.    ***",
+    "[LibClamAV] **************************************************",
+    "Database test passed.",
+    "daily.cvd updated (version: 28184, sigs: 355871, f-level: 90, builder: svc.clamav-publisher)",
+    "Trying to retrieve CVD header from http://127.0.0.1:8080/main.cld",
+    "WARNING: remote_cvdhead: file not found: http://127.0.0.1:8080/main.cld",
+    "Trying to retrieve CVD header from http://127.0.0.1:8080/main.cvd",
+    "OK",
+    "main database available for download (remote version: 63)",
+    "Testing database: '/tmp/cvd/tmp.4c19a18e99/main.cvd' ...",
+    "Database test passed.",
+    "main.cvd updated (version: 63, sigs: 3287027, f-level: 90, builder: tomjudge)",
+    "Trying to retrieve CVD header from http://127.0.0.1:8080/bytecode.cld",
+    "WARNING: remote_cvdhead: file not found: http://127.0.0.1:8080/bytecode.cld",
+    "Trying to retrieve CVD header from http://127.0.0.1:8080/bytecode.cvd",
+    "OK",
+    "bytecode database available for download (remote version: 339)",
+    "Testing database: '/tmp/cvd/tmp.4c19a18e99/bytecode.cvd' ...",
+    "Database test passed.",
+    "bytecode.cvd updated (version: 339, sigs: 80, f-level: 90, builder: nrandolp)"
+  ]
+}

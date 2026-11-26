@@ -1,12 +1,15 @@
 # Paket Penguncian Keputusan Domain (DEC-M01–DEC-M10) & UAT Manusia RM0-05
 
-Tanggal penyusunan: 18 November 2026.  
-Status fase: **`BLOCKED_HUMAN_UAT_AND_DOMAIN_DECISIONS`** *(teknis lab, stabilisasi Fase 1–3, TLS/SBOM gate, & CI lokal PASS; menunggu keterlibatan pemilik layanan Diskominfo/OPD serta penguji manusia)*.  
-Identitas kandidat beku: Tag Git **`rm0-05-rc4`** *(menggantikan `rm0-05-rc3` setelah Fase 3 Hardening Produksi, Integrasi Kedinasan Nyata, & Go-Live Gate; rujuk SHA tepat dan hash seluruh berkas pada [source-manifest.json](../../qa/remediation/rm0-05/source-manifest.json), SBOM pada [sbom-m0.json](../../qa/remediation/rm0-05/sbom-m0.json), serta bukti CI pada [local-ci.json](../../qa/remediation/rm0-05/local-ci.json))*.  
-Lingkungan uji lab lokal: **`http://127.0.0.1:18090`** (`Go 1.27.4`, `Node 26.13.1`, `Nginx 1.30.6` rebuild, `PostgreSQL 18.7`, `ClamAV 1.5.4`).
-Ringkasan kesiapan pra-UAT & pra-go-live `rm0-05-rc4`: melanjutkan seluruh pencapaian `rm0-05-rc3` ditambah kesiapan produksi terkendali di balik env gate (`038-040`, penolakan keras identitas/sesi lab saat `HELPDESK_LAB_AUTH=0`, `GET /api/v1/auth/config` + `GET /api/v1/admin/subjects`, SSO ASN OIDC/PKCE `S256` & verifikasi JWT RS256/ES256 JWKS, pengiriman notifikasi M9 Telegram Bot API & SMTP relay + `GET /api/v1/admin/delivery-jobs` + replay, pengamanan retensi/legal-hold M3 `POST /api/v1/tickets/{id}/retention` + preflight & eksekusi purge dua Super Admin `DEC-M07`, konfigurasi edge HTTPS TLSv1.2/1.3 HSTS `infra/nginx/nginx.prod.conf` + overlay `compose.prod.yml` dengan `freshclam` aktif, gerbang keamanan & CycloneDX SBOM `scripts/security_gate.py`, serta panduan cutover [production-cutover.md](../../runbooks/production-cutover.md)).
+Diperbarui 24 November 2026.
 
-> **Prinsip Kejujuran RM0-05:** Tidak satu pun nama penguji manusia, tanda tangan pejabat, atau persetujuan kebijakan organisasi boleh diisi oleh agen AI. Seluruh keputusan di bawah wajib ditetapkan langsung oleh pemilik mandat Diskominfo / Perangkat Daerah Kota Depok pada kandidat `rm0-05-rc4` sebelum otorisasi rilis produksi.
+Status fase **`BLOCKED_HUMAN_UAT_AND_DOMAIN_DECISIONS`**.
+
+Evaluasi teknis Fase 2 memakai kandidat historis `m0-p2-20261124-c3` dengan [manifest dan hasil verifikasi](../../qa/remediation/rm0-05/penyempurnaan/fase2-completion.json). Lingkungan 18192 sudah dipensiunkan setelah konsolidasi. Bukti [kandidat rm0-05-rc4](../../qa/remediation/rm0-05/source-manifest.json) tersedia untuk keterlacakan.
+
+
+Riwayat pengembangan `rm0-05-rc4`: melanjutkan seluruh pencapaian `rm0-05-rc3` ditambah kesiapan produksi terkendali di balik env gate (`038-040`, penolakan keras identitas/sesi lab saat `HELPDESK_LAB_AUTH=0`, `GET /api/v1/auth/config` + `GET /api/v1/admin/subjects`, SSO ASN OIDC/PKCE `S256` & verifikasi JWT RS256/ES256 JWKS, pengiriman notifikasi M9 Telegram Bot API & SMTP relay + `GET /api/v1/admin/delivery-jobs` + replay, pengamanan retensi/legal-hold M3 `POST /api/v1/tickets/{id}/retention` + preflight & eksekusi purge dua Super Admin `DEC-M07`, konfigurasi edge HTTPS TLSv1.2/1.3 HSTS `infra/nginx/nginx.prod.conf` + overlay `compose.prod.yml` dengan `freshclam` aktif, gerbang keamanan & CycloneDX SBOM `scripts/security_gate.py`, serta panduan cutover [production-cutover.md](../../runbooks/production-cutover.md)).
+
+> **Prinsip Kejujuran RM0-05:** Tidak satu pun nama penguji manusia, tanda tangan pejabat, atau persetujuan kebijakan organisasi boleh diisi oleh agen AI. Seluruh keputusan di bawah wajib ditetapkan langsung oleh pemilik mandat Diskominfo / Perangkat Daerah Kota Depok pada kandidat `m0-p2-20261124-c3` sebelum otorisasi rilis produksi.
 
 ---
 
@@ -29,12 +32,12 @@ Ringkasan kesiapan pra-UAT & pra-go-live `rm0-05-rc4`: melanjutkan seluruh penca
 
 ---
 
-## 2. Protokol Eksekusi UAT Manusia di Atas Kandidat Beku (`rm0-05-rc4`)
+## 2. Protokol UAT Manusia Kandidat Fase 2
 
 ### 2.1 Pra-syarat sebelum sesi UAT dimulai
-1. Pastikan kandidat kode tidak dimodifikasi selama sesi UAT berlangsung (`git checkout rm0-05-rc4`, verifikasi `python -X utf8 scripts/ci_local.py --with-live-browser` → **`PASS`**).
-2. Akses Portal Publik: `http://127.0.0.1:18090/` dan Portal Petugas/Admin: `http://127.0.0.1:18090/admin/auth/login.html`.
-3. Gunakan matriks CSV pelacakan hasil nyata di [uat-worksheets.csv](../../qa/remediation/rm0-05/uat-worksheets.csv) agar setiap penguji mencatat **Nama Penguji, OPD, Tanggal Uji, Hasil Aktual, dan ID Defect** secara terpisah.
+1. Gunakan kandidat lokal **m0-p2-20261124-c3**. Cocokkan image, ledger dan konfigurasi sebelum sesi. Gunakan [bukti Fase 2](../../qa/remediation/rm0-05/penyempurnaan/fase2-completion.json). Tag `rm0-05-rc4` tetap menjadi referensi historis.
+2. Cocokkan URL, image, ledger, serta fixture sintetis lingkungan yang ditetapkan koordinator UAT sebelum mulai. [Checkpoint pengembangan lokal](../../status/PROJECT_STATE.md).
+3. Buka [panduan penguji](RM0_05_PANDUAN_UAT_FASE_2.md) dan [lembar hasil](../../qa/remediation/rm0-05/uat-worksheets.csv). Penguji mencatat nama, OPD, tanggal, hasil aktual, keputusan dan bukti yang tidak memuat informasi rahasia.
 
 ### 2.2 Skenario Wajib 9 Persona Manusia
 
@@ -46,9 +49,9 @@ Ringkasan kesiapan pra-UAT & pra-go-live `rm0-05-rc4`: melanjutkan seluruh penca
 | **UAT-04** | Operator Meja Layanan | `/admin/auth/login.html` → `/admin/app/tickets/index.html` → Verifikasi tiket + override kategori beralasan → Dispatch | Guard menolak dispatch sebelum `VERIFIED`, override kategori menyimpan alasan & memicu aturan Smart Dispatch OPD/Bidang | `PENDING_HUMAN_UAT` |
 | **UAT-05** | Koordinator Layanan | `/admin/app/tickets/index.html` → Rekomendasi Smart Dispatch L1/L2, catat kasus vendor + jeda SLA berizin, ajukan/terima handoff lintas OPD | Gross vs net SLA terhitung akurat, overlap jeda tidak menggandakan pengurangan waktu, handoff memindahkan ownership & mencabut akses teknisi asal | `PENDING_HUMAN_UAT` |
 | **UAT-06** | Teknisi L1 / L2 | `/admin/app/tickets/index.html` → `Mulai Kerjakan`, tambah catatan `INTERNAL` vs komentar publik, unggah lampiran & `Selesaikan` (24 jam) | Catatan internal tidak muncul di halaman pemohon/tamu, konflik versi `409` terlihat saat tab bersaing, timer konfirmasi 24 jam tampil jelas | `PENDING_HUMAN_UAT` |
-| **UAT-07** | Editor & Penerbit Konten (M8) | `/admin/app/helpdesk/index.html?kind=media` & `?kind=knowledge` → unggah media, terbitkan `ARTICLE` & `PAGE`, kelola 5 slot Hero | Artikel & halaman terbit langsung muncul di `/panduan.html`, `/halaman/{slug}`, & pencarian; lampiran privat tiket ditolak untuk reuse langsung | `PENDING_HUMAN_UAT` |
+| **UAT-07** | Editor & Penerbit Konten (M8) | `/admin/app/helpdesk/index.html?kind=media` & `?kind=articles` → unggah media, terbitkan `ARTICLE` & `PAGE`, kelola 5 slot Hero | Artikel & halaman terbit langsung muncul di `/panduan.html`, `/halaman/{slug}`, & pencarian; lampiran privat tiket ditolak untuk reuse langsung | `PENDING_HUMAN_UAT` |
 | **UAT-08** | Pimpinan & Auditor | `/admin/app/dashboard/index.html`, `?kind=reports`, `?kind=audit` → periksa KPI, ekspor CSV, jejak audit append-only | Angka SLA tepat waktu, watermark WIB, & pembagi (*denominator*) jelas; ekspor CSV terlindungi dari injeksi formula; riwayat audit tidak bisa diubah/dihapus | `PENDING_HUMAN_UAT` |
-| **UAT-09** | Admin OPD & Super Admin | `?kind=memberships`, `?kind=roles`, `?kind=maintenance` → atur profil akses berizin (`grant_ceiling`), kebijakan peran, & jalankan `BACKUP_MANIFEST` | Admin konfigurasi tidak otomatis bisa membaca isi tiket; purge keras oleh non-Super Admin ditolak `403`; job `BACKUP_MANIFEST` mengunduh manifes bertanda SHA-256 | `PENDING_HUMAN_UAT` |
+| **UAT-09** | Admin OPD & Super Admin | `?kind=memberships`, `?kind=role-policies`, `?kind=maintenance` → atur profil akses berizin (`grant_ceiling`), kebijakan peran, & jalankan `BACKUP_MANIFEST` | Admin konfigurasi tidak otomatis bisa membaca isi tiket; purge keras oleh non-Super Admin ditolak `403`; job `BACKUP_MANIFEST` mengunduh manifes bertanda SHA-256 | `PENDING_HUMAN_UAT` |
 
 ---
 

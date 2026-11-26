@@ -1,0 +1,24 @@
+{
+  "timestamp": "2026-11-24T04:29:29.819107+00:00",
+  "scope": "Two Docker tmpfs PostgreSQL instances, one synthetic ticket/private blob/event/job; no working DB",
+  "host_ports": [],
+  "persistent_volumes": [],
+  "backup_manifest": {
+    "metadata_sha256": "93e35dc4b21ed072d88a0d4ea2048b56ab73dd81887c353e591ac35f559ef2b1",
+    "metadata_bytes": 279612,
+    "blob_sha256": "01179c19a190d7c0f8c5a4837edca8872ed2eebe1e96ec9eaf65d88ca03f21ef",
+    "blob_bytes": 44,
+    "migration_manifest_sha256": "969130e4f07132812f17846f37117a466dc865f6bfa97a3683b4c157cefed333",
+    "config_sha256": {
+      "compose.yaml": "14433224c5d78865fe26e1f34913341ec62614c998e0ed19bb7124c004f94a72",
+      "planning/technology-lock.json": "ee6efdaf6bfa0ebf4cdee12eeb4b2351e99b5663b286e10176ab4a700837cc0a"
+    }
+  },
+  "rpo_fixture_missing_commits": 0,
+  "source_latest_fixture_commit_ms": 1795494598354,
+  "fresh_app_process_1": "PASS",
+  "rto_seconds_to_first_http_read": 208.078,
+  "fresh_app_process_2": "PASS",
+  "result": "PASS",
+  "cleanup": "PASS"
+}

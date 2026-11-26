@@ -1,0 +1,47 @@
+{
+  "timestamp": "2026-11-24T06:21:17.550Z",
+  "base_url": "http://127.0.0.1:18191",
+  "browser": "Microsoft Edge Headless (CDP)",
+  "suites": {
+    "candidate_role_hero": {
+      "status": "PASS",
+      "superAdminLocked": "Hak inti Super Admin dilindungi.",
+      "roleFeedback": "Kebijakan tersimpan. Versi 4. Berlaku pada permintaan akun berikutnya.",
+      "roleImpact": "Ditambahkan: Tidak adaDicabut: Tidak adaAlasan: Verifikasi kebijakan peran RM0-04",
+      "slotCount": 5,
+      "mobilePreview": {
+        "size": "mobile",
+        "slots": 5,
+        "caption": "Banner 1 · Layanan Resmi TIK Depok · Uji RM0-04 1795501283308"
+      },
+      "heroDraftMsg": "Draf tersimpan. Versi 7.",
+      "heroPubMsg": "Banner terbit. Versi 8.",
+      "heroFit": {
+        "desktop_1280x720": {
+          "height": 720,
+          "vh": 720,
+          "overflow": 0,
+          "html": true
+        },
+        "mobile_390x844": {
+          "height": 844,
+          "vh": 844,
+          "overflow": 0,
+          "html": true
+        },
+        "mobile_375x667": {
+          "height": 667,
+          "vh": 667,
+          "overflow": 0,
+          "html": true
+        }
+      }
+    }
+  },
+  "from_suite": "candidate_role_hero",
+  "through_suite": "candidate_role_hero",
+  "csp_violations": [],
+  "console_errors": [],
+  "exceptions": [],
+  "result": "PASS"
+}

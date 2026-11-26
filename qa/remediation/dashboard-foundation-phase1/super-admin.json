@@ -1,0 +1,63 @@
+{
+  "task_id": "M0-DASHBOARD-F1-SUPER-ADMIN",
+  "timestamp": "2026-11-26T03:43:44.7355770+00:00",
+  "acceptance": "AC11 AC06 (akun lab dan satu PD)",
+  "result": "DONE_VERIFIED_LAB",
+  "report": "qa/remediation/dashboard-foundation-phase1/super-admin.json",
+  "files": [
+    "backend/internal/modules/m1/internal/app/identity.go",
+    "backend/internal/modules/m1/internal/app/role_policy.go",
+    "backend/internal/modules/m1/internal/app/role_policy_lab_test.go",
+    "seeds/lab.sh",
+    "seeds/dashboard-lab.sql",
+    "scripts/test_admin_dashboard_foundation_browser.mjs",
+    "runbooks/m0-03-lab.md",
+    "planning/backlog.csv",
+    "status/PROJECT_STATE.md",
+    "status/evidence.jsonl",
+    "qa/remediation/dashboard-foundation-phase1/browser.json",
+    "qa/remediation/dashboard-foundation-phase1/super-admin.json"
+  ],
+  "commands": [
+    "docker build --quiet --target source -t helpdesk-m0-test:dashboard-lab -f infra/docker/backend.Dockerfile .",
+    "docker run --rm --network none helpdesk-m0-test:dashboard-lab go test ./internal/modules/m1/... ./internal/modules/m9/...",
+    "docker image tag sha256:b84e3a631395f6a72a7363ef31b48e0a964eda00aaeab41ac52b97117d6e6aee helpdesk-m0-app:pre-dashboard-super-admin-20261126",
+    "docker compose build --quiet app",
+    "docker compose --profile lab run --rm --no-deps --pull never seed-lab dashboard",
+    "docker compose up -d --no-deps --no-build --pull never --wait --wait-timeout 60 app",
+    "python -X utf8 scripts/smoke_local.py",
+    "$env:EDGE_MAINT_CDP_PORT='9355'; node scripts/test_admin_dashboard_foundation_browser.mjs",
+    "git -c core.safecrlf=false diff --check"
+  ],
+  "runtime": {
+    "port": 18090,
+    "app_image": "sha256:f9d29457c19d033fa05553080db25ee8b0084d6182bd5fa520f54cef99271d57",
+    "rollback_tag": "helpdesk-m0-app:pre-dashboard-super-admin-20261126",
+    "healthy_services": [
+      "app",
+      "web",
+      "db",
+      "scanner"
+    ],
+    "counts_before_after": {
+      "tickets": 136,
+      "attachments": 51,
+      "media": 17
+    }
+  },
+  "limits": [
+    "Izin hanya untuk fixture Super Admin dengan grant aktif tingkat PD Diskominfo di synthetic_lab.",
+    "Kebijakan peran produksi tetap. Kondisi produksi diuji pada unit, tanpa deployment atau UAT produksi."
+  ],
+  "before": {
+    "report_status": 403,
+    "report_read": false,
+    "cards_hidden": true
+  },
+  "checks": {
+    "policy_unit": "PASS: produksi, sesi nonfixture, akun lain, PD lain, PD nonaktif, mandat tim, grant tidak ada, dan scope lab yang benar. Export dan ticket.read tidak ikut diterapkan.",
+    "seed_guard": "PASS: di luar synthetic_lab ditolak dengan LAB_SEED_DISABLED. Targeted seed UPDATE 1 dan pengulangan UPDATE 0.",
+    "browser": "PASS: 4 kartu, rincian SLA, pintasan Master dan Akses, serta cakupan PD; dua periode sesuai API. Scope lain dan ekspor 403. Regresi Koordinator dan Teknisi lulus.",
+    "browser_evidence": "browser.json"
+  }
+}

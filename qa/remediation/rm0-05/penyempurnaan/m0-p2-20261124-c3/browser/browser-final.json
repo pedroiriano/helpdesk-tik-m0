@@ -1,0 +1,107 @@
+{
+  "timestamp": "2026-11-24T04:47:44.938Z",
+  "base_url": "http://127.0.0.1:18191",
+  "browser": "Microsoft Edge Headless (CDP)",
+  "suites": {
+    "R4-B_csp_routes_overflow_faq": {
+      "status": "PASS",
+      "checked": 25,
+      "homeFaqCheck": {
+        "count": 5,
+        "afterFirst": "true",
+        "firstAfterSecond": "false",
+        "secondExpanded": "true"
+      },
+      "pageFaqCheck": {
+        "count": 5,
+        "afterFirst": true,
+        "firstAfterSecond": false,
+        "secondOpen": true
+      }
+    },
+    "candidate_access_profiles": {
+      "status": "PASS",
+      "profileCount": 5,
+      "ceilingWarn": "7 izin berada di luar kebijakan atau mandat delegasi saat ini. Sesuaikan pilihan sebelum menyimpan.",
+      "editInfo": "Operator OPD A · OperatorDinas Komunikasi dan Informatika Ko",
+      "saveMsg": "Tersimpan pada server. Versi 4.",
+      "editorTitleAfterSave": "Ubah akses pengguna"
+    },
+    "candidate_catalog_routing": {
+      "status": "PASS",
+      "catCount": 25,
+      "opdCount": 37,
+      "routeSaveTrigger": true,
+      "routeStatus": "Aturan tersimpan. Versi 4.",
+      "reloadedVersion": "Aturan versi 4."
+    },
+    "candidate_role_hero": {
+      "status": "PASS",
+      "superAdminLocked": "Hak inti Super Admin dilindungi.",
+      "roleFeedback": "Kebijakan tersimpan. Versi 3. Berlaku pada permintaan akun berikutnya.",
+      "slotCount": 5,
+      "heroDraftMsg": "Draf tersimpan. Versi 3.",
+      "heroPubMsg": "Banner terbit. Versi 4.",
+      "heroFit": {
+        "desktop_1280x720": {
+          "height": 720,
+          "vh": 720,
+          "overflow": 0,
+          "html": true
+        },
+        "mobile_390x844": {
+          "height": 844,
+          "vh": 844,
+          "overflow": 0,
+          "html": true
+        },
+        "mobile_375x667": {
+          "height": 667,
+          "vh": 667,
+          "overflow": 0,
+          "html": true
+        }
+      }
+    },
+    "RM0_03_R3_H_backup_manifest_ui": {
+      "status": "PASS",
+      "jobId": "fd68cdfc-1c55-4146-9f96-85a652563991",
+      "execStatus": "Status pekerjaan SUCCEEDED.",
+      "artifactVerify": {
+        "status": 200,
+        "headerSha": "8ff0068df7d23f95437b02f35c880957c65981cb0cfe5a17e052fb709a06331f",
+        "computedSha": "8ff0068df7d23f95437b02f35c880957c65981cb0cfe5a17e052fb709a06331f",
+        "shaMatch": true,
+        "ownersCount": 9,
+        "migrationCount": 43,
+        "configShaLen": 64,
+        "jobId": "fd68cdfc-1c55-4146-9f96-85a652563991"
+      }
+    },
+    "R4-D_form_lost_response_draft_tracking": {
+      "status": "PASS",
+      "valSummary": {
+        "visible": true,
+        "count": 4,
+        "focusedId": "ticket-description"
+      },
+      "retryPrompt": {
+        "retryVisible": true,
+        "href": "http://127.0.0.1:18191/detail-tiket.html?id=0a2f6474-ffaa-4b46-b2e1-6295ce9e4d4d"
+      },
+      "uploadRecovered": true,
+      "sameIdemKey": true,
+      "guestTrackingChecked": true,
+      "draftSavedText": "Draft tersimpan (v1 pada 11.48)",
+      "testTicketId": "0a2f6474-ffaa-4b46-b2e1-6295ce9e4d4d"
+    },
+    "R4-E_queue_lifecycle_conflict": {
+      "status": "FAIL",
+      "error": "Concurrent dispatch expected 200, got 422\n\n422 !== 200\n"
+    }
+  },
+  "csp_violations": [],
+  "console_errors": [],
+  "exceptions": [],
+  "result": "FAIL"
+}

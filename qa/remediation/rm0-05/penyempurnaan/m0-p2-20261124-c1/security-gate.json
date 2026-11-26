@@ -1,0 +1,12 @@
+{
+  "generated_at": "2026-11-24T04:29:45.815031Z",
+  "suite": "security-and-sbom-local-gate",
+  "command": "python -X utf8 scripts/security_gate.py --report C:/Datas/Proyek/Aplikasi/helpdesk-monolith/qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c1/security-gate.json --sbom C:/Datas/Proyek/Aplikasi/helpdesk-monolith/qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c1/sbom-m0.json",
+  "tracked_files_audited": 1398,
+  "sbom_path": "C:/Datas/Proyek/Aplikasi/helpdesk-monolith/qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c1/sbom-m0.json",
+  "sbom_components": 104,
+  "secret_findings": [],
+  "hardening_issues": [],
+  "remote_ci_scanners": "Trivy container CVE & govulncheck run on GitHub Actions security-and-sbom job (not installed on offline Windows host)",
+  "result": "PASS"
+}

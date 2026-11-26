@@ -211,6 +211,9 @@ class AdminDataTable {
     this.shell.dataset.hdDtShell = '1';
 
     scrollWrap.classList.add('hd-dt-scroll');
+    scrollWrap.tabIndex = 0;
+    scrollWrap.setAttribute('role', 'region');
+    scrollWrap.setAttribute('aria-label', table.getAttribute('aria-label') || 'Area tabel data');
     table.classList.add('hd-dt-table');
 
     const toolbar = document.createElement('div');
@@ -305,7 +308,23 @@ class AdminDataTable {
     if (scrollWrap.parentElement) {
       scrollWrap.parentElement.insertBefore(this.shell, scrollWrap);
     }
-    this.shell.append(toolbar, scrollWrap, footer);
+    let toolbarContainer: HTMLElement = toolbar;
+    if (table.hasAttribute('data-dt-compact-toolbar')) {
+      const options = document.createElement('details');
+      options.className = 'hd-dt-compact';
+      const summary = document.createElement('summary');
+      const quickSearch = table.dataset.dtCompactToolbar === 'search';
+      summary.textContent = quickSearch ? 'Opsi tabel' : 'Atur tampilan halaman ini';
+      options.append(summary, toolbar);
+      if (quickSearch) {
+        toolbarContainer = document.createElement('div');
+        toolbarContainer.className = 'hd-dt-quick-search';
+        toolbarContainer.append(searchGroup, options);
+      } else {
+        toolbarContainer = options;
+      }
+    }
+    this.shell.append(toolbarContainer, scrollWrap, footer);
 
     this.bindEvents();
     this.observeTable();

@@ -3,6 +3,8 @@ import argparse
 import datetime
 import hashlib
 import json
+import os
+from urllib.parse import urlsplit
 from pathlib import Path
 import re
 import subprocess
@@ -59,7 +61,27 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--with-live-browser", action="store_true", help="Also verify live gateway routes, links, modals, and Edge CDP suites on 127.0.0.1:18090")
     parser.add_argument("--skip-docker", action="store_true", help="Run host-only static, contract, and package checks without Docker builds or disposable DB")
+    parser.add_argument("--evidence-dir", type=Path, default=Path("qa/remediation/rm0-05"))
+    parser.add_argument("--candidate-id", default="rm0-05-rc4")
+    parser.add_argument("--manifest", type=Path)
     args = parser.parse_args()
+    evidence = (ROOT / args.evidence_dir).resolve()
+    try:
+        evidence.relative_to(ROOT / "qa")
+    except ValueError:
+        parser.error("Evidence directory must be under qa")
+    evidence.mkdir(parents=True, exist_ok=True)
+    if args.with_live_browser:
+        try:
+            origin = urlsplit(os.environ.get("HELPDESK_BASE_URL", ""))
+            if (origin.scheme != "http" or origin.hostname != "127.0.0.1" or not origin.port
+                or origin.port == 18090 or origin.username or origin.path or origin.query or origin.fragment):
+                raise ValueError
+        except ValueError:
+            parser.error("Set HELPDESK_BASE_URL explicitly to an isolated loopback origin distinct from port 18090")
+        os.environ["HELPDESK_LINK_REPORT_DIR"] = str(evidence)
+        os.environ["HELPDESK_BROWSER_REPORT_DIR"] = str(evidence / "browser")
+
 
     commit_sha, is_dirty = git_info()
     steps = []
@@ -78,7 +100,8 @@ def main():
         ("go_module_boundaries", [sys.executable, "scripts/check_boundaries.py"]),
         ("go_boundary_negative", [sys.executable, "scripts/test_boundaries.py"]),
         ("piui_build_parity", [sys.executable, "scripts/test_piui_build.py"]),
-        ("security_and_sbom", [sys.executable, "-X", "utf8", "scripts/security_gate.py"]),
+        ("security_and_sbom", [sys.executable, "-X", "utf8", "scripts/security_gate.py",
+          "--report", str(evidence/"security-gate.json"), "--sbom", str(evidence/"sbom-m0.json"), "--candidate-id", args.candidate_id]),
     ]
     for name, cmd in static_cmds:
         steps.append(run_step(name, cmd))
@@ -98,7 +121,7 @@ def main():
             "node scripts/test_public_cache.mjs"
         )
         steps.append(run_step("node_26_frontend_mjs_suites", ["docker", "run", "--rm", "-v", f"{ROOT}:/work:ro", "-w", "/work", NODE_IMAGE, "sh", "-c", node_cmd]))
-        steps.append(run_step("pg_18_disposable_migrations", [sys.executable, "-X", "utf8", "scripts/test_owner_migrations.py", "--report", "qa/remediation/rm0-05/ci-migrations.json"]))
+        steps.append(run_step("pg_18_disposable_migrations", [sys.executable, "-X", "utf8", "scripts/test_owner_migrations.py", "--report", str(evidence/"ci-migrations.json")]))
 
     if args.with_live_browser:
         steps.append(run_step("live_link_audit", [sys.executable, "-X", "utf8", "scripts/test_m0_13_links.py"]))
@@ -106,7 +129,7 @@ def main():
         steps.append(run_step("live_edge_cdp_browser", ["node", "scripts/test_rm0_04_browser.mjs"]))
 
     all_passed = all(s["result"] == "PASS" for s in steps)
-    manifest_file = ROOT / "qa/remediation/rm0-05/source-manifest.json"
+    manifest_file = ROOT / (args.manifest or (evidence / "source-manifest.json"))
     manifest_sha = hashlib.sha256(manifest_file.read_bytes()).hexdigest() if manifest_file.is_file() else None
 
     report = {
@@ -114,14 +137,16 @@ def main():
         "scope": "Reproducible local CI pipeline before/during RM0-05",
         "git_commit": commit_sha,
         "git_working_tree_dirty": is_dirty,
-        "source_manifest": "qa/remediation/rm0-05/source-manifest.json" if manifest_sha else None,
+        "candidate_id": args.candidate_id,
+        "fixture_origin": os.environ.get("HELPDESK_BASE_URL") if args.with_live_browser else None,
+        "source_manifest": str(manifest_file.relative_to(ROOT)) if manifest_sha else None,
         "source_manifest_sha256": manifest_sha,
         "with_live_browser": args.with_live_browser,
         "skip_docker": args.skip_docker,
         "steps": steps,
         "result": "PASS" if all_passed else "FAIL",
     }
-    out = ROOT / "qa/remediation/rm0-05/local-ci.json"
+    out = evidence / "local-ci.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"{report['result']} local CI ({len(steps)} steps) -> {out.relative_to(ROOT)} (commit={commit_sha}, dirty={is_dirty})")

@@ -118,11 +118,15 @@ func (s Store) ReadScopedReport(ctx context.Context, from, to time.Time, org str
 	if err != nil {
 		return nil, err
 	}
+	return summarizeReport(facts, watermark), nil
+}
+
+func summarizeReport(facts []reportFact, watermark *time.Time) *api.Report {
 	report := api.Report{AsOf: time.Now().UTC(), Watermark: watermark, Timezone: "Asia/Jakarta", Measure: "SLA", Accepted: int64(len(facts))}
 	policies := make(map[int64]bool)
 	for _, f := range facts {
-		switch f.State {
-		case "RESOLVED", "CLOSED":
+		switch reportState(f.State) {
+		case "completed":
 			report.Completed++
 			if f.Resolved == nil || f.Due == nil {
 				report.Unmeasured++
@@ -139,7 +143,7 @@ func (s Store) ReadScopedReport(ctx context.Context, from, to time.Time, org str
 				report.GrossSeconds += *f.Gross
 				report.NetSeconds += *f.Net
 			}
-		case "CANCELLED":
+		case "cancelled":
 			report.Cancelled++
 		default:
 			report.Backlog++
@@ -154,7 +158,7 @@ func (s Store) ReadScopedReport(ctx context.Context, from, to time.Time, org str
 		pct := 100 * float64(report.Count) / float64(report.Denominator)
 		report.SLAPercent = &pct
 	}
-	return &report, nil
+	return &report
 }
 
 func exportBytes(format string, facts []reportFact) ([]byte, error) {

@@ -1,0 +1,32 @@
+{
+  "timestamp": "2026-11-24T04:53:53.353Z",
+  "base_url": "http://127.0.0.1:18191",
+  "browser": "Microsoft Edge Headless (CDP)",
+  "suites": {
+    "R4-I_footer_zoom_reduced_motion": {
+      "status": "PASS",
+      "zoomChecks": {
+        "/": 0,
+        "/lapor.html": 0,
+        "/admin/app/dashboard/index.html": 0
+      },
+      "reducedMotion": true,
+      "footerInfo": {
+        "exists": true,
+        "hasDepok": true,
+        "hasDiskominfo": true,
+        "noPedro": true,
+        "height": 131
+      }
+    },
+    "Fase2_UI_and_Ops": {
+      "status": "FAIL",
+      "error": "waitFor timeout (media pickers populated)"
+    }
+  },
+  "from_suite": "R4-I_footer_zoom_reduced_motion",
+  "csp_violations": [],
+  "console_errors": [],
+  "exceptions": [],
+  "result": "FAIL"
+}

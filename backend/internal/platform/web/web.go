@@ -104,6 +104,7 @@ type Page struct {
 	Limit        int
 	Cursor       string
 	Organization string
+	Division     string
 }
 
 func Pagination(r *http.Request, sorts ...string) (Page, error) {

@@ -14,12 +14,15 @@ import (
 
 type IdentityPort interface {
 	Authenticate(ctx context.Context, c m1api.Credentials) (m1api.Actor, error)
+	ActiveTeamInOrg(context.Context, string, string) (bool, error)
+	DispatchTeams(context.Context, string, web.Page) ([]m1api.DirectoryEntry, error)
 }
 
 type Handler struct {
-	Service  *Service
-	Identity IdentityPort
-	Origin   string
+	Service   *Service
+	Identity  IdentityPort
+	Origin    string
+	Dashboard DashboardPort
 }
 
 func NewHandler(svc *Service, identity IdentityPort, origin string) *Handler {
@@ -40,6 +43,10 @@ func (h *Handler) actorSession(r *http.Request, required ...string) (actorID, ac
 			orgs := []string{}
 			for _, m := range sess.Memberships {
 				if !m.OrganizationActive {
+					continue
+				}
+				if m.TeamID != nil && len(required) > 0 && (required[0] == "report.read" || required[0] == "report.export") {
+					// The original report endpoints aggregate a whole organization.
 					continue
 				}
 				allowedOrg := len(required) == 0
@@ -238,6 +245,12 @@ func (h *Handler) Register(m *http.ServeMux) {
 
 	// GET /api/v1/reports
 	m.HandleFunc("GET /api/v1/reports", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Query().Get("view") == "dashboard" {
+			if err := h.dashboardReport(w, r); err != nil {
+				web.WriteError(w, err)
+			}
+			return
+		}
 		actorID, _, actorOrgs, perms := h.actorSession(r, "report.read")
 		if actorID == "ANONYMOUS" {
 			web.WriteError(w, web.Fail(401, "Autentikasi sesi diperlukan"))
@@ -295,6 +308,12 @@ func (h *Handler) Register(m *http.ServeMux) {
 		}
 
 		web.JSON(w, 200, report)
+	})
+
+	m.HandleFunc("GET /api/v1/reports/dashboard-tickets", func(w http.ResponseWriter, r *http.Request) {
+		if err := h.dashboardTickets(w, r); err != nil {
+			web.WriteError(w, err)
+		}
 	})
 
 	// POST /api/v1/reports/exports

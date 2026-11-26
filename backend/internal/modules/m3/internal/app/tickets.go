@@ -137,6 +137,9 @@ func (s *Service) Create(ctx context.Context, c Credentials, key string, in api.
 	if e = domain.Validate(&in, snap); e != nil {
 		return database.Result{}, e
 	}
+	if e = identity.CheckMaintenance(ctx, s.Identity, true, snap.Service.OwnerOrgID); e != nil {
+		return database.Result{}, e
+	}
 	if kind == "ASN" {
 		for _, m := range actor.Memberships {
 			if m.OrganizationActive && actor.Can("ticket.create", m.OrganizationID) {
@@ -270,6 +273,9 @@ func (s *Service) authorized(ctx context.Context, c Credentials, id string, writ
 	if e == nil && scope.Internal {
 		scope.Internal, e = s.Store.InternalAllowed(ctx, scope, id)
 	}
+	if e == nil && write {
+		e = identity.CheckMaintenance(ctx, s.Identity, false, v.OwnerOrg)
+	}
 	return v, scope, a, e
 }
 func (s *Service) List(ctx context.Context, c Credentials, p web.Page) (any, error) {
@@ -388,10 +394,24 @@ func (s *Service) assign(ctx context.Context, c Credentials, id, key string, in 
 	if e != nil {
 		return database.Result{}, e
 	}
+	if proposal.Status != "HANDOFF" && proposal.TeamID != "" && !a.HasTeamMandate(v.OwnerOrg, proposal.TeamID, "ticket.dispatch") {
+		proposal = undisclosedDispatch(proposal)
+	}
 	if in.ProposalDigest != "" && (in.ProposalVersion != v.Version || in.ProposalDigest != proposal.Digest) {
 		return database.Result{}, web.Fail(409, "Saran penugasan berubah. Muat ulang rekomendasi.")
 	}
-	if proposal.Status != "RECOMMENDED" {
+	if in.Manual {
+		if proposal.Status != "MANUAL" {
+			return database.Result{}, web.Fail(409, "Penugasan manual tidak berlaku. Tinjau saran terbaru.")
+		}
+		if in.ProposalVersion != v.Version {
+			return database.Result{}, web.Fail(409, "Versi tiket berubah. Muat ulang.")
+		}
+		proposal.Candidates, e = s.Assignment.ManualCandidates(ctx, a, v.OwnerOrg)
+		if e != nil {
+			return database.Result{}, e
+		}
+	} else if proposal.Status != "RECOMMENDED" {
 		return database.Result{}, web.Fail(422, proposal.Explanation)
 	}
 	valid := false
@@ -411,7 +431,7 @@ func (s *Service) assign(ctx context.Context, c Credentials, id, key string, in 
 	if err != nil {
 		return database.Result{}, err
 	}
-	if fresh.ID != a.ID || !fresh.Can("ticket.dispatch", v.OwnerOrg) {
+	if fresh.ID != a.ID || !fresh.HasTeamMandate(v.OwnerOrg, in.TeamID, "ticket.dispatch") {
 		return database.Result{}, web.Fail(403, "Mandat penugasan berubah")
 	}
 	return database.Mutate(ctx, s.Store.Pool, database.Mutation{Owner: "M3", Actor: a.ID, Command: command, Target: id, Key: key, Scope: v.OwnerOrg, Reason: in.Reason, Payload: in}, func(tx pgx.Tx) (database.Result, error) {
@@ -447,10 +467,30 @@ func (s *Service) DispatchProposal(ctx context.Context, c Credentials, id, tier 
 		return assignment.Proposal{}, err
 	}
 	proposal, err := s.Assignment.Propose(ctx, v.ID, v.Version, v.ServiceID, v.OwnerOrg, tier, verifiedCategory(v))
-	if err == nil && proposal.Status == "HANDOFF" && !actor.Can("ticket.handoff", v.OwnerOrg) {
-		proposal.Explanation += " Hubungi Koordinator untuk mengajukan pelimpahan."
+	if err != nil {
+		return proposal, err
+	}
+	if proposal.Status != "HANDOFF" && proposal.TeamID != "" && !actor.HasTeamMandate(v.OwnerOrg, proposal.TeamID, "ticket.dispatch") {
+		proposal = undisclosedDispatch(proposal)
+	}
+	switch proposal.Status {
+	case "MANUAL":
+		proposal.Candidates, err = s.Assignment.ManualCandidates(ctx, actor, v.OwnerOrg)
+		if len(proposal.Candidates) > 0 {
+			proposal.Explanation += " Pilih teknisi tersedia dalam mandat Anda dan isi alasan penugasan manual."
+		}
+	case "HANDOFF":
+		if !actor.Can("ticket.handoff", v.OwnerOrg) {
+			proposal.Explanation += " Hubungi Koordinator untuk mengajukan pelimpahan."
+		}
 	}
 	return proposal, err
+}
+
+func undisclosedDispatch(proposal assignment.Proposal) assignment.Proposal {
+	return assignment.Proposal{TicketID: proposal.TicketID, TicketVersion: proposal.TicketVersion,
+		Level: proposal.Level, Status: "MANUAL", Candidates: []assignment.Candidate{},
+		Explanation: "Tinjau pilihan penugasan dalam mandat Anda."}
 }
 
 func verifiedCategory(v api.Ticket) string {
@@ -845,6 +885,9 @@ func (s *Service) RequestHandoff(ctx context.Context, c Credentials, id, key str
 	if !active {
 		return database.Result{}, web.Fail(422, "Tim tujuan harus aktif pada OPD tujuan")
 	}
+	if err = identity.CheckMaintenance(ctx, s.Identity, false, in.TargetOrgID); err != nil {
+		return database.Result{}, err
+	}
 	now := s.now()
 	return database.Mutate(ctx, s.Store.Pool, database.Mutation{
 		Owner: "M3", Actor: a.ID, Command: "RequestHandoff", Target: id, Key: key, Scope: v.OwnerOrg, Reason: in.Reason, Payload: in,
@@ -925,6 +968,9 @@ func (s *Service) AcceptHandoff(ctx context.Context, c Credentials, id, handoffI
 	}
 	offer, err := s.Store.ReadHandoffOffer(ctx, id, handoffID, acceptOrgs)
 	if err != nil {
+		return database.Result{}, err
+	}
+	if err = identity.CheckMaintenance(ctx, s.Identity, false, offer.FromOrgID, offer.TargetOrgID); err != nil {
 		return database.Result{}, err
 	}
 	active, err := s.Identity.ActiveTeamInOrg(ctx, offer.TargetTeamID, offer.TargetOrgID)

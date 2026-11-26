@@ -1,0 +1,170 @@
+{
+  "result": "PASS",
+  "base": "http://127.0.0.1:18090",
+  "checks": [
+    "Hero manual, five banners, short viewport, compact shortcuts and connection label",
+    "Catalog filters, empty result, case detail, context preserved, report notice on both paths",
+    "Catalog failure feedback and connection recovery",
+    "Published guide navigation and direct detail",
+    "Runtime environment markers and visible copy across public, staff and admin routes"
+  ],
+  "observations": {
+    "hero_400": {
+      "width": 400,
+      "height": 498,
+      "overflow": 0,
+      "missingCSS": false,
+      "boxes": {
+        "hero": {
+          "top": 0,
+          "bottom": 498,
+          "height": 498
+        },
+        "image": {
+          "top": 88,
+          "bottom": 221,
+          "height": 133
+        },
+        "cta": {
+          "top": 341,
+          "bottom": 435,
+          "height": 94
+        },
+        "thumbs": {
+          "top": 445,
+          "bottom": 490,
+          "height": 45
+        },
+        "links": {
+          "top": 498,
+          "bottom": 600,
+          "height": 102
+        }
+      }
+    },
+    "catalog_390": {
+      "width": 390,
+      "height": 844,
+      "overflow": 0,
+      "missingCSS": false,
+      "boxes": {
+        "search": {
+          "top": 298,
+          "bottom": 348,
+          "height": 50
+        },
+        "filter": {
+          "top": 372,
+          "bottom": 416,
+          "height": 44
+        },
+        "first": {
+          "top": 528,
+          "bottom": 762,
+          "height": 234
+        }
+      }
+    },
+    "catalog_1440": {
+      "width": 1440,
+      "height": 900,
+      "overflow": 0,
+      "missingCSS": false,
+      "boxes": {
+        "search": {
+          "top": 413,
+          "bottom": 463,
+          "height": 50
+        },
+        "filters": {
+          "top": 339,
+          "bottom": 483,
+          "height": 145
+        },
+        "first": {
+          "top": 604,
+          "bottom": 880,
+          "height": 276
+        }
+      }
+    },
+    "report_390": {
+      "width": 390,
+      "height": 844,
+      "overflow": 0,
+      "missingCSS": false,
+      "boxes": {
+        "notice": {
+          "top": 421,
+          "bottom": 459,
+          "height": 38
+        },
+        "title": {
+          "top": 530,
+          "bottom": 580,
+          "height": 50
+        }
+      }
+    },
+    "knowledge_390": {
+      "width": 390,
+      "height": 844,
+      "overflow": 0,
+      "missingCSS": false,
+      "boxes": {
+        "search": {
+          "top": 252,
+          "bottom": 302,
+          "height": 50
+        },
+        "featured": {
+          "top": 386,
+          "bottom": 590,
+          "height": 204
+        },
+        "first": {
+          "top": 606,
+          "bottom": 848,
+          "height": 242
+        }
+      }
+    },
+    "guide_detail_390": {
+      "width": 390,
+      "height": 844,
+      "overflow": 0,
+      "missingCSS": false,
+      "boxes": {
+        "heading": {
+          "top": 227,
+          "bottom": 313,
+          "height": 86
+        },
+        "back": {
+          "top": 150,
+          "bottom": 194,
+          "height": 44
+        }
+      }
+    },
+    "dashboard_390": {
+      "width": 390,
+      "height": 844,
+      "overflow": 0,
+      "missingCSS": false,
+      "boxes": {
+        "context": {
+          "top": 376,
+          "bottom": 418,
+          "height": 42
+        },
+        "kpis": {
+          "top": 463,
+          "bottom": 677,
+          "height": 214
+        }
+      }
+    }
+  },
+  "errors": []
+}

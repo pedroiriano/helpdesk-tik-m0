@@ -3,6 +3,7 @@ import { initAdminDataTables } from './admin-datatable';
 import { initSelect2ComboBoxes } from './select2-combobox';
 import { bindReportingContext } from './reporting-context';
 import { canOpenAdminPage } from '../../admin-navigation.mjs';
+import { workStart } from '../../admin-profiles.mjs';
 import { ticketActions, activeResolution, setGuestReceiptMode, commandFingerprint } from './ticket-actions';
 import { syncJourney, serviceLoginHref, ticketState, priorityLabel, requesterGuidance, htmlText } from './journey';
 import { api, APIError, csrf, durableIntent, errorText, intent, json } from './transport';
@@ -12,7 +13,6 @@ import {
   loadRequesterNotifications,
   loadHandoffInbox,
   loadQueueServiceFilter,
-  searchTicketsAcl,
   runBulkArchive,
   populateVendorPicSelect,
   loadOperationalRecordsAndScheduler,
@@ -552,7 +552,6 @@ async function create(): Promise<void> {
   if (!formEl) return;
 
   const reporting = await bindReportingContext(formEl, service, session);
-  formEl.hidden = false;
 
   const dyn = $('[data-ticket-dynamic]');
 
@@ -668,7 +667,10 @@ async function create(): Promise<void> {
 
     if (savedCheck) savedCheck.required = true;
 
-    guestCsrf = (await getBootstrap()).csrf_token;
+    const bootstrap = await getBootstrap();
+    guestCsrf = bootstrap.csrf_token;
+    const notice = $('[data-hd-environment]', formEl);
+    if (notice) notice.hidden = bootstrap.mode !== 'SYNTHETIC_LAB';
 
     $('.hd-actions')?.setAttribute('data-ready', 'true');
 
@@ -733,6 +735,8 @@ async function create(): Promise<void> {
 
 
   const srvContext = $('[data-service-context]');
+  const maxUploadBytes = Math.min(policy.upload_max_bytes, 10485760);
+  const maxUploadMb = (maxUploadBytes / (1024 * 1024)).toLocaleString('id-ID', { maximumFractionDigits: 2 });
 
   if (srvContext) {
 
@@ -743,15 +747,12 @@ async function create(): Promise<void> {
     if (srvNameEl) srvNameEl.textContent = service.name;
 
     const srvCatEl = $('[data-service-category]');
-    const modeLabel = service.access_mode === 'PUBLIC_GUEST' ? 'Layanan Terbuka (Publik)' : (service.access_mode === 'ASN_AUTH' ? 'Khusus ASN Pemkot Depok' : (service.category_id || 'Layanan Resmi TIK'));
+    const modeLabel = service.access_mode === 'PUBLIC_GUEST' ? 'Dapat dilaporkan tanpa akun'
+      : service.access_mode === 'ASN_AUTH' ? 'Khusus akun ASN' : 'Memerlukan akun';
     if (srvCatEl) srvCatEl.textContent = modeLabel;
-    const srvSlaEl = $('[data-service-sla]');
-    if (srvSlaEl) {
-      const maxMb = (policy.upload_max_bytes / (1024 * 1024)).toLocaleString('id-ID', { maximumFractionDigits: 2 });
-      srvSlaEl.textContent = `Lampiran maksimal ${maxMb} MB. Target penanganan mengikuti kebijakan layanan pada tiket.`;
-    }
-
   }
+  const uploadLimit = $('[data-report-upload-limit]', formEl);
+  if (uploadLimit) uploadLimit.textContent = `Maksimal ${maxUploadMb} MB`;
 
 
 
@@ -796,10 +797,6 @@ async function create(): Promise<void> {
     }
 
   });
-
-
-
-  setStatus(`${service.name} · Formulir v${formSnap.form_version} · Policy v${policy.policy_version}`);
 
 
 
@@ -871,9 +868,9 @@ async function create(): Promise<void> {
 
   function applyFile(file: File) {
 
-    if (file.size > 10485760) {
+    if (file.size > maxUploadBytes) {
 
-      setStatus('Ukuran berkas melebihi batas 10 MB. Silakan pilih berkas yang lebih kecil.', '[data-submit-status]');
+      setStatus(`Ukuran berkas melebihi batas ${maxUploadMb} MB. Pilih berkas yang lebih kecil.`, '[data-submit-status]');
 
       clearFileSelection();
 
@@ -967,7 +964,7 @@ async function create(): Promise<void> {
 
     dropzoneEl.addEventListener('keydown', (e) => {
 
-      if (e.key === 'Enter' || e.key === ' ') {
+      if (e.target === dropzoneEl && (e.key === 'Enter' || e.key === ' ')) {
 
         e.preventDefault();
 
@@ -1548,8 +1545,6 @@ async function create(): Promise<void> {
       const createdSec = $('[data-ticket-created]');
       formEl.hidden = true;
       if (srvContext) srvContext.hidden = true;
-      const stepper = $('.hd-form-stepper');
-      if (stepper) stepper.hidden = true;
 
       clearLocalDraft();
       if (draftId) void api('/drafts/' + draftId, 'DELETE').catch(() => {});
@@ -1560,8 +1555,43 @@ async function create(): Promise<void> {
         heading.tabIndex = -1;
         const attachmentStatus = el('p');
         attachmentStatus.setAttribute('role', 'status');
-        createdSec.replaceChildren(heading, el('p', 'Tiket diterima dan masuk antrean verifikasi.'),
-          ticketLink(res.id), attachmentStatus);
+        const actions = el('div', '', 'hd-actions');
+        const openTicket = ticketLink(res.id, guestKey ? 'Buka Pelacakan' : 'Lihat status laporan') as HTMLAnchorElement;
+        createdSec.replaceChildren(heading, el('p', 'Laporan diterima. Operator akan memeriksa kelengkapannya.'),
+          actions, attachmentStatus);
+        if (guestKey) {
+          const keyNotice = el('p', 'Simpan kunci ini secara pribadi untuk membuka tiket di perangkat lain.');
+          keyNotice.setAttribute('role', 'status');
+          const copy = el('button', 'Salin Kunci Pelacakan', 'btn btn-secondary') as HTMLButtonElement;
+          copy.type = 'button';
+          const fallback = document.createElement('input');
+          fallback.className = 'vy-input';
+          fallback.readOnly = true;
+          fallback.autocomplete = 'off';
+          fallback.spellcheck = false;
+          fallback.hidden = true;
+          fallback.setAttribute('aria-label', 'Kunci pelacakan untuk disalin');
+          fallback.addEventListener('blur', () => {
+            fallback.value = '';
+            fallback.hidden = true;
+          });
+          copy.addEventListener('click', async () => {
+            try {
+              await navigator.clipboard.writeText(guestKey);
+              keyNotice.textContent = 'Kunci tersalin. Simpan di tempat yang aman.';
+            } catch {
+              fallback.hidden = false;
+              fallback.value = guestKey;
+              fallback.focus();
+              fallback.select();
+              keyNotice.textContent = 'Salin kunci yang dipilih, lalu simpan secara pribadi.';
+            }
+          });
+          openTicket.href = '/lacak.html';
+          actions.append(copy);
+          attachmentStatus.before(keyNotice, fallback);
+        }
+        actions.append(openTicket);
         heading.focus();
 
         let trackingReady = !guestKey;
@@ -1571,6 +1601,7 @@ async function create(): Promise<void> {
           await api('/guest/tracking-session', 'POST', { csrf_token: boot.csrf_token },
             crypto.randomUUID(), boot.csrf_token, { 'X-Guest-Capability': guestKey });
           trackingReady = true;
+          openTicket.href = (ticketLink(res.id) as HTMLAnchorElement).href;
         }
         if (committedFile) {
           const retry = document.createElement('button');
@@ -1624,9 +1655,19 @@ async function create(): Promise<void> {
 
   });
 
+  if (session) {
+    const config = await api<Components['AuthConfig']>('/auth/config').catch(() => undefined);
+    const notice = $('[data-hd-environment]', formEl);
+    if (notice) notice.hidden = !config?.lab_auth_enabled;
+  }
+  formEl.hidden = false;
+  setStatus('');
+
 }
 
 
+
+type CursorPosition = { cursor: string; previous: string[] };
 
 function createCursorPager<T>(
 
@@ -1636,9 +1677,10 @@ function createCursorPager<T>(
 
   renderer: (items: T[]) => void,
 
-  limit = 10
+  limit = 10,
+  onPage?: (position: CursorPosition) => void
 
-): (reset?: boolean) => Promise<void> {
+): (reset?: boolean, position?: CursorPosition) => Promise<void> {
 
   let cursor = '';
 
@@ -1656,14 +1698,11 @@ function createCursorPager<T>(
 
 
 
-  async function loadPage(reset = false): Promise<void> {
-
-    if (reset) {
-
-      cursor = '';
-
-      historyStack.length = 0;
-
+  async function loadPage(reset = false, position?: CursorPosition): Promise<void> {
+    if (reset || position) {
+      cursor = position?.cursor ?? '';
+      nextCursor = null;
+      historyStack.splice(0, historyStack.length, ...(position?.previous ?? []));
     }
 
     const currentSeq = ++counter;
@@ -1689,8 +1728,11 @@ function createCursorPager<T>(
       nextCursor = res.next_cursor;
 
       renderer(res.items);
+      onPage?.({cursor, previous:[...historyStack]});
 
-      setStatus(res.items.length ? 'Data sesuai akses server.' : 'Belum ada data pada bagian ini.');
+      setStatus(name === 'tiket'
+        ? (res.items.length ? res.items.length + ' tiket pada halaman ini.' : 'Belum ada tiket untuk pilihan ini.')
+        : (res.items.length ? 'Data sesuai akses server.' : 'Belum ada data pada bagian ini.'));
 
       if (prevBtn) prevBtn.disabled = historyStack.length === 0;
 
@@ -1745,9 +1787,13 @@ function createCursorPager<T>(
 
 function queueTable(items: Ticket[], bulk?: { enabled: boolean; selected: Map<string, number>; onSelect: () => void }) {
   const wrapper = el('div', '', 'piui-table-scroll hd-queue-table');
+  wrapper.tabIndex = 0;
+  wrapper.setAttribute('role', 'region');
+  wrapper.setAttribute('aria-label', 'Daftar tiket pada halaman ini');
   const table = document.createElement('table');
   table.className = 'piui-table';
   table.setAttribute('aria-label', 'Antrean tiket');
+  table.dataset.dtCompactToolbar = '';
   const labels = bulk?.enabled
     ? ['Pilih', 'Tiket', 'Status', 'Prioritas', 'Diterima', 'Target penyelesaian', 'Penugasan', 'Tindakan']
     : ['Tiket', 'Status', 'Prioritas', 'Diterima', 'Target penyelesaian', 'Penugasan', 'Tindakan'];
@@ -1768,12 +1814,18 @@ function queueTable(items: Ticket[], bulk?: { enabled: boolean; selected: Map<st
     node.textContent = format.format(date) + ' WIB';
     return node;
   };
+  const marker = (label: string, tone: string) => {
+    const item = el('span', label, 'hd-ticket-marker');
+    item.dataset.tone = tone;
+    return item;
+  };
   const labelOffset = bulk?.enabled ? 2 : 1;
   for (const ticket of items) {
     const row = body.insertRow();
     if (bulk?.enabled) {
       const selCell = row.insertCell();
       selCell.dataset.label = 'Pilih';
+      selCell.dataset.queueColumn = 'select';
       const terminalUnarchived = ['CLOSED', 'CANCELLED'].includes(ticket.state) && !ticket.archived_at;
       if (terminalUnarchived) {
         const cb = document.createElement('input');
@@ -1792,20 +1844,31 @@ function queueTable(items: Ticket[], bulk?: { enabled: boolean; selected: Map<st
     }
     const heading = document.createElement('th');
     heading.scope = 'row';
+    heading.dataset.queueColumn = 'ticket';
     heading.append(el('strong', ticket.title), el('span', ticket.number, 'hd-queue-number'));
     row.append(heading);
-    const columns = [
-      document.createTextNode(ticketState(ticket) + (ticket.verification === 'VERIFIED' ? ' · Terverifikasi' : ' · Menunggu verifikasi')),
-      document.createTextNode(priorityLabel(ticket.classification_decision?.priority ?? ticket.priority)),
-      time(ticket.accepted_at),
-      time(ticket.resolution_due_at),
-      document.createTextNode(!ticket.assignee_id ? 'Belum ditugaskan' :
-        ticket.assignee_id === session?.actor.subject_id ? 'Ditugaskan kepada Anda' : 'Sudah ditugaskan'),
-      ticketLink(ticket.id),
+    const priority = ticket.classification_decision?.priority ?? ticket.priority;
+    const statusTone = ticket.state === 'CLOSED' ? 'success'
+      : ['NEEDS_INFORMATION', 'RESOLVED'].includes(ticket.state) ? 'attention'
+      : ticket.state === 'CANCELLED' ? 'neutral' : 'active';
+    const status = el('div', '', 'hd-queue-state');
+    status.append(marker(ticketState(ticket), statusTone),
+      el('small', ticket.verification === 'VERIFIED' ? 'Terverifikasi' : 'Menunggu verifikasi', 'hd-queue-state__note'));
+    const priorityTone = priority === 'CRITICAL' ? 'urgent' : priority === 'HIGH' ? 'attention' : 'neutral';
+    const columns: [string, Node][] = [
+      ['status', status],
+      ['priority', marker(priorityLabel(priority), priorityTone)],
+      ['received', time(ticket.accepted_at)],
+      ['due', time(ticket.resolution_due_at)],
+      ['assignment', ticket.assignment_needs_review ? marker('PIC berhalangan', 'attention')
+        : document.createTextNode(!ticket.assignee_id ? 'Belum ditugaskan'
+          : ticket.assignee_id === session?.actor.subject_id ? 'Ditugaskan kepada Anda' : 'Sudah ditugaskan')],
+      ['open', ticketLink(ticket.id)],
     ];
-    columns.forEach((value, index) => {
+    columns.forEach(([key, value], index) => {
       const cell = row.insertCell();
       cell.dataset.label = labels[index + labelOffset];
+      cell.dataset.queueColumn = key;
       cell.append(value);
     });
   }
@@ -1817,8 +1880,6 @@ async function list(): Promise<void> {
   const root = $('[data-ticket-list]');
   if (!root) return;
   const adminQueue = location.pathname.startsWith('/admin/');
-  const roleGuide = $('[data-queue-role-guide]');
-  if (roleGuide) roleGuide.hidden = !adminQueue;
 
   if (!session) {
     root.replaceChildren(el('p', 'Masuk untuk melihat tiket akun Anda, atau gunakan kunci untuk melacak laporan tamu.'));
@@ -1830,20 +1891,14 @@ async function list(): Promise<void> {
     setStatus('Pilih cara membuka tiket Anda.');
     return;
   }
-  const guide = $('[data-queue-role-guide]');
-  if (guide) {
-    guide.hidden = !adminQueue;
-    const copy = $('[data-queue-guide-text]', guide);
-    if (copy) copy.textContent = 'Pilih antrean, periksa status tiket, lalu buka detail untuk menjalankan tindakan sesuai tugas Anda.';
-  }
-
   const can = (permission: string) => session?.actor.kind === 'STAFF' && session.actor.memberships.some(m =>
     m.organization_active && m.permissions.includes(permission));
   const endpoints: Record<string, string> = {all: '/tickets'};
   if (can('ticket.verify')) endpoints.verification = '/operator/queue/verification';
   if (can('ticket.dispatch')) endpoints.dispatch = '/operator/queue/dispatch';
   if (session?.actor.role === 'TECHNICIAN' && can('ticket.read')) endpoints['my-tasks'] = '/technician/queue/my-tasks';
-  const defaultFilter = Object.keys(endpoints)[1] ?? 'all';
+  const preferred = new URL(workStart(session).href, location.origin).searchParams.get('filter') ?? '';
+  const defaultFilter = Object.hasOwn(endpoints, preferred) ? preferred : Object.keys(endpoints)[1] ?? 'all';
   const filterForRoute = () => {
     const requested = new URLSearchParams(location.search).get('filter') ?? '';
     return Object.hasOwn(endpoints, requested) ? requested : defaultFilter;
@@ -1852,8 +1907,75 @@ async function list(): Promise<void> {
 
   const searchForm = $<HTMLFormElement>('[data-queue-search-form]');
   const searchQ = $<HTMLInputElement>('#queue-search-q');
+  const searchReset = $<HTMLButtonElement>('[data-queue-search-reset]');
   const filterState = $<HTMLSelectElement>('#queue-filter-state');
   const filterService = $<HTMLSelectElement>('#queue-filter-service');
+  const queueButtons = [...document.querySelectorAll<HTMLButtonElement>('[data-queue-filter]')];
+  const permissions = {all:'ticket.read', verification:'ticket.verify', dispatch:'ticket.dispatch', 'my-tasks':'ticket.read'};
+  const organizationNames = new Map<string, string>();
+  const syncQueue = () => {
+    if (!adminQueue) return;
+    const scope = $('[data-queue-scope]');
+    const hint = $('[data-queue-search-hint]');
+    const permission = permissions[filter as keyof typeof permissions];
+    const orgs = [...new Set(session?.actor.memberships.filter(m =>
+      m.organization_active && m.permissions.includes(permission)).map(m => m.organization_id))];
+    const names = orgs.map(id => organizationNames.get(id)).filter(Boolean);
+    if (scope) {
+      scope.hidden = false;
+      scope.textContent = orgs.length
+        ? 'Cakupan: ' + (names.length === orgs.length && names.length <= 3 ? names.join(', ') : orgs.length + ' PD dalam mandat Anda')
+        : 'Belum ada mandat PD aktif untuk antrean ini.';
+    }
+    if (hint) hint.hidden = filter === 'all';
+    for (const button of queueButtons) {
+      const name = button.dataset.queueFilter ?? '';
+      const active = filter === name;
+      button.hidden = !Object.hasOwn(endpoints, name);
+      button.classList.toggle('is-active', active);
+      button.classList.toggle('piui-btn--primary', active);
+      button.classList.toggle('piui-btn--secondary', !active);
+      button.setAttribute('aria-pressed', String(active));
+    }
+  };
+  if (adminQueue && session.actor.kind === 'STAFF') {
+    void api<{ items: Components['DirectoryEntry'][] }>('/reporting/directory?limit=100')
+      .then(page => {
+        for (const org of page.items) organizationNames.set(org.id, org.name);
+        syncQueue();
+      }).catch(() => {});
+  }
+
+  type Criteria = { q: string; state: string; service: string };
+  type QueueHistory = { owner: string; filter: string; criteria: Criteria; page?: CursorPosition; scroll: number };
+  let criteria: Criteria = { q:'', state:'', service:'' };
+  let pagePosition: CursorPosition | undefined;
+  let hasLoadedPage = false;
+  const syncSearchReset = () => {
+    if (searchReset) searchReset.hidden = !(criteria.q || criteria.state || criteria.service
+      || searchQ?.value || filterState?.value || filterService?.value);
+  };
+  const owner = JSON.stringify([session.actor.subject_id, session.actor.role, session.actor.memberships
+    .filter(m => m.organization_active).map(m => [m.organization_id, m.team_id, [...m.permissions].sort()]).sort()]);
+  const updateInputs = () => {
+    if (searchQ) searchQ.value = criteria.q;
+    if (filterState) filterState.value = criteria.state;
+    if (filterService) filterService.value = criteria.service;
+    const advanced = $<HTMLDetailsElement>('[data-queue-advanced]', searchForm ?? document);
+    if (advanced && (criteria.state || criteria.service)) advanced.open = true;
+    syncSearchReset();
+  };
+  const saveQueue = (push = false, scroll = 0) => {
+    if (!adminQueue || !session) return;
+    const url = new URL(location.href);
+    url.searchParams.set('filter', filter);
+    // Search terms and cursors are limited to the current history entry. Never retain a tracking key.
+    const keepSearch = !/[a-f0-9]{64}/i.test(criteria.q);
+    const queue: QueueHistory = {owner, filter, criteria: {...criteria, q:keepSearch ? criteria.q : ''},
+      page: keepSearch ? pagePosition : undefined, scroll:keepSearch ? scroll : 0};
+    if (push) history.pushState({hdQueue:queue}, '', url);
+    else history.replaceState({...history.state, hdQueue:queue}, '', url);
+  };
   const bulkBar = $('[data-bulk-bar]');
   const bulkReason = $<HTMLInputElement>('#bulk-reason');
   const bulkBtn = $<HTMLButtonElement>('[data-bulk-archive-btn]');
@@ -1886,45 +2008,57 @@ async function list(): Promise<void> {
     const base = endpoints[filter];
     if (filter !== 'all') return base;
     const params = new URLSearchParams();
-    if (filterState?.value) params.set('state', filterState.value);
-    if (filterService?.value) params.set('service_id', filterService.value);
+    if (criteria.state) params.set('state', criteria.state);
+    if (criteria.service) params.set('service_id', criteria.service);
+    if (criteria.q.length >= 2) params.set('q', criteria.q);
     const qs = params.toString();
     return qs ? `${base}?${qs}` : base;
   };
 
-  const pager = createCursorPager<Ticket>('tiket', buildEndpoint, items => {
-    renderTickets(items);
-  }, adminQueue ? 100 : 10);
+  let restoreScroll = 0;
+  let restoration = 0;
+  const pager = createCursorPager<Ticket>('tiket', buildEndpoint, renderTickets, adminQueue ? 100 : 10, position => {
+    pagePosition = position;
+    hasLoadedPage = true;
+    if (restoreScroll > 0) {
+      window.scrollTo({ top:restoreScroll, behavior:'instant' });
+      restoreScroll = 0;
+    }
+  });
 
+  const serviceOptions = searchForm ? loadQueueServiceFilter() : Promise.resolve();
+  const startQueuePage = (push = false) => {
+    restoration++;
+    restoreScroll = 0;
+    pagePosition = undefined;
+    hasLoadedPage = false;
+    saveQueue(push);
+    syncQueue();
+    void pager(true);
+  };
   if (searchForm) {
     searchForm.hidden = false;
-    void loadQueueServiceFilter();
-    const runSearchOrFilter = async () => {
+    searchForm.addEventListener('input', syncSearchReset);
+    searchForm.addEventListener('change', syncSearchReset);
+    searchForm.addEventListener('submit', event => {
+      event.preventDefault();
       const q = searchQ?.value.trim() ?? '';
-      const st = filterState?.value ?? '';
-      const svcId = filterService?.value ?? '';
-      if (q.length >= 2) {
-        setStatus('Mencari tiket sesuai hak akses…');
-        try {
-          const matched = await searchTicketsAcl(q, st, svcId);
-          renderTickets(matched);
-          setStatus(matched.length ? `${matched.length} tiket ditemukan dari pencarian aman.` : 'Tidak ada tiket yang cocok dengan kata kunci dan filter ini.');
-        } catch (err) {
-          setStatus(errorText(err));
-        }
+      if (q.length === 1) {
+        setStatus('Masukkan minimal dua karakter.');
+        searchQ?.focus();
         return;
       }
-      if ((st || svcId) && filter !== 'all') {
-        filter = 'all';
-      }
-      await pager(true);
-    };
-    searchForm.addEventListener('submit', e => { e.preventDefault(); void runSearchOrFilter(); });
-    $('[data-queue-search-reset]', searchForm)?.addEventListener('click', () => {
-      if (searchQ) searchQ.value = '';
-      if (filterState) filterState.value = '';
-      if (filterService) filterService.value = '';
-      void pager(true);
+      const previousFilter = filter;
+      criteria = {q, state:filterState?.value ?? '', service:filterService?.value ?? ''};
+      syncSearchReset();
+      if (criteria.q || criteria.state || criteria.service) filter = 'all';
+      startQueuePage(previousFilter !== filter);
+    });
+    searchReset?.addEventListener('click', () => {
+      criteria = {q:'', state:'', service:''};
+      updateInputs();
+      startQueuePage();
+      searchQ?.focus();
     });
   }
 
@@ -1961,40 +2095,65 @@ async function list(): Promise<void> {
     void loadHandoffInbox(session, () => pager(true));
   }
 
-  const queueFilters = $('[data-queue-filters]');
-  if (queueFilters && adminQueue) {
-    queueFilters.hidden = false;
-    const buttons = [...queueFilters.querySelectorAll<HTMLButtonElement>('[data-queue-filter]')];
-    const sync = () => {
-      for (const button of buttons) {
-        const name = button.dataset.queueFilter ?? '';
-        const active = filter === name;
-        button.hidden = !Object.hasOwn(endpoints, name);
-        button.classList.toggle('piui-btn--primary', active);
-        button.classList.toggle('piui-btn--secondary', !active);
-        button.setAttribute('aria-pressed', String(active));
-      }
-    };
-    for (const button of buttons) {
-      button.addEventListener('click', () => {
-        const name = button.dataset.queueFilter ?? '';
-        if (!Object.hasOwn(endpoints, name) || filter === name) return;
-        filter = name;
-        const url = new URL(location.href);
-        url.searchParams.set('filter', filter);
-        history.pushState(null, '', url);
-        sync();
-        void pager(true);
-      });
-    }
-    window.addEventListener('popstate', () => {
-      filter = filterForRoute();
-      sync();
-      void pager(true);
-    });
-    sync();
+  if (!adminQueue) {
+    await pager(true);
+    return;
   }
-  await pager(true);
+  const queueFilters = $('[data-queue-filters]');
+  if (queueFilters) queueFilters.hidden = false;
+  const restoreQueue = async () => {
+    const request = ++restoration;
+    filter = filterForRoute();
+    const saved = history.state?.hdQueue as QueueHistory | undefined;
+    const matches = saved?.owner === owner && saved.filter === filter;
+    criteria = matches && filter === 'all' ? saved.criteria : {q:'', state:'', service:''};
+    pagePosition = matches ? saved.page : undefined;
+    hasLoadedPage = false;
+    restoreScroll = matches ? saved.scroll : 0;
+    if (criteria.service) {
+      await serviceOptions;
+      if (request !== restoration) return;
+      if (![...(filterService?.options ?? [])].some(option => option.value === criteria.service)) {
+        criteria = {...criteria, service:''};
+        pagePosition = undefined;
+        restoreScroll = 0;
+      }
+    }
+    updateInputs();
+    syncQueue();
+    const position = pagePosition;
+    await pager(!position, position);
+  };
+
+  for (const button of queueButtons) {
+    button.addEventListener('click', () => {
+      const name = button.dataset.queueFilter ?? '';
+      if (!Object.hasOwn(endpoints, name) || filter === name) return;
+      saveQueue(false, window.scrollY);
+      filter = name;
+      criteria = {q:'', state:'', service:''};
+      updateInputs();
+      startQueuePage(true);
+    });
+  }
+  root.addEventListener('click', event => {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const link = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>('a.hd-btn-detail') : null;
+    if (!link || link.pathname !== '/admin/app/tickets/detail.html') return;
+    saveQueue(false, window.scrollY);
+    const navigation = window.navigation;
+    if (navigation?.currentEntry) {
+      navigation.updateCurrentEntry({state:{helpdeskQueueOrigin:filter}});
+    }
+  });
+  window.addEventListener('popstate', () => void restoreQueue());
+  window.addEventListener('pagehide', () => {
+    if (hasLoadedPage) saveQueue(false, window.scrollY);
+  });
+  document.addEventListener('hd:unauthorized', () => {
+    history.replaceState(null, '', location.href);
+  });
+  await restoreQueue();
 }
 
 
@@ -2351,9 +2510,7 @@ function renderExecutiveTicketProgress(
     UNAVAILABLE: ['hd-sla-pill--on-track', 'Perhitungan SLA belum tersedia'],
   } as const;
   const [slaClass, slaLabel] = slaStates[clock?.status ?? 'UNAVAILABLE'];
-  const slaRemaining = clock?.policy_source === 'LEGACY'
-    ? 'Target historis'
-    : clock ? `Target ${formatIndonesianDateTime(clock.resolution_due_at)}` : '';
+  const target = clock?.resolution_due_at || ticket.resolution_due_at;
   
   const stateStyles: Record<string, {cls: string; icon: string}> = {
     OPEN: {cls: ticket.verification === 'VERIFIED' ? 'hd-badge--verified' : 'hd-badge--submitted', icon: '📥'},
@@ -2383,7 +2540,7 @@ function renderExecutiveTicketProgress(
       <div class="hd-progress-badges">
         <span class="hd-progress-ticket-num" title="Nomor Tiket Resmi">
           🎫 ${htmlText(ticket.number)}
-          <button type="button" class="hd-btn-copy-ticket" data-copy-ticket="${htmlText(ticket.number)}" title="Salin Nomor Tiket">📋 Salin</button>
+          <button type="button" class="hd-btn-copy-ticket" data-copy-ticket="${htmlText(ticket.number)}" aria-label="Salin nomor tiket">Salin</button>
         </span>
         <span class="hd-badge ${curState.cls}">${curState.icon} ${curState.label}</span>
         <span class="hd-badge ${prioCls}">Prioritas: ${priorityLabel(prio)}</span>
@@ -2393,13 +2550,40 @@ function renderExecutiveTicketProgress(
       </div>
     </div>
 
-    <p class="hd-next-step">${session?.actor.kind === 'STAFF' ? 'Periksa riwayat dan gunakan tindakan yang tersedia sesuai mandat Anda.' : requesterGuidance(ticket)}</p>
     <h2 class="hd-progress-title">${htmlText(ticket.title)}</h2>
-    ${ticket.reported_category ? `<p>Kategori pelapor: ${htmlText(ticket.reported_category.name)}</p>` : ''}
-    ${ticket.reporting_context ? `<p>Asal laporan: ${htmlText(ticket.reporting_context.organization.name)}${ticket.reporting_context.division ? ' · ' + htmlText(ticket.reporting_context.division.name) : ''} · ${ticket.reporting_context.verified ? 'Akun ASN' : 'Pernyataan pelapor, belum terverifikasi'}</p>` : ''}
-    <div class="hd-progress-desc">${htmlText(ticket.description)}</div>
+    <dl class="hd-ticket-facts">
+      <div>
+        <dt>Penanggung jawab teknis</dt>
+        <dd>${htmlText(techName)}</dd>
+      </div>
+      <div>
+        <dt>Target penyelesaian</dt>
+        <dd>${htmlText(target ? formatIndonesianDateTime(target) : 'Belum tersedia')}</dd>
+        <dd><span class="hd-sla-pill ${slaClass}">${slaLabel}</span></dd>
+        ${clock?.policy_source === 'LEGACY' ? '<dd>Target historis</dd>' : ''}
+      </div>
+    </dl>
+    <div class="hd-next-step hd-callout hd-callout--neutral">
+      <strong class="hd-callout-title">Tindakan berikutnya</strong>
+      <p data-ticket-next-copy>${session?.actor.kind === 'STAFF' ? 'Periksa riwayat dan gunakan tindakan yang tersedia sesuai mandat Anda.' : requesterGuidance(ticket)}</p>
+      ${ticket.state === 'RESOLVED' ? '<p><strong>Batas konfirmasi:</strong> ' +
+        htmlText(confirmationDueAt ? formatIndonesianDateTime(confirmationDueAt) : 'Belum dapat dimuat') + '</p>' : ''}
+    </div>
+    <nav class="hd-ticket-jumps" aria-label="Bagian detail tiket">
+      <a class="btn btn-secondary" data-ticket-jump href="#ticket-conversation">Percakapan</a>
+      <a class="btn btn-secondary" data-ticket-jump href="#ticket-history">Riwayat</a>
+      <a class="btn btn-secondary" data-ticket-jump href="#ticket-attachments">Lampiran</a>
+      <a class="btn btn-secondary" data-ticket-jump data-ticket-jump-dispatch href="#ticket-assignment" hidden>Penugasan</a>
+    </nav>
+    <details class="hd-ticket-report" open>
+      <summary>Uraian laporan</summary>
+      ${ticket.reported_category ? `<p>Kategori pelapor: ${htmlText(ticket.reported_category.name)}</p>` : ''}
+      ${ticket.reporting_context ? `<p>Asal laporan: ${htmlText(ticket.reporting_context.organization.name)}${ticket.reporting_context.division ? ' · ' + htmlText(ticket.reporting_context.division.name) : ''} · ${ticket.reporting_context.verified ? 'Akun ASN' : 'Pernyataan pelapor, belum terverifikasi'}</p>` : ''}
+      <div class="hd-progress-desc">${htmlText(ticket.description)}</div>
+    </details>
 
-    <!-- Stepper 5 Tahap Alur Penanganan -->
+    <details class="hd-ticket-report">
+      <summary>Tahapan dan rincian tiket</summary>
     <div class="hd-stepper-progress" aria-label="Tahapan Progres Penanganan">
       <div class="hd-stepper-item ${getStepClass(1, ticket)}">
         <div class="hd-stepper-node">${getStepIcon(1, ticket)}</div>
@@ -2412,7 +2596,7 @@ function renderExecutiveTicketProgress(
         <div class="hd-stepper-node">${getStepIcon(2, ticket)}</div>
         <div class="hd-stepper-text">
           <span class="hd-stepper-name">2. Verifikasi</span>
-          <span class="hd-stepper-sub">Front Desk M4</span>
+          <span class="hd-stepper-sub">Pemeriksaan laporan</span>
         </div>
       </div>
       <div class="hd-stepper-item ${getStepClass(3, ticket)}">
@@ -2438,7 +2622,6 @@ function renderExecutiveTicketProgress(
       </div>
     </div>
 
-    <!-- Grid 4 Parameter Kunci -->
     <div class="hd-progress-meta-grid">
       <div class="hd-meta-box">
         <span class="hd-meta-box__label">📋 Layanan &amp; Kategori TIK</span>
@@ -2447,31 +2630,21 @@ function renderExecutiveTicketProgress(
       </div>
 
       <div class="hd-meta-box">
-        <span class="hd-meta-box__label">👷 Petugas Penanggung Jawab</span>
-        <span class="hd-meta-box__val">${htmlText(techName)}</span>
-        <span class="hd-meta-box__sub">${ticket.verification === 'VERIFIED' ? '✓ Operator Front Desk Terverifikasi' : 'Menunggu Telaah Operator'}</span>
-      </div>
-
-      <div class="hd-meta-box">
-        <span class="hd-meta-box__label">⏱️ Target Waktu SLA</span>
-        <span class="hd-meta-box__val">${formatIndonesianDateTime(ticket.resolution_due_at)}</span>
-        <div><span class="hd-sla-pill ${slaClass}">${slaLabel}</span></div>
-        <span class="hd-meta-box__sub">${slaRemaining} (${htmlText(ticket.calendar_version)})</span>
-      </div>
-
-      <div class="hd-meta-box">
         <span class="hd-meta-box__label">📅 Waktu Pelaporan</span>
-        <span class="hd-meta-box__val">${formatIndonesianDateTime(ticket.accepted_at)}</span>
+        <span class="hd-meta-box__val">${htmlText(formatIndonesianDateTime(ticket.accepted_at))}</span>
         <span class="hd-meta-box__sub">Pembaruan: ${getRelativeTime(ticket.updated_at)}</span>
+        ${ticket.calendar_version ? `<span class="hd-meta-box__sub">Kalender SLA: ${htmlText(ticket.calendar_version)}</span>` : ''}
       </div>
     </div>
+    <p data-ticket-classification-summary role="status"></p>
+    </details>
   `;
 
   const copyBtn = card.querySelector('[data-copy-ticket]');
   copyBtn?.addEventListener('click', () => {
     navigator.clipboard.writeText(ticket.number).then(() => {
       copyBtn.textContent = '✓ Tersalin!';
-      setTimeout(() => { copyBtn.textContent = '📋 Salin'; }, 2000);
+      setTimeout(() => { copyBtn.textContent = 'Salin'; }, 2000);
     }).catch(() => {});
   });
 
@@ -2547,7 +2720,10 @@ async function ticketDetail(): Promise<void> {
 
     for (const c of items) {
 
-      root.append(el('li', `${c.visibility === 'INTERNAL' ? '[Internal] ' : ''}${c.body}`));
+      const entry = el('li');
+      if (isInternal) entry.append(el('strong', c.visibility === 'INTERNAL' ? 'Catatan internal' : 'Percakapan dengan pelapor'));
+      entry.append(el('p', c.body));
+      root.append(entry);
 
     }
 
@@ -2622,6 +2798,34 @@ async function ticketDetail(): Promise<void> {
 
 
 
+  const backToQueue = $<HTMLAnchorElement>('[data-back-to-queue]');
+  const navigation = window.navigation;
+  const previousIndex = (navigation?.currentEntry?.index ?? 0) - 1;
+  // The gateway masks previous URLs. Only same-origin queue entries carry this marker.
+  const returnFilter = navigation?.entries()[previousIndex]?.getState()?.helpdeskQueueOrigin;
+  if (backToQueue && ['all','verification','dispatch','my-tasks'].includes(returnFilter)) {
+    backToQueue.search = new URLSearchParams({filter:returnFilter}).toString();
+    backToQueue.addEventListener('click', event => {
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || !navigation?.canGoBack) return;
+      event.preventDefault();
+      history.back();
+    });
+  }
+
+  const detailView = $('[data-ticket-detail]');
+  detailView?.addEventListener('click', event => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const link = event.target instanceof Element
+      ? event.target.closest<HTMLAnchorElement>('a[data-ticket-jump]') : null;
+    if (!link) return;
+    const section = document.getElementById(link.hash.slice(1));
+    if (!section || section.closest('[hidden]')) return;
+    event.preventDefault();
+    section.tabIndex = -1;
+    section.focus({preventScroll:true});
+    section.scrollIntoView({block:'start'});
+  });
+
   const verifySec = $('[data-operator-verify]');
 
   const dispatchSec = $('[data-operator-dispatch]');
@@ -2653,8 +2857,10 @@ async function ticketDetail(): Promise<void> {
 
 
   function updateNextAction(available: ReturnType<typeof ticketActions>) {
-    const next = $('.hd-next-step');
+    const next = $('[data-ticket-next-copy]');
     if (!next || !currentTicket) return;
+    const assignmentJump = $('[data-ticket-jump-dispatch]');
+    if (assignmentJump) assignmentJump.hidden = !available.dispatch || !dispatchSec || dispatchSec.hidden;
     const steps: [boolean, HTMLElement | null, string, string][] = [
       [available.verify, verifySec, 'Periksa dan verifikasi laporan', 'Periksa uraian, kategori dan dampak sebelum mengesahkan laporan.'],
       [available.confirm, confirmSec, 'Periksa hasil penanganan', 'Pastikan kendala teratasi. Berikan persetujuan atau alasan keberatan.'],
@@ -2666,11 +2872,13 @@ async function ticketDetail(): Promise<void> {
     const primary = steps.find(([enabled, section]) => enabled && section && !section.hidden);
     if (!primary) return;
     const [, section, label, explanation] = primary;
-    section!.id ||= 'ticket-action-' + (section!.getAttributeNames().find(n => n.startsWith('data-')) ?? 'next').replace('data-', '');
-    section!.tabIndex = -1;
-    const link = el('a', label, 'btn btn-secondary') as HTMLAnchorElement;
-    link.href = '#' + section!.id;
-    next.replaceChildren(document.createTextNode(explanation + ' '), link);
+    if (!section) return;
+    section.id ||= 'ticket-action-' + (section.getAttributeNames().find(n => n.startsWith('data-')) ?? 'next').replace('data-', '');
+    const link = el('a', label, 'btn btn-primary') as HTMLAnchorElement;
+    link.href = '#' + section.id;
+    link.dataset.ticketJump = '';
+    next.textContent = explanation;
+    next.after(link);
   }
 
   async function refresh(): Promise<void> {
@@ -2706,11 +2914,9 @@ async function ticketDetail(): Promise<void> {
         if (sInfo?.name) serviceName = sInfo.name;
       } catch {}
 
-      let techName = 'Dalam Antrean Disposisi';
-      if (currentTicket.assignee_id) {
-        techName = 'Teknisi penanggung jawab telah ditugaskan';
-
-      }
+      const techName = currentTicket.assignee_id === session?.actor.subject_id && currentTicket.assignee_id
+        ? 'Ditugaskan kepada Anda'
+        : currentTicket.assignee_id ? 'Teknisi telah ditugaskan' : 'Belum ditugaskan';
 
       let resolutionNote = '';
       let confirmationDueAt: string | undefined;
@@ -2883,7 +3089,17 @@ async function ticketDetail(): Promise<void> {
 
 
       const commentForm = $('[data-ticket-comment]');
-      if (commentForm) commentForm.hidden = !available.comment;
+      if (commentForm) {
+        commentForm.hidden = !available.comment;
+        const audience = $<HTMLSelectElement>('#ticket-comment-visibility', commentForm);
+        const choice = $('[for="ticket-comment-visibility"]', commentForm);
+        if (choice) choice.hidden = !isInternal;
+        if (audience) {
+          audience.hidden = !isInternal;
+          if (!isInternal) audience.value = 'REQUESTER';
+          audience.dispatchEvent(new Event('change'));
+        }
+      }
       const uploadForm = $('[data-ticket-upload]');
       if (uploadForm) uploadForm.hidden = !available.attach;
       updateNextAction(available);
@@ -2891,7 +3107,7 @@ async function ticketDetail(): Promise<void> {
 
       await Promise.all([historyPager(true), commentPager(true), filePager(true)]);
 
-      setStatus('Perkembangan tiket berhasil dimuat.');
+      setStatus('');
 
     } catch (err) {
 
@@ -3136,35 +3352,92 @@ async function ticketDetail(): Promise<void> {
 
   let dispatchProposal: Components['DispatchProposal'] | undefined;
   let proposalRequest = 0;
+  const dispatchHeading = $('[data-dispatch-heading]');
+  const dispatchCandidate = $('[data-dispatch-candidate]');
+  const dispatchContext = $('[data-dispatch-context]');
+  const dispatchRetry = $<HTMLButtonElement>('[data-dispatch-retry]');
+  const dispatchSelect = $<HTMLSelectElement>('#dispatch-assignee');
+  function candidateWorkload(roster: Components['DispatchProposal']['candidates'][number]['roster']): string {
+    if (roster.availability === 'UNKNOWN_LOAD') return 'Beban belum diketahui';
+    if (roster.capacity == null) return 'Kapasitas belum diatur';
+    return roster.active_tickets + ' dari ' + roster.capacity + ' tiket aktif' +
+      (roster.availability === 'FULL' ? ' · Kapasitas penuh' : '');
+  }
+  function syncDispatchCandidate() {
+    if (!dispatchCandidate) return;
+    const chosen = dispatchProposal?.candidates.find(candidate =>
+      candidate.roster.team_id + '/' + candidate.roster.subject_id === dispatchSelect?.value);
+    dispatchCandidate.hidden = !chosen;
+    if (chosen) {
+      const {roster} = chosen;
+      dispatchCandidate.textContent = [
+        chosen.name,
+        chosen.team_name,
+        roster.skills.length ? 'Keahlian: ' + roster.skills.join(', ') : '',
+        'Jadwal aktif hingga ' + formatIndonesianDateTime(roster.available_until),
+        candidateWorkload(roster),
+        roster.waiting_vendor != null ? roster.waiting_vendor + ' menunggu vendor (bagian dari tiket aktif)' : '',
+        roster.waiting_reporter != null ? roster.waiting_reporter + ' menunggu konfirmasi pelapor' : '',
+      ].filter(Boolean).join(' · ');
+    }
+  }
+  dispatchSelect?.addEventListener('change', syncDispatchCandidate);
+  dispatchRetry?.addEventListener('click', () => void loadDispatchProposal());
   async function loadDispatchProposal() {
     if (!currentTicket || !dispatchSec) return;
     const serial = ++proposalRequest;
     dispatchProposal = undefined;
+    if (dispatchHeading) dispatchHeading.textContent = 'Smart Dispatch';
+    if (dispatchContext) dispatchContext.hidden = true;
+    if (dispatchRetry) dispatchRetry.hidden = true;
+    syncDispatchCandidate();
     syncHandoffSuggestion();
     const form = $<HTMLFormElement>('[data-form-dispatch]', dispatchSec);
     const select = $<HTMLSelectElement>('#dispatch-assignee', dispatchSec);
     const button = form && $<HTMLButtonElement>('button[type=submit]',form);
     if (!form || !select || !button) return;
-    button.disabled=true;
+    button.disabled = select.disabled = true;
     select.replaceChildren();
     const tier = formValue(form,'tier');
-    setStatus('Memeriksa routing dan roster…','[data-dispatch-proposal]');
+    setStatus('Memeriksa aturan penugasan dan jadwal teknisi…', '[data-dispatch-proposal]');
     try {
       const mode=['ASSIGNED','IN_PROGRESS'].includes(currentTicket.state) ? '&mode=reassign' : '';
       const proposal = await api<Components['DispatchProposal']>('/tickets/'+ticketId+'/dispatch-proposal?tier='+encodeURIComponent(tier)+mode);
       if (serial!==proposalRequest) return;
       dispatchProposal = proposal;
-      const asOf = proposal.projection_as_of ? new Date(proposal.projection_as_of).toLocaleString('id-ID') : 'belum tersedia';
-      setStatus([proposal.destination, proposal.explanation, proposal.status === 'RECOMMENDED' ? 'Pembaruan proyeksi '+asOf+'.' : ''].filter(Boolean).join(' · '), '[data-dispatch-proposal]');
+      const proposedTitle = {
+        RECOMMENDED: 'Teknisi direkomendasikan', MANUAL: 'Tidak ada rekomendasi otomatis', HANDOFF: 'Perlu pengalihan ke PD lain',
+      }[proposal.status];
+      if (dispatchHeading) dispatchHeading.textContent = proposedTitle ?? 'Saran penugasan';
+      const guidance = proposal.status === 'MANUAL'
+        ? (proposal.candidates.length ? ' Pilih teknisi yang tersedia dan tulis alasan penugasan manual.' : ' Belum ada teknisi tersedia untuk tingkat ini.')
+        : proposal.status === 'HANDOFF' ? ' Tanggung jawab tetap pada PD asal sampai PD tujuan menerima.' : '';
+      setStatus(proposal.explanation + guidance, '[data-dispatch-proposal]');
+      if (dispatchContext) {
+        const category = currentTicket.classification_decision?.category_name;
+        const context = [
+          proposal.destination ? 'Tujuan: ' + proposal.destination : '',
+          category ? 'Kategori: ' + category : '',
+          proposal.projection_as_of ? 'Beban diperbarui ' + formatIndonesianDateTime(proposal.projection_as_of) : '',
+        ].filter(Boolean);
+        dispatchContext.hidden = context.length === 0;
+        dispatchContext.textContent = context.join(' · ');
+      }
       syncHandoffSuggestion();
       for (const candidate of proposal.candidates) {
-        const label = candidate.name+' · '+proposal.level+' · '+candidate.roster.active_tickets+' tiket aktif';
-        const option=el('option',label) as HTMLOptionElement; option.value=candidate.roster.subject_id; select.append(option);
+        const label = [candidate.name, candidate.team_name || proposal.level, candidateWorkload(candidate.roster)].join(' · ');
+        const option = el('option', label) as HTMLOptionElement;
+        option.value = candidate.roster.team_id + '/' + candidate.roster.subject_id;
+        select.append(option);
       }
-      select.value=proposal.assignee_id;
-      button.disabled=proposal.status!=='RECOMMENDED';
+      if (proposal.status === 'RECOMMENDED') select.value = proposal.team_id + '/' + proposal.assignee_id;
+      button.textContent = proposal.status === 'MANUAL' ? 'Tetapkan Manual' : 'Tetapkan Teknisi';
+      button.disabled = select.disabled = !proposal.candidates.length || proposal.status === 'HANDOFF';
+      syncDispatchCandidate();
     } catch (error) {
-      if (serial===proposalRequest) setStatus(errorText(error), '[data-dispatch-proposal]');
+      if (serial !== proposalRequest) return;
+      setStatus(errorText(error), '[data-dispatch-proposal]');
+      if (dispatchRetry) dispatchRetry.hidden = false;
     }
   }
 
@@ -3187,7 +3460,7 @@ async function ticketDetail(): Promise<void> {
 
       if (btn) btn.disabled = true;
 
-      const assigneeId = formValue(formDispatch, 'assignee_id');
+      const [teamId, assigneeId] = formValue(formDispatch, 'assignee_id').split('/');
 
       const reason = formValue(formDispatch, 'reason');
 
@@ -3195,12 +3468,13 @@ async function ticketDetail(): Promise<void> {
 
         expected_version: currentTicket.version,
 
-        team_id: dispatchProposal.team_id,
+        team_id: teamId,
 
         assignee_id: assigneeId,
 
         proposal_version: dispatchProposal.ticket_version,
-        proposal_digest: dispatchProposal.digest,
+        proposal_digest: dispatchProposal.digest || undefined,
+        manual: dispatchProposal.status === 'MANUAL' || undefined,
         tier: dispatchProposal.level,
         reason
 
@@ -3540,7 +3814,7 @@ async function ticketDetail(): Promise<void> {
   let orgCursor = '', teamCursor = '', loadedOwner = '', handoffEpoch = 0;
   function syncHandoffSuggestion() {
     const button = $<HTMLButtonElement>('[data-use-handoff-suggestion]');
-    if (button) button.hidden = dispatchProposal?.status !== 'HANDOFF' || !handoffSec || handoffSec.hidden;
+    if (button) button.hidden = dispatchProposal?.status !== 'HANDOFF' || !dispatchSec || dispatchSec.hidden || !handoffSec || handoffSec.hidden;
   }
   async function loadHandoffTargets(teams = false, append = false) {
     if (!currentTicket || !handoffOrg || !handoffTeam || !handoffOrgMore || !handoffTeamMore) return;
@@ -3988,6 +4262,20 @@ async function ticketDetail(): Promise<void> {
 
   if (commentForm) {
 
+    const visibility = $<HTMLSelectElement>('#ticket-comment-visibility', commentForm);
+    const syncAudience = () => {
+      const internalOnly = isInternal && visibility?.value === 'INTERNAL';
+      commentForm.dataset.audience = internalOnly ? 'internal' : 'requester';
+      const audience = $('[data-comment-audience-help]', commentForm);
+      const label = $('[data-comment-label]', commentForm);
+      const button = $('[data-comment-submit-label]', commentForm);
+      if (audience) audience.textContent = internalOnly
+        ? 'Hanya petugas berizin yang dapat membaca catatan ini.'
+        : isInternal ? 'Balasan ini terlihat oleh pelapor.' : 'Pesan ini terlihat oleh petugas yang berwenang.';
+      if (label) label.textContent = internalOnly ? 'Catatan internal' : isInternal ? 'Balasan kepada pelapor' : 'Pesan kepada petugas';
+      if (button) button.textContent = internalOnly ? 'Simpan Catatan Internal' : isInternal ? 'Kirim Balasan kepada Pelapor' : 'Kirim Pesan';
+    };
+    visibility?.addEventListener('change', syncAudience);
     const commentIntent = durableIntent<Components['CommentCreate']>();
 
     let commentPending = false;
@@ -4025,6 +4313,7 @@ async function ticketDetail(): Promise<void> {
         );
 
         commentForm.reset();
+        syncAudience();
 
         await refresh();
 

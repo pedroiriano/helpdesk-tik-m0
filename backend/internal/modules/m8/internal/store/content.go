@@ -387,8 +387,8 @@ func (s *Store) TransitionContent(ctx context.Context, id string, expectedVersio
 	}, nil
 }
 
-func (s *Store) SearchArticles(ctx context.Context, query string, audience string, isStaff bool, limit int, scopes ...api.Scope) ([]api.SearchHit, error) {
-	if limit <= 0 || limit > 100 {
+func (s *Store) SearchArticles(ctx context.Context, query string, audience string, isStaff bool, limit int, after string, scopes ...api.Scope) ([]api.SearchHit, error) {
+	if limit <= 0 || limit > 101 {
 		limit = 20
 	}
 	pattern := "%" + query + "%"
@@ -408,9 +408,10 @@ func (s *Store) SearchArticles(ctx context.Context, query string, audience strin
 		  AND c.audience = ANY($1)
  AND (c.audience='PUBLIC_GUEST' OR c.org_id IS NULL OR c.org_id=ANY($4::uuid[]))
 		  AND (c.title ILIKE $2 OR r.sanitized_body ILIKE $2)
+		AND (NULLIF($5,'')::uuid IS NULL OR c.id>NULLIF($5,'')::uuid)
 		ORDER BY c.id ASC
 		LIMIT $3
-	`, allowed, pattern, limit, api.ScopeValue(scopes).Orgs)
+	`, allowed, pattern, limit, api.ScopeValue(scopes).Orgs, after)
 	if err != nil {
 		return nil, err
 	}

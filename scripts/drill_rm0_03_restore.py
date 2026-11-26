@@ -1,5 +1,6 @@
 """Backup/restore proof using disposable, label-verified DBs and private fixture blobs."""
 
+import argparse
 import datetime
 import hashlib
 import json
@@ -62,6 +63,9 @@ def main():
     source, target = MigrationGate(), MigrationGate()
     network = source.name + '-recovery'
     created = False
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--report", type=Path, default=Path("qa/remediation/rm0-03/recovery.json"))
+    args = parser.parse_args()
     report = {'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(),
               'scope': 'Two Docker tmpfs PostgreSQL instances, one synthetic ticket/private blob/event/job; no working DB',
               'host_ports': [], 'persistent_volumes': []}
@@ -85,6 +89,16 @@ def main():
             fixture = b'%PDF-1.4\n% Synthetic recovery fixture\n%%EOF\n'
             (original / BLOB).write_bytes(fixture)
             digest = sha(original / BLOB)
+            # Compilation is a preparation step. RTO starts with a restored-data
+            # attempt and the same already-built executable for both processes.
+            runner = root / 'runner'
+            runner.mkdir()
+            source.docker('run','--rm','--pull','never','--network','none',
+                          '--mount',f'type=bind,source={runner},target=/runner',
+                          IMAGE,'go','test','-c','-o','/runner/recovery.test','./internal/bootstrap',timeout=360)
+            report['test_binary_sha256'] = sha(runner / 'recovery.test')
+            report['timing_scope'] = 'Create restore DB to first HTTP read by a fresh app process; tests precompiled'
+
             checkpoint_ms = int(prime(source, len(fixture), digest))
             expected = db_probe(source)
             source.docker('exec',source.name,'pg_dump','-U','postgres','-d','helpdesk','-Fc','-f','/tmp/rm003.backup')
@@ -119,9 +133,10 @@ def main():
                 result = target.docker('run','--rm','--pull','never','--network',network,'--cpus','1','--memory','1024m',
                   '--label','helpdesk.scope='+LABEL,
                   '--mount',f'type=bind,source={restored},target=/restore-fixture,readonly',
+                  '--mount',f'type=bind,source={runner},target=/runner,readonly',
                   '-e','HELPDESK_RM003_RECOVERY=1','-e','HELPDESK_TEST_DB_HOST='+target.name,
                   '-e','HELPDESK_TEST_PASSWORD='+target.password,'-e','HELPDESK_TEST_BLOB_DIGEST='+blob_sha,
-                  IMAGE,'go','test','./internal/bootstrap','-run','^TestRM003RecoveryRead$','-count=1','-v',
+                  IMAGE,'sh','-ec','cp /runner/recovery.test /tmp/recovery.test; chmod 700 /tmp/recovery.test; exec /tmp/recovery.test -test.run ^TestRM003RecoveryRead$ -test.count 1 -test.v',
                   ok=False,timeout=360)
                 if result.returncode:
                     raise RuntimeError(result.stdout[-2000:]+result.stderr[-1000:])
@@ -143,7 +158,8 @@ def main():
             report['cleanup']='PASS'
         except Exception as e:
             report.update(result='FAIL',cleanup=str(e))
-    dest = ROOT/'qa/remediation/rm0-03/recovery.json'
+    dest = ROOT / args.report
+    dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(json.dumps(report,indent=2),encoding='utf-8')
     print(f"{report['result']} RM0-03 recovery -> {dest}")
     return report['result'] == 'PASS'

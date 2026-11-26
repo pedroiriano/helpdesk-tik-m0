@@ -1,6 +1,7 @@
 export interface AdminConfirmOptions {
   title: string;
   description: string;
+  details?: string[];
   confirmLabel: string;
   confirmTone?: 'warn' | 'primary';
   requireReason?: boolean;
@@ -11,7 +12,7 @@ export interface AdminConfirmOptions {
 
 export function openAdminConfirmDialog(opts: AdminConfirmOptions): void {
   const dialog = document.querySelector<HTMLDialogElement>('[data-hd-archive-confirm]');
-  if (!dialog) return;
+  if (!dialog || dialog.open) return;
 
   const titleEl = dialog.querySelector<HTMLElement>('[data-hd-arch-title]');
   const descEl = dialog.querySelector<HTMLElement>('[data-hd-arch-desc]');
@@ -27,6 +28,15 @@ export function openAdminConfirmDialog(opts: AdminConfirmOptions): void {
 
   if (titleEl) titleEl.textContent = opts.title;
   if (descEl) descEl.textContent = opts.description;
+  const details = dialog.querySelector('[data-hd-arch-details]');
+  if (details) {
+    details.replaceChildren(...(opts.details ?? []).map(text => {
+      const item = document.createElement('li');
+      item.textContent = text;
+      return item;
+    }));
+    (details as HTMLElement).hidden = !opts.details?.length;
+  }
   if (statusEl) statusEl.textContent = '';
 
   const needsReason = Boolean(opts.requireReason);

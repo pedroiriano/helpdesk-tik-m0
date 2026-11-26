@@ -1,0 +1,217 @@
+{
+  "task_id": "M0-TECH",
+  "timestamp": "2026-11-24T08:36:04.002719+00:00",
+  "scope": "local_consolidation",
+  "result": "PASS",
+  "url": "http://127.0.0.1:18090/",
+  "compose_project": "helpdesk-m0",
+  "source": "Exact verified image IDs from technical-operations/completion.json",
+  "images": {
+    "original": {
+      "helpdesk-m0-app:pre-technical-20261124": "sha256:2fff2da3ba9c1ba8cf330d3cf9ec1beb06f79fd9a1448827e4d331ec9374dd47",
+      "helpdesk-m0-web:pre-technical-20261124": "sha256:324d64cba9e97438b5cd058e487e3528a034976d9af6400e36675572f9fa8b8e"
+    },
+    "candidate": {
+      "helpdesk-m0-app:0.1.0": "sha256:b84e3a631395f6a72a7363ef31b48e0a964eda00aaeab41ac52b97117d6e6aee",
+      "helpdesk-m0-web:0.1.0": "sha256:ccdebfce60ff4811d386dde970d1a87d3fe76c90c9844e306076ef551a2841f0"
+    }
+  },
+  "ledger_before": "042",
+  "ledger_after": "046",
+  "working_counts_after": {
+    "tickets": 136,
+    "attachments": 51,
+    "media": 17
+  },
+  "working_db_volume": "helpdesk-m0_postgres18-data",
+  "working_upload_volume": "helpdesk-m0_private-uploads",
+  "archive": ".local/consolidation-20261124",
+  "backups": {
+    "helpdesk-m0": {
+      "counts": {
+        "ledger": "042",
+        "tickets": "136",
+        "subjects": "18",
+        "attachments": "51",
+        "media": "17",
+        "services": "24",
+        "rosters": "3"
+      },
+      "dump_sha256": "7268a59fb22915074fc598e459be59d024dbe7874185cd1c82884f58736e8ad9",
+      "uploads_sha256": "a49bf046a22dc0c38a0b22f402449f21b499908f824772909d312292c2722a00",
+      "upload_files": 86,
+      "restore": "PASS (PostgreSQL disposable)",
+      "upload_archive_integrity": "PASS"
+    },
+    "helpdesk-penyempurnaan-fase1": {
+      "counts": {
+        "ledger": "043",
+        "tickets": "7",
+        "subjects": "18",
+        "attachments": "6",
+        "media": "3",
+        "services": "23",
+        "rosters": "3"
+      },
+      "dump_sha256": "9fbab7bff6e0a75bce72fda131d18f16ce5455b1069c92d7711f4732c0551caf",
+      "uploads_sha256": "6ba475170454be775c3e5031888c33b27fe6bb930a05231d8cfa4c356351fc72",
+      "upload_files": 10,
+      "restore": "PASS (PostgreSQL disposable)",
+      "upload_archive_integrity": "PASS"
+    },
+    "helpdesk-penyempurnaan-fase2-uat": {
+      "counts": {
+        "ledger": "043",
+        "tickets": "0",
+        "subjects": "18",
+        "attachments": "0",
+        "media": "0",
+        "services": "23",
+        "rosters": "3"
+      },
+      "dump_sha256": "337eab2048dc46fb13b8ce16403dcc66a2aeaef50c1cacd934262dbf3a277efa",
+      "uploads_sha256": "ee914709d5bd455151168908499cd97546315cbab4e7e4f36b1de23e2a46233f",
+      "upload_files": 0,
+      "restore": "PASS (PostgreSQL disposable)",
+      "upload_archive_integrity": "PASS"
+    },
+    "helpdesk-technical-lab": {
+      "counts": {
+        "ledger": "046",
+        "tickets": "3",
+        "subjects": "18",
+        "attachments": "0",
+        "media": "0",
+        "services": "23",
+        "rosters": "3"
+      },
+      "dump_sha256": "fd575d121a4d8ff38cbe7794077889fd194e03dfb29aaed61c677b63b24e6207",
+      "uploads_sha256": "056cf91083baf070a7a3d9446353c2411ad292aaf3339de92017b6bbdde0a036",
+      "upload_files": 0,
+      "restore": "PASS (PostgreSQL disposable)",
+      "upload_archive_integrity": "PASS"
+    }
+  },
+  "cleanup": {
+    "projects": {
+      "helpdesk-penyempurnaan-fase1": {
+        "containers_removed": 6,
+        "image_ids": [
+          "sha256:780aa87d68d12d56a0e53c0f3a20d38cd7390b2a26be800802c2a1b0d2576b8b",
+          "sha256:f9c2998516aded76117a19c0e95ce485a4800e17bb1582899a5da383e006c9a2"
+        ]
+      },
+      "helpdesk-penyempurnaan-fase2-uat": {
+        "containers_removed": 6,
+        "image_ids": [
+          "sha256:68b4d09b02da52968e6006b2d55ebb6ecc1a7c940f2477f31c4fa734e2096a17",
+          "sha256:bcb6c658b20f8a159b98b1f3fad770a1ac521964100495f13e04fb2163fd9ac8"
+        ]
+      },
+      "helpdesk-technical-lab": {
+        "containers_removed": 6,
+        "image_ids": [
+          "sha256:b84e3a631395f6a72a7363ef31b48e0a964eda00aaeab41ac52b97117d6e6aee",
+          "sha256:ccdebfce60ff4811d386dde970d1a87d3fe76c90c9844e306076ef551a2841f0"
+        ]
+      }
+    },
+    "volumes_removed": [
+      "helpdesk-penyempurnaan-fase1_private-uploads",
+      "helpdesk-penyempurnaan-fase1_pg43",
+      "helpdesk-penyempurnaan-fase2-uat_private-uploads",
+      "helpdesk-penyempurnaan-fase2-uat_pg43",
+      "helpdesk-technical-lab_private-uploads",
+      "helpdesk-technical-lab_postgres18-data",
+      "helpdesk-penyempurnaan-fase1_postgres18-data"
+    ],
+    "images_removed": [
+      "helpdesk-technical-lab-app:m0",
+      "helpdesk-technical-lab-web:m0",
+      "helpdesk-penyempurnaan-fase1-app:local",
+      "helpdesk-penyempurnaan-fase1-web:local"
+    ],
+    "network_removed": [
+      "helpdesk-m0-contract-74afbfaaea-net"
+    ],
+    "preserved_volumes": [
+      "helpdesk-m0_postgres16-rollback (Docker: helpdesk-m0_postgres-data)",
+      "helpdesk-m0_postgres18-data",
+      "helpdesk-m0_private-uploads"
+    ],
+    "archived_uat_runtime": {
+      "image_ids": [
+        "sha256:68b4d09b02da52968e6006b2d55ebb6ecc1a7c940f2477f31c4fa734e2096a17",
+        "sha256:bcb6c658b20f8a159b98b1f3fad770a1ac521964100495f13e04fb2163fd9ac8"
+      ],
+      "rootfs": {
+        "app": {
+          "sha256": "684df814bfb8ad6bad62370abda224b6fb6ef0e53b026a74c450f3c2d1dd5e54",
+          "bytes": 14692352
+        },
+        "web": {
+          "sha256": "0fa5044c23d5c5e617881dc2b6c9f957e2bb16391853bf3260f8becb2fbad018",
+          "bytes": 33823744
+        }
+      }
+    },
+    "unused_volume_check": {
+      "result": "PASS",
+      "source": "helpdesk-penyempurnaan-fase1_postgres18-data",
+      "archive_sha256": "57210cd282b4d7dcb7c734c80a1641515c7a7c6ee4963795a00f3cc8bffe80c6",
+      "archive_bytes": 6916567,
+      "checked_at": "2026-11-24T08:34:20.332194+00:00",
+      "restored": {
+        "database_count": 2,
+        "server": "18.7",
+        "helpdesk_exists": true,
+        "contains_ledger": false
+      }
+    }
+  },
+  "closed_ports": [
+    18191,
+    18192,
+    18193
+  ],
+  "verification": [
+    {
+      "command": "python -X utf8 .local/consolidation-20261124/consolidate.py cutover",
+      "result": "PASS"
+    },
+    {
+      "command": "python -X utf8 .local/consolidation-20261124/consolidate.py backup-retired",
+      "result": "PASS"
+    },
+    {
+      "command": "python -X utf8 .local/consolidation-20261124/consolidate.py verify-backups",
+      "result": "PASS"
+    },
+    {
+      "command": "python -X utf8 .local/consolidation-20261124/legacycheck.py",
+      "result": "PASS"
+    },
+    {
+      "command": "python -X utf8 .local/consolidation-20261124/cleanup.py",
+      "result": "PASS"
+    },
+    {
+      "command": "HELPDESK_BASE_URL=http://127.0.0.1:18090 python -X utf8 scripts/smoke_local.py",
+      "result": "PASS before and after cleanup"
+    },
+    {
+      "command": "python -X utf8 .local/consolidation-20261124/smoke_technical.py",
+      "result": "PASS synthetic coordinator and technician. No business mutations."
+    },
+    {
+      "command": "Get-NetTCPConnection -State Listen -LocalPort 18191,18192,18193",
+      "result": "PASS no listeners"
+    }
+  ],
+  "limits": [
+    "Konsolidasi Docker pengembangan lokal. UAT manusia dan persetujuan rilis tetap mengikuti gerbang proyek.",
+    "Volume PG16 rollback ADR 0010 dipertahankan. Arsip unggahan divalidasi gzip/tar dan SHA-256.",
+    "UAT 18192 telah dipensiunkan. Image asal tidak tersedia di daemon saat pembersihan sehingga filesystem app dan web disimpan sebagai arsip terpisah.",
+    "Data preview dan UAT lama disimpan terpisah. Database kerja dipertahankan in-place."
+  ]
+}

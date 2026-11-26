@@ -124,6 +124,28 @@ func (s Store) RoutingDestination(ctx context.Context, team, org string) (string
 	return name, err
 }
 
+func (s Store) RosterTeams(ctx context.Context, org string, ids []string, p web.Page) ([]api.RosterTeam, error) {
+	rows, err := s.Pool.Query(ctx, `SELECT t.id::text,t.name,d.id::text,d.name
+      FROM identity.teams t JOIN identity.organizations o ON o.id=t.org_id
+      LEFT JOIN identity.divisions d ON d.id=t.division_id AND d.active
+      WHERE t.org_id=$1 AND t.active AND o.active AND ($2::uuid[] IS NULL OR t.id=ANY($2::uuid[]))
+      AND (NULLIF($3,'')::uuid IS NULL OR t.id>NULLIF($3,'')::uuid)
+      ORDER BY t.id LIMIT $4`, org, ids, p.Cursor, p.Limit+1)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []api.RosterTeam{}
+	for rows.Next() {
+		var item api.RosterTeam
+		if err := rows.Scan(&item.ID, &item.Name, &item.DivisionID, &item.DivisionName); err != nil {
+			return nil, err
+		}
+		items = append(items, item)
+	}
+	return items, rows.Err()
+}
+
 func (s Store) HandoffTargets(ctx context.Context, from, to string, p web.Page) ([]api.DirectoryEntry, error) {
 	var rows pgx.Rows
 	var err error

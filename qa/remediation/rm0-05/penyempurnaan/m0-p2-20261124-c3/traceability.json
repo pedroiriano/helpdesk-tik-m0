@@ -1,0 +1,781 @@
+{
+  "candidate_id": "m0-p2-20261124-c3",
+  "contract_acceptance": [
+    {
+      "id": "AC01",
+      "requirement": "Registry dan partition mencakup M1–M9 tepat sekali",
+      "m0_scope": "Satu group G1 berisi M1-M9 tepat sekali, satu proses; manifest invalid ditolak.",
+      "historical_evidence": "qa/bootstrap/verification.json; qa/m0-12/completion.json; scripts/check_boundaries.py",
+      "candidate_evidence": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/source-manifest.json",
+        "qa/remediation/rm0-05/penyempurnaan/fase1-completion.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+      ],
+      "scope_limit": "Lab sintetis dan skenario yang tercantum pada bukti.",
+      "lab_gate": "PASS_WITH_LIMITS"
+    },
+    {
+      "id": "AC02",
+      "requirement": "Payload/API sama di empat model",
+      "m0_scope": "Implementasi dan bukti M0; perbandingan beberapa arsitektur belum dijalankan.",
+      "historical_evidence": "qa/m0-02/contracts.json; qa/remediation/rm0-01/completion.json; qa/remediation/rm0-02/completion.json; qa/remediation/rm0-03/completion.json; qa/upgrades/dec-m11/phase3-cutover-report.json (M0 terverifikasi; studi multi-model DEFERRED_RESEARCH)",
+      "candidate_evidence": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/runtime.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json"
+      ],
+      "scope_limit": "Kesetaraan API lintas model perlu eksekusi riset C3/F9/G-OPT.",
+      "lab_gate": "PASS_WITH_LIMITS"
+    },
+    {
+      "id": "AC03",
+      "requirement": "Idempotency dan unknown commit",
+      "m0_scope": "Berlaku penuh pada implementasi M0.",
+      "historical_evidence": "qa/m0-04/completion.json; qa/remediation/rm0-02/completion.json; qa/remediation/rm0-03/completion.json; qa/remediation/rm0-04/browser-final.json",
+      "candidate_evidence": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+        "qa/remediation/rm0-05/penyempurnaan/fase1-dispatch-regression.json"
+      ],
+      "scope_limit": "Lab sintetis dan skenario yang tercantum pada bukti.",
+      "lab_gate": "PASS_WITH_LIMITS"
+    },
+    {
+      "id": "AC04",
+      "requirement": "Concurrent assignment/version",
+      "m0_scope": "Berlaku penuh pada implementasi M0.",
+      "historical_evidence": "qa/m0-05/completion.json; qa/remediation/rm0-02/completion.json; qa/remediation/rm0-04/browser-final.json (R4-E_queue_lifecycle_conflict)",
+      "candidate_evidence": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+        "qa/remediation/rm0-05/penyempurnaan/fase1-dispatch-regression.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser-coverage.json"
+      ],
+      "scope_limit": "Lab sintetis dan skenario yang tercantum pada bukti.",
+      "lab_gate": "PASS_WITH_LIMITS"
+    },
+    {
+      "id": "AC05",
+      "requirement": "Outbox crash/replay/order",
+      "m0_scope": "Berlaku penuh pada implementasi M0.",
+      "historical_evidence": "qa/m0-04/completion.json; qa/m0-06/completion.json; qa/remediation/rm0-02/completion.json; qa/remediation/rm0-03/completion.json",
+      "candidate_evidence": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+        "qa/remediation/rm0-05/penyempurnaan/fase1-fase2-backend.json"
+      ],
+      "scope_limit": "Lab sintetis dan skenario yang tercantum pada bukti.",
+      "lab_gate": "PASS_WITH_LIMITS"
+    },
+    {
+      "id": "AC06",
+      "requirement": "Guest/public/ASN boundaries",
+      "m0_scope": "Berlaku penuh pada implementasi M0.",
+      "historical_evidence": "qa/remediation/rm0-01/completion.json; qa/remediation/rm0-02/completion.json; qa/remediation/rm0-04/completion.json; qa/remediation/rm0-04/browser-final.json (scope lab terverifikasi; keputusan SSO & delegasi DEC-M02/DEC-M06 dan UAT manusia di RM0-05)",
+      "candidate_evidence": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+        "qa/remediation/rm0-05/penyempurnaan/fase1-fase2-backend.json",
+        "qa/remediation/rm0-05/penyempurnaan/fase1-fase3-backend.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser-coverage.json"
+      ],
+      "scope_limit": "Mandat organisasi dan SSO resmi menunggu DEC-M02/M06 dan staging.",
+      "lab_gate": "PASS_WITH_LIMITS"
+    },
+    {
+      "id": "AC07",
+      "requirement": "Internal note dan attachment ACL",
+      "m0_scope": "Berlaku penuh pada implementasi M0.",
+      "historical_evidence": "qa/remediation/rm0-01/completion.json; qa/remediation/rm0-04/completion.json; qa/remediation/rm0-04/browser-final.json (R4-H_lightbox_and_media); qa/upgrades/dec-m11/phase1-report.json (ClamAV 1.5.4; UAT manusia & DEC-M08 di RM0-05)",
+      "candidate_evidence": [
+        "qa/remediation/rm0-05/penyempurnaan/fase1-uploads.json",
+        "qa/remediation/rm0-05/penyempurnaan/fase1-scanner-mirror.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser-coverage.json"
+      ],
+      "scope_limit": "Kebijakan aset dan pembaruan definisi resmi menunggu DEC-M08 dan akses staging.",
+      "lab_gate": "PASS_WITH_LIMITS"
+    },
+    {
+      "id": "AC08",
+      "requirement": "State machine dan SLA",
+      "m0_scope": "Berlaku penuh pada implementasi M0.",
+      "historical_evidence": "qa/remediation/rm0-02/completion.json; qa/remediation/rm0-03/completion.json; contracts/RM0_03_TRACEABILITY.md; qa/upgrades/dec-m11/pg18-rm0-03.json (kebijakan resmi menunggu DEC-M03/M04/M05)",
+      "candidate_evidence": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+        "qa/remediation/rm0-05/penyempurnaan/fase1-fase2-backend.json",
+        "contracts/RM0_03_TRACEABILITY.md"
+      ],
+      "scope_limit": "Target SLA, pause vendor, dan kalender resmi menunggu DEC-M03/M04/M05.",
+      "lab_gate": "PASS_WITH_LIMITS"
+    },
+    {
+      "id": "AC09",
+      "requirement": "Model parity",
+      "m0_scope": "Implementasi dan bukti M0; perbandingan beberapa arsitektur belum dijalankan.",
+      "historical_evidence": "qa/bootstrap/verification.json; qa/remediation/rm0-02/completion.json; qa/upgrades/dec-m11/phase1-report.json (Go 1.27.4 & Node 26.13.1/Vite 8.3.5 tunggal M0)",
+      "candidate_evidence": [
+        "planning/technology-lock.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/runtime.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+      ],
+      "scope_limit": "Toolchain terpin untuk M0; pengukuran lintas model tertunda.",
+      "lab_gate": "PASS_WITH_LIMITS"
+    },
+    {
+      "id": "AC10",
+      "requirement": "Resource fairness",
+      "m0_scope": "Implementasi dan bukti M0; perbandingan beberapa arsitektur belum dijalankan.",
+      "historical_evidence": "docs/adr/0009-resource-envelope-and-rpo-rto-dec-m10.md; docs/adr/0010-technology-stack-upgrade-and-pinning-dec-m11.md; qa/remediation/rm0-03/runtime-limits-final.txt; planning/technology-lock.json",
+      "candidate_evidence": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/runtime.json",
+        "docs/adr/0009-resource-envelope-and-rpo-rto-dec-m10.md"
+      ],
+      "scope_limit": "Profil resource lab terukur; kapasitas/DR produksi dan paritas antar-model perlu pengesahan dan uji.",
+      "lab_gate": "PASS_WITH_LIMITS"
+    },
+    {
+      "id": "AC11",
+      "requirement": "UI operasional",
+      "m0_scope": "Berlaku penuh pada implementasi M0.",
+      "historical_evidence": "qa/remediation/rm0-01/completion.json; qa/remediation/rm0-02/completion.json; qa/remediation/rm0-04/completion.json; qa/remediation/rm0-04/browser-final.json; qa/m0-13/link_audit.json (scope lab terverifikasi; UAT manusia & otorisasi rilis di RM0-05)",
+      "candidate_evidence": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/smoke-uat.txt",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/link_audit.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser-coverage.json"
+      ],
+      "scope_limit": "Cakupan browser representatif; penerimaan pengguna melalui UAT.",
+      "lab_gate": "PASS_WITH_LIMITS"
+    },
+    {
+      "id": "AC12",
+      "requirement": "Provenance ilmiah",
+      "m0_scope": "Provenance source dan evidence M0 diperiksa; G-OPT serta HELD_OUT bukan task paket ini.",
+      "historical_evidence": "qa/m0-09/completion.json; qa/remediation/rm0-04/editorial-integration.json; qa/remediation/rm0-05/source-manifest.json",
+      "candidate_evidence": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/source-manifest.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser-coverage.json",
+        "qa\\remediation\\rm0-04\\editorial-integration.json"
+      ],
+      "scope_limit": "Manifest lokal dapat diaudit; seed/freeze pembanding dan pengujian antar-model tertunda.",
+      "lab_gate": "PASS_WITH_LIMITS"
+    },
+    {
+      "id": "AC13",
+      "requirement": "Dispatch sebelum/sesudah verifikasi dan override kategori",
+      "m0_scope": "Berlaku penuh pada implementasi M0.",
+      "historical_evidence": "qa/m0-05/completion.json; qa/remediation/rm0-02/completion.json; docs/adr/0011-reporting-directory-and-category-routing.md; qa/remediation/rm0-04/browser-final.json",
+      "candidate_evidence": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+        "qa/remediation/rm0-05/penyempurnaan/fase1-dispatch-regression.json",
+        "qa/remediation/rm0-05/penyempurnaan/fase1-browser.json"
+      ],
+      "scope_limit": "Lab sintetis dan skenario yang tercantum pada bukti.",
+      "lab_gate": "PASS_WITH_LIMITS"
+    },
+    {
+      "id": "AC14",
+      "requirement": "Resolve, setuju, tanpa respons, menolak, feedback biasa",
+      "m0_scope": "Berlaku penuh pada implementasi M0.",
+      "historical_evidence": "qa/m0-06/completion.json; qa/remediation/rm0-03/completion.json; qa/remediation/rm0-04/lifecycle-review/completion.json",
+      "candidate_evidence": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+        "qa/remediation/rm0-05/penyempurnaan/fase1-fase2-backend.json"
+      ],
+      "scope_limit": "Lab sintetis dan skenario yang tercantum pada bukti.",
+      "lab_gate": "PASS_WITH_LIMITS"
+    },
+    {
+      "id": "AC15",
+      "requirement": "Auto-close bersamaan reject serta job upaya lama",
+      "m0_scope": "Berlaku penuh pada implementasi M0.",
+      "historical_evidence": "qa/m0-06/completion.json; qa/remediation/rm0-03/completion.json",
+      "candidate_evidence": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+        "contracts/RM0_03_TRACEABILITY.md"
+      ],
+      "scope_limit": "Lab sintetis dan skenario yang tercantum pada bukti.",
+      "lab_gate": "PASS_WITH_LIMITS"
+    },
+    {
+      "id": "AC16",
+      "requirement": "Vendor terlambat dan pause tumpang tindih",
+      "m0_scope": "Berlaku penuh pada implementasi M0.",
+      "historical_evidence": "qa/m0-07/completion.json; qa/remediation/rm0-03/completion.json",
+      "candidate_evidence": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+        "qa/remediation/rm0-05/penyempurnaan/fase1-fase2-backend.json"
+      ],
+      "scope_limit": "Lab sintetis dan skenario yang tercantum pada bukti.",
+      "lab_gate": "PASS_WITH_LIMITS"
+    },
+    {
+      "id": "AC17",
+      "requirement": "Handoff lintas OPD serta pencabutan delegasi",
+      "m0_scope": "Berlaku penuh pada implementasi M0.",
+      "historical_evidence": "qa/m0-07/completion.json; qa/remediation/rm0-03/completion.json",
+      "candidate_evidence": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+        "qa/remediation/rm0-05/penyempurnaan/fase1-fase2-backend.json"
+      ],
+      "scope_limit": "Lab sintetis dan skenario yang tercantum pada bukti.",
+      "lab_gate": "PASS_WITH_LIMITS"
+    },
+    {
+      "id": "AC18",
+      "requirement": "Unggah dari form lalu pilih di pustaka media",
+      "m0_scope": "Berlaku penuh pada implementasi M0.",
+      "historical_evidence": "qa/remediation/rm0-01/completion.json; qa/remediation/rm0-04/completion.json; qa/remediation/rm0-04/browser-final.json (R4-D & R4-H; DEC-M08 dan UAT manusia di RM0-05)",
+      "candidate_evidence": [
+        "qa/remediation/rm0-05/penyempurnaan/fase1-uploads.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser-coverage.json"
+      ],
+      "scope_limit": "Retensi, batas media dan lisensi menunggu DEC-M08/M12.",
+      "lab_gate": "PASS_WITH_LIMITS"
+    },
+    {
+      "id": "AC19",
+      "requirement": "Putus jaringan, tab bersaing dan pergantian akun",
+      "m0_scope": "Berlaku penuh pada implementasi M0.",
+      "historical_evidence": "qa/m0-08/completion.json; qa/remediation/rm0-04/completion.json; qa/remediation/rm0-04/browser-final.json (R4-D_form_lost_response_draft_tracking)",
+      "candidate_evidence": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser-coverage.json"
+      ],
+      "scope_limit": "UAT pemohon dan pengguna alat bantu masih menunggu.",
+      "lab_gate": "PASS_WITH_LIMITS"
+    },
+    {
+      "id": "AC20",
+      "requirement": "Modal, combo box, tabel dan grafik dengan keyboard",
+      "m0_scope": "Berlaku penuh pada implementasi M0.",
+      "historical_evidence": "qa/remediation/rm0-04/completion.json; qa/remediation/rm0-04/browser-final.json; qa/m0-13/link_audit.json",
+      "candidate_evidence": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/link_audit.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser-coverage.json"
+      ],
+      "scope_limit": "Peta rute dan browser representatif; UAT manusia belum dilakukan.",
+      "lab_gate": "PASS_WITH_LIMITS"
+    },
+    {
+      "id": "AC21",
+      "requirement": "Telegram binding salah scope, retry dan revoke",
+      "m0_scope": "Berlaku penuh pada implementasi M0.",
+      "historical_evidence": "qa/m0-10/completion.json; qa/remediation/rm0-03/completion.json (sink sintetis terverifikasi; kanal nyata menunggu DEC-M09)",
+      "candidate_evidence": [
+        "qa/remediation/rm0-05/penyempurnaan/fase1-fase3-backend.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json"
+      ],
+      "scope_limit": "SMTP/Telegram diuji melalui sink; endpoint nyata menunggu DEC-M09 dan staging.",
+      "lab_gate": "PASS_WITH_LIMITS"
+    },
+    {
+      "id": "AC22",
+      "requirement": "Arsip, restore arsip dan purge non Super Admin",
+      "m0_scope": "Berlaku penuh pada implementasi M0.",
+      "historical_evidence": "qa/m0-11/completion.json; qa/remediation/rm0-03/completion.json; qa/m0-11/restore_drill.json (purge tetap disabled menunggu DEC-M07)",
+      "candidate_evidence": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c1/recovery.json"
+      ],
+      "scope_limit": "Purge nonaktif; RTO/RPO diukur untuk fixture, kebijakan retensi dan target produksi menunggu DEC-M07/M10.",
+      "lab_gate": "PASS_WITH_LIMITS"
+    },
+    {
+      "id": "AC23",
+      "requirement": "Search/export/analytics setelah hak dicabut",
+      "m0_scope": "Berlaku penuh pada implementasi M0.",
+      "historical_evidence": "qa/remediation/rm0-01/completion.json; qa/remediation/rm0-03/completion.json; qa/remediation/rm0-04/completion.json; qa/remediation/rm0-04/browser-final.json (R4-F & R4-G)",
+      "candidate_evidence": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser-coverage.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+        "qa/remediation/rm0-05/penyempurnaan/fase1-fase2-backend.json"
+      ],
+      "scope_limit": "Lab sintetis dan skenario yang tercantum pada bukti.",
+      "lab_gate": "PASS_WITH_LIMITS"
+    },
+    {
+      "id": "AC24",
+      "requirement": "Konfigurasi portal dan job operasional",
+      "m0_scope": "Berlaku penuh pada implementasi M0.",
+      "historical_evidence": "qa/remediation/rm0-03/completion.json (R3-H BACKUP_MANIFEST); qa/remediation/rm0-04/completion.json; qa/remediation/rm0-04/browser-final.json",
+      "candidate_evidence": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser-coverage.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/runtime.json"
+      ],
+      "scope_limit": "Lab sintetis dan skenario yang tercantum pada bukti.",
+      "lab_gate": "PASS_WITH_LIMITS"
+    },
+    {
+      "id": "AC25",
+      "requirement": "Parity perluasan fitur di empat model",
+      "m0_scope": "Implementasi dan bukti M0; perbandingan beberapa arsitektur belum dijalankan.",
+      "historical_evidence": "qa/remediation/rm0-01/completion.json; qa/remediation/rm0-04/completion.json; qa/upgrades/dec-m11/phase3-cutover-report.json; docs/releases/M0_RELEASE_AUTHORIZATION.md; docs/adr/0012-faq-management-and-m0-c3-f9-architecture-parity.md; docs/ARCHITECTURE_M0_C3_F9.md (M0 terverifikasi; multi-model & UAT manusia di RM0-05/riset)",
+      "candidate_evidence": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/source-manifest.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/runtime.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json",
+        "docs/ARCHITECTURE_M0_C3_F9.md"
+      ],
+      "scope_limit": "Bukti berlaku untuk proses tunggal M0. C3/F9/G-OPT, UAT dan otorisasi produksi masih terbuka.",
+      "lab_gate": "PASS_WITH_LIMITS"
+    }
+  ],
+  "features": [
+    {
+      "id": "FR01",
+      "requirement": "P003–P033 sembilan modul",
+      "related_acceptance": [
+        "AC01",
+        "AC09",
+        "AC25"
+      ],
+      "contract_status": "PARTIAL",
+      "requirements_evidence": "AC01, AC09, AC25; backend/internal/modules/m1..m9, qa/remediation/rm0-01..04/completion.json (9 modul M0 lulus lab; perbandingan 4 arsitektur C3/F9/G-OPT ditunda DEFERRED_RESEARCH)",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR02",
+      "requirement": "P036.1 tabel dan bulk/export",
+      "related_acceptance": [
+        "AC20",
+        "AC23"
+      ],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "AC20, AC23; frontend/src/features/{m0-03,m0-04}.ts, qa/remediation/rm0-04/browser-final.json (R4-E queue & R4-F CSV export)",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR03",
+      "requirement": "P036.2 grafik interaktif",
+      "related_acceptance": [
+        "AC20",
+        "AC23"
+      ],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "AC20, AC23; frontend/src/features/dashboard.ts & m0-03.ts (M9 KPI & tabel aksesibel setara), qa/remediation/rm0-04/browser-final.json",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR04",
+      "requirement": "P036.3 kartu bento masonry",
+      "related_acceptance": [],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "frontend/public-ui.css, frontend/business.css, qa/remediation/rm0-04/mobile/completion.json (grid 3/2/1 responsif & urutan baca DOM)",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR05",
+      "requirement": "P036.4 accordion tunggal",
+      "related_acceptance": [],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "frontend/hero-public.js, frontend/business-pages.mjs, frontend/src/features/m0-03.ts (/api/v1/knowledge/faqs?view=published & #vy-faq), qa/remediation/rm0-04/browser-final.json (R4-B homeFaqCheck & pageFaqCheck)",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR06",
+      "requirement": "P036.5 pencarian global",
+      "related_acceptance": [
+        "AC23"
+      ],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "AC23; frontend/src/features/search-combobox.ts, M2/M3/M8 /api/v1/search, qa/remediation/rm0-04/browser-final.json (R4-G); Cursor terikat kueri dan principal, ACL live, hasil Media CLEAN M3/M8 dan pencarian antrean M3. qa/remediation/rm0-05/penyempurnaan/fase1-completion.json",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR07",
+      "requirement": "P036.6 toast",
+      "related_acceptance": [],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "frontend/src/features/m0-04.ts & m0-03.ts status/callout persisten; error & konflik 409 terlihat tanpa tertutup toast",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR08",
+      "requirement": "P036.7 scrollbar",
+      "related_acceptance": [],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "frontend/business.css (.hd-table-wrap overflow horizontal aman mobile), scripts/test_modal_and_mobile.py, browser-final.json",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR09",
+      "requirement": "P036.8 Select2",
+      "related_acceptance": [],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "frontend/src/features/select2-combobox.ts, frontend/src/features/search-combobox.ts & report-context combobox WAI-ARIA (Web Publik & Web Admin, #hd-faq-topic), qa/remediation/rm0-04/browser-final.json",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR10",
+      "requirement": "P036.9 draft",
+      "related_acceptance": [
+        "AC19"
+      ],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "AC19; frontend/src/features/m0-04.ts, backend/internal/modules/m3/internal/app/drafts.go, qa/remediation/rm0-04/browser-final.json (R4-D)",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR11",
+      "requirement": "P036.10 validasi",
+      "related_acceptance": [],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "contracts/openapi/business.json, frontend/src/features/m0-04.ts noValidate + [data-validation-summary], qa/remediation/rm0-04/browser-final.json (R4-D)",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR12",
+      "requirement": "P036.11 editor",
+      "related_acceptance": [],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "backend/internal/modules/m8/internal/store/content.go (ARTICLE/PAGE/FAQ), migrations/m8/042-faq-management.sql, frontend/src/features/{knowledge,m0-03}.ts, qa/remediation/rm0-04/editorial-integration.json",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR13",
+      "requirement": "P036.12 dropzone",
+      "related_acceptance": [
+        "AC18"
+      ],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "AC18; frontend/ticket-pages.mjs (#hd-create-dropzone), frontend/business-pages.mjs (M3/M8 upload), browser-final.json (R4-D & R4-H)",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR14",
+      "requirement": "P036.13 modal",
+      "related_acceptance": [
+        "AC20"
+      ],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "AC20; frontend/public-ui.css & business.css dialog terpusat + Focus/Esc, scripts/test_modal_and_mobile.py, browser-final.json (R4-H)",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR15",
+      "requirement": "P036.14 komponen lain",
+      "related_acceptance": [],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "frontend/ticket-pages.mjs (timeline progres, guest card, review modal), browser-final.json (R4-D & R4-E)",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR16",
+      "requirement": "P037 dasbor dan pengunjung",
+      "related_acceptance": [
+        "AC23"
+      ],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "AC23; backend/internal/modules/m9, frontend/src/features/{dashboard,m0-03}.ts (denominator, watermark, scope), browser-final.json (R4-F)",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR17",
+      "requirement": "P038 master",
+      "related_acceptance": [],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "M1/M2 master Akun/Subjek (?kind=subjects), PD / Unit Kerja/Bidang/Tim/Layanan/Kategori berversi, frontend/src/features/admin-datatable.ts, qa/remediation/rm0-04/catalog-routing/completion.json & browser-final.json (katalog resmi menunggu DEC-M01)",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR18",
+      "requirement": "P039 sistem dan portal",
+      "related_acceptance": [
+        "AC24"
+      ],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "AC24; backend/internal/bootstrap/backup_manifest.go, migrations/m1/041-maintenance-display.sql (Under Maintenance terjadwal/tak terjadwal), frontend/maintenance-banner.js, frontend/admin-navigation.mjs, qa/remediation/rm0-03/completion.json (R3-H BACKUP_MANIFEST); Pemeliharaan global/PD terpisah dan diaudit. FreshClam recovery via mirror lab. qa/remediation/rm0-05/penyempurnaan/fase1-completion.json",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR19",
+      "requirement": "P040 media dan SEO",
+      "related_acceptance": [
+        "AC18"
+      ],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "AC18; M3/M8 media, sanitize reuse, SEO slug (/panduan/{slug}, /halaman/{slug}), qa/remediation/rm0-01 & rm0-04 browser-final.json (DEC-M08 pending)",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR20",
+      "requirement": "P041 audit",
+      "related_acceptance": [
+        "AC05",
+        "AC21"
+      ],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "AC05, AC21; M9 append-only audit_entries & outbox durable semua owner, qa/remediation/rm0-03/integration-final.json & browser-final.json",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR21",
+      "requirement": "P042 Telegram",
+      "related_acceptance": [
+        "AC21"
+      ],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "AC21; M9 telegram_bindings & delivery_jobs sink sintetis terverifikasi; kanal Telegram produksi menunggu DEC-M09",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR22",
+      "requirement": "P043 draft dan pengarsipan",
+      "related_acceptance": [
+        "AC19",
+        "AC22"
+      ],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "AC19, AC22; draft autosave/isolation + archive/restore; purge tetap disabled menunggu kebijakan retensi/hold DEC-M07",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR23",
+      "requirement": "P044 pengelolaan tambahan",
+      "related_acceptance": [],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "Master skill, roster L1/L2, vendor cases, handoff lintas OPD & ekspor CSV asinkron; qa/remediation/rm0-02 & rm0-03 completion.json",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR24",
+      "requirement": "P047 Smart Dispatch",
+      "related_acceptance": [
+        "AC13"
+      ],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "AC13; M4 classifier & M5 routing rules/proposals, docs/adr/0007 & 0011, qa/remediation/rm0-02 & browser-final.json (keputusan aturan resmi menunggu DEC-M01); Roster berizin dan berversi, fallback manual dengan teknisi aktif, serta event proyeksi M5. qa/remediation/rm0-05/penyempurnaan/fase1-completion.json",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR25",
+      "requirement": "P048 SLA dan 24 jam",
+      "related_acceptance": [
+        "AC14",
+        "AC15"
+      ],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "AC14, AC15; M6 CAL-1/CAL-247, 24h auto-close CAS & NotificationStored proof; target resmi menunggu DEC-M03/DEC-M05",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR26",
+      "requirement": "P049 L1 L2 vendor pimpinan",
+      "related_acceptance": [
+        "AC16",
+        "AC17"
+      ],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "AC16, AC17; PIC internal, coalesce pause, handoff atomik & eskalasi; aturan resmi eskalasi/vendor menunggu DEC-M04",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR27",
+      "requirement": "P050 kinerja teknisi",
+      "related_acceptance": [
+        "AC23"
+      ],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "AC23; M9 cohort laporan kinerja, reopen & work log pada qa/remediation/rm0-03/completion.json & browser-final.json (R4-F)",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR28",
+      "requirement": "P051 lintas perangkat daerah",
+      "related_acceptance": [
+        "AC06",
+        "AC17",
+        "AC23"
+      ],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "AC06, AC17, AC23; direktori OPD, handoff atomik & isolasi scope list/detail/search/export/media; DEC-M06 pending",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    },
+    {
+      "id": "FR29",
+      "requirement": "P052 role dan hak akses",
+      "related_acceptance": [
+        "AC06",
+        "AC24"
+      ],
+      "contract_status": "DONE_VERIFIED_LAB",
+      "requirements_evidence": "AC06, AC24; M1 role_module_policies, 5 profil admin-profiles.mjs, grant ceiling & ACL per objek; browser-final.json (DEC-M02/M06 pending)",
+      "ui_and_contract_gate": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    }
+  ],
+  "prior_findings": {
+    "F01": {
+      "closure": "REMEDIATED_LAB",
+      "prior_evidence": "qa/remediation/rm0-01/completion.json",
+      "final_verification": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+        "qa/remediation/rm0-05/penyempurnaan/fase1-fase3-backend.json"
+      ]
+    },
+    "F02": {
+      "closure": "REMEDIATED_LAB",
+      "prior_evidence": "qa/remediation/rm0-01/completion.json",
+      "final_verification": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+        "qa/remediation/rm0-05/penyempurnaan/fase1-fase3-backend.json"
+      ]
+    },
+    "F03": {
+      "closure": "REMEDIATED_MANUAL_REDACTION",
+      "prior_evidence": "qa/remediation/rm0-01/completion.json",
+      "final_verification": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+        "qa/remediation/rm0-05/penyempurnaan/fase1-fase3-backend.json"
+      ]
+    },
+    "F04": {
+      "closure": "REMEDIATED_SCOPED_SURFACES",
+      "prior_evidence": "qa/remediation/rm0-01/completion.json",
+      "final_verification": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+        "qa/remediation/rm0-05/penyempurnaan/fase1-fase3-backend.json"
+      ]
+    },
+    "F13": {
+      "closure": "CLAIM_CORRECTED_PENDING_HUMAN_AUTHORIZATION",
+      "prior_evidence": "qa/remediation/rm0-01/completion.json",
+      "final_verification": [
+        "docs/releases/M0_RELEASE_AUTHORIZATION.md",
+        "qa/remediation/rm0-05/uat-worksheets.csv"
+      ]
+    },
+    "F14": {
+      "closure": "REPLACEMENT_EVIDENCE_SOURCE_BOUND",
+      "prior_evidence": "qa/remediation/rm0-01/completion.json",
+      "final_verification": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/source-manifest.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/runtime.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+      ]
+    },
+    "F05": {
+      "closure": "Implementation corrected and persistence/rollback/replay tests PASS on disposable",
+      "prior_evidence": "qa/remediation/rm0-02/completion.json",
+      "final_verification": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+        "qa/remediation/rm0-05/penyempurnaan/fase1-dispatch-regression.json"
+      ]
+    },
+    "F06": {
+      "closure": "Lifecycle corrected; matrix/HTTP tests and final browser representative smoke PASS for synthetic lab",
+      "prior_evidence": "qa/remediation/rm0-02/completion.json",
+      "final_verification": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+        "qa/remediation/rm0-05/penyempurnaan/fase1-dispatch-regression.json"
+      ]
+    },
+    "F07": {
+      "closure": "Deterministic M4 and scoped/versioned M5 proposals corrected; HTTP and final UI smoke PASS for synthetic lab; organizational decisions remain open",
+      "prior_evidence": "qa/remediation/rm0-02/completion.json",
+      "final_verification": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+        "qa/remediation/rm0-05/penyempurnaan/fase1-dispatch-regression.json"
+      ]
+    },
+    "F08": {
+      "closure": "PASS_LAB",
+      "prior_evidence": "qa/remediation/rm0-03/completion.json",
+      "final_verification": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c1/recovery.json",
+        "qa/remediation/rm0-05/penyempurnaan/fase1-fase2-backend.json"
+      ]
+    },
+    "F09": {
+      "closure": "PASS_LAB",
+      "prior_evidence": "qa/remediation/rm0-03/completion.json",
+      "final_verification": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c1/recovery.json",
+        "qa/remediation/rm0-05/penyempurnaan/fase1-fase2-backend.json"
+      ]
+    },
+    "F10": {
+      "closure": "PASS_LAB_WITH_LIMITS",
+      "prior_evidence": "qa/remediation/rm0-03/completion.json",
+      "final_verification": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c1/recovery.json",
+        "qa/remediation/rm0-05/penyempurnaan/fase1-fase2-backend.json"
+      ]
+    },
+    "F11": {
+      "closure": "PASS_LAB",
+      "prior_evidence": "qa/remediation/rm0-03/completion.json",
+      "final_verification": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c1/recovery.json",
+        "qa/remediation/rm0-05/penyempurnaan/fase1-fase2-backend.json"
+      ]
+    },
+    "F12": {
+      "closure": "PASS_LAB_WITH_DECISIONS",
+      "prior_evidence": "qa/remediation/rm0-03/completion.json",
+      "final_verification": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c1/recovery.json",
+        "qa/remediation/rm0-05/penyempurnaan/fase1-fase2-backend.json"
+      ]
+    },
+    "F15": {
+      "closure": "DECIDED_TWO_TIER_LAB_ENVELOPE",
+      "prior_evidence": "qa/remediation/rm0-03/completion.json",
+      "final_verification": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c1/recovery.json",
+        "qa/remediation/rm0-05/penyempurnaan/fase1-fase2-backend.json"
+      ]
+    },
+    "F16": {
+      "closure": "PASS_LAB",
+      "prior_evidence": "qa/remediation/rm0-04/completion.json",
+      "final_verification": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser-coverage.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/link_audit.json"
+      ]
+    },
+    "F17": {
+      "closure": "PASS_LAB",
+      "prior_evidence": "qa/remediation/rm0-04/completion.json",
+      "final_verification": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser-coverage.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/link_audit.json"
+      ]
+    }
+  },
+  "phase_1_2_audit": {
+    "A01": [
+      "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/source-manifest.json",
+      "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/runtime.json",
+      "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json"
+    ],
+    "A02": [
+      "qa/remediation/rm0-05/penyempurnaan/fase1-browser.json",
+      "qa/remediation/rm0-05/penyempurnaan/fase1-fase2-backend.json"
+    ],
+    "A03": [
+      "qa/remediation/rm0-05/penyempurnaan/fase1-scanner-mirror.json",
+      "qa/remediation/rm0-05/penyempurnaan/fase1-uploads.json"
+    ],
+    "A04": [
+      "qa/remediation/rm0-05/penyempurnaan/fase1-fase3-backend.json",
+      "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/compose.txt"
+    ],
+    "A05": [
+      "qa/remediation/rm0-05/penyempurnaan/fase1-dispatch-regression.json",
+      "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser-coverage.json"
+    ],
+    "A06": [
+      "docs/releases/RM0_05_PANDUAN_UAT_FASE_2.md",
+      "qa/remediation/rm0-05/uat-worksheets.csv"
+    ],
+    "A07": [
+      "qa/remediation/rm0-05/penyempurnaan/fase1-browser.json",
+      "qa/remediation/rm0-05/penyempurnaan/fase1-fase2-backend.json",
+      "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser-coverage.json"
+    ]
+  },
+  "ui_matrix": "qa\\remediation\\rm0-04\\completion.json"
+}

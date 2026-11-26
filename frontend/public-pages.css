@@ -219,3 +219,316 @@
   }
   [data-helpdesk-public] .hd-kb-body :is(p, li) { font-size: 1rem; line-height: 1.7; }
 }
+
+/* Keep the floating header clear of controls reached by keyboard. */
+[data-helpdesk-public] :is(.skip-link, main a, main button, main input, main select, main textarea, summary):focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+  scroll-margin-block-start: 96px;
+}
+[data-helpdesk-public] main#main-content { min-inline-size: 0; scroll-margin-block-start: 96px; }
+@media (max-width: 640px) {
+  [data-helpdesk-public] :is(.hd-form-grid, .hd-catalog, .hd-report-review dl) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  [data-helpdesk-public] :is(.hd-form-grid > *, .hd-report-review dd) {
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+  }
+  [data-helpdesk-public] .hd-report-review dd { margin-inline-start: 0; }
+}
+
+/* Compact service pages share a single masthead clearance. */
+[data-helpdesk-public] main.hd-task-page:is([data-hd-page], [data-ticket-page]) {
+  --hd-task-border: color-mix(in srgb, var(--vy-line, #343742), #85b9ed 22%);
+  --hd-task-muted: #aebcca;
+  --hd-task-surface: #111821;
+  max-inline-size: 1256px;
+  padding-block: clamp(108px, 9vw, 132px) clamp(48px, 7vw, 80px) !important;
+  padding-inline: clamp(16px, 4vw, 48px);
+}
+[data-helpdesk-public] .hd-task-heading {
+  padding: clamp(18px, 3vw, 32px) clamp(18px, 4vw, 40px);
+  margin-block: 0 clamp(20px, 3vw, 32px);
+  background: linear-gradient(110deg, #172536, #101720 80%);
+  border: 1px solid var(--hd-task-border);
+  border-inline-start: 3px solid #78b7f1;
+  border-radius: 12px;
+}
+[data-helpdesk-public] .hd-task-heading .vy-leaf-head {
+  margin: 0;
+  max-inline-size: 29ch;
+  font-size: clamp(1.85rem, 4.2vw, 3rem);
+  text-wrap: pretty;
+}
+[data-helpdesk-public] .hd-task-heading .vy-leaf-brief {
+  margin-block: 8px 0;
+  color: var(--hd-task-muted);
+  font-size: clamp(.9375rem, 1.5vw, 1.0625rem);
+  line-height: 1.6;
+}
+[data-helpdesk-public] .hd-task-page :is(.vy-contact-form, .hd-catalog-help, .hd-catalog-more) {
+  border-color: var(--hd-task-border);
+  border-radius: 12px;
+}
+[data-helpdesk-public] .hd-task-page :is(.vy-input-group label, legend, .hd-search-label) {
+  margin-block-end: 8px;
+  color: #dbe7f2;
+  font: inherit;
+  font-weight: 600;
+  font-size: .9375rem;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-transform: none;
+}
+[data-helpdesk-public] .hd-task-page :is(input.vy-input, select.vy-input, textarea.vy-input) {
+  min-block-size: 44px;
+  border-color: #4d6072;
+  border-radius: 8px;
+  background: #0c121a;
+}
+[data-helpdesk-public] .hd-task-page .vy-input::placeholder { color: #98a7b7; opacity: 1; }
+[data-helpdesk-public] .hd-task-page :is(input, select, textarea):focus-visible {
+  outline-color: #aad4ff;
+}
+[data-helpdesk-public] .hd-task-page :is([data-hd-status], [data-ticket-status]):empty { display: none; }
+[data-helpdesk-public] .hd-task-page :is([data-hd-status], [data-ticket-status]):not(:empty) {
+  margin-block: 0 12px;
+  color: var(--hd-task-muted);
+  font-size: .9375rem;
+}
+[data-helpdesk-public] .hd-task-page .hd-ticket-nav {
+  margin-block: 24px 0;
+  justify-content: flex-start;
+  gap: 8px;
+  background: transparent;
+  border-color: var(--hd-task-border);
+  box-shadow: none;
+}
+[data-helpdesk-public] .hd-catalog-filter {
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 2fr);
+  padding: clamp(12px, 2vw, 20px);
+  align-items: end;
+  margin-block: 0 16px;
+  background: var(--hd-task-surface);
+}
+[data-helpdesk-public] .hd-catalog-filter .vy-input-group { margin: 0; }
+[data-helpdesk-public] :is(.hd-catalog-help, .hd-catalog-more) {
+  padding: clamp(14px, 2.5vw, 22px);
+  border: 1px solid;
+  background: var(--hd-task-surface);
+}
+[data-helpdesk-public] .hd-catalog-help {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  margin-block: 0 20px;
+}
+[data-helpdesk-public] .hd-catalog-help h2 { margin: 0; font-size: 1rem; }
+[data-helpdesk-public] .hd-catalog-help p { margin: 4px 0 0; color: var(--hd-task-muted); font-size: .875rem; }
+[data-helpdesk-public] .hd-catalog-more { margin-block-start: 32px; }
+[data-helpdesk-public] .hd-catalog-more h2 { margin: 0 0 12px; font-size: 1.25rem; }
+[data-helpdesk-public] .hd-catalog-more .hd-search-box,
+[data-helpdesk-public] .hd-catalog-more .hd-search-input { margin-block-end: 0; }
+[data-helpdesk-public] .hd-catalog-more #hd-search-status:empty { display: none; }
+[data-helpdesk-public] .hd-catalog { margin-block: 12px 20px; }
+[data-helpdesk-public] .hd-catalog .hd-service-option {
+  background: linear-gradient(155deg, #15202d 0%, #111821 65%);
+  gap: 16px;
+}
+[data-helpdesk-public] .hd-service-option__copy { display: grid; gap: 12px; }
+[data-helpdesk-public] .hd-service-option__meta { gap: 8px; justify-content: space-between; }
+[data-helpdesk-public] .hd-service-code,
+[data-helpdesk-public] .hd-service-audience {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: .75rem;
+  font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+[data-helpdesk-public] .hd-service-code { color: #a9b8c8; background: #202b38; }
+[data-helpdesk-public] .hd-service-audience { color: #bcdcff; background: #223a52; }
+[data-helpdesk-public] .hd-service-audience[data-service-access="PUBLIC_GUEST"] { color: #b7efd7; background: #193c36; }
+[data-helpdesk-public] .hd-service-option h2 { font-size: clamp(1.125rem, 1.8vw, 1.3125rem); text-wrap: pretty; }
+[data-helpdesk-public] .hd-service-option .hd-actions { gap: 8px; margin-block: auto 0; align-items: stretch; }
+[data-helpdesk-public] .hd-service-option .hd-actions a { font-size: .875rem; text-align: center; }
+[data-helpdesk-public] [data-hd-page="catalog"] > [data-hd-status]:not(:empty) {
+  margin-block: 0 12px !important;
+  padding: 6px 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+}
+[data-helpdesk-public] .hd-public-breadcrumb { margin-block: 0 12px; font-size: .875rem; }
+[data-helpdesk-public] .hd-public-breadcrumb a { color: #b7d9ff; text-underline-offset: 4px; }
+[data-helpdesk-public] .hd-service-heading .hd-actions { margin-block: 16px 0; }
+[data-helpdesk-public] .hd-service-preview { margin-block-end: 16px; }
+[data-helpdesk-public] .hd-service-preview h2 { margin-block: 0 6px; }
+[data-helpdesk-public] .hd-service-preview [data-hd-fields] { margin-block-start: 16px; }
+[data-helpdesk-public] .hd-service-preview input:disabled,
+[data-helpdesk-public] .hd-service-preview textarea:disabled,
+[data-helpdesk-public] .hd-service-preview select:disabled { opacity: 1; color: #c1ccda; }
+[data-helpdesk-public] .hd-task-page :is(.hd-track-card, .hd-auth-card) {
+  inline-size: min(100%, 40rem);
+  margin-inline: auto;
+  background: var(--hd-task-surface);
+}
+[data-helpdesk-public] .hd-track-card .vy-input-group { margin-block-end: 8px; }
+[data-helpdesk-public] #ticket-key-help { margin-block: 0 16px; color: var(--hd-task-muted); font-size: .875rem; }
+[data-helpdesk-public] .hd-auth-tabs button[aria-selected="true"] {
+  background: #162b40;
+  color: #b7ddff;
+  border-radius: 8px 8px 0 0;
+}
+[data-helpdesk-public] .hd-task-page h2 { line-height: 1.3; }
+[data-helpdesk-public] .hd-task-page .hd-kb-hero { margin-block-end: 20px; box-shadow: none; }
+[data-helpdesk-public] .hd-task-page .hd-kb-hero__desc { color: var(--hd-task-muted); }
+@media (max-width: 639px) {
+  [data-helpdesk-public] main.hd-task-page:is([data-hd-page], [data-ticket-page]) { padding-block-start: 102px !important; }
+  [data-helpdesk-public] .hd-task-heading { margin-block-end: 16px; }
+  [data-helpdesk-public] .hd-catalog .hd-service-option { padding: 16px; }
+  [data-helpdesk-public] .hd-service-option .hd-actions a { flex: 1 1 9rem; justify-content: center; }
+}
+
+
+[data-helpdesk-public] .hd-task-page .hd-callout--info {
+  background: #17283b;
+  border-color: #56799e;
+  color: #d8eaff;
+}
+[data-helpdesk-public] .hd-task-page .hd-callout--info :is(p,strong) { color: inherit; }
+[data-helpdesk-public] .hd-task-page :is(.hd-s2-control,.hd-s2-dropdown,.hd-s2-search) {
+  color: #deebf9;
+  background: #0c121a;
+  border-color: #4d6072;
+  box-shadow: none;
+}
+[data-helpdesk-public] .hd-task-page .hd-s2-value.is-placeholder { color: #98a7b7; }
+[data-helpdesk-public] .hd-task-page .hd-s2-search-wrap { background: #121b26; }
+[data-helpdesk-public] .hd-task-page .hd-s2-option:is(.is-highlighted,.is-selected) {
+  color: #e4f1ff;
+  background: #193651;
+}
+[data-helpdesk-public] .hd-task-page .hd-s2-option__check { color: #a6d4ff; }
+[data-helpdesk-public] .hd-task-page .hd-s2 :is(.hd-s2-trigger,.hd-s2-caret) { color: inherit; }
+[data-helpdesk-public] .hd-task-page .hd-s2-control:focus-within { border-color: #a6d4ff; }
+[data-helpdesk-public] .hd-task-page .hd-catalog-filter.hd-form-grid { gap: 10px 16px !important; }
+.hd-catalog-options { min-inline-size: 0; }
+[data-helpdesk-public] [data-hd-page="catalog"] .hd-catalog { margin-block-start: 12px; }
+.hd-catalog-options summary {
+  cursor: pointer;
+  min-block-size: 44px;
+  align-content: center;
+  font-size: .875rem;
+  font-weight: 600;
+}
+.hd-catalog-options summary:focus-visible { outline: 2px solid #a9d4ff; outline-offset: 2px; }
+.hd-catalog-options [data-hd-filter-count]:not([hidden]) {
+  margin-inline-start: 8px;
+  padding: 2px 7px;
+  background: #203c56;
+  color: #d6ecff;
+  border-radius: 1rem;
+}
+.hd-catalog-options__fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 8px 12px;
+}
+.hd-service-terms { margin-block: 8px 0; color: var(--hd-task-muted); font-size: .875rem; }
+[data-helpdesk-public] [data-hd-knowledge] [data-hd-kb-list] { padding: clamp(14px,2.3vw,22px); }
+[data-helpdesk-public] [data-hd-knowledge] [data-hd-kb-list] h1 { margin-block: 0 6px; }
+[data-helpdesk-public] [data-hd-knowledge] [data-hd-kb-list] > p { margin-block: 0 12px; }
+[data-helpdesk-public] [data-hd-kb-status] { margin-block: 8px 12px; }
+[data-helpdesk-public] [data-hd-kb-status]:empty { display: none; }
+[data-helpdesk-public] [data-hd-knowledge] .hd-featured-guide {
+  padding: clamp(14px,2.2vw,22px);
+  margin-block-end: 16px;
+  grid-template-columns: minmax(0,1fr) minmax(4rem,9rem);
+  gap: 12px;
+  box-shadow: none;
+}
+[data-helpdesk-public] [data-hd-knowledge] .hd-featured-guide__content { gap: 8px; }
+[data-helpdesk-public] [data-hd-knowledge] .hd-featured-guide__visual { padding: 6px; }
+[data-helpdesk-public] [data-hd-knowledge] .hd-featured-guide__content a { align-self: start; }
+@media (max-width: 760px) {
+  [data-helpdesk-public] .hd-task-page .hd-catalog-filter.hd-form-grid { grid-template-columns: minmax(0,1fr) !important; gap: 4px !important; }
+  .hd-catalog-options[open] .hd-catalog-options__fields { padding-block-end: 6px; }
+  [data-helpdesk-public] [data-hd-knowledge] .hd-featured-guide { grid-template-columns: minmax(0,1fr) 52px; align-items: start; }
+  [data-helpdesk-public] [data-hd-knowledge] .hd-featured-guide__title { font-size: 1.0625rem; }
+  [data-helpdesk-public] [data-hd-knowledge] .hd-featured-guide__desc { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+  [data-helpdesk-public] .hd-kb-query input { flex-basis: 8rem; }
+}
+[data-helpdesk-public] [data-ticket-page="create"] [data-ticket-status]:empty { display: none; }
+[data-helpdesk-public] [data-ticket-page="create"] .hd-task-heading {
+  padding: 12px clamp(14px, 2.5vw, 24px);
+  margin-block-end: 12px;
+}
+[data-helpdesk-public] [data-ticket-page="create"] .hd-task-heading .vy-leaf-head {
+  font-size: clamp(1.65rem, 3.7vw, 2.5rem);
+}
+[data-helpdesk-public] [data-ticket-page="create"] [data-ticket-create] {
+  margin-block: 12px 24px;
+  padding: clamp(14px, 2.4vw, 24px);
+}
+[data-helpdesk-public] [data-ticket-create]:not([hidden]) { display: grid; gap: 16px; }
+[data-helpdesk-public] [data-ticket-create] > .vy-input-group { margin-block: 0; }
+[data-helpdesk-public] .hd-report-start {
+  padding: 10px clamp(14px, 2.4vw, 24px);
+  background: var(--hd-task-surface);
+  border: 1px solid var(--hd-task-border);
+  border-radius: 12px;
+}
+[data-helpdesk-public] .hd-report-steps ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  list-style: none;
+  counter-reset: report-step;
+  padding: 0;
+  margin: 0;
+  color: var(--hd-task-muted);
+  font-size: .8125rem;
+}
+[data-helpdesk-public] .hd-report-steps li {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  counter-increment: report-step;
+}
+[data-helpdesk-public] .hd-report-steps li::before { content: counter(report-step); font-weight: 700; }
+[data-helpdesk-public] .hd-report-steps li[aria-current="step"] { color: #a9d4ff; font-weight: 700; }
+[data-helpdesk-public] .hd-report-service {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px 16px;
+  margin-block-start: 8px;
+  padding-block-start: 8px;
+  border-block-start: 1px solid var(--hd-task-border);
+}
+[data-helpdesk-public] .hd-report-service h2 { margin: 0; font-size: clamp(1rem, 2vw, 1.25rem); }
+[data-helpdesk-public] .hd-report-service p { margin: 2px 0 0; color: var(--hd-task-muted); font-size: .8125rem; }
+[data-helpdesk-public] .hd-report-service .btn { margin: 0; min-block-size: 44px; }
+[data-helpdesk-public] [data-hd-kb-detail] { max-inline-size: 49rem; margin-inline: auto; }
+[data-helpdesk-public] [data-hd-kb-detail] > p { margin: 0; }
+[data-helpdesk-public] [data-hd-kb-detail] > p a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 44px;
+  color: #b7d9ff;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+[data-helpdesk-public] [data-hd-kb-reader] { margin-block-start: 12px; }
+[data-helpdesk-public] [data-hd-kb-title] {
+  margin-block: 0 10px;
+  font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+  line-height: 1.2;
+}
+[data-helpdesk-public] [data-hd-kb-reader] .hd-kb-metadata { margin-block: 0 20px; color: #b4c4d4; }
+[data-helpdesk-public] .hd-kb-body :is(ul,ol) { padding-inline-start: 1.4em; }
+[data-helpdesk-public] .hd-kb-body :is(h2,h3,h4) { margin-block: 1.2em .45em; line-height: 1.3; }

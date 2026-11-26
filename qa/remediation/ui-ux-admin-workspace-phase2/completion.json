@@ -1,0 +1,60 @@
+{
+  "task_id": "M0-UX-ADMIN-F2",
+  "date_jakarta": "2026-11-26",
+  "acceptance": "AC11, penyempurnaan ruang kerja Admin pada lab",
+  "result": "DONE_VERIFIED_LAB",
+  "gateway": "http://127.0.0.1:18090/",
+  "changed_files": [
+    "frontend/business-pages.mjs",
+    "frontend/business.css",
+    "frontend/src/features/admin-shell.ts",
+    "frontend/src/features/admin-datatable.ts",
+    "frontend/src/features/dashboard.ts",
+    "frontend/src/features/m0-03.ts",
+    "frontend/src/features/roster.ts",
+    "frontend/src/features/role-policy-editor.ts",
+    "docs/06_ATURAN_UI_UX_WEB_ADMIN.md",
+    "scripts/test_admin_workspace_phase2_browser.mjs"
+  ],
+  "changes": [
+    "Dasbor menampilkan pintasan tugas dan KPI sebelum periode, rincian SLA, serta diagnostik koneksi",
+    "Ketersediaan Tim mendahulukan cakupan, kapasitas, daftar jadwal, dan tindakan Tambah atau Ubah. Editor memiliki fokus masuk dan kembali",
+    "Halaman master menyediakan aksi utama, pencarian dan data terlebih dahulu. Tambah, Ubah serta tautan baru membuka editor; Batal mengembalikan fokus",
+    "Hak Akses mengelompokkan izin per modul, menampilkan jumlah izin aktif dan perubahan, serta mempertahankan pilihan saat modul lain diperiksa",
+    "Media menyediakan pemilih editorial atau privat, status dan galeri pada layar awal. Unggah dan tinjauan publikasi dibuka sesuai tugas"
+  ],
+  "layout_metrics_390x844_css_px": {
+    "dashboard_kpis_top_before": 969,
+    "dashboard_kpis_top_after": 409,
+    "dashboard_kpis_bottom_after": 623,
+    "roster_first_edit_top": 597,
+    "organization_first_edit_bottom": 814,
+    "role_first_module_top": 495,
+    "editorial_media_first_card_top": 542
+  },
+  "verification": [
+    {"command": "npm.cmd --prefix frontend run build", "result": "PASS"},
+    {"command": "python -X utf8 scripts/test_piui_build.py", "result": "PASS"},
+    {"command": "node scripts/test_admin_navigation.mjs", "result": "PASS"},
+    {"command": "python -X utf8 scripts/smoke_local.py", "result": "PASS", "proof": "Gateway sehat, rute dan header keamanan sesuai, aset sama dengan dist"},
+    {
+      "command": "$env:EDGE_MAINT_CDP_PORT='9345'; $env:HELPDESK_UX_SCREENSHOTS='.local/ui-ux-20261126/admin-workspace'; node scripts/test_admin_workspace_phase2_browser.mjs",
+      "result": "PASS",
+      "proof": "10 tampilan representatif dan interaksi per area. Termasuk fokus, peran yang dilindungi, perubahan lintas kelompok, pembatalan tinjauan, dan tab media",
+      "artifact": "browser.json"
+    },
+    {"command": "git -c core.safecrlf=false diff --check", "result": "PASS"}
+  ],
+  "runtime": {
+    "active_port": 18090,
+    "healthy_services": ["web", "app", "db", "scanner"],
+    "web_image": "sha256:401c84e5a00ea500ebf4227f73f3c8b2118def92df7c7a446b3d6e71d27b4a42",
+    "rollback_tag": "helpdesk-m0-web:pre-ux-admin-20261126",
+    "working_db_rows": {"tickets": 136, "attachments": 51, "media": 17}
+  },
+  "limits": [
+    "Edge dengan viewport emulasi dan akun Koordinator serta Super Admin di lab",
+    "Pratinjau formulir, izin dan media diuji tanpa menyimpan perubahan master, jadwal atau kebijakan dan tanpa mengunggah berkas",
+    "UAT manusia, perangkat fisik, pembaca layar, CI terlindungi dan rilis produksi belum dijalankan"
+  ]
+}

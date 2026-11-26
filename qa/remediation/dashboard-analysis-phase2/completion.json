@@ -1,0 +1,91 @@
+{
+  "task_id": "M0-DASHBOARD-F2",
+  "timestamp": "2026-11-26T04:01:00.8896076+00:00",
+  "acceptance": "AC02 AC06 AC11 AC23 (analisis dasbor)",
+  "result": "DONE_VERIFIED_LAB",
+  "report": "qa/remediation/dashboard-analysis-phase2/completion.json",
+  "files": [
+    "backend/internal/bootstrap/application.go",
+    "backend/internal/modules/m3/module.go",
+    "backend/internal/modules/m3/api/dashboard.go",
+    "backend/internal/modules/m3/internal/store/dashboard.go",
+    "backend/internal/modules/m9/module.go",
+    "backend/internal/modules/m9/api/types.go",
+    "backend/internal/modules/m9/api/dashboard.go",
+    "backend/internal/modules/m9/internal/app/http.go",
+    "backend/internal/modules/m9/internal/app/dashboard.go",
+    "backend/internal/modules/m9/internal/store/reports.go",
+    "backend/internal/modules/m9/internal/store/dashboard.go",
+    "backend/internal/modules/m9/internal/store/dashboard_test.go",
+    "scripts/build_business_contracts.py",
+    "contracts/openapi/business.json",
+    "contracts/business_traceability.csv",
+    "contracts/feature_coverage.csv",
+    "frontend/src/features/business-types.generated.ts",
+    "frontend/src/features/dashboard.ts",
+    "frontend/src/features/dashboard-analysis.ts",
+    "frontend/src/features/report-link-context.ts",
+    "frontend/src/features/technical-performance.ts",
+    "frontend/src/features/m0-03.ts",
+    "frontend/src/features/journey.ts",
+    "frontend/business-pages.mjs",
+    "frontend/business.css",
+    "docs/06_ATURAN_UI_UX_WEB_ADMIN.md",
+    "scripts/test_admin_dashboard_analysis_browser.mjs",
+    "planning/backlog.csv",
+    "status/PROJECT_STATE.md",
+    "status/evidence.jsonl",
+    "qa/remediation/dashboard-analysis-phase2/browser.json",
+    "qa/remediation/dashboard-analysis-phase2/completion.json"
+  ],
+  "commands": [
+    "python -X utf8 scripts/build_business_contracts.py --check",
+    "docker build --quiet --target source -t helpdesk-m0-test:dashboard-phase2 -f infra/docker/backend.Dockerfile .",
+    "docker run --rm --network none helpdesk-m0-test:dashboard-phase2 go test ./internal/modules/m3/... ./internal/modules/m9/... ./internal/bootstrap",
+    "npm.cmd --prefix frontend run build",
+    "python -X utf8 scripts/test_piui_build.py",
+    "node scripts/test_admin_navigation.mjs",
+    "docker compose build --quiet app",
+    "docker compose build --quiet web",
+    "docker compose up -d --no-deps --no-build --pull never --wait --wait-timeout 60 app web",
+    "python -X utf8 scripts/smoke_local.py",
+    "$env:EDGE_MAINT_CDP_PORT='9356'; node scripts/test_admin_dashboard_analysis_browser.mjs",
+    "$env:EDGE_MAINT_CDP_PORT='9357'; node scripts/test_admin_dashboard_foundation_browser.mjs",
+    "git -c core.safecrlf=false diff --check"
+  ],
+  "runtime": {
+    "port": 18090,
+    "app_image": "sha256:715a274563329445509fcd9ed6f9b3463a5b4be8664229bca59206729296c085",
+    "web_image": "sha256:24fb7a914dfacaa8bc32c680b6a838524fc2d72f2696a3353fdfd8db346fd493",
+    "rollback_tags": [
+      "helpdesk-m0-app:pre-dashboard-f2-20261126",
+      "helpdesk-m0-web:pre-dashboard-f2-20261126"
+    ],
+    "healthy_services": [
+      "app",
+      "web",
+      "db",
+      "scanner"
+    ],
+    "counts_before_after": {
+      "tickets": 136,
+      "attachments": 51,
+      "media": 17
+    }
+  },
+  "limits": [
+    "Edge emulasi 1440 × 900 dan 390 × 844. Sampel lab Diskominfo, akun Koordinator dan Super Admin; regresi Fase 1 mencakup Teknisi.",
+    "Kasus tenggat mendekati, jeda dan batas waktu WIB diuji pada unit. Sampel browser memiliki 12 melewati tenggat dan 52 target belum terukur.",
+    "Ekspor teknis sukses dibaca. Ekspor cohort diuji pada pemindahan filter dan penolakan lintas PD; tidak membuat job ekspor yang diizinkan pada database kerja.",
+    "Data proyeksi dapat diperbarui di antara permintaan halaman live. Periode maksimum analisis 31 hari. Batas baris server mengikuti batas laporan M9 yang ada.",
+    "UAT pada perangkat fisik, kapasitas produksi dan pengujian beban belum dijalankan."
+  ],
+  "requirements": {
+    "aggregates": "PASS: 114 baris = 114 diterima. Tren aktif 64 dan selesai 50 sesuai ringkasan, kelompok usia dan tenggat ditelusuri ke baris.",
+    "filters": "PASS: grafik dan kartu mengisi tanggal dan kelompok tabel. Pencarian nomor dari halaman kedua dan pencarian judul berjalan sebelum cursor dan limit. Rujukan detail memakai tiket hasil tabel.",
+    "capacity": "PASS: kapasitas sesuai respons tim dalam mandat jadwal pada waktu penilaian saat ini. Kinerja teknis sesuai respons aktivitas dengan PD dan periode yang sama.",
+    "authorization": "PASS: agregat, baris, pencarian, kapasitas dan dua jalur ekspor lintas PD menghasilkan 403. Super Admin berizin laporan saja memperoleh agregat tanpa baris atau ekspor.",
+    "ui": "PASS: 1440 × 900, 390 × 844 tanpa overflow dokumen dan aktivasi segmen dengan Enter memindahkan fokus ke judul tabel.",
+    "browser": "browser.json"
+  }
+}

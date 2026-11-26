@@ -141,7 +141,7 @@ def extend(s, operation, obj, arr, enum, ref, UUID, TEXT, UTC, VERSION):
     operation('post', '/tickets/{id}/pauses/{pause_id}/resume', 'ResumePause', 'M3', 'ticket.pause', 'Receipt', 'VersionedReason', fr='FR27')
     operation('get', '/tickets/{id}/scheduler-jobs', 'ListTicketSchedulerJobs', 'M7', 'system.job', 'SchedulerJobList', fr='FR17')
     operation('get', '/admin/scheduler-jobs', 'ListAdminSchedulerJobs', 'M7', 'system.job', 'SchedulerJobList', fr='FR17')
-    operation('get', '/staff/directory', 'ListStaffDirectory', 'M1', 'ticket.read', 'StaffDirectoryList', fr='FR27')
+    operation('get', '/staff/directory', 'ListStaffDirectory', 'M1', 'staff organization scope; team filter requires scoped roster management', 'StaffDirectoryList', fr='FR27', query=('organization_id','team_id'))
     operation('get', '/admin/operations', 'ListAdminOperations', 'M1', 'operation.read', 'SystemJobList', fr='FR18')
     operation('get', '/media/approvals', 'ListMediaApprovals', 'M8', 'media.reuse', 'MediaApprovalList', fr='FR19')
     for owner, suffix, fr in (('M4', 'classification', 'FR14'), ('M5', 'routing', 'FR15'), ('M6', 'sla', 'FR16'), ('M7', 'escalation', 'FR17')):

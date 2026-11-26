@@ -9,8 +9,13 @@ import path from 'node:path';
 const BASE = process.env.HELPDESK_BASE_URL || 'http://127.0.0.1:18090';
 const EDGE = process.env.EDGE_BIN || 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
 const CDP_PORT = Number(process.env.EDGE_CDP_PORT || 9234);
+const FROM_SUITE = process.env.HELPDESK_BROWSER_FROM_SUITE || '';
+const THROUGH_SUITE = process.env.HELPDESK_BROWSER_THROUGH_SUITE || '';
+const FIXTURE_TICKET = process.env.HELPDESK_BROWSER_FIXTURE_TICKET || '';
+assert.ok(!FIXTURE_TICKET || (FROM_SUITE && /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(FIXTURE_TICKET)),
+  'A fixture ticket UUID may be supplied only for a resumed run');
 const ROOT = path.resolve(import.meta.dirname, '..');
-const OUT_DIR = path.join(ROOT, 'qa', 'remediation', 'rm0-04');
+const OUT_DIR = process.env.HELPDESK_BROWSER_REPORT_DIR ? path.resolve(process.env.HELPDESK_BROWSER_REPORT_DIR) : path.join(ROOT, 'qa', 'remediation', 'rm0-04');
 fs.mkdirSync(OUT_DIR, { recursive: true });
 
 class CDPClient {
@@ -86,10 +91,12 @@ class CDPClient {
     return filePath;
   }
   async key(keyName, code, keyCode, modifiers = 0) {
-    await this.send('Input.dispatchKeyEvent', { type: 'keyDown', key: keyName, code, windowsVirtualKeyCode: keyCode, modifiers });
+    await this.send('Input.dispatchKeyEvent', { type: 'keyDown', key: keyName, code, windowsVirtualKeyCode: keyCode, modifiers, text: keyName === 'Enter' ? '\r' : undefined });
     await this.send('Input.dispatchKeyEvent', { type: 'keyUp', key: keyName, code, windowsVirtualKeyCode: keyCode, modifiers });
   }
 }
+
+const PNG_FIXTURE = [137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,1,0,0,0,1,8,6,0,0,0,31,21,196,137,0,0,0,10,73,68,65,84,120,156,99,0,1,0,0,5,0,1,13,10,45,180,0,0,0,0,73,69,78,68,174,66,96,130];
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -216,6 +223,8 @@ async function main() {
     base_url: BASE,
     browser: 'Microsoft Edge Headless (CDP)',
     suites: {},
+    from_suite: FROM_SUITE || null,
+    through_suite: THROUGH_SUITE || null,
     csp_violations: [],
     console_errors: [],
     exceptions: [],
@@ -246,10 +255,20 @@ async function main() {
     for (const item of v) cspList.push({ route: label, ...item });
   }
 
+  const waitForStyles = label => waitFor(() => cdp.eval(`document.readyState === 'complete'
+    && [...document.querySelectorAll('link[rel="stylesheet"]')].every(link => Boolean(link.sheet))`),
+  10000, `stylesheet readiness for ${label}`);
+
+  let suiteStarted = !FROM_SUITE;
+  let suiteEnded = false;
   async function runSuite(name, fn) {
+    if (suiteEnded) return;
+    if (name === FROM_SUITE) suiteStarted = true;
+    if (!suiteStarted) return;
     try {
       const detail = await fn();
       report.suites[name] = { status: 'PASS', ...detail };
+      if (name === THROUGH_SUITE) suiteEnded = true;
       console.log(`[PASS] ${name}`);
     } catch (err) {
       report.suites[name] = { status: 'FAIL', error: err.message };
@@ -281,6 +300,7 @@ async function main() {
         await cdp.setViewport(vp.w, vp.h, vp.mobile);
         for (const r of vp.name === 'desktop' ? publicRoutes : ['/', '/lapor.html', '/panduan.html', '/halaman.html', '/faq.html', '/akses.html']) {
           await cdp.navigate(`${BASE}${r}`, 450);
+          await waitForStyles(`${vp.name}:${r}`);
           await recordRouteTelemetry(`${vp.name}:${r}`);
           const m = await cdp.eval(`({
             h1: document.querySelector('h1')?.textContent?.trim() || '',
@@ -480,6 +500,30 @@ async function main() {
         sel.dispatchEvent(new Event('change', { bubbles: true }));
       })()`);
       await sleep(300);
+      const diffReview = await cdp.eval(`(() => {
+        const section = document.querySelector('[data-hd-role-policy-section]');
+        const modules = section.querySelector('#hd-role-module');
+        modules.value = 'Banner Hero';
+        modules.dispatchEvent(new Event('change',{bubbles:true}));
+        const groups = [...section.querySelectorAll('[data-role-module]')];
+        const visible = groups.filter(group=>!group.hidden);
+        const check = visible[0]?.querySelector('input[name=permissions]');
+        if (visible.length !== 1 || !check) return false;
+        const wasChecked = check.checked;
+        check.click();
+        const summary = section.querySelector('[data-role-changes]').textContent;
+        const reason = section.querySelector('#hd-role-policy-reason');
+        reason.value = 'Validasi perubahan izin dari modul Banner Hero';
+        section.querySelector('button[type=submit]').click();
+        const dialog = document.querySelector('[data-hd-archive-confirm]');
+        const lines = [...dialog.querySelectorAll('[data-hd-arch-details] li')].map(el=>el.textContent);
+        dialog.querySelector('[data-hd-arch-close]').click();
+        check.click();
+        return summary.includes(wasChecked ? '1 izin dicabut' : '1 izin ditambahkan') &&
+          (wasChecked ? lines[1] : lines[0]).includes('Hero') &&
+          !dialog.open && section.querySelector('[data-role-scope]').textContent.includes('semua akun peran');
+      })()`);
+      assert.equal(diffReview,true,'Module filter, real permission delta and cancellation');
       const roleSaved = await cdp.eval(`(() => {
         const s = document.querySelector('[data-hd-role-policy-section]');
         const r = s.querySelector('#hd-role-policy-reason');
@@ -489,6 +533,10 @@ async function main() {
         return 'submitted';
       })()`);
       assert.equal(roleSaved, 'submitted', 'TECHNICIAN role policy must be editable by Super Admin');
+      await waitFor(() => cdp.eval(`document.querySelector('[data-hd-archive-confirm]')?.open`),8000,'role review modal');
+      const roleImpact = await cdp.eval(`document.querySelector('[data-hd-arch-details]')?.textContent`);
+      assert.ok(roleImpact.includes('Ditambahkan:') && roleImpact.includes('Dicabut:'));
+      await cdp.eval(`document.querySelector('[data-hd-arch-submit]').click()`);
       const roleFeedback = await waitFor(async () => {
         const t = await cdp.eval(`document.querySelector('[data-hd-role-policy-section] [role="status"]')?.textContent || ''`);
         return t.includes('Kebijakan tersimpan.') ? t : false;
@@ -499,25 +547,37 @@ async function main() {
       await recordRouteTelemetry('admin-hero-editor');
       const slotCount = await waitFor(() => cdp.eval(`document.querySelectorAll('[data-hero-slots] fieldset').length`), 8000, 'hero slots rendered');
       assert.equal(slotCount, 5, `Expected 5 hero banner slots, got ${slotCount}`);
-      const origTitle = await cdp.eval(`document.querySelector('[data-hero-slots] fieldset input')?.value || ''`);
-      const testTitle = 'Layanan Resmi TIK Depok · Uji RM0-04';
+      const origTitle = await cdp.eval(`document.querySelector('[data-hero-slots] fieldset input[required][maxlength="100"]')?.value || ''`);
+      assert.ok(origTitle.trim(), 'Hero restoration requires a nonempty original title');
+      const testTitle = 'Layanan Resmi TIK Depok · Uji RM0-04 ' + Date.now();
       await cdp.eval(`(() => {
-        const inp = document.querySelector('[data-hero-slots] fieldset input');
+        const inp = document.querySelector('[data-hero-slots] fieldset input[required][maxlength="100"]');
         inp.value = ${JSON.stringify(testTitle)};
         inp.dispatchEvent(new Event('input', { bubbles: true }));
         document.querySelector('#hd-hero-reason').value = 'Uji terbit hero RM0-04 browser';
         document.querySelector('[data-hd-hero-section] button[type="submit"]').click();
       })()`);
       const heroDraftMsg = await waitFor(async () => {
-        const t = await cdp.eval(`document.querySelector('[data-hd-hero-section] [role="status"]')?.textContent || ''`);
+        const t = await cdp.eval(`document.querySelector('[data-hd-hero-section] form [role="status"]')?.textContent || ''`);
         return t.includes('Draf tersimpan.') ? t : false;
       }, 10000, 'hero draft saved');
       await cdp.eval(`(() => {
         document.querySelector('#hd-hero-reason').value = 'Terbit hero RM0-04 browser';
         document.querySelector('[data-hero-publish]').click();
       })()`);
+      const mobilePreview = await cdp.eval(`(() => {
+        document.querySelector('[data-hero-size="mobile"]').click();
+        const frame = document.querySelector('[data-hero-preview-frame]');
+        return {size:frame.dataset.size, slots:document.querySelector('[data-hero-preview-slots]').children.length,
+          caption:frame.querySelector('figcaption').textContent};
+      })()`);
+      assert.equal(mobilePreview.size,'mobile');
+      assert.equal(mobilePreview.slots,5);
+      assert.ok(mobilePreview.caption.includes(testTitle));
+      await waitFor(() => cdp.eval(`document.querySelector('[data-hd-archive-confirm]')?.open`),8000,'hero publication review');
+      await cdp.eval(`document.querySelector('[data-hd-arch-submit]').click()`);
       const heroPubMsg = await waitFor(async () => {
-        const t = await cdp.eval(`document.querySelector('[data-hd-hero-section] [role="status"]')?.textContent || ''`);
+        const t = await cdp.eval(`document.querySelector('[data-hd-hero-section] form [role="status"]')?.textContent || ''`);
         return t.includes('Banner terbit.') ? t : false;
       }, 10000, 'hero published');
 
@@ -530,6 +590,8 @@ async function main() {
       ]) {
         await cdp.setViewport(vp.w, vp.h, vp.mobile);
         await cdp.navigate(`${BASE}/`, 600);
+        await waitFor(() => cdp.eval(`document.querySelector('.vy-stage__tab')?.dataset.title === ${JSON.stringify(testTitle)}`),
+          8000, `public Hero publication at ${vp.name}`);
         await recordRouteTelemetry(`hero-sync:${vp.name}`);
         const rect = await cdp.eval(`(() => {
           const hero = document.querySelector('.vy-hero, main > section');
@@ -551,21 +613,33 @@ async function main() {
       await cdp.setViewport(1280, 800, false);
       await cdp.navigate(`${BASE}/admin/app/helpdesk/index.html?kind=hero`, 700);
       await waitFor(() => cdp.eval(`document.querySelectorAll('[data-hero-slots] fieldset').length === 5`), 8000, 'hero restore load');
-      await cdp.eval(`(() => {
-        const inp = document.querySelector('[data-hero-slots] fieldset input');
+      const restoreForm = await cdp.eval(`(() => {
+        const inp = document.querySelector('[data-hero-slots] fieldset input[required][maxlength="100"]');
         inp.value = ${JSON.stringify(origTitle)};
         inp.dispatchEvent(new Event('input', { bubbles: true }));
         document.querySelector('#hd-hero-reason').value = 'Pemulihan banner hero pasca-uji RM0-04';
-        document.querySelector('[data-hd-hero-section] button[type="submit"]').click();
+        const submit = document.querySelector('[data-hd-hero-section] button[type="submit"]');
+        const form = submit.form;
+        const state = {enabled:!submit.disabled, invalid:[...form.querySelectorAll(':invalid')].map(node=>node.id || node.closest('label')?.textContent)};
+        if (state.enabled && state.invalid.length === 0) form.requestSubmit(submit);
+        return state;
       })()`);
-      await waitFor(async () => (await cdp.eval(`document.querySelector('[data-hd-hero-section] [role="status"]')?.textContent || ''`)).includes('Draf tersimpan.'), 10000, 'hero restore draft');
+      assert.deepEqual(restoreForm, {enabled:true, invalid:[]}, 'Hero restore form must submit');
+      const restoreStatus = () => cdp.eval(`document.querySelector('[data-hd-hero-section] form [role="status"]')?.textContent || ''`);
+      try {
+        await waitFor(async () => (await restoreStatus()).includes('Draf tersimpan.'), 10000, 'hero restore draft');
+      } catch (error) {
+        throw new Error(`${error.message}. Form status: ${await restoreStatus()}`);
+      }
       await cdp.eval(`(() => {
         document.querySelector('#hd-hero-reason').value = 'Terbit ulang hero awal pasca-uji RM0-04';
         document.querySelector('[data-hero-publish]').click();
       })()`);
-      await waitFor(async () => (await cdp.eval(`document.querySelector('[data-hd-hero-section] [role="status"]')?.textContent || ''`)).includes('Banner terbit.'), 10000, 'hero restore publish');
+      await waitFor(() => cdp.eval(`document.querySelector('[data-hd-archive-confirm]')?.open`),8000,'hero restore publication review');
+      await cdp.eval(`document.querySelector('[data-hd-arch-submit]').click()`);
+      await waitFor(async () => (await cdp.eval(`document.querySelector('[data-hd-hero-section] form [role="status"]')?.textContent || ''`)).includes('Banner terbit.'), 10000, 'hero restore publish');
 
-      return { superAdminLocked, roleFeedback, slotCount, heroDraftMsg, heroPubMsg, heroFit };
+      return { superAdminLocked, roleFeedback, roleImpact, slotCount, mobilePreview, heroDraftMsg, heroPubMsg, heroFit };
     });
 
     // C. RM0-03 R3-H Real BACKUP_MANIFEST UI Request -> Dual Approve -> Execute -> Artifact Download + SHA-256 Verify
@@ -643,14 +717,30 @@ async function main() {
     });
 
     // D1. R4-D Validation Summary, Review Dialog, CDP Lost-Response Attachment Retry, Guest Tracking & Revoke, ASN Draft Isolation
-    let testTicketId = '';
+    let testTicketId = FIXTURE_TICKET;
     await runSuite('R4-D_form_lost_response_draft_tracking', async () => {
-      // Logout first so /lapor.html runs as Public Guest
+      // Start the report through the public entry points at a narrow viewport.
       await logoutSession(cdp);
+      await cdp.setViewport(400, 498, true);
+      await cdp.navigate(BASE + '/', 500);
+      await waitForStyles('mobile public entry');
+      const entry = await cdp.eval(`[...document.querySelectorAll('.hd-hero-cta-wrap a')].map(a => ({
+        text:a.textContent, path:a.getAttribute('href'), height:a.getBoundingClientRect().height,
+        inViewport:a.getBoundingClientRect().bottom <= innerHeight
+      }))`);
+      assert.deepEqual(entry.map(a => a.path), ['/layanan.html','/lacak.html','/tiket.html']);
+      assert.ok(entry.every(a => a.height >= 44 && a.inViewport), JSON.stringify(entry));
+      await cdp.navigate(BASE + '/layanan.html', 500);
+      const accessLabels = await waitFor(() => cdp.eval(`(() => {
+        const badges = [...document.querySelectorAll('[data-service-access]')];
+        return badges.length ? badges.map(a => a.textContent) : null;
+      })()`), 8000, 'catalog access labels');
+      assert.ok(accessLabels.includes('Bisa tanpa akun'));
+      assert.ok(accessLabels.every(label => ['Bisa tanpa akun','Perlu akun','Khusus ASN','Khusus petugas'].includes(label)));
       await cdp.setViewport(1280, 800, false);
       await cdp.navigate(`${BASE}/lapor.html?id=${firstSvc.id}`, 800);
       await recordRouteTelemetry('lapor-guest-validation');
-      await waitFor(() => cdp.eval(`document.querySelector('#ticket-title') !== null`), 8000, 'lapor form ready');
+      await waitFor(() => cdp.eval(`!document.querySelector('[data-ticket-create]')?.hidden && document.querySelector('#ticket-key')?.value.length === 64`), 8000, 'lapor form ready');
 
       // Empty submit triggers per-field validation summary with focus buttons
       await cdp.eval(`(() => {
@@ -689,7 +779,7 @@ async function main() {
           el.dispatchEvent(new Event('change', { bubbles: true }));
         }
         // Attach 1x1 PNG file via DataTransfer
-        const png = new Uint8Array([137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,1,0,0,0,1,8,6,0,0,0,31,21,196,137,0,0,0,10,73,68,65,84,120,156,99,0,1,0,0,5,0,1,13,10,45,180,0,0,0,0,73,69,78,68,174,66,96,130]);
+        const png = new Uint8Array(${JSON.stringify(PNG_FIXTURE)});
         const file = new File([png], 'bukti-uji.png', { type: 'image/png' });
         const dt = new DataTransfer();
         dt.items.add(file);
@@ -740,6 +830,23 @@ async function main() {
 
       testTicketId = new URL(retryPrompt.href).searchParams.get('id') || '';
       assert.ok(testTicketId.length >= 32, 'Ticket ID must be created before attachment failure');
+      const receiptActions = await cdp.eval(`(async () => {
+        const receipt = document.querySelector('[data-ticket-created]');
+        const copy = [...receipt.querySelectorAll('button')].find(b => b.textContent === 'Salin Kunci Pelacakan');
+        const link = receipt.querySelector('a');
+        const secret = document.querySelector('#ticket-key')?.value;
+        if (!copy || !link || !secret) return false;
+        const write = navigator.clipboard.writeText;
+        let matched = false;
+        navigator.clipboard.writeText = async value => { matched = value === secret; };
+        try {
+          copy.click();
+          await Promise.resolve();
+          return matched && link.textContent === 'Buka Pelacakan' &&
+            !link.href.includes(secret) && !receipt.innerText.includes(secret);
+        } finally { navigator.clipboard.writeText = write; }
+      })()`);
+      assert.equal(receiptActions, true, 'Receipt exposes safe copy and open actions');
 
       // Click Retry upload attachment -> sends SAME Idempotency-Key to SAME ticket without duplicate!
       await cdp.eval(`(() => {
@@ -825,14 +932,17 @@ async function main() {
       const draftLeaked = await cdp.eval(`Boolean(document.querySelector('[data-draft-banner]') && !document.querySelector('[data-draft-banner]').hidden)`);
       assert.equal(draftLeaked, false, 'ASN draft MUST NOT leak after switching to Publik A');
 
-      return { valSummary, retryPrompt, uploadRecovered, sameIdemKey: true, guestTrackingChecked, draftSavedText, testTicketId };
+      return { entry, accessLabels, receiptActions, valSummary, retryPrompt, uploadRecovered, sameIdemKey: true, guestTrackingChecked, draftSavedText, testTicketId };
     });
 
     // D2. R4-E Queue Mobile/Desktop, Ticket Verification, Dispatch, Conflict 409, Resolution
     await runSuite('R4-E_queue_lifecycle_conflict', async () => {
       await loginSubjectById(cdp, '20000000-0000-4000-8000-000000000004', true); // Operator OPD A
       await cdp.setViewport(1280, 800, false);
-      await cdp.navigate(`${BASE}/admin/app/tickets/index.html`, 900);
+      await cdp.navigate(BASE + '/admin/app/dashboard/index.html', 550);
+      const workLink = await waitFor(() => cdp.eval(`document.querySelector('[data-admin-work-link]')?.textContent`), 8000, 'operator work shortcut');
+      assert.equal(workLink, 'Perlu Verifikasi');
+      await cdp.navigate(BASE + '/admin/app/tickets/index.html', 900);
       await recordRouteTelemetry('admin-tickets-desktop');
       const desktopOv = await cdp.eval(`document.documentElement.scrollWidth - document.documentElement.clientWidth`);
       assert.ok(desktopOv <= 2, `Admin tickets desktop overflow ${desktopOv}`);
@@ -844,10 +954,37 @@ async function main() {
       assert.ok(mobOv <= 2, `Admin tickets mobile overflow ${mobOv}`);
       await cdp.screenshot('admin-tickets-mobile.png');
 
-      // Open our created ticket in detail page
+      // Apply a real server filter and return from detail without losing queue context.
       await cdp.setViewport(1280, 800, false);
       assert.ok(testTicketId, 'Need ticketId from R4-D');
-      await cdp.navigate(`${BASE}/admin/app/tickets/detail.html?id=${encodeURIComponent(testTicketId)}`, 900);
+      await waitFor(() => cdp.eval(`document.querySelector('[data-queue-scope]')?.textContent.includes('Cakupan PD aktif')`), 8000, 'active PD displayed');
+      await cdp.eval(`(() => {
+        document.querySelector('#queue-search-q').value = 'Uji Browser RM0-04';
+        document.querySelector('#queue-filter-state').value = 'OPEN';
+        document.querySelector('[data-queue-search-form]').requestSubmit();
+      })()`);
+      const ticketHref = '/admin/app/tickets/detail.html?id=' + encodeURIComponent(testTicketId);
+      const ticketSelector = '[data-ticket-list] a[href=' + JSON.stringify(ticketHref) + ']';
+      const waitForTicket = () => waitFor(() => cdp.eval(`Boolean(document.querySelector(${JSON.stringify(ticketSelector)}))`), 8000, 'filtered ticket found');
+      const openTicket = async () => {
+        await waitForTicket();
+        await cdp.eval(`document.querySelector(${JSON.stringify(ticketSelector)}).click()`);
+        await waitFor(() => cdp.eval(`Boolean(document.querySelector('[data-back-to-queue]'))`), 8000, 'ticket back link');
+      };
+      await waitForTicket();
+      const scrollBefore = await cdp.eval(`(() => {
+        window.scrollTo({top:250,behavior:'instant'});
+        return scrollY;
+      })()`);
+      assert.ok(scrollBefore > 0, 'Queue fixture should scroll');
+      await openTicket();
+      await waitFor(() => cdp.eval(`Boolean(document.querySelector('[data-ticket-next-copy]'))`), 8000, 'ticket summary loaded');
+      await cdp.eval(`document.querySelector('[data-back-to-queue]').click()`);
+      await waitFor(() => cdp.eval(`document.querySelector('#queue-search-q')?.value === 'Uji Browser RM0-04'
+        && document.querySelector('#queue-filter-state')?.value === 'OPEN'
+        && new URLSearchParams(location.search).get('filter') === 'all'
+        && Math.abs(scrollY - ${scrollBefore}) <= 2`), 8000, 'queue filters and scroll restored');
+      await openTicket();
       await recordRouteTelemetry('admin-ticket-detail');
       await waitFor(() => cdp.eval(`document.querySelector('[data-form-verify]') && !document.querySelector('[data-operator-verify]')?.hidden`), 10000, 'operator verify form');
 
@@ -859,13 +996,28 @@ async function main() {
       })()`);
       const dispatchVisible = await waitFor(() => cdp.eval(`document.querySelector('[data-operator-dispatch]') && !document.querySelector('[data-operator-dispatch]').hidden`), 10000, 'dispatch panel visible after verify');
       assert.ok(dispatchVisible, 'Dispatch panel must unlock only after VERIFIED');
+      const audience = await cdp.eval(`(() => {
+        const select = document.querySelector('#ticket-comment-visibility');
+        if (!select || select.hidden) return false;
+        select.value = 'INTERNAL';
+        select.dispatchEvent(new Event('change'));
+        const internal = document.querySelector('[data-comment-submit-label]')?.textContent === 'Simpan Catatan Internal';
+        select.value = 'REQUESTER';
+        select.dispatchEvent(new Event('change'));
+        return internal && document.querySelector('[data-comment-submit-label]')?.textContent === 'Kirim Balasan kepada Pelapor';
+      })()`);
+      assert.equal(audience, true);
 
       // Dispatch ticket to proposed Technician (first concurrent dispatch succeeds -> bumps version -> UI submit catches 409 Conflict Banner!)
-      const dispatchedAssigneeId = await waitFor(() => cdp.eval(`(() => {
+      const dispatchOption = await waitFor(() => cdp.eval(`(() => {
         const s = document.querySelector('#dispatch-assignee');
         return s && s.options.length >= 1 ? (s.value || s.options[0].value) : '';
       })()`), 8000, 'dispatch assignees loaded');
-      const concurrentDispatchCode = await cdp.eval(`(async () => {
+      const selectedRoster = await cdp.eval(`document.querySelector('[data-dispatch-candidate]')?.textContent || ''`);
+      assert.ok(selectedRoster.includes('Jadwal aktif hingga') && selectedRoster.includes('tiket aktif'));
+      const [dispatchTeamId, dispatchedAssigneeId] = dispatchOption.split('/');
+      assert.ok(dispatchTeamId && dispatchedAssigneeId, 'Dispatch option must encode team and assignee IDs');
+      const concurrentDispatch = await cdp.eval(`(async () => {
         const cur = await (await fetch('/api/v1/tickets/${testTicketId}', { credentials: 'include' })).json();
         const prop = await (await fetch('/api/v1/tickets/${testTicketId}/dispatch-proposal?tier=L1', { credentials: 'include' })).json();
         const csrfTok = decodeURIComponent(document.cookie.match(/(?:^|;\\s*)helpdesk_csrf=([^;]+)/)?.[1] || '');
@@ -875,7 +1027,7 @@ async function main() {
           headers: { 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID(), 'X-CSRF-Token': csrfTok },
           body: JSON.stringify({
             expected_version: cur.version,
-            team_id: prop.team_id,
+            team_id: ${JSON.stringify(dispatchTeamId)},
             assignee_id: ${JSON.stringify(dispatchedAssigneeId)},
             proposal_version: prop.ticket_version,
             proposal_digest: prop.digest,
@@ -883,14 +1035,15 @@ async function main() {
             reason: 'Disposisi konkuren untuk uji konflik 409 UI'
           })
         });
-        return r.status;
+        return {status:r.status, error:r.ok ? null : await r.json()};
       })()`);
-      assert.equal(concurrentDispatchCode, 200, `Concurrent dispatch expected 200, got ${concurrentDispatchCode}`);
+      const concurrentDispatchCode = concurrentDispatch.status;
+      assert.equal(concurrentDispatchCode, 200, `Concurrent dispatch error: ${JSON.stringify(concurrentDispatch)}`);
 
       // Operator UI still holds stale pre-dispatch version -> submit triggers REAL 409 [data-conflict-banner]!
       await cdp.eval(`(() => {
         const sel = document.querySelector('#dispatch-assignee');
-        sel.value = ${JSON.stringify(dispatchedAssigneeId)};
+        sel.value = ${JSON.stringify(dispatchOption)};
         document.querySelector('#dispatch-reason').value = 'Disposisi teknisi uji RM0-04';
         document.querySelector('[data-form-dispatch] button[type="submit"]').click();
       })()`);
@@ -919,7 +1072,7 @@ async function main() {
         const t = document.querySelector('[data-resolve-status]')?.textContent || '';
         return t.includes('Hasil penanganan tersimpan') ? t : false;
       })()`), 10000, 'tech resolve saved');
-      return { desktopOv, mobOv, concurrentDispatchCode, conflictUiShown, dispatchedAssigneeId, resolveStatus };
+      return { workLink, desktopOv, mobOv, queueRestored:true, audience, selectedRoster, concurrentDispatchCode, conflictUiShown, dispatchedAssigneeId, resolveStatus };
     });
 
     // D3. R4-F M9 Reports Lag/Empty/Watermark & Export + Cross-org 403 + Logout Revocation
@@ -990,9 +1143,12 @@ async function main() {
         document.querySelector('#hd-art-title').value = ${JSON.stringify(title)};
         document.querySelector('#hd-art-slug').value = ${JSON.stringify(slug)};
         document.querySelector('#hd-art-audience').value = 'PUBLIC_GUEST';
-        document.querySelector('#hd-art-body').value = 'Konten halaman portal resmi hasil uji end-to-end RM0-04.';
-        document.querySelector('[data-hd-article-form] button[type="submit"]').click();
+        document.querySelector('#hd-art-body').value = '<p>Konten halaman portal resmi hasil uji end-to-end RM0-04.</p>';
+        document.querySelector('[data-editorial-preview]').open = true;
       })()`);
+      await waitFor(() => cdp.eval(`document.querySelector('[data-editorial-preview-title]')?.textContent === ${JSON.stringify(title)}
+        && document.querySelector('[data-editorial-preview-body] p')?.textContent.includes('Konten halaman portal')`),8000,'editorial draft preview');
+      await cdp.eval(`document.querySelector('[data-hd-article-form]').requestSubmit()`);
       await waitFor(async () => (await cdp.eval(`document.querySelector('[data-hd-articles-rows]')?.innerText || ''`)).includes(slug), 10000, 'draft PAGE appears in table');
 
       // Publish PAGE row
@@ -1002,6 +1158,9 @@ async function main() {
         const pub = [...row.querySelectorAll('button')].find(b => b.textContent.includes('Terbitkan'));
         pub.click();
       })()`);
+      await waitFor(() => cdp.eval(`document.querySelector('[data-hd-archive-confirm]')?.open
+        && document.querySelector('[data-hd-arch-details]')?.textContent.includes(${JSON.stringify(title)})`),8000,'editorial publication review');
+      await cdp.eval(`document.querySelector('[data-hd-arch-submit]').click()`);
       await waitFor(async () => {
         const rows = await cdp.eval(`(() => {
           const r = [...document.querySelectorAll('[data-hd-articles-rows] tr')].find(r => r.innerText.includes(${JSON.stringify(slug)}));
@@ -1039,6 +1198,9 @@ async function main() {
         const arc = [...row.querySelectorAll('button')].find(b => b.textContent.includes('Arsipkan'));
         arc.click();
       })()`);
+      await waitFor(() => cdp.eval(`document.querySelector('[data-hd-archive-confirm]')?.open
+        && document.querySelector('[data-hd-arch-details]')?.textContent.includes(${JSON.stringify(title)})`),8000,'editorial archive review');
+      await cdp.eval(`document.querySelector('[data-hd-arch-submit]').click()`);
       await waitFor(async () => {
         const r = await cdp.eval(`[...document.querySelectorAll('[data-hd-articles-rows] tr')].find(r => r.innerText.includes(${JSON.stringify(slug)}))?.innerText || ''`);
         return r.includes('ARCHIVED');
@@ -1130,11 +1292,13 @@ async function main() {
 
     // D6. R4-I Footer 2-tier, 200% Zoom Reflow & prefers-reduced-motion: reduce
     await runSuite('R4-I_footer_zoom_reduced_motion', async () => {
+      await loginSubjectById(cdp, '20000000-0000-4000-8000-000000000011', true);
       // Test 200% zoom reflow (~640px desktop width)
       await cdp.setViewport(640, 480, false);
       const zoomChecks = {};
       for (const route of ['/', '/lapor.html', '/admin/app/dashboard/index.html']) {
         await cdp.navigate(`${BASE}${route}`, 550);
+        await waitForStyles(`zoom200:${route}`);
         await recordRouteTelemetry(`zoom200:${route}`);
         const ov = await cdp.eval(`document.documentElement.scrollWidth - document.documentElement.clientWidth`);
         assert.ok(ov <= 2, `200% zoom reflow overflow on ${route}: ${ov}`);
@@ -1198,12 +1362,31 @@ async function main() {
       await cdp.eval(`(() => { const s = document.querySelector('#hd-rule-owner'); s.value = 'sla'; s.dispatchEvent(new Event('change')); })()`);
       const hasSlaRules = await waitFor(() => cdp.eval(`Boolean(document.querySelector('[data-hd-rules-rows] button'))`), 8000, 'SLA rules rendered');
 
-      // Super Admin sees its uploaded CLEAN media & M8 articles/pages in media pickers
+      // Create the CLEAN editorial asset through the UI on this disposable fixture.
+      await cdp.navigate(`${BASE}/admin/app/helpdesk/index.html?kind=media`, 700);
+      await waitFor(() => cdp.eval(`document.querySelector('#media-upload-org')?.options.length > 0`),
+        8000, 'editorial media upload org loaded');
+      const mediaAlt = 'Ilustrasi sintetis kandidat M0 ' + Date.now();
+      await cdp.eval(`(() => {
+        document.querySelector('[data-hd-toggle-upload]').click();
+        const form = document.querySelector('[data-hd-media-upload-form]');
+        const org = form.querySelector('#media-upload-org');
+        if (!org.value) org.value = [...org.options].find(option => option.value)?.value || '';
+        form.querySelector('#hd-media-alt').value = ${JSON.stringify(mediaAlt)};
+        const dt = new DataTransfer();
+        dt.items.add(new File([new Uint8Array(${JSON.stringify(PNG_FIXTURE)})], 'media-uat-sintetis.png', {type:'image/png'}));
+        const input = form.querySelector('#hd-admin-media-file');
+        input.files = dt.files;
+        input.dispatchEvent(new Event('change', {bubbles:true}));
+        form.requestSubmit();
+      })()`);
+      await waitFor(() => cdp.eval(`document.querySelector('[data-hd-media-upload-status]')?.textContent.includes('CLEAN')`),
+        12000, 'editorial media upload completed and clean');
       await cdp.navigate(`${BASE}/admin/app/helpdesk/index.html?kind=media`, 700);
       const pickersReady = await waitFor(() => cdp.eval(`(() => {
         const s = document.querySelector('#media-source-pick');
         const t = document.querySelector('#media-target-pick');
-        return Boolean(s && t && s.options.length > 1 && t.options.length > 1);
+        return Boolean(s && t && [...s.options].some(o => o.text.includes(${JSON.stringify(mediaAlt)})) && t.options.length > 1);
       })()`), 8000, 'media pickers populated');
 
       // Publisher OPD A loads media approvals list (200) and M8 content picker
@@ -1274,11 +1457,90 @@ async function main() {
       return { authState, adminAuth, deliveryPanel };
     });
 
+    if (FROM_SUITE === 'technical-operations') {
+      await runSuite('technical-operations', async () => {
+        assert.equal(BASE, 'http://127.0.0.1:18193', 'Use the isolated technical operations stack');
+        const org = '10000000-0000-4000-8000-000000000001';
+        const team = '50000000-0000-4000-8000-000000000001';
+        const adminPage = BASE + '/admin/app/helpdesk/index.html?kind=';
+        const login = async (n, admin = true) => {
+          await logoutSession(cdp);
+          await loginSubjectById(cdp, '20000000-0000-4000-8000-' + String(n).padStart(12,'0'), admin);
+        };
+        const mutate = async (path, body) => {
+          const result = await cdp.eval(`(async () => {
+            const csrf = decodeURIComponent(document.cookie.match(/(?:^|;\\s*)helpdesk_csrf=([^;]+)/)?.[1] || '');
+            const response = await fetch('/api/v1' + ${JSON.stringify(path)}, {method:'POST', credentials:'same-origin',
+              headers: {'Content-Type':'application/json','X-CSRF-Token':csrf,'Idempotency-Key':crypto.randomUUID()},
+              body: JSON.stringify(${JSON.stringify(body)})});
+            const data = await response.json();
+            return {status:response.status,id:data.id,message:data.message};
+          })()`);
+          assert.ok(result.status < 300, JSON.stringify(result));
+          return result;
+        };
+
+        await cdp.setViewport(1366,850);
+        await login(11);
+        await cdp.navigate(adminPage+'availability&organization_id='+org+'&team_id='+team+'#roster');
+        await waitFor(() => cdp.eval(`Boolean(document.querySelector('[data-hd-roster-rows] button'))`),8000,'roster rows');
+        await cdp.eval(`document.querySelector('[data-hd-roster-rows] button').click();
+          document.querySelector('#hd-roster-limit').value='6';
+          document.querySelector('#hd-roster-reason').value='Pengaturan fixture browser M0';
+          document.querySelector('[data-hd-roster-form]').requestSubmit();`);
+        await waitFor(() => cdp.eval(`document.querySelector('[data-hd-roster-status]').textContent.includes('Jadwal tersimpan')`),8000,'roster save');
+        const reloaded = cdp.waitForEvent('Page.loadEventFired');
+        await cdp.send('Page.reload',{ignoreCache:true});
+        await reloaded;
+        await waitFor(() => cdp.eval(`document.querySelector('[data-hd-roster-rows]').textContent.includes('6 dari 6')`), 8000, 'capacity persisted');
+        await recordRouteTelemetry('technical-availability');
+        await cdp.screenshot('ketersediaan-tim-desktop.png');
+
+        await login(1,false);
+        const created = await mutate('/tickets',{service_id:'30000000-0000-4000-8000-000000000001',
+          service_version:1, form_version:1, policy_version:1,title:'Uji browser kapasitas teknisi',
+          description:'Fixture sintetis untuk kandidat kapasitas',answers:{ringkasan:'Uji jaringan'}});
+        await login(4);
+        const categories = await cdp.eval(`fetch('/api/v1/tickets/${created.id}/verification-categories').then(r=>r.json())`);
+        assert.ok(Array.isArray(categories) && categories.length, 'Use active categories for the seeded service');
+        const category = categories.find(c => /jaringan|koneksi|internet/i.test(c.name)) || categories[0];
+        await mutate('/tickets/'+created.id+'/verify',{expected_version:1,category_id:category.id,
+          priority:'NORMAL',classifier_version:2,reason:'Verifikasi fixture browser M0'});
+        await login(11);
+        await waitFor(() => cdp.eval(`fetch('/api/v1/tickets/${created.id}/dispatch-proposal?tier=L1').then(r=>r.json()).then(v=>v.status==='RECOMMENDED')`),
+          12000,'workload recommendation');
+        await cdp.navigate(BASE+'/admin/app/tickets/detail.html?id='+created.id+'&filter=dispatch');
+        await waitFor(() => cdp.eval(`document.querySelector('[data-dispatch-candidate]')?.textContent.includes('0 dari 6 tiket aktif')`), 8000, 'dispatch workload displayed');
+        await recordRouteTelemetry('technical-dispatch');
+        await cdp.screenshot('smart-dispatch-desktop.png');
+
+        await cdp.setViewport(390,844,true);
+        await login(9);
+        await cdp.navigate(adminPage+'reports');
+        await waitFor(() => cdp.eval(`(() => {
+          const panel = document.querySelector('[data-hd-technical-report]');
+          const team = document.querySelector('#hd-technical-report-team');
+          return panel && !panel.hidden && team?.options.length>1 && !team.disabled;
+        })()`),8000,'personal report');
+        assert.equal(await cdp.eval(`document.querySelector('[data-hd-technical-report-title]').textContent`),'Pencapaian Saya');
+        await cdp.eval(`document.querySelector('[data-hd-technical-report] button[type="submit"]').focus()`);
+        await cdp.key('Enter','Enter',13);
+        await waitFor(() => cdp.eval(`document.querySelector('[data-hd-technical-report-summary]')?.textContent.includes('Tiket unik diselesaikan')`),8000,'keyboard report submission');
+        assert.equal(await cdp.eval(`document.documentElement.scrollWidth <= innerWidth+1`), true, 'mobile report reflow');
+        assert.equal(await cdp.eval(`document.querySelector('[data-hd-technical-report-export]').hidden`), true, 'self report export permission');
+        await recordRouteTelemetry('technical-personal-performance');
+        await cdp.screenshot('pencapaian-saya-mobile.png');
+        return { roster: 'persistent', dispatch: 'capacity indicator', report: '390 × 844, keyboard and scoped export' };
+      });
+    }
+
     report.csp_violations = cspList;
     report.console_errors = consoleErrors;
     report.exceptions = exceptions;
     assert.equal(cspList.length, 0, `CSP violations detected: ${JSON.stringify(cspList)}`);
     assert.equal(exceptions.length, 0, `Uncaught JS exceptions detected: ${JSON.stringify(exceptions)}`);
+    assert.ok(suiteStarted, `Unknown starting suite: ${FROM_SUITE}`);
+    assert.ok(!THROUGH_SUITE || suiteEnded, `Ending suite not reached: ${THROUGH_SUITE}`);
     report.result = 'PASS';
   } finally {
     fs.writeFileSync(path.join(OUT_DIR, 'browser-final.json'), JSON.stringify(report, null, 2));

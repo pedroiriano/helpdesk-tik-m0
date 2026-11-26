@@ -51,7 +51,7 @@ func (s *Service) Register(m *http.ServeMux) {
 		}
 		state := r.URL.Query().Get("state")
 		serviceID := r.URL.Query().Get("service_id")
-		v, e := s.ListFiltered(r.Context(), creds(r), p, state, serviceID)
+		v, e := s.ListFiltered(r.Context(), creds(r), p, state, serviceID, r.URL.Query().Get("q"))
 		reply(w, v, e)
 	})
 	m.HandleFunc("POST /api/v1/tickets/bulk", func(w http.ResponseWriter, r *http.Request) {

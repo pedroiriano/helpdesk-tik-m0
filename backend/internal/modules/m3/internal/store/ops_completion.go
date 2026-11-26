@@ -11,15 +11,16 @@ import (
 )
 
 // ListFiltered applies mandatory visibility ACL before optional state/service filters and cursor pagination.
-func (s Store) ListFiltered(ctx context.Context, scope Scope, p web.Page, state, serviceID string) ([]api.Ticket, error) {
+func (s Store) ListFiltered(ctx context.Context, scope Scope, p web.Page, state, serviceID, query string) ([]api.Ticket, error) {
 	rows, e := s.Pool.Query(ctx, `SELECT `+columns+` FROM intake.tickets t
 		WHERE `+visible+`
 		  AND ($5='' OR t.id::text>$5)
 		  AND ($6='' OR t.service_owner_org_id::text=$6)
 		  AND ($8='' OR t.state=$8)
 		  AND ($9='' OR t.service_id::text=$9)
+		  AND ($10='' OR strpos(lower(t.title),lower($10))>0 OR strpos(lower(t.number),lower($10))>0)
 		ORDER BY t.id LIMIT $7`,
-		scope.ID, scope.TicketID, scope.Orgs, scope.Role, p.Cursor, p.Organization, p.Limit+1, state, serviceID)
+		scope.ID, scope.TicketID, scope.Orgs, scope.Role, p.Cursor, p.Organization, p.Limit+1, state, serviceID, query)
 	if e != nil {
 		return nil, e
 	}
@@ -168,7 +169,11 @@ func (s Store) CloseVendorCase(ctx context.Context, tx pgx.Tx, ticketID, caseID,
 	if err = History(ctx, tx, ticketID, nextVer, actor, "CloseVendorCase", "Kasus vendor ditutup: "+in.Reason); err != nil {
 		return api.Ticket{}, err
 	}
-	return scan(tx.QueryRow(ctx, `SELECT `+columns+` FROM intake.tickets t WHERE id=$1`, ticketID))
+	ticket, err := scan(tx.QueryRow(ctx, `SELECT `+columns+` FROM intake.tickets t WHERE id=$1`, ticketID))
+	if err != nil {
+		return api.Ticket{}, err
+	}
+	return ticket, emitState(ctx, tx, ticket)
 }
 
 func (s Store) ResumePause(ctx context.Context, tx pgx.Tx, ticketID, pauseID, actor string, in api.ArchiveInput, now time.Time) (api.Ticket, error) {
@@ -320,8 +325,9 @@ func (s Store) ResolveHandoffPending(ctx context.Context, tx pgx.Tx, ticketID, h
 
 func (s Store) RecordWorkLog(ctx context.Context, tx pgx.Tx, ticketID, actor string, in api.WorkLogInput, now time.Time) (api.WorkLogRecord, error) {
 	var curVer int64
-	var curState string
-	err := tx.QueryRow(ctx, `SELECT version,state FROM intake.tickets WHERE id=$1 AND archived_at IS NULL FOR UPDATE`, ticketID).Scan(&curVer, &curState)
+	var curState, owner string
+	var team *string
+	err := tx.QueryRow(ctx, `SELECT version,state,service_owner_org_id::text,handling_team_id::text FROM intake.tickets WHERE id=$1 AND archived_at IS NULL FOR UPDATE`, ticketID).Scan(&curVer, &curState, &owner, &team)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return api.WorkLogRecord{}, web.Fail(404, "Tiket tidak ditemukan")
 	}
@@ -336,10 +342,10 @@ func (s Store) RecordWorkLog(ctx context.Context, tx pgx.Tx, ticketID, actor str
 	}
 	id := web.ID()
 	var rec api.WorkLogRecord
-	err = tx.QueryRow(ctx, `INSERT INTO intake.work_logs(id,version,ticket_id,actor_id,started_at,ended_at,summary,created_at,updated_at)
-		VALUES($1,1,$2,$3,$4,$5,$6,$7,$7)
+	err = tx.QueryRow(ctx, `INSERT INTO intake.work_logs(id,version,ticket_id,actor_id,started_at,ended_at,summary,created_at,updated_at,service_owner_org_id,handling_team_id)
+		VALUES($1,1,$2,$3,$4,$5,$6,$7,$7,$8,$9)
 		RETURNING id::text,version,ticket_id::text,actor_id::text,started_at,ended_at,summary,created_at`,
-		id, ticketID, actor, in.StartedAt, in.EndedAt, in.Summary, now).
+		id, ticketID, actor, in.StartedAt, in.EndedAt, in.Summary, now, owner, team).
 		Scan(&rec.ID, &rec.Version, &rec.TicketID, &rec.ActorID, &rec.StartedAt, &rec.EndedAt, &rec.Summary, &rec.CreatedAt)
 	if err != nil {
 		return api.WorkLogRecord{}, err

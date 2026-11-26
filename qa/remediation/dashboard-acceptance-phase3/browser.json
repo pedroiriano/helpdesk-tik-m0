@@ -1,0 +1,318 @@
+{
+  "result": "PASS",
+  "target": "http://127.0.0.1:18090/admin/app/dashboard/index.html",
+  "roles": {
+    "COORDINATOR": {
+      "action": {
+        "top": 183,
+        "bottom": 227,
+        "width": 130,
+        "height": 44
+      },
+      "filter": "filter=dispatch",
+      "kpi": true,
+      "ticket_table": true,
+      "cohort_export": true,
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": 0,
+      "kpis": {
+        "top": 336,
+        "bottom": 490,
+        "width": 336,
+        "height": 154
+      },
+      "report_content_width": 336,
+      "report_heading_width": 336,
+      "report_sla_width": 336,
+      "report_status_width": 336
+    },
+    "OPERATOR": {
+      "action": {
+        "top": 183,
+        "bottom": 227,
+        "width": 121,
+        "height": 44
+      },
+      "filter": "filter=verification",
+      "kpi": false,
+      "ticket_table": false,
+      "cohort_export": false,
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": 0
+    },
+    "TECHNICIAN": {
+      "action": {
+        "top": 183,
+        "bottom": 227,
+        "width": 99,
+        "height": 44
+      },
+      "filter": "filter=my-tasks",
+      "kpi": false,
+      "ticket_table": false,
+      "cohort_export": false,
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": 0
+    },
+    "LEADERSHIP": {
+      "action": {
+        "top": 183,
+        "bottom": 227,
+        "width": 147,
+        "height": 44
+      },
+      "filter": "kind=reports",
+      "kpi": true,
+      "ticket_table": true,
+      "cohort_export": true,
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": 0,
+      "kpis": {
+        "top": 336,
+        "bottom": 490,
+        "width": 336,
+        "height": 154
+      },
+      "report_content_width": 336,
+      "report_heading_width": 336,
+      "report_sla_width": 336,
+      "report_status_width": 336
+    },
+    "SUPER_ADMIN": {
+      "action": {
+        "top": 201,
+        "bottom": 245,
+        "width": 138,
+        "height": 44
+      },
+      "filter": "kind=memberships",
+      "kpi": true,
+      "ticket_table": false,
+      "cohort_export": false,
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": 0,
+      "kpis": {
+        "top": 355,
+        "bottom": 508,
+        "width": 336,
+        "height": 154
+      },
+      "report_content_width": 336,
+      "report_heading_width": 336,
+      "report_sla_width": 336,
+      "report_status_width": 336
+    },
+    "PLATFORM_ADMIN": {
+      "action": {
+        "top": 183,
+        "bottom": 227,
+        "width": 138,
+        "height": 44
+      },
+      "filter": "kind=memberships",
+      "kpi": false,
+      "ticket_table": false,
+      "cohort_export": false,
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": 0
+    },
+    "ADMIN_OPD": {
+      "action": {
+        "top": 183,
+        "bottom": 227,
+        "width": 138,
+        "height": 44
+      },
+      "filter": "kind=memberships",
+      "kpi": false,
+      "ticket_table": false,
+      "cohort_export": false,
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": 0
+    },
+    "EDITOR": {
+      "action": {
+        "top": 183,
+        "bottom": 227,
+        "width": 125,
+        "height": 44
+      },
+      "filter": "kind=articles",
+      "kpi": false,
+      "ticket_table": false,
+      "cohort_export": false,
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": 0
+    },
+    "PUBLISHER": {
+      "action": {
+        "top": 183,
+        "bottom": 227,
+        "width": 137,
+        "height": 44
+      },
+      "filter": "kind=articles",
+      "kpi": false,
+      "ticket_table": false,
+      "cohort_export": false,
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": 0
+    },
+    "AUDITOR": {
+      "action": {
+        "top": 183,
+        "bottom": 227,
+        "width": 99,
+        "height": 44
+      },
+      "filter": "kind=audit",
+      "kpi": true,
+      "ticket_table": false,
+      "cohort_export": true,
+      "viewport": [
+        390,
+        844
+      ],
+      "overflow": 0,
+      "kpis": {
+        "top": 336,
+        "bottom": 490,
+        "width": 336,
+        "height": 154
+      },
+      "report_content_width": 336,
+      "report_heading_width": 336,
+      "report_sla_width": 336,
+      "report_status_width": 336
+    }
+  },
+  "readiness": {
+    "first_viewport": {
+      "1440x900": {
+        "viewport": [
+          1440,
+          900
+        ],
+        "overflow": 0,
+        "action": {
+          "top": 166,
+          "bottom": 210,
+          "width": 130,
+          "height": 44
+        },
+        "kpis": {
+          "top": 309,
+          "bottom": 401,
+          "width": 1124,
+          "height": 92
+        },
+        "report_content_width": 1124,
+        "report_heading_width": 1124,
+        "report_sla_width": 1124
+      },
+      "1280x720": {
+        "viewport": [
+          1280,
+          720
+        ],
+        "overflow": 0,
+        "action": {
+          "top": 164,
+          "bottom": 208,
+          "width": 130,
+          "height": 44
+        },
+        "kpis": {
+          "top": 305,
+          "bottom": 397,
+          "width": 934,
+          "height": 92
+        },
+        "report_content_width": 934,
+        "report_heading_width": 934,
+        "report_sla_width": 934
+      },
+      "390x844": {
+        "viewport": [
+          390,
+          844
+        ],
+        "overflow": 0,
+        "action": {
+          "top": 183,
+          "bottom": 227,
+          "width": 130,
+          "height": 44
+        },
+        "kpis": {
+          "top": 336,
+          "bottom": 490,
+          "width": 336,
+          "height": 154
+        },
+        "report_content_width": 336,
+        "report_heading_width": 336,
+        "report_sla_width": 336
+      },
+      "320x568": {
+        "viewport": [
+          320,
+          568
+        ],
+        "overflow": 0,
+        "action": {
+          "top": 183,
+          "bottom": 227,
+          "width": 130,
+          "height": 44
+        },
+        "kpis": {
+          "top": 336,
+          "bottom": 506,
+          "width": 266,
+          "height": 170
+        },
+        "report_content_width": 266,
+        "report_heading_width": 266,
+        "report_sla_width": 266
+      }
+    },
+    "long_labels": true,
+    "state_tones_both_themes": true,
+    "empty_first_week": true,
+    "loading_busy": true,
+    "summary_retry": true,
+    "table_empty_retry": true,
+    "card_to_table_focus_return": true,
+    "chart_arrow_keys_and_focus_return": true,
+    "detail_route_loaded": true
+  },
+  "no_session_hides_private_views": true
+}

@@ -1,0 +1,62 @@
+{
+  "task_id": "M0-UX-TICKET-F1",
+  "date_jakarta": "2026-11-26",
+  "acceptance": "AC11, penyempurnaan antarmuka alur tiket pada lab",
+  "result": "DONE_VERIFIED_LAB",
+  "gateway": "http://127.0.0.1:18090/",
+  "changed_files": [
+    "frontend/ticket-pages.mjs",
+    "frontend/src/features/m0-04.ts",
+    "frontend/public-pages.css",
+    "frontend/business.css",
+    "docs/05_ATURAN_UI_UX_WEB_PUBLIK.md",
+    "docs/06_ATURAN_UI_UX_WEB_ADMIN.md",
+    "scripts/test_ux_priority3_browser.mjs"
+  ],
+  "changes": [
+    "Buat Laporan menyatukan konteks layanan dan tahapan. Isian judul serta uraian mendahului petunjuk lampiran dan kunci tamu",
+    "Antrean memadatkan cakupan, jumlah, pencarian dan kartu. Tombol buka sejajar dengan tenggat dan judul panjang membungkus di desktop serta ponsel",
+    "Detail mendahulukan status, prioritas, penanggung jawab teknis, target dan aksi sesuai mandat. Percakapan, Riwayat, Lampiran dan Penugasan memiliki pintasan dengan fokus tujuan",
+    "Percakapan mempertahankan perbedaan label, tujuan dan tombol untuk balasan serta catatan internal"
+  ],
+  "layout_metrics": {
+    "unit": "CSS px, posisi atas relatif terhadap viewport",
+    "report_390x844_title_top": {"baseline_general_service": 800, "final_general_service": 475},
+    "queue_coordinator_390x844_first_row_top": {"baseline": 875, "final": 609},
+    "queue_coordinator_1440x900_first_row_top": {"baseline": 819, "final": 640},
+    "queue_390x844_open_button_bottom": {"operator": 746, "coordinator": 824},
+    "detail_390x844_next_action_bottom": {"operator": 718, "coordinator": 681}
+  },
+  "verification": [
+    {"command": "npm.cmd --prefix frontend run build", "result": "PASS"},
+    {"command": "python -X utf8 scripts/test_piui_build.py", "result": "PASS"},
+    {"command": "node scripts/test_admin_navigation.mjs", "result": "PASS"},
+    {"command": "python -X utf8 scripts/smoke_local.py", "result": "PASS", "proof": "Gateway, health, rute, header, dan kesetaraan aset"},
+    {
+      "command": "$env:HELPDESK_BASE_URL='http://127.0.0.1:18090'; $env:HELPDESK_UX_REPORT_DIR='qa/remediation/ui-ux-ticket-flow-phase1'; $env:EDGE_MAINT_CDP_PORT='9343'; node scripts/test_ux_priority3_browser.mjs",
+      "result": "PASS",
+      "proof": "Letak aksi, target sentuh, validasi dan pratinjau laporan, penolakan lampiran terlalu besar, navigasi fokus, label catatan internal, kembali ke antrean, serta pencarian dan reset",
+      "artifact": "accessibility.json",
+      "revision": "Kandidat sebelum perbaikan pembungkusan kolom judul desktop. Perbaikan gaya terakhir diverifikasi pada audit visual final"
+    },
+    {
+      "command": "$env:EDGE_MAINT_CDP_PORT='9344'; node .local/ui-ux-20261126/ticket-flow.mjs",
+      "result": "PASS",
+      "proof": "Delapan tampilan pada image aktif. Pembungkusan judul dan tombol buka dalam viewport, tanpa luapan dokumen, stylesheet hilang, atau JavaScript exception",
+      "artifact": ".local/ui-ux-20261126/ticket-flow/layout.json"
+    },
+    {"command": "git -c core.safecrlf=false diff --check", "result": "PASS"}
+  ],
+  "runtime": {
+    "active_port": 18090,
+    "healthy_services": ["web", "app", "db", "scanner"],
+    "web_image": "sha256:fc2a37c843b4c8f864b91e57c905dcd727e52ae98f3926b23f7f13e4ae1c9339",
+    "rollback_tag": "helpdesk-m0-web:pre-ux-tickets-20261126",
+    "working_db_rows": {"tickets": 136, "attachments": 51, "media": 17}
+  },
+  "limits": [
+    "Edge dengan akun lab dan viewport emulasi. Pratinjau laporan dibatalkan. Pengujian tidak melakukan mutasi tiket, komentar, penugasan, atau unggahan",
+    "UAT manusia, perangkat fisik, pembaca layar, CI terlindungi dan deployment produksi tidak dijalankan",
+    "Pekerjaan berakhir pada Fase 1 dari penyempurnaan UI/UX"
+  ]
+}

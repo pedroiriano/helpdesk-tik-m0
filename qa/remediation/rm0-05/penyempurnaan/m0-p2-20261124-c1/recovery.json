@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-11-24T04:37:50.281645+00:00",
+  "scope": "Two Docker tmpfs PostgreSQL instances, one synthetic ticket/private blob/event/job; no working DB",
+  "host_ports": [],
+  "persistent_volumes": [],
+  "test_binary_sha256": "bd35f15e1ccfc9e63e6cc31ac8bfb4bb63a684a6909d20dcb75f04c31011b8c2",
+  "timing_scope": "Create restore DB to first HTTP read by a fresh app process; tests precompiled",
+  "backup_manifest": {
+    "metadata_sha256": "85d256f6a4f3c9d44f19fdb88f58127fa9df47a2b71078ffd7aa22089707fc00",
+    "metadata_bytes": 279612,
+    "blob_sha256": "01179c19a190d7c0f8c5a4837edca8872ed2eebe1e96ec9eaf65d88ca03f21ef",
+    "blob_bytes": 44,
+    "migration_manifest_sha256": "969130e4f07132812f17846f37117a466dc865f6bfa97a3683b4c157cefed333",
+    "config_sha256": {
+      "compose.yaml": "14433224c5d78865fe26e1f34913341ec62614c998e0ed19bb7124c004f94a72",
+      "planning/technology-lock.json": "ee6efdaf6bfa0ebf4cdee12eeb4b2351e99b5663b286e10176ab4a700837cc0a"
+    }
+  },
+  "rpo_fixture_missing_commits": 0,
+  "source_latest_fixture_commit_ms": 1795495132042,
+  "fresh_app_process_1": "PASS",
+  "rto_seconds_to_first_http_read": 6.295,
+  "fresh_app_process_2": "PASS",
+  "result": "PASS",
+  "cleanup": "PASS"
+}

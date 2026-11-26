@@ -2,11 +2,11 @@ import policy from '../contracts/policy/permissions.v1.json' with { type: 'json'
 
 // Presentation profiles never replace the canonical role or server authorization.
 export const primaryProfiles = [
-  {id:'operator',label:'Operator',roles:['OPERATOR'],description:'Periksa kelengkapan laporan, verifikasi, lalu teruskan untuk ditangani.',permission:'ticket.verify',href:'/admin/app/tickets/index.html?filter=verification',action:'Buka antrean verifikasi'},
-  {id:'technician',label:'Teknisi',roles:['TECHNICIAN'],description:'Buka tugas yang diberikan, catat pekerjaan, lalu ajukan hasil penanganan. L1/L2 adalah tingkat kompetensi.',permission:'ticket.resolve',href:'/admin/app/tickets/index.html?filter=my-tasks',action:'Buka tugas saya'},
-  {id:'coordinator',label:'Koordinator',roles:['COORDINATOR'],description:'Atur penugasan dan tindak lanjuti hambatan, jeda SLA, atau perpindahan antar-OPD.',permission:'ticket.dispatch',href:'/admin/app/tickets/index.html?filter=dispatch',action:'Buka antrean disposisi'},
-  {id:'leadership',label:'Pimpinan',roles:['LEADERSHIP'],description:'Pantau capaian SLA dan tindak lanjuti eskalasi sesuai mandat organisasi.',permission:'report.read',href:'/admin/app/helpdesk/index.html?kind=reports',action:'Buka laporan kinerja'},
-  {id:'administrator',label:'Administrator',roles:['ADMIN_OPD','PLATFORM_ADMIN','SUPER_ADMIN'],description:'Kelola akun dan layanan sesuai mandat. Hak konfigurasi tidak otomatis membuka isi tiket.',permission:'identity.grant',href:'/admin/app/helpdesk/index.html?kind=memberships',action:'Kelola akun dan akses'},
+  {id:'operator',label:'Operator',roles:['OPERATOR'],description:'Periksa dan teruskan laporan baru.',permission:'ticket.verify',href:'/admin/app/tickets/index.html?filter=verification',action:'Perlu Verifikasi'},
+  {id:'technician',label:'Teknisi',roles:['TECHNICIAN'],description:'Buka tugas dan catat hasil penanganan.',permission:'ticket.resolve',href:'/admin/app/tickets/index.html?filter=my-tasks',action:'Tugas Saya'},
+  {id:'coordinator',label:'Koordinator',roles:['COORDINATOR'],description:'Atur penugasan dan tindak lanjuti hambatan.',permission:'ticket.dispatch',href:'/admin/app/tickets/index.html?filter=dispatch',action:'Perlu Keputusan'},
+  {id:'leadership',label:'Pimpinan',roles:['LEADERSHIP'],description:'Pantau capaian SLA dan eskalasi.',permission:'report.read',href:'/admin/app/helpdesk/index.html?kind=reports',action:'SLA dan Hambatan'},
+  {id:'administrator',label:'Administrator',roles:['ADMIN_OPD','PLATFORM_ADMIN','SUPER_ADMIN'],description:'Kelola akun, akses, dan layanan sesuai mandat.',permission:'identity.grant',href:'/admin/app/helpdesk/index.html?kind=memberships',action:'Master dan Akses'},
 ];
 export const specialProfiles = [
   {id:'editor',label:'Editor konten',roles:['EDITOR']},
@@ -45,5 +45,8 @@ export function workStart(session) {
     if (can(profile.permission)) return profile;
     if (profile.id === 'administrator' && can('catalog.write')) return {...profile,href:'/admin/app/helpdesk/index.html?kind=services',action:'Kelola layanan'};
   }
+  if (role === 'EDITOR' && can('content.write')) return {...profile,description:'Susun dan tinjau panduan layanan.',href:'/admin/app/helpdesk/index.html?kind=articles',action:'Kelola Panduan'};
+  if (role === 'PUBLISHER' && can('content.publish')) return {...profile,description:'Tinjau panduan sebelum diterbitkan.',href:'/admin/app/helpdesk/index.html?kind=articles',action:'Tinjau Penerbitan'};
+  if (role === 'AUDITOR' && can('audit.read')) return {...profile,description:'Telusuri aktivitas dalam mandat audit.',href:'/admin/app/helpdesk/index.html?kind=audit',action:'Jejak Audit'};
   return {label:profile?.label ?? 'Petugas',description:profile ? 'Buka menu sesuai tugas dan hak akses akun Anda.' : 'Periksa penugasan dan hak akses bersama Administrator.',href:'/panduan.html',action:'Buka panduan pengguna'};
 }

@@ -19,19 +19,22 @@ Jangan pernah menyimpan file secret atau kunci privat ke Git (`security_gate.py`
    - `session_key` (wajib >= 32 byte acak kriptografis; digunakan HMAC cookie SSO + kemampuan pelacakan guest).
    - `postgres`, `m1`..`m9` (password unik min 32 karakter per role owner schema PostgreSQL 18.7).
 3. **Secret Integrasi Opsional (`/run/secrets` atau env server aman)**:
-   - `oidc_client_secret` (atau `HELPDESK_SSO_CLIENT_SECRET`)
+   - `sso_client_secret` (atau `HELPDESK_SSO_CLIENT_SECRET`)
    - `telegram_bot_token` (atau `HELPDESK_TELEGRAM_BOT_TOKEN`)
-   - `smtp_pass` (atau `HELPDESK_SMTP_PASS`)
+   - `smtp_password` (atau `HELPDESK_SMTP_PASSWORD`; `HELPDESK_SMTP_PASS` masih diterima sebagai fallback)
+
+   Aktifkan `compose.prod-integrations.yml` sebagai overlay tambahan dan arahkan `HELPDESK_INTEGRATION_SECRETS_DIR` ke direktori terproteksi di luar Git. App membaca file dengan nama di atas dari `/run/integrations` secara read-only. Mount hanya file untuk kanal yang digunakan. Pastikan UID runtime memiliki akses baca dan tidak dapat menulis.
 
 ## 3. Registrasi SSO ASN Kedinasan (OIDC + PKCE S256)
-- Daftarkan Redirect URI exact pada Identity Provider Pemkot Depok:
+- Gunakan `HELPDESK_SSO_REDIRECT_URI`. Nama lama `HELPDESK_SSO_REDIRECT_URL` masih diterima. Daftarkan URI yang sama pada Identity Provider Pemkot Depok:
   `https://<domain-resmi>/api/v1/auth/sso/callback`
 - Nonaktifkan seluruh identitas lab (`HELPDESK_LAB_AUTH=0`). Pastikan hanya akun ASN/Staf aktif (`lab_fixture = false`, dengan `external_ref`/NIP atau email terverifikasi tunggal) yang terdaftar.
 - Backend memverifikasi signature JWT `RS256`/`ES256` via `HELPDESK_SSO_JWKS_URL`, `state`, `nonce`, dan `code_verifier` PKCE `S256` serta cookie `HttpOnly` `SameSite=Lax` bertanda tangan HMAC. Akun tak dikenal ditolak `403`.
 
 ## 4. Antivirus ClamAV & `freshclam`
 - Overlay `compose.prod.yml` mengaktifkan pembaruan definisi virus berkala (`CLAMAV_NO_FRESHCLAMD: 'false'`) dan menyimpan database tanda tangan pada volume persisten `clamav-db:/var/lib/clamav`.
-- Bila server produksi berada di belakang jaringan terkurung, konfigurasikan mirror internal CVD pada host atau pastikan akses keluar hanya ke mirror definisi ClamAV resmi sebelum container `app` menerima unggahan pertama.
+- Scanner memiliki jaringan keluar tersendiri `scanner-updates` tanpa port publik. Database tetap di jaringan internal. Batasi akses keluar di firewall host ke mirror yang disetujui. Bila jaringan terkurung, siapkan mirror internal.
+- Periksa `scanner_signature_age_seconds` pada health admin. Nilai kosong berarti waktu definisi yang dimuat belum dapat dibuktikan. Bandingkan usia dengan batas kebijakan yang berlaku. Jika pembaruan gagal, periksa akses mirror dan ulangi sampai ClamAV memuat definisi baru. Verifikasi terpisah dengan unggahan fixture bersih mulai karantina sampai CLEAN.
 
 ## 5. Prosedur Backup, Migrasi, & Cutover Terkendali
 1. **Verifikasi prasyarat & keamanan pra-cutover**:

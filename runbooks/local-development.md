@@ -8,7 +8,7 @@ docker compose up -d --build --wait --wait-timeout 120
 python scripts/smoke_local.py
 ```
 
-Publik: http://127.0.0.1:18090/ . Admin: http://127.0.0.1:18090/admin/ .
+Gunakan satu gateway Docker lokal di port 18090. Buka [Web Publik](http://127.0.0.1:18090/) atau [Web Admin](http://127.0.0.1:18090/admin/). Versi ini memakai migrasi 001–046. Riwayat konsolidasi dan pemeriksaan tersedia pada [bukti lokal](../qa/remediation/technical-operations/local-consolidation-18090.json).
 Kedua rute menyajikan halaman PIUI asli dengan teks Helpdesk. Dashboard memakai data contoh, sedangkan tombol status koneksi membaca API lokal. Login lab dan master M1/M2 operasional dijelaskan pada [runbook M0-03](m0-03-lab.md). Transaksi tiket lab tersedia pada kandidat M0-04; lihat [runbook tiket dan batas verifikasi](m0-04-lab.md).
 Health liveness: `/api/v1/health/live`; readiness: `/api/v1/health/ready`.
 Readiness memeriksa sembilan pool/marker foundation, identity/catalog versi 3 dan intake/notify_audit versi 4. Status scanner diperiksa terpisah; file gagal scan tetap dikarantina.

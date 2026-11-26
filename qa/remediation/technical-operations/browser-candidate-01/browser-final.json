@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-11-24T08:06:26.346Z",
+  "base_url": "http://127.0.0.1:18193",
+  "browser": "Microsoft Edge Headless (CDP)",
+  "suites": {
+    "technical-operations": {
+      "status": "FAIL",
+      "error": "Timeout waiting for Page.loadEventFired"
+    }
+  },
+  "from_suite": "technical-operations",
+  "through_suite": "technical-operations",
+  "csp_violations": [],
+  "console_errors": [],
+  "exceptions": [],
+  "result": "FAIL"
+}

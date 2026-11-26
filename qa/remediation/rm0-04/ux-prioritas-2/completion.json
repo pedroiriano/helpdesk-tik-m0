@@ -1,0 +1,109 @@
+{
+  "timestamp": "2026-11-24T06:26:44.319611+00:00",
+  "task_id": "RM0-04",
+  "follow_up": "UX Prioritas 2",
+  "scope": "isolated_lab",
+  "result": "PASS",
+  "status": "DONE_VERIFIED_LAB",
+  "requirements": [
+    "AC06",
+    "AC07",
+    "AC11",
+    "AC13",
+    "AC18",
+    "AC20",
+    "FR17",
+    "FR19",
+    "FR24",
+    "FR29"
+  ],
+  "preview": "http://127.0.0.1:18191",
+  "images": {
+    "app": "sha256:780aa87d68d12d56a0e53c0f3a20d38cd7390b2a26be800802c2a1b0d2576b8b",
+    "web": "sha256:baaadb518b27c2a8ee058ccb224a441e7979543490e07a186056d5f0c290034f"
+  },
+  "git_head": "8f9ab58a668830ad1bf92b8d70580eae36a7bef8",
+  "working_tree_snapshot": true,
+  "affected_source_sha256": {
+    "backend/internal/bootstrap/fase2_integration_test.go": "8bdb6b1e26582a2b2c1ffb5e7409790fbdf7b351069c0e74493ce167e0b52cc9",
+    "backend/internal/modules/m1/api/identity.go": "01205bc15b2f4bbe4b6aace5000a6bd6b752859f680c925899bf7c3210f6efff",
+    "backend/internal/modules/m1/internal/app/http.go": "8a80b89e11130beccdd2564299f89a27e3eabc3e0878cc580c0d9c307319b3a9",
+    "backend/internal/modules/m1/internal/app/operations.go": "83d0bc9778fa4911fe6eacd47dc6999f25356632917c841c4909849cfab944ce",
+    "backend/internal/modules/m1/internal/store/identity.go": "abd69784c258b99136f12d11006bbc3a3232890d20597d256c7ea4ef6822c435",
+    "backend/internal/modules/m5/internal/app/assignment.go": "de2ba3c33935513b1b574701dc32fd7538ba61d6128ceb9952926f480e8b7cc8",
+    "backend/internal/modules/m5/internal/app/roster.go": "7a26ed4ef6ae5c23f66a9146ddada9485b960e279c853bfed50ef123e5729ae9",
+    "backend/internal/platform/web/web.go": "5388d6bd63a2459370fe51a6e2084ec2513c334603119f8f99cae8ca59773f33",
+    "contracts/openapi/business.json": "74cddf1c9b9d707d2296d653c16849a3b7e4239616bd9ac1e939e743ed183c3d",
+    "frontend/business-pages.mjs": "da0e650d1ec17ce695d08af2e9772994c09cff729fd5c3f67beb68c36322473f",
+    "frontend/business.css": "9b08a0440fb3cd01a31989e0c621a30ad3d6a05a21060426ca406b714fa1935e",
+    "frontend/src/features/admin-confirm.ts": "8000ac9fc361d37887f15b1c5c90598b2a3db85e45fd4a6c6feda3eacefe1f2d",
+    "frontend/src/features/hero-editor.ts": "88a19c9c0ef3f3b2b7a6653e59a4aafb534460fe04d5fde834d27ae1a8627d49",
+    "frontend/src/features/m0-03.ts": "1f76179dcc9faf817a3dd96ff6f2694c3e9130c7328fa50c9f8e5739e9eb8790",
+    "frontend/src/features/master-impact.ts": "2cd9df5b454111c5fa68ea1b934b52e4a4eb89dbb284f192b58c65666edb3c32",
+    "frontend/src/features/role-policy-editor.ts": "0bb869b45e3f21c62439900490556c3da8bff8260d0c7d3a8d69d85bb7a7d093",
+    "frontend/src/features/roster.ts": "5c08c4c014ef253d6af3309622f4c866ba36378d3b3fbaaa7a72dfb9808099ad",
+    "frontend/src/features/routing-editor.ts": "2c30cbf38641218b6822d9631c00dbdf4ae9c0963f01df72f741487e92f5e1e4",
+    "scripts/build_business_contracts.py": "e482e7ef8b9f3903a711f5282732f8a945a33100530cd051a29498bbfcef88e8",
+    "scripts/fase2_contracts.py": "2a7ef248f8e73ad16face20e949e1cd6734f343785ec338d6be969e558945b2b",
+    "scripts/test_rm0_04_browser.mjs": "9a943682c33978610fddef0f38fb6f09716975f193be30dba8f7fe17d32be959",
+    "scripts/test_ux_priority2_browser.mjs": "bb1ee352300bc6c86eaa24522f2d2e1332be9cbc08f39709117e02a0ae9d011b",
+    "docs/06_ATURAN_UI_UX_WEB_ADMIN.md": "03176f534a6001df89836b55f9ed1dd2d17e6c078b94880b73f86359351b3691"
+  },
+  "verified": {
+    "role_policy": "Filter modul, izin yang bertambah/dicabut, cakupan lintas PD sesuai mandat akun, pembatalan tinjauan, penyimpanan oleh Super Admin dan perlindungan hak inti.",
+    "master": "Navigasi PD/Bidang/Tim/Roster, filter server sebelum paginasi, prapilih roster, teknisi sesuai mandat tim, tinjauan dampak dan pembatalan penonaktifan.",
+    "editorial": "Pratinjau terfilter, penyimpanan draf, review publikasi dan arsip, pembaca dan pencarian publik, lima slot Hero desktop/mobile dan versi tayang.",
+    "media": "Unggah PNG sintetis, hasil scan nyata CLEAN dan aset tampil di pemilih Hero.",
+    "acl": "Kontrol negatif staf biasa, tamu, PD berbeda, ID tim salah format, tim di PD lain dan divisi di luar cakupan."
+  },
+  "resolved_attempts": [
+    "Kontrol negatif integrasi awal memakai ID teknisi L2 PD A; diselaraskan dengan fixture Teknisi PD B."
+  ],
+  "tests": [
+    {
+      "command": "npm.cmd --prefix frontend run build; python -X utf8 scripts/test_piui_build.py",
+      "exit_code": 0
+    },
+    {
+      "command": "python -X utf8 scripts/build_business_contracts.py --check; python -X utf8 -m unittest tests/contract/test_business_contracts.py",
+      "exit_code": 0
+    },
+    {
+      "command": "python -X utf8 scripts/check_boundaries.py; node scripts/test_admin_navigation.mjs; node scripts/test_admin_profiles.mjs",
+      "exit_code": 0
+    },
+    {
+      "command": "HELPDESK_BASE_URL=http://127.0.0.1:18191 python -X utf8 scripts/smoke_local.py",
+      "exit_code": 0
+    },
+    {
+      "command": "node scripts/test_rm0_04_browser.mjs (HELPDESK_BASE_URL 18191, FROM_SUITE=THROUGH_SUITE=candidate_role_hero)",
+      "exit_code": 0,
+      "report": "qa/remediation/rm0-04/ux-prioritas-2/role-hero-final/browser-final.json"
+    },
+    {
+      "command": "node scripts/test_rm0_04_browser.mjs (HELPDESK_BASE_URL 18191, FROM_SUITE=THROUGH_SUITE=R4-G_m8_page_editorial_search_reader)",
+      "exit_code": 0,
+      "report": "qa/remediation/rm0-04/ux-prioritas-2/editorial/browser-final.json"
+    },
+    {
+      "command": "HELPDESK_BASE_URL=http://127.0.0.1:18191 node scripts/test_ux_priority2_browser.mjs",
+      "exit_code": 0,
+      "report": "qa/remediation/rm0-04/ux-prioritas-2/structure-media.json"
+    },
+    {
+      "command": "python -X utf8 scripts/test_fase2_backend.py --report qa/remediation/rm0-04/ux-prioritas-2/integration.json",
+      "exit_code": 0,
+      "report": "qa/remediation/rm0-04/ux-prioritas-2/integration.json"
+    },
+    {
+      "command": "python -X utf8 scripts/verify_package.py",
+      "exit_code": 0
+    }
+  ],
+  "limits": [
+    "Tinjauan dampak memakai daftar terkait yang diizinkan server, bukan pemetaan dependensi lintas PD. Aturan layanan yang diperiksa langsung adalah default L1/L2.",
+    "Pratinjau Hero Desktop/Mobile menguji aset dan judul dalam bingkai Admin. Peramban publik diuji terpisah untuk sinkronisasi publikasi.",
+    "Perubahan dijalankan hanya di preview 18191. Aplikasi kerja 18090 dan baseline UAT 18192 terverifikasi sehat. UAT manusia belum dijalankan."
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "task_id": "M0-ADMIN-SIDEBAR-RAIL",
+  "timestamp": "2026-11-26T06:33:23.9210342+00:00",
+  "acceptance": "AC11 AC06 (sidebar mode ikon)",
+  "result": "DONE_VERIFIED_LAB",
+  "report": "qa/remediation/admin-sidebar-rail/completion.json",
+  "files": [
+    "frontend/admin-navigation.mjs",
+    "frontend/src/features/admin-shell.ts",
+    "frontend/business.css",
+    "docs/06_ATURAN_UI_UX_WEB_ADMIN.md",
+    "scripts/test_admin_sidebar_rail_browser.mjs",
+    "qa/remediation/admin-sidebar-rail/browser.json",
+    "qa/remediation/admin-sidebar-rail/completion.json",
+    "planning/backlog.csv",
+    "status/PROJECT_STATE.md",
+    "status/evidence.jsonl"
+  ],
+  "commands": [
+    "npm.cmd --prefix frontend run build",
+    "python -X utf8 scripts/test_piui_build.py",
+    "node scripts/test_admin_navigation.mjs",
+    "docker image tag sha256:2eb271728fbabadbbb75b6007440f00def9e5a61825fc59eb2140bfe95dc37c0 helpdesk-m0-web:pre-sidebar-rail-20261126",
+    "docker compose build --quiet web",
+    "docker compose up -d --no-deps --no-build --pull never --wait --wait-timeout 60 web",
+    "$env:EDGE_MAINT_CDP_PORT='9362'; node scripts/test_admin_sidebar_rail_browser.mjs",
+    "python -X utf8 scripts/smoke_local.py",
+    "git -c core.safecrlf=false diff --check"
+  ],
+  "runtime": {
+    "port": 18090,
+    "web_image": "sha256:ef6f524f967cc615475778d0ce05996f934a3acd2f0480b5d7bcaa51dfbb3063",
+    "app_image": "sha256:715a274563329445509fcd9ed6f9b3463a5b4be8664229bca59206729296c085",
+    "rollback_tag": "helpdesk-m0-web:pre-sidebar-rail-20261126"
+  },
+  "limits": [
+    "Uji browser Edge 1280 × 720 dan drawer emulasi 390 × 844. Akun lab Super Admin dan Teknisi L1. Pembaca layar fisik dan UAT pengguna belum diuji."
+  ],
+  "root_cause": "Daftar submenu masih memiliki atribut hidden saat sidebar diciutkan. Utilitas PIUI mempertahankan display:none. Ikon induk disembunyikan untuk mode ringkas, sehingga seluruh grup tidak dapat dijangkau.",
+  "checks": {
+    "browser": "browser.json",
+    "super_admin": {
+      "total": 22,
+      "submenu": 16
+    },
+    "technician": {
+      "total": 8,
+      "submenu": 4
+    },
+    "keyboard": "Nama aksesibel, target 44 px, Enter membuka Banner Hero, fokus menggulir ke ikon terbawah dan mengikuti rute aktif.",
+    "states": "Pengungkapan grup tersimpan saat kembali ke mode lebar. Drawer mobile mempertahankan label dan Escape mengembalikan fokus. Item tanpa mandat tetap tersembunyi."
+  }
+}

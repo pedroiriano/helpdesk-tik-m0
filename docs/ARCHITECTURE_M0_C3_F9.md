@@ -52,6 +52,17 @@ Satu build frontend (`/api/v1/*`) melayani ketiga arsitektur tanpa membedakan ko
 
 ---
 
+### C. Kontrak Fase 1 Penyempurnaan M0
+
+| Kemampuan | Owner dan perilaku yang harus setara | C3, F9, dan G-OPT |
+|---|---|---|
+| Pemeliharaan | M1 menyediakan kebijakan global dan PD. M3 menerapkan kebijakan lokal pada organisasi pemilik layanan/tiket dan pihak pada handoff. Global berlaku bagi operasi interaktif sesuai mode. READ_ONLY diutamakan atas DRAIN, cakupan global menang pada mode sama, batas akhir eksklusif. DRAIN menahan tiket baru. Pemulihan jadwal dan autentikasi tetap tersedia. | Gunakan waktu virtual/fixture dua PD, hasil HTTP, cakupan dan audit yang sama. |
+| Smart Dispatch | M5 mengelola daftar jadwal berizin, beralasan dan berversi. M3 tetap mengomit penugasan setelah VERIFIED. Manual hanya saat status MANUAL dan kandidat masih memenuhi mandat organisasi/tim, hak dan ketersediaan. Snapshot manual memutakhirkan proyeksi tanpa fakta rekomendasi. | Gunakan roster, skill, periode, beban awal, kategori, keputusan dan fixture CAS yang sama. |
+| UX dan pencarian | Gunakan PIUI yang sama, lima pintasan per peran dan paging yang sama pada kontrak M2/M3/M8. Cursor pencarian terikat kueri dan principal. Terapkan ACL pada setiap halaman, termasuk hasil Media CLEAN dan unduhan. | Gunakan rute, perilaku akses dan skenario desktop/mobile/keyboard yang sama pada gateway tiap model. |
+| Integrasi | Gunakan konfigurasi TLS, OIDC/sink dan definisi scanner yang sebanding. Pisahkan akses pembaruan definisi dari jaringan DB. | Samakan penyedia uji, resource dan profil scanner yang dihitung serta kebijakan pengukuran. |
+
+Cakupan di atas menjadi persyaratan paritas. Bukti yang dihasilkan dalam fase ini mencakup runtime M0, sementara implementasi dan validasi komparatif lainnya tetap DEFERRED_RESEARCH.
+
 ## 3. Batasan Ketat Kesetaraan & Penelitian
 
 1. **Kesetaraan Port (`sync_business_ports` & `event_subscriptions`)**:

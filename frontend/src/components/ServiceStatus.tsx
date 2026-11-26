@@ -12,7 +12,7 @@ export function ServiceStatus({ admin }: { admin: boolean }) {
         if (!response.ok) throw new Error('unavailable');
         const body: unknown = await response.json();
         if (!body || typeof body !== 'object' || !('status' in body) || body.status !== 'ready') throw new Error('invalid');
-        setState('Layanan pengembangan terhubung');
+        setState('Koneksi layanan berhasil');
       }).catch(() => { if (!cancelled) setState('Layanan belum terhubung. Silakan coba lagi.'); })
       .finally(() => clearTimeout(timeout));
     let cancelled = false;

@@ -18,7 +18,14 @@ for(const item of adminItems) {
     assert.equal(canNavigate(item,undefined),false);
     assert.equal(canNavigate(item,actor('PUBLIC',item.permissions,true,'PUBLIC')),false);
     assert.equal(canNavigate(item,actor('OPERATOR',item.permissions,false)),false);
-    assert.equal(canNavigate(item,actor(item.role ?? 'OPERATOR',[item.permissions[0]],true,'STAFF',item.organization)),true);
+    if (item.id === 'availability') {
+      assert.equal(canNavigate(item,actor('PLATFORM_ADMIN',['rules.write'])),false);
+      assert.equal(canNavigate(item,actor('PLATFORM_ADMIN',['identity.grant','rules.write'])),true);
+      assert.equal(canNavigate(item,actor('TECHNICIAN',['ticket.read','ticket.resolve'])),true);
+      assert.equal(canNavigate(item,actor('TECHNICIAN',['ticket.resolve'])),false);
+    } else {
+      assert.equal(canNavigate(item,actor(item.role ?? 'OPERATOR',[item.permissions[0]],true,'STAFF',item.organization)),true);
+    }
     if(item.organization) assert.equal(canNavigate(item,actor('EDITOR',item.permissions)),false);
     if(item.role) assert.equal(canNavigate(item,actor('PLATFORM_ADMIN',item.permissions)),false);
   }

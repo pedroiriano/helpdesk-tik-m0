@@ -1,0 +1,71 @@
+{
+  "timestamp": "2026-11-24T06:41:44.184Z",
+  "base_url": "http://127.0.0.1:18191",
+  "browser": "Microsoft Edge Headless (CDP)",
+  "suites": {
+    "R4-D_form_lost_response_draft_tracking": {
+      "status": "PASS",
+      "entry": [
+        {
+          "text": "Buat Laporan",
+          "path": "/layanan.html",
+          "height": 44,
+          "inViewport": true
+        },
+        {
+          "text": "Lacak Tiket Tamu",
+          "path": "/lacak.html",
+          "height": 44,
+          "inViewport": true
+        },
+        {
+          "text": "Tiket Saya",
+          "path": "/tiket.html",
+          "height": 44,
+          "inViewport": true
+        }
+      ],
+      "accessLabels": [
+        "Bisa tanpa akun",
+        "Bisa tanpa akun",
+        "Bisa tanpa akun",
+        "Bisa tanpa akun",
+        "Bisa tanpa akun"
+      ],
+      "receiptActions": true,
+      "valSummary": {
+        "visible": true,
+        "count": 4,
+        "focusedId": "ticket-description"
+      },
+      "retryPrompt": {
+        "retryVisible": true,
+        "href": "http://127.0.0.1:18191/detail-tiket.html?id=43eddcb9-e0a4-4922-b57a-a0c904a80359"
+      },
+      "uploadRecovered": true,
+      "sameIdemKey": true,
+      "guestTrackingChecked": true,
+      "draftSavedText": "Draft tersimpan (v6 pada 13.41)",
+      "testTicketId": "43eddcb9-e0a4-4922-b57a-a0c904a80359"
+    },
+    "R4-E_queue_lifecycle_conflict": {
+      "status": "PASS",
+      "workLink": "Perlu Verifikasi",
+      "desktopOv": 0,
+      "mobOv": 0,
+      "queueRestored": true,
+      "audience": true,
+      "selectedRoster": "Teknisi L1 OPD A · Keahlian: hardware, network · Jadwal aktif hingga Senin, 31 Des 2035 • 07.00 WIB · 0 tiket aktif",
+      "concurrentDispatchCode": 200,
+      "conflictUiShown": true,
+      "dispatchedAssigneeId": "20000000-0000-4000-8000-000000000009",
+      "resolveStatus": "Hasil penanganan tersimpan dan menunggu konfirmasi pemohon."
+    }
+  },
+  "from_suite": "R4-D_form_lost_response_draft_tracking",
+  "through_suite": "R4-E_queue_lifecycle_conflict",
+  "csp_violations": [],
+  "console_errors": [],
+  "exceptions": [],
+  "result": "PASS"
+}

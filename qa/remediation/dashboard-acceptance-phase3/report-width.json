@@ -1,0 +1,49 @@
+{
+  "task_id": "M0-DASHBOARD-REPORT-WIDTH",
+  "timestamp": "2026-11-26T04:39:31.8147747+00:00",
+  "acceptance": "AC11 (lebar konten Kinerja tiket)",
+  "result": "DONE_VERIFIED_LAB",
+  "report": "qa/remediation/dashboard-acceptance-phase3/report-width.json",
+  "files": [
+    "frontend/business.css",
+    "docs/06_ATURAN_UI_UX_WEB_ADMIN.md",
+    "scripts/test_admin_dashboard_acceptance_browser.mjs",
+    "qa/remediation/dashboard-acceptance-phase3/browser.json",
+    "qa/remediation/dashboard-acceptance-phase3/report-width.json",
+    "planning/backlog.csv",
+    "status/PROJECT_STATE.md",
+    "status/evidence.jsonl"
+  ],
+  "commands": [
+    "npm.cmd --prefix frontend run build",
+    "python -X utf8 scripts/test_piui_build.py",
+    "docker compose build --quiet web",
+    "docker compose up -d --no-deps --no-build --pull never --wait --wait-timeout 60 web",
+    "$env:EDGE_MAINT_CDP_PORT='9358'; node scripts/test_admin_dashboard_acceptance_browser.mjs",
+    "python -X utf8 scripts/smoke_local.py",
+    "git -c core.safecrlf=false diff --check"
+  ],
+  "runtime": {
+    "port": 18090,
+    "web_image": "sha256:2eb271728fbabadbbb75b6007440f00def9e5a61825fc59eb2140bfe95dc37c0",
+    "app_image": "sha256:715a274563329445509fcd9ed6f9b3463a5b4be8664229bca59206729296c085",
+    "rollback_tag": "helpdesk-m0-web:pre-dashboard-report-width-20261126"
+  },
+  "limits": [
+    "Sampel Edge desktop 1440 × 900 dan 1280 × 720; ponsel emulasi 390 × 844 dan 320 × 568. Hanya web diperbarui."
+  ],
+  "root_cause": "Grid Kinerja tiket menggunakan kolom implisit yang menyusut di bawah justify-content native. Pesan status terkena batas lebar paragraf.",
+  "checks": {
+    "browser": "browser.json",
+    "widths": {
+      "1440x900": 1124,
+      "1280x720": 934,
+      "390x844": 336,
+      "320x568": 266
+    },
+    "equal_report_internal_width": true,
+    "no_horizontal_overflow": true,
+    "roles_tested": 10,
+    "summary": "Judul, KPI dan pengungkapan SLA sejajar; pesan status turut mengisi lebar ketika muncul."
+  }
+}

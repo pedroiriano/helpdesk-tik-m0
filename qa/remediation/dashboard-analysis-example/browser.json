@@ -1,0 +1,85 @@
+{
+  "result": "PASS",
+  "target": "http://127.0.0.1:18090/admin/app/dashboard/index.html",
+  "system_empty": {
+    "content_width": 896,
+    "trend_width": 896,
+    "trend_height": 168,
+    "age_and_deadline_same_row": true,
+    "overflow": 0
+  },
+  "example_desktop": {
+    "content_width": 896,
+    "trend_width": 896,
+    "trend_height": 336,
+    "age_and_deadline_same_row": true,
+    "overflow": 0
+  },
+  "example_mobile": {
+    "content_width": 336,
+    "trend_width": 336,
+    "trend_height": 363,
+    "age_and_deadline_same_row": false,
+    "overflow": 0
+  },
+  "example": {
+    "accepted": 80,
+    "active": 30,
+    "completed": 49,
+    "cancelled": 1,
+    "daily": [
+      [
+        8,
+        3,
+        5
+      ],
+      [
+        12,
+        4,
+        8
+      ],
+      [
+        10,
+        3,
+        6
+      ],
+      [
+        16,
+        5,
+        11
+      ],
+      [
+        14,
+        5,
+        9
+      ],
+      [
+        9,
+        4,
+        5
+      ],
+      [
+        11,
+        6,
+        5
+      ]
+    ],
+    "age": [
+      11,
+      12,
+      7
+    ],
+    "deadline": [
+      4,
+      9,
+      12,
+      2,
+      3
+    ]
+  },
+  "no_example_api_requests": true,
+  "system_kpis_preserved": true,
+  "example_no_ticket_actions_or_export": true,
+  "source_toggle_keyboard": true,
+  "nonlab_mode_simulation_hides_example": true
+}

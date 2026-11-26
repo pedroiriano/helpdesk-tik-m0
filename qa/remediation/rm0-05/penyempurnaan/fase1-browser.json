@@ -1,0 +1,19 @@
+{
+  "runtime": "http://127.0.0.1:18191",
+  "viewport": [
+    "1280x840",
+    "390x844"
+  ],
+  "result": "PASS",
+  "checks": [
+    "Perlu Verifikasi",
+    "Tugas Saya",
+    "Perlu Keputusan",
+    "SLA dan Hambatan",
+    "Master dan Akses",
+    "Roster diperbarui melalui UI dan fokus alasan",
+    "Drawer mobile dibuka melalui keyboard tanpa luapan horizontal",
+    "Saran pencarian publik dapat dipilih melalui keyboard",
+    "Tiket tamu masuk antrean operator dan detail memprioritaskan verifikasi"
+  ]
+}

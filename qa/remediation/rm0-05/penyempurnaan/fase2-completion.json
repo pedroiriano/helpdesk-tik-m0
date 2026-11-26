@@ -1,0 +1,84 @@
+{
+  "task_id": "PENYEMPURNAAN_M0_FASE_2",
+  "timestamp": "2026-11-24T04:57:04.455763+00:00",
+  "candidate_id": "m0-p2-20261124-c3",
+  "technical_status": "DONE_VERIFIED_LAB",
+  "rm0_05_status": "BLOCKED_HUMAN_UAT_AND_DOMAIN_DECISIONS",
+  "release_status": "PENDING_AUTHORIZATION",
+  "production_deployment": "NOT_EXECUTED",
+  "candidate": {
+    "git_head": "8f9ab58a668830ad1bf92b8d70580eae36a7bef8",
+    "dirty_source_snapshot": true,
+    "historical_git_tag": {
+      "tag": "rm0-05-rc4",
+      "git_sha": "68b9922af7695e545fcb161bd6498b4579cba5b4"
+    },
+    "source_manifest": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/source-manifest.json",
+    "source_manifest_sha256": "4703fa01d24b414da39f3af453627e3355b58adf2b29d7a0e1fb4b392d3e6a63",
+    "runtime_evidence": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/runtime.json",
+    "images": {
+      "app": "sha256:68b4d09b02da52968e6006b2d55ebb6ecc1a7c940f2477f31c4fa734e2096a17",
+      "web": "sha256:bcb6c658b20f8a159b98b1f3fad770a1ac521964100495f13e04fb2163fd9ac8",
+      "db": "sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015",
+      "scanner": "sha256:7054e3f34308c384ea43cd786ea17abf899bd44af40af9f1b099853d7a5c214e"
+    },
+    "baseline_runtime_delta": [
+      "infra/docker/web.Dockerfile"
+    ],
+    "test_origin": "http://127.0.0.1:18191",
+    "human_uat_origin": "http://127.0.0.1:18192",
+    "migration_count": 43
+  },
+  "acceptance": {
+    "R5-A": "PASS_LAB; closure F01–F17, findings A01–A07, and UI matrix referenced in traceability.json.",
+    "R5-B": "PASS; manifest, dirty HEAD, local images, configs, migration ledger and fixture resources recorded.",
+    "R5-C": "PASS_LAB; AC01–AC25 and FR01–FR29 mapped, with explicit research and domain boundaries.",
+    "R5-D": "PASS_LAB; final gate by impact on the same runtime, including 13/13 browser suites and 9/9 lifecycle subtests.",
+    "R5-E": "PASS_LAB; recovery with two fresh processes, affected UI normal/error states, stale-version conflict and dynamic permission revocation. Official integrators remain separately blocked.",
+    "R5-F": "BLOCKED_HUMAN_UAT_AND_DOMAIN_DECISIONS; package prepared, 0/9 signed human results and no verified defect acceptance.",
+    "R5-G": "BLOCKED_AUTHORIZATION; required domain decisions and production authorization pending.",
+    "R5-H": "PASS; package validator, status, evidence, backlog, decision packet and handoff reconciled, with separate lab, staging, UAT and research scopes."
+  },
+  "gate_summary": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/gate-summary.json",
+  "traceability": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/traceability.json",
+  "integration": {
+    "lab": "PASS_OIDC_SMTP_TELEGRAM_SINK_AND_SCANNER_MIRROR",
+    "official": "BLOCKED_INTEGRASI_RESMI",
+    "evidence": [
+      "qa/remediation/rm0-05/penyempurnaan/fase1-fase3-backend.json",
+      "qa/remediation/rm0-05/penyempurnaan/fase1-scanner-mirror.json"
+    ],
+    "owner": "Pengelola identitas, notifikasi dan infrastruktur Diskominfo",
+    "required": "Staging resmi, akun uji berizin/ditolak, tujuan notifikasi dan mirror definisi yang diotorisasi."
+  },
+  "human_uat": {
+    "status": "PENDING_HUMAN_UAT",
+    "completed": 0,
+    "required": 9,
+    "owner": "Koordinator UAT Diskominfo/OPD",
+    "worksheets": "qa/remediation/rm0-05/uat-worksheets.csv",
+    "guide": "docs/releases/RM0_05_PANDUAN_UAT_FASE_2.md"
+  },
+  "decisions": {
+    "status": "PENDING_DOMAIN_DECISIONS",
+    "required": [
+      "DEC-M01–M09",
+      "DEC-M10 kapasitas/pemulihan produksi",
+      "DEC-M12 penggunaan aset/lisensi"
+    ],
+    "packet": "docs/releases/RM0_05_UAT_AND_DECISION_PACKET.md"
+  },
+  "remaining_findings": {
+    "candidate_blockers": [],
+    "trivy_nonblocking": {
+      "MEDIUM": 7,
+      "LOW": 4
+    },
+    "scope_limits": [
+      "Perubahan runtime Fase 2 hanya base image gateway. Konfigurasi Nginx, kode produk Go/Frontend, migrasi dan seed byte-identik terhadap snapshot Fase 1.",
+      "Bukti Go, kontrak, Node, builder dan migrasi terikat pada input tooling/runtime terkait yang tidak berubah atau pada subtes lifecycle terbaru. Tes browser dituntaskan per iris dampak dengan image gateway final yang sama.",
+      "Pemindaian image Trivy mencakup app scratch dan gateway, memakai DB pada trivy-db-metadata.json. Temuan medium/low tersisa tercatat dan tidak diklasifikasikan sebagai selesai diperbaiki. Cakupan tidak meliputi DB/scanner pihak ketiga.",
+      "Paritas C3/F9/G-OPT, uji beban produksi dan UAT manusia menunggu pelaksanaan tersendiri."
+    ]
+  }
+}

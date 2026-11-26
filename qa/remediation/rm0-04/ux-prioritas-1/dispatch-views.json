@@ -1,0 +1,8 @@
+{
+  "result": "PASS",
+  "origin": "http://127.0.0.1:18191",
+  "actual_verification_queue": 200,
+  "scope": "Browser UI branches using fixture response; no dispatch/handoff writes",
+  "manual": true,
+  "handoff": true
+}

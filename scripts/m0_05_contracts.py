@@ -14,9 +14,13 @@ def extend(s, operation, obj, arr, enum, UUID, TEXT, UTC, VERSION):
     s['Verification']['required'].remove('evidence_digest')
     s['Verification']['properties']['evidence_digest']['deprecated'] = True
     s['Dispatch']['properties'].update(tier=enum('L1','L2'),proposal_digest={'type':'string','pattern':'^[a-f0-9]{64}$'})
-    roster=obj({'id':UUID,'version':VERSION,'subject_id':UUID,'team_id':UUID,'skills':arr(TEXT),'available_from':UTC,'available_until':UTC,'active_tickets':{'type':'integer','minimum':0}})
+    roster=obj({'id':UUID,'version':VERSION,'subject_id':UUID,'team_id':UUID,'skills':arr(TEXT),'available_from':UTC,'available_until':UTC,'active_tickets':{'type':'integer','minimum':0},
+                'capacity':{'type':['integer','null'],'minimum':1,'maximum':100},
+                'availability':enum('AVAILABLE','FULL','UNKNOWN_LOAD','UNCONFIGURED'),
+                'waiting_vendor':{'type':['integer','null'],'minimum':0},
+                'waiting_reporter':{'type':['integer','null'],'minimum':0}})
     roster['properties']['projection_as_of']=UTC
-    s['DispatchProposal']=obj({'ticket_id':UUID,'ticket_version':VERSION,'status':enum('RECOMMENDED','MANUAL'),'assignee_id':{'type':'string'},'team_id':{'type':'string'},'level':enum('L1','L2'),'digest':{'type':'string'},'explanation':TEXT,'candidates':arr(obj({'roster':roster,'name':TEXT}))})
+    s['DispatchProposal']=obj({'ticket_id':UUID,'ticket_version':VERSION,'status':enum('RECOMMENDED','MANUAL'),'assignee_id':{'type':'string'},'team_id':{'type':'string'},'level':enum('L1','L2'),'digest':{'type':'string'},'explanation':TEXT,'candidates':arr(obj({'roster':roster,'name':TEXT,'team_name':TEXT},optional=('team_name',)))})
     s['DispatchProposal']['properties'].update(projection_as_of=UTC,target_org_id=UUID,destination=TEXT)
     s['DispatchProposal']['properties']['status']=enum('RECOMMENDED','MANUAL','HANDOFF')
     operation('get','/tickets/{id}/dispatch-proposal','ReadDispatchProposal','M3','ticket.dispatch','DispatchProposal',fr='FR24',query=('tier','mode'))

@@ -28,6 +28,6 @@ func (m *Module) Port() api.Port              { return m.service }
 func (m *Module) Source() *delivery.Source    { return delivery.New(m.pool, "M2") }
 func (m *Module) Service() *app.Service       { return m.service }
 
-func (m *Module) SearchServices(ctx context.Context, query, kind string, orgs []string, limit int) ([]api.SearchHit, error) {
-	return m.service.SearchServices(ctx, query, kind, orgs, limit)
+func (m *Module) SearchServices(ctx context.Context, query, kind string, orgs []string, limit int, after string) ([]api.SearchHit, error) {
+	return m.service.SearchServices(ctx, query, kind, orgs, limit, after)
 }

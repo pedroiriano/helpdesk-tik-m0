@@ -1,0 +1,58 @@
+{
+  "timestamp": "2026-11-24T05:58:10.222Z",
+  "base_url": "http://127.0.0.1:18191",
+  "browser": "Microsoft Edge Headless (CDP)",
+  "suites": {
+    "R4-D_form_lost_response_draft_tracking": {
+      "status": "PASS",
+      "entry": [
+        {
+          "text": "Buat Laporan",
+          "path": "/layanan.html",
+          "height": 44,
+          "inViewport": true
+        },
+        {
+          "text": "Lacak Tiket Tamu",
+          "path": "/lacak.html",
+          "height": 44,
+          "inViewport": true
+        },
+        {
+          "text": "Tiket Saya",
+          "path": "/tiket.html",
+          "height": 44,
+          "inViewport": true
+        }
+      ],
+      "accessLabels": [
+        "Bisa tanpa akun",
+        "Bisa tanpa akun",
+        "Bisa tanpa akun",
+        "Bisa tanpa akun",
+        "Bisa tanpa akun"
+      ],
+      "receiptActions": true,
+      "valSummary": {
+        "visible": true,
+        "count": 4,
+        "focusedId": "ticket-description"
+      },
+      "retryPrompt": {
+        "retryVisible": true,
+        "href": "http://127.0.0.1:18191/detail-tiket.html?id=caf2499a-284a-42b1-aa9d-5a9eebf3dbc8"
+      },
+      "uploadRecovered": true,
+      "sameIdemKey": true,
+      "guestTrackingChecked": true,
+      "draftSavedText": "Draft tersimpan (v5 pada 12.58)",
+      "testTicketId": "caf2499a-284a-42b1-aa9d-5a9eebf3dbc8"
+    }
+  },
+  "from_suite": "R4-D_form_lost_response_draft_tracking",
+  "through_suite": "R4-D_form_lost_response_draft_tracking",
+  "csp_violations": [],
+  "console_errors": [],
+  "exceptions": [],
+  "result": "PASS"
+}

@@ -1,0 +1,485 @@
+{
+  "candidate_id": "m0-p2-20261124-c3",
+  "timestamp": "2026-11-24T04:48:26.527133+00:00",
+  "runtime": {
+    "helpdesk-penyempurnaan-fase1": {
+      "origin": "http://127.0.0.1:18191",
+      "images_health_limits": {
+        "app": {
+          "image": "sha256:68b4d09b02da52968e6006b2d55ebb6ecc1a7c940f2477f31c4fa734e2096a17",
+          "health": "healthy",
+          "nano_cpus": 2500000000,
+          "memory_bytes": 4831838208
+        },
+        "web": {
+          "image": "sha256:bcb6c658b20f8a159b98b1f3fad770a1ac521964100495f13e04fb2163fd9ac8",
+          "health": "healthy",
+          "nano_cpus": 400000000,
+          "memory_bytes": 805306368
+        },
+        "db": {
+          "image": "sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015",
+          "health": "healthy",
+          "nano_cpus": 1000000000,
+          "memory_bytes": 2684354560
+        },
+        "scanner": {
+          "image": "sha256:7054e3f34308c384ea43cd786ea17abf899bd44af40af9f1b099853d7a5c214e",
+          "health": "healthy",
+          "nano_cpus": 1000000000,
+          "memory_bytes": 3221225472
+        }
+      },
+      "config": {
+        "mode": "SYNTHETIC_LAB",
+        "lab_auth_enabled": true,
+        "public_auth_enabled": true,
+        "sso_enabled": false,
+        "purge_enabled": false
+      },
+      "route_http": {
+        "/": 200,
+        "/akses.html": 200,
+        "/lapor.html": 200,
+        "/lacak.html": 200,
+        "/tiket.html": 200,
+        "/panduan.html": 200,
+        "/faq.html": 200,
+        "/admin/auth/login.html": 200,
+        "/admin/app/tickets/index.html?filter=verification": 200,
+        "/admin/app/tickets/index.html?filter=dispatch": 200,
+        "/admin/app/tickets/index.html?filter=my-tasks": 200,
+        "/admin/app/helpdesk/index.html?kind=reports": 200,
+        "/admin/app/helpdesk/index.html?kind=articles": 200,
+        "/admin/app/helpdesk/index.html?kind=faqs": 200,
+        "/admin/app/helpdesk/index.html?kind=hero": 200,
+        "/admin/app/helpdesk/index.html?kind=media": 200,
+        "/admin/app/helpdesk/index.html?kind=audit": 200,
+        "/admin/app/helpdesk/index.html?kind=memberships": 200,
+        "/admin/app/helpdesk/index.html?kind=role-policies": 200,
+        "/admin/app/helpdesk/index.html?kind=rules": 200,
+        "/admin/app/helpdesk/index.html?kind=maintenance": 200
+      },
+      "ledger": [
+        [
+          "001",
+          "9d87f326cbec57bdf8950337bb7646a8fef04ccfcfba06b3491f2d7cecbfb3b9"
+        ],
+        [
+          "002",
+          "22b20ee7aed43f9f65f3495ecf994e7c17fde3fc8b61573d1556d0e24b5cf230"
+        ],
+        [
+          "003",
+          "9c60061768b0e99975c7ce1cfb3a1f511bf1dd0b59c460db720bbd2d0945d3d1"
+        ],
+        [
+          "004",
+          "2309199a00d065973050bb5ee6e74e1ca311b48d005f6a5170232cf30ec9ce8f"
+        ],
+        [
+          "005",
+          "119ab08d6916e51a6f055f5666a1fd2eb41fb66f73cc2d1a530770a9e4b4cfaf"
+        ],
+        [
+          "006",
+          "3e418c239b167e48f0d202bab5205a9f3dd6fb5d3235dd02870f2ca90eeaa191"
+        ],
+        [
+          "007",
+          "26cd015b67eeeb55d14d73928947d1883475978b961ae32919124d5c599b0f69"
+        ],
+        [
+          "008",
+          "e7a0a7c1ef3a44eb619619140d1bc564e8bf7f0033d5efec0c4907b698d87335"
+        ],
+        [
+          "009",
+          "fddca939a3849bcf962df7008b97ff85c78be631207ba69e5e8d0eb0109967f1"
+        ],
+        [
+          "010",
+          "dbb65ccc1c84c0b4081f5475bb81ed6a1e6df24eb9d8fa296d29a3940460b867"
+        ],
+        [
+          "011",
+          "115a31a4192a61a7112f5e83014c4be97b4cc59df005bedc3eabd5cb9ade519a"
+        ],
+        [
+          "012",
+          "3fee6d052bc20b9d9900b2af9330bc7adf6b546a7be58948d795ae17349e6b17"
+        ],
+        [
+          "013",
+          "fcc0f0ee6d4f9e3f7b3e3477585f6fec0ef1fd18c7e95577622a6e89cc1fca30"
+        ],
+        [
+          "014",
+          "22ef01d50c56a7e71edde29273ba3a7a5a93480e760d17d0ca282014d02c4cdc"
+        ],
+        [
+          "015",
+          "96a281df6cc4693fd7f7775584675942436fce92b6576846c9269212fba46140"
+        ],
+        [
+          "016",
+          "d930a7d2f9908b7366de738c3759f951cf9edaf1ffb897af15b3ed99dbb78b7a"
+        ],
+        [
+          "017",
+          "6138d0ecd467807696b2d3347aefd192b80ccb09af617d3ccab38bb353a7c765"
+        ],
+        [
+          "018",
+          "4d3af0028e879526ab84d27c01774142d0526c9538b084aee9b3f0fd7ba3acae"
+        ],
+        [
+          "019",
+          "1ebe38ea9e11782cfed89ee64c17dc33dfe5ae15579434e7938742dcc9947d29"
+        ],
+        [
+          "020",
+          "8f37b8739c0479e37308ab213aeae5bd61ec36d192f168567a3863c2e190effa"
+        ],
+        [
+          "021",
+          "63fb1ef5a7088e0015466979badb8b68ecb906f7a2ee939c862840479562308f"
+        ],
+        [
+          "022",
+          "86343b718729fe4020aa73533f9afebc9c5cd012149381106ac0d1072bbd7c07"
+        ],
+        [
+          "023",
+          "0159223a8b97ff2eb02b786c17b97d6c147503c3da12dd6f4d3b8a418127d1ad"
+        ],
+        [
+          "024",
+          "0540fcdf7673009f26bd3930b89889eee37b685acf4f2ba6216ea2d085c45c18"
+        ],
+        [
+          "025",
+          "4724cee502830cb69dedd4b8deefe7941bb48a04c7ea3bdfea4abae252e49d12"
+        ],
+        [
+          "026",
+          "03dfc98e3515c636be5057c8be150dde37377fd88b2bc496f344b75371e61cd8"
+        ],
+        [
+          "027",
+          "304b1988e4cb1c0f74c375d774d728b531698e7aed6bf53a056739b39236eee8"
+        ],
+        [
+          "028",
+          "4720acfb5a617fd8969044da8fea47c36f13a1a239cb56377b54edebeda17d26"
+        ],
+        [
+          "029",
+          "ec191955c410b7c4a2ae083d4ea1db10ec34fede13d66d3011403c2e948b19ff"
+        ],
+        [
+          "030",
+          "68cc7900faf259137cc2af2c7a6af146d26792a7fc8d2c880e4538ad12b132b1"
+        ],
+        [
+          "031",
+          "69df3aedf5d6192ef5d22f0ff0b9f5c108dc0a98e98c3c26399d97eba325d82f"
+        ],
+        [
+          "032",
+          "cea481d4296bc5a9523470e417d0fd4df7ee2137a32b9eed4181fc9e9414bf28"
+        ],
+        [
+          "033",
+          "ec44b52aafbda1e5dde1d5d1b9027b5eb90ceb7415056f9e04b5e7e4dbc6aef9"
+        ],
+        [
+          "034",
+          "0746c122639b7587da328eba5683547ce3c3ce7a0bcf005c10983c8e2ec55df6"
+        ],
+        [
+          "035",
+          "ea2ef213bb86b19b3975b5b0f2279633abf70c38abcff4867055b768c563d45f"
+        ],
+        [
+          "036",
+          "ef4a81fe95cc82a479dd646fa6f1b220c82dd3b8b74a2dad6853732920393b8d"
+        ],
+        [
+          "037",
+          "de11a9bd51453cda2f935ed30fb31acbc3f2b3b03ff052d891df4904731fb796"
+        ],
+        [
+          "038",
+          "28cdf187cc419e39bdc8b75a38ab1747225105433a180135a37eaabb3d82ef7d"
+        ],
+        [
+          "039",
+          "cd8298b28ede72805c0a23a5d84c797c2859a747163db12024a35bdda11e04c5"
+        ],
+        [
+          "040",
+          "24d0fac5d896bca9ff3f412db8eb4735bd2d7440dbb237e2955e5c39349e1c36"
+        ],
+        [
+          "041",
+          "d2096fb6ee3a2c9032fc8bc4c630c4c6df572233611d692ec22c51e967b3af67"
+        ],
+        [
+          "042",
+          "53716c3c6af6c759332c00554c50b2ab3a39cacf21803a0bd21e6f47824b241b"
+        ],
+        [
+          "043",
+          "efb2a574a3df154c61f3d0e528328b75dd2962ccb49fc41d522f69c46b7da28c"
+        ]
+      ],
+      "nonsecret_compose_override": ".local/penyempurnaan-fase1/compose.yml",
+      "override_hash": "bda7cf56fea20b5652290cb950bb14a4e852187e433933921f8d44420ad5391c",
+      "nginx_version": "1.30.7 (nginx -v on stderr)",
+      "ready_http": 200
+    },
+    "helpdesk-penyempurnaan-fase2-uat": {
+      "origin": "http://127.0.0.1:18192",
+      "images_health_limits": {
+        "app": {
+          "image": "sha256:68b4d09b02da52968e6006b2d55ebb6ecc1a7c940f2477f31c4fa734e2096a17",
+          "health": "healthy",
+          "nano_cpus": 2500000000,
+          "memory_bytes": 4831838208
+        },
+        "web": {
+          "image": "sha256:bcb6c658b20f8a159b98b1f3fad770a1ac521964100495f13e04fb2163fd9ac8",
+          "health": "healthy",
+          "nano_cpus": 400000000,
+          "memory_bytes": 805306368
+        },
+        "db": {
+          "image": "sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015",
+          "health": "healthy",
+          "nano_cpus": 1000000000,
+          "memory_bytes": 2684354560
+        },
+        "scanner": {
+          "image": "sha256:7054e3f34308c384ea43cd786ea17abf899bd44af40af9f1b099853d7a5c214e",
+          "health": "healthy",
+          "nano_cpus": 1000000000,
+          "memory_bytes": 3221225472
+        }
+      },
+      "config": {
+        "mode": "SYNTHETIC_LAB",
+        "lab_auth_enabled": true,
+        "public_auth_enabled": true,
+        "sso_enabled": false,
+        "purge_enabled": false
+      },
+      "route_http": {
+        "/": 200,
+        "/akses.html": 200,
+        "/lapor.html": 200,
+        "/lacak.html": 200,
+        "/tiket.html": 200,
+        "/panduan.html": 200,
+        "/faq.html": 200,
+        "/admin/auth/login.html": 200,
+        "/admin/app/tickets/index.html?filter=verification": 200,
+        "/admin/app/tickets/index.html?filter=dispatch": 200,
+        "/admin/app/tickets/index.html?filter=my-tasks": 200,
+        "/admin/app/helpdesk/index.html?kind=reports": 200,
+        "/admin/app/helpdesk/index.html?kind=articles": 200,
+        "/admin/app/helpdesk/index.html?kind=faqs": 200,
+        "/admin/app/helpdesk/index.html?kind=hero": 200,
+        "/admin/app/helpdesk/index.html?kind=media": 200,
+        "/admin/app/helpdesk/index.html?kind=audit": 200,
+        "/admin/app/helpdesk/index.html?kind=memberships": 200,
+        "/admin/app/helpdesk/index.html?kind=role-policies": 200,
+        "/admin/app/helpdesk/index.html?kind=rules": 200,
+        "/admin/app/helpdesk/index.html?kind=maintenance": 200
+      },
+      "ledger": [
+        [
+          "001",
+          "9d87f326cbec57bdf8950337bb7646a8fef04ccfcfba06b3491f2d7cecbfb3b9"
+        ],
+        [
+          "002",
+          "22b20ee7aed43f9f65f3495ecf994e7c17fde3fc8b61573d1556d0e24b5cf230"
+        ],
+        [
+          "003",
+          "9c60061768b0e99975c7ce1cfb3a1f511bf1dd0b59c460db720bbd2d0945d3d1"
+        ],
+        [
+          "004",
+          "2309199a00d065973050bb5ee6e74e1ca311b48d005f6a5170232cf30ec9ce8f"
+        ],
+        [
+          "005",
+          "119ab08d6916e51a6f055f5666a1fd2eb41fb66f73cc2d1a530770a9e4b4cfaf"
+        ],
+        [
+          "006",
+          "3e418c239b167e48f0d202bab5205a9f3dd6fb5d3235dd02870f2ca90eeaa191"
+        ],
+        [
+          "007",
+          "26cd015b67eeeb55d14d73928947d1883475978b961ae32919124d5c599b0f69"
+        ],
+        [
+          "008",
+          "e7a0a7c1ef3a44eb619619140d1bc564e8bf7f0033d5efec0c4907b698d87335"
+        ],
+        [
+          "009",
+          "fddca939a3849bcf962df7008b97ff85c78be631207ba69e5e8d0eb0109967f1"
+        ],
+        [
+          "010",
+          "dbb65ccc1c84c0b4081f5475bb81ed6a1e6df24eb9d8fa296d29a3940460b867"
+        ],
+        [
+          "011",
+          "115a31a4192a61a7112f5e83014c4be97b4cc59df005bedc3eabd5cb9ade519a"
+        ],
+        [
+          "012",
+          "3fee6d052bc20b9d9900b2af9330bc7adf6b546a7be58948d795ae17349e6b17"
+        ],
+        [
+          "013",
+          "fcc0f0ee6d4f9e3f7b3e3477585f6fec0ef1fd18c7e95577622a6e89cc1fca30"
+        ],
+        [
+          "014",
+          "22ef01d50c56a7e71edde29273ba3a7a5a93480e760d17d0ca282014d02c4cdc"
+        ],
+        [
+          "015",
+          "96a281df6cc4693fd7f7775584675942436fce92b6576846c9269212fba46140"
+        ],
+        [
+          "016",
+          "d930a7d2f9908b7366de738c3759f951cf9edaf1ffb897af15b3ed99dbb78b7a"
+        ],
+        [
+          "017",
+          "6138d0ecd467807696b2d3347aefd192b80ccb09af617d3ccab38bb353a7c765"
+        ],
+        [
+          "018",
+          "4d3af0028e879526ab84d27c01774142d0526c9538b084aee9b3f0fd7ba3acae"
+        ],
+        [
+          "019",
+          "1ebe38ea9e11782cfed89ee64c17dc33dfe5ae15579434e7938742dcc9947d29"
+        ],
+        [
+          "020",
+          "8f37b8739c0479e37308ab213aeae5bd61ec36d192f168567a3863c2e190effa"
+        ],
+        [
+          "021",
+          "63fb1ef5a7088e0015466979badb8b68ecb906f7a2ee939c862840479562308f"
+        ],
+        [
+          "022",
+          "86343b718729fe4020aa73533f9afebc9c5cd012149381106ac0d1072bbd7c07"
+        ],
+        [
+          "023",
+          "0159223a8b97ff2eb02b786c17b97d6c147503c3da12dd6f4d3b8a418127d1ad"
+        ],
+        [
+          "024",
+          "0540fcdf7673009f26bd3930b89889eee37b685acf4f2ba6216ea2d085c45c18"
+        ],
+        [
+          "025",
+          "4724cee502830cb69dedd4b8deefe7941bb48a04c7ea3bdfea4abae252e49d12"
+        ],
+        [
+          "026",
+          "03dfc98e3515c636be5057c8be150dde37377fd88b2bc496f344b75371e61cd8"
+        ],
+        [
+          "027",
+          "304b1988e4cb1c0f74c375d774d728b531698e7aed6bf53a056739b39236eee8"
+        ],
+        [
+          "028",
+          "4720acfb5a617fd8969044da8fea47c36f13a1a239cb56377b54edebeda17d26"
+        ],
+        [
+          "029",
+          "ec191955c410b7c4a2ae083d4ea1db10ec34fede13d66d3011403c2e948b19ff"
+        ],
+        [
+          "030",
+          "68cc7900faf259137cc2af2c7a6af146d26792a7fc8d2c880e4538ad12b132b1"
+        ],
+        [
+          "031",
+          "69df3aedf5d6192ef5d22f0ff0b9f5c108dc0a98e98c3c26399d97eba325d82f"
+        ],
+        [
+          "032",
+          "cea481d4296bc5a9523470e417d0fd4df7ee2137a32b9eed4181fc9e9414bf28"
+        ],
+        [
+          "033",
+          "ec44b52aafbda1e5dde1d5d1b9027b5eb90ceb7415056f9e04b5e7e4dbc6aef9"
+        ],
+        [
+          "034",
+          "0746c122639b7587da328eba5683547ce3c3ce7a0bcf005c10983c8e2ec55df6"
+        ],
+        [
+          "035",
+          "ea2ef213bb86b19b3975b5b0f2279633abf70c38abcff4867055b768c563d45f"
+        ],
+        [
+          "036",
+          "ef4a81fe95cc82a479dd646fa6f1b220c82dd3b8b74a2dad6853732920393b8d"
+        ],
+        [
+          "037",
+          "de11a9bd51453cda2f935ed30fb31acbc3f2b3b03ff052d891df4904731fb796"
+        ],
+        [
+          "038",
+          "28cdf187cc419e39bdc8b75a38ab1747225105433a180135a37eaabb3d82ef7d"
+        ],
+        [
+          "039",
+          "cd8298b28ede72805c0a23a5d84c797c2859a747163db12024a35bdda11e04c5"
+        ],
+        [
+          "040",
+          "24d0fac5d896bca9ff3f412db8eb4735bd2d7440dbb237e2955e5c39349e1c36"
+        ],
+        [
+          "041",
+          "d2096fb6ee3a2c9032fc8bc4c630c4c6df572233611d692ec22c51e967b3af67"
+        ],
+        [
+          "042",
+          "53716c3c6af6c759332c00554c50b2ab3a39cacf21803a0bd21e6f47824b241b"
+        ],
+        [
+          "043",
+          "efb2a574a3df154c61f3d0e528328b75dd2962ccb49fc41d522f69c46b7da28c"
+        ]
+      ],
+      "nonsecret_compose_override": ".local/penyempurnaan-fase2-uat/compose.yml",
+      "override_hash": "c0481c210e6471639d084a9d205d5007f8c3beb67dadb3fb60c579dece88f32e",
+      "nginx_version": "1.30.7 (nginx -v on stderr)",
+      "ready_http": 200
+    }
+  },
+  "result": "PASS",
+  "working_gateway_http": 200,
+  "docker_engine": "29.9.3",
+  "compose_version": "5.7.0",
+  "gateway_base_digest": "sha256:8c950211a641ec5b23f265450517001f6bcca533666120ebe36cb4cff3d00a55"
+}

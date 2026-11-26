@@ -1,0 +1,262 @@
+{
+  "SchemaVersion": 2,
+  "Trivy": {
+    "Version": "0.76.2"
+  },
+  "ReportID": "01a20bd9-05fe-7c87-9b8b-95908a6a4d0e",
+  "CreatedAt": "2026-11-24T04:38:21.950827734Z",
+  "ArtifactID": "sha256:7b4a866fd265ac4f2983c7f70ea06519cfdbd0640558b2c2f58333a3d1fccb8b",
+  "ArtifactName": "/scan/candidate-app.tar",
+  "ArtifactType": "container_image",
+  "Metadata": {
+    "Size": 14684160,
+    "ImageID": "sha256:7e6a0ac0ecd2eed2c289754758104bb67b2db3443537caf03f2e09dbe939aa52",
+    "DiffIDs": [
+      "sha256:c227a3dbe51a11abd1988c1a9a2c3512a59d2e8ba4d6b3a5a416d8d89a24778e",
+      "sha256:763977449ced7bfa1621b296653232abb37add3eaaf326afd8e77a1024e5ec7c",
+      "sha256:e7d07aa780ebd2a1b82d3bdae3bea53698276f9b8f1fe1a17d4cf13fe60d8743",
+      "sha256:f3488e2767a3c54119513ada1ba29b6dfbebd673d835ef7e2a4d6e8a57cd7508",
+      "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef"
+    ],
+    "RepoTags": [
+      "helpdesk-penyempurnaan-fase1-app:local"
+    ],
+    "Reference": "helpdesk-penyempurnaan-fase1-app:local",
+    "ImageConfig": {
+      "architecture": "amd64",
+      "created": "2026-11-24T04:19:30.820634759Z",
+      "history": [
+        {
+          "created": "2026-11-24T04:18:37.492364133Z",
+          "created_by": "COPY /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-24T04:19:30.379190512Z",
+          "created_by": "COPY /out/helpdesk /helpdesk # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-24T04:19:30.533934277Z",
+          "created_by": "COPY configs/M0.json /app/configs/M0.json # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-24T04:19:30.695630641Z",
+          "created_by": "COPY migrations/manifest.json migrations/checksums.sha256 /app/migrations/ # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-24T04:19:30.820634759Z",
+          "created_by": "USER 65532:65532",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-24T04:19:30.820634759Z",
+          "created_by": "WORKDIR /app",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2026-11-24T04:19:30.820634759Z",
+          "created_by": "EXPOSE [8080/tcp]",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-11-24T04:19:30.820634759Z",
+          "created_by": "ENTRYPOINT [\"/helpdesk\"]",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        }
+      ],
+      "os": "linux",
+      "rootfs": {
+        "type": "layers",
+        "diff_ids": [
+          "sha256:c227a3dbe51a11abd1988c1a9a2c3512a59d2e8ba4d6b3a5a416d8d89a24778e",
+          "sha256:763977449ced7bfa1621b296653232abb37add3eaaf326afd8e77a1024e5ec7c",
+          "sha256:e7d07aa780ebd2a1b82d3bdae3bea53698276f9b8f1fe1a17d4cf13fe60d8743",
+          "sha256:f3488e2767a3c54119513ada1ba29b6dfbebd673d835ef7e2a4d6e8a57cd7508",
+          "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef"
+        ]
+      },
+      "config": {
+        "Entrypoint": [
+          "/helpdesk"
+        ],
+        "Env": [
+          "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+        ],
+        "Labels": {
+          "com.docker.compose.project": "helpdesk-penyempurnaan-fase1",
+          "com.docker.compose.service": "app",
+          "com.docker.compose.version": "5.7.0"
+        },
+        "User": "65532:65532",
+        "WorkingDir": "/app",
+        "ExposedPorts": {
+          "8080/tcp": {}
+        }
+      }
+    },
+    "Layers": [
+      {
+        "Size": 182272,
+        "Digest": "sha256:30370170daa22519f42d8c4f231fc5308f866b1d1a3fb9a9346c0b30360ceb99",
+        "DiffID": "sha256:c227a3dbe51a11abd1988c1a9a2c3512a59d2e8ba4d6b3a5a416d8d89a24778e"
+      },
+      {
+        "Size": 14477312,
+        "Digest": "sha256:db176dfea01cd82b9f298c7b1b6bfc1fc8aa768985a7948cf7a69c365cbd586d",
+        "DiffID": "sha256:763977449ced7bfa1621b296653232abb37add3eaaf326afd8e77a1024e5ec7c"
+      },
+      {
+        "Size": 3584,
+        "Digest": "sha256:e3b2aed7b030314062834a535cfc8eeb164c46fbacf332da41d0699f017ac632",
+        "DiffID": "sha256:e7d07aa780ebd2a1b82d3bdae3bea53698276f9b8f1fe1a17d4cf13fe60d8743"
+      },
+      {
+        "Size": 19968,
+        "Digest": "sha256:38530cbf52d82c62d4a21ce22b0959b21e1f3c47fd6a43869d21aeedca28e80f",
+        "DiffID": "sha256:f3488e2767a3c54119513ada1ba29b6dfbebd673d835ef7e2a4d6e8a57cd7508"
+      },
+      {
+        "Size": 1024,
+        "Digest": "sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1",
+        "DiffID": "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef"
+      }
+    ]
+  },
+  "Results": [
+    {
+      "Target": "helpdesk",
+      "Class": "lang-pkgs",
+      "Type": "gobinary",
+      "Packages": [
+        {
+          "ID": "helpdesk.local/m0",
+          "Name": "helpdesk.local/m0",
+          "Identifier": {
+            "PURL": "pkg:golang/helpdesk.local/m0",
+            "UID": "dab4368beba390a7"
+          },
+          "Relationship": "root",
+          "DependsOn": [
+            "github.com/jackc/pgpassfile@v1.0.0",
+            "github.com/jackc/pgservicefile@v0.0.0-20240606120523-5a60cdf6a761",
+            "github.com/jackc/pgx/v5@v5.12.0",
+            "github.com/jackc/puddle/v2@v2.2.3",
+            "golang.org/x/sync@v0.22.0",
+            "golang.org/x/text@v0.41.0",
+            "stdlib@v1.27.4"
+          ],
+          "Layer": {
+            "Digest": "sha256:db176dfea01cd82b9f298c7b1b6bfc1fc8aa768985a7948cf7a69c365cbd586d",
+            "DiffID": "sha256:763977449ced7bfa1621b296653232abb37add3eaaf326afd8e77a1024e5ec7c"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "stdlib@v1.27.4",
+          "Name": "stdlib",
+          "Identifier": {
+            "PURL": "pkg:golang/stdlib@v1.27.4",
+            "UID": "685247f44b93fe0c"
+          },
+          "Version": "v1.27.4",
+          "Relationship": "direct",
+          "Layer": {
+            "Digest": "sha256:db176dfea01cd82b9f298c7b1b6bfc1fc8aa768985a7948cf7a69c365cbd586d",
+            "DiffID": "sha256:763977449ced7bfa1621b296653232abb37add3eaaf326afd8e77a1024e5ec7c"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/jackc/pgpassfile@v1.0.0",
+          "Name": "github.com/jackc/pgpassfile",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/jackc/pgpassfile@v1.0.0",
+            "UID": "f95ade6b6f49ddf8"
+          },
+          "Version": "v1.0.0",
+          "Layer": {
+            "Digest": "sha256:db176dfea01cd82b9f298c7b1b6bfc1fc8aa768985a7948cf7a69c365cbd586d",
+            "DiffID": "sha256:763977449ced7bfa1621b296653232abb37add3eaaf326afd8e77a1024e5ec7c"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/jackc/pgservicefile@v0.0.0-20240606120523-5a60cdf6a761",
+          "Name": "github.com/jackc/pgservicefile",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/jackc/pgservicefile@v0.0.0-20240606120523-5a60cdf6a761",
+            "UID": "4845b34ff0cb8979"
+          },
+          "Version": "v0.0.0-20240606120523-5a60cdf6a761",
+          "Layer": {
+            "Digest": "sha256:db176dfea01cd82b9f298c7b1b6bfc1fc8aa768985a7948cf7a69c365cbd586d",
+            "DiffID": "sha256:763977449ced7bfa1621b296653232abb37add3eaaf326afd8e77a1024e5ec7c"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/jackc/pgx/v5@v5.12.0",
+          "Name": "github.com/jackc/pgx/v5",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/jackc/pgx/v5@v5.12.0",
+            "UID": "81016600ac6a5e01"
+          },
+          "Version": "v5.12.0",
+          "Layer": {
+            "Digest": "sha256:db176dfea01cd82b9f298c7b1b6bfc1fc8aa768985a7948cf7a69c365cbd586d",
+            "DiffID": "sha256:763977449ced7bfa1621b296653232abb37add3eaaf326afd8e77a1024e5ec7c"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "github.com/jackc/puddle/v2@v2.2.3",
+          "Name": "github.com/jackc/puddle/v2",
+          "Identifier": {
+            "PURL": "pkg:golang/github.com/jackc/puddle/v2@v2.2.3",
+            "UID": "28d90c23b9c395cc"
+          },
+          "Version": "v2.2.3",
+          "Layer": {
+            "Digest": "sha256:db176dfea01cd82b9f298c7b1b6bfc1fc8aa768985a7948cf7a69c365cbd586d",
+            "DiffID": "sha256:763977449ced7bfa1621b296653232abb37add3eaaf326afd8e77a1024e5ec7c"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "golang.org/x/sync@v0.22.0",
+          "Name": "golang.org/x/sync",
+          "Identifier": {
+            "PURL": "pkg:golang/golang.org/x/sync@v0.22.0",
+            "UID": "ef783231f62113ba"
+          },
+          "Version": "v0.22.0",
+          "Layer": {
+            "Digest": "sha256:db176dfea01cd82b9f298c7b1b6bfc1fc8aa768985a7948cf7a69c365cbd586d",
+            "DiffID": "sha256:763977449ced7bfa1621b296653232abb37add3eaaf326afd8e77a1024e5ec7c"
+          },
+          "AnalyzedBy": "gobinary"
+        },
+        {
+          "ID": "golang.org/x/text@v0.41.0",
+          "Name": "golang.org/x/text",
+          "Identifier": {
+            "PURL": "pkg:golang/golang.org/x/text@v0.41.0",
+            "UID": "ba7f24e483c60f14"
+          },
+          "Version": "v0.41.0",
+          "Layer": {
+            "Digest": "sha256:db176dfea01cd82b9f298c7b1b6bfc1fc8aa768985a7948cf7a69c365cbd586d",
+            "DiffID": "sha256:763977449ced7bfa1621b296653232abb37add3eaaf326afd8e77a1024e5ec7c"
+          },
+          "AnalyzedBy": "gobinary"
+        }
+      ]
+    }
+  ]
+}

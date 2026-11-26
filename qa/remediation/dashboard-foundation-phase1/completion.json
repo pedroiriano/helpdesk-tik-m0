@@ -1,0 +1,69 @@
+{
+  "task_id": "M0-DASHBOARD-F1",
+  "timestamp": "2026-11-26T03:36:03.2791837+00:00",
+  "acceptance": "AC11 AC06 (lingkup dasbor)",
+  "result": "DONE_VERIFIED_LAB",
+  "report": "qa/remediation/dashboard-foundation-phase1/completion.json",
+  "files": [
+    "frontend/business-pages.mjs",
+    "frontend/business.css",
+    "frontend/src/features/admin-shell.ts",
+    "frontend/src/features/dashboard.ts",
+    "frontend/src/features/m0-03.ts",
+    "docs/06_ATURAN_UI_UX_WEB_ADMIN.md",
+    "scripts/test_admin_dashboard_foundation_browser.mjs",
+    "planning/backlog.csv",
+    "status/PROJECT_STATE.md",
+    "status/evidence.jsonl",
+    "qa/remediation/dashboard-foundation-phase1/browser.json",
+    "qa/remediation/dashboard-foundation-phase1/completion.json"
+  ],
+  "commands": [
+    "npm.cmd --prefix frontend run build",
+    "python -X utf8 scripts/test_piui_build.py",
+    "node scripts/test_admin_navigation.mjs",
+    "$env:EDGE_MAINT_CDP_PORT='9354'; node scripts/test_admin_dashboard_foundation_browser.mjs",
+    "python -X utf8 scripts/smoke_local.py",
+    "git -c core.safecrlf=false diff --check"
+  ],
+  "runtime": {
+    "active_port": 18090,
+    "web_image": "sha256:f345040306a04a5b77846dd4d3bdaf89e150fcaad202b1c1a72004e1cd4064cc",
+    "rollback_tag": "helpdesk-m0-web:pre-dashboard-f1-20261126",
+    "healthy_services": [
+      "web",
+      "app",
+      "db",
+      "scanner"
+    ],
+    "working_db_rows": {
+      "tickets": 136,
+      "attachments": 51,
+      "media": 17
+    }
+  },
+  "limits": [
+    "Edge lokal, viewport 1440 × 900 dan 390 × 844, akun lab Koordinator dan Teknisi. Navigasi peran lain diperiksa dengan tes navigasi kanonis.",
+    "Baseline API aktual mencakup SLA Belum terukur dan 100%; sampel tidak menghasilkan 0%.",
+    "Hanya web diganti. Tidak ada mutasi tiket, lampiran, media, master atau kebijakan saat pengujian. Login dan logout hanya pada sesi lab.",
+    "UAT pengguna, perangkat ponsel fisik, pembaca layar dan otorisasi produksi belum diverifikasi."
+  ],
+  "checkpoints": [
+    "Sumber frontend dan gateway Docker 18090 diperiksa. Kandidat awal web sha256:6724313d9a0c7f7f9a6be18fb09db04159af01927acc0f64c94b284fc96c9c8e ditandai untuk rollback.",
+    "API GET /api/v1/reports memakai cohort ACCEPTED dari satu PD serta batas awal inklusif dan akhir eksklusif. Periode merupakan 7 atau 30 hari bergulir.",
+    "Kartu Masih aktif dalam periode memakai backlog dari API. Seluruh tiket aktif saat ini juga mencakup laporan dari sebelum periode, sehingga merupakan cakupan berbeda."
+  ],
+  "proof": {
+    "api_parity": "PASS: keempat kartu, penyebut dan rincian SLA dibandingkan dengan respons jaringan yang dipakai halaman untuk masing-masing periode.",
+    "scope": "PASS: pilihan PD cocok dengan mandat laporan tingkat PD pada /auth/me; permintaan ke luar mandat ditolak 403. Teknisi tanpa mandat laporan hanya melihat pintasan.",
+    "recovery": "PASS: detail, kartu dan konteks lama disembunyikan saat permintaan gagal. Muat ulang berhasil. Data privat disembunyikan setelah sesi habis.",
+    "browser": "browser.json",
+    "docker_deployment": [
+      "docker image tag sha256:6724313d9a0c7f7f9a6be18fb09db04159af01927acc0f64c94b284fc96c9c8e helpdesk-m0-web:pre-dashboard-f1-20261126",
+      "docker compose build --quiet web",
+      "docker compose up -d --no-deps --no-build --pull never --wait --wait-timeout 60 web",
+      "docker port helpdesk-m0-nginx"
+    ],
+    "data_counts": "PASS: dibandingkan dengan catatan kandidat sebelumnya, jumlah tiket, lampiran dan media tidak berubah."
+  }
+}

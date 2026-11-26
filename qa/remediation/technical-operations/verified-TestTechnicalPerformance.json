@@ -1,0 +1,8 @@
+{
+  "suite": "TestTechnicalPerformance",
+  "timestamp": "2026-11-24T08:16:29.527874+00:00",
+  "result": "PASS",
+  "baseline_migration": "043",
+  "target": "disposable PostgreSQL",
+  "output": "=== RUN   TestTechnicalPerformance\n2026/11/24 08:17:12 web.WriteError: Laporan kinerja tersedia untuk petugas berizin\n2026/11/24 08:17:12 web.WriteError: Organisasi atau tim di luar mandat laporan Anda\n2026/11/24 08:17:12 web.WriteError: Organisasi atau tim di luar mandat laporan Anda\n2026/11/24 08:17:12 web.WriteError: Periode harus positif dan paling lama 366 hari\n--- PASS: TestTechnicalPerformance (0.69s)\nPASS\nok  \thelpdesk.local/m0/internal/bootstrap\t0.701s"
+}

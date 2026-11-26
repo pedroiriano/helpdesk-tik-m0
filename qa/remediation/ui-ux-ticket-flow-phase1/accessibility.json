@@ -1,0 +1,320 @@
+{
+  "result": "PASS",
+  "origin": "http://127.0.0.1:18090",
+  "checks": {
+    "home_360": {
+      "width": 360,
+      "overflow": 0,
+      "boxes": [
+        {
+          "selector": ".hd-hero-btn--primary",
+          "height": 44,
+          "width": 328,
+          "left": 16,
+          "right": 344
+        },
+        {
+          "selector": ".hd-hero-btn--secondary",
+          "height": 44,
+          "width": 161,
+          "left": 16,
+          "right": 177
+        }
+      ]
+    },
+    "home_short_400": {
+      "width": 400,
+      "overflow": 0,
+      "boxes": [
+        {
+          "selector": ".hd-hero-btn--primary",
+          "height": 44,
+          "width": 368,
+          "left": 16,
+          "right": 384
+        },
+        {
+          "selector": ".vy-stage__tab:last-child",
+          "height": 44.8125,
+          "width": 69.59375,
+          "left": 314.390625,
+          "right": 383.984375
+        }
+      ]
+    },
+    "home_short_layout": {
+      "hero": 498,
+      "viewport": 498,
+      "gap": 10,
+      "within": true,
+      "navAfter": true,
+      "count": 5
+    },
+    "catalog_360": {
+      "width": 360,
+      "overflow": 0,
+      "boxes": [
+        {
+          "selector": "#hd-catalog-q",
+          "height": 50,
+          "width": 298,
+          "left": 31,
+          "right": 329
+        },
+        {
+          "selector": ".hd-service-option .btn-primary",
+          "height": 44,
+          "width": 294,
+          "left": 33,
+          "right": 327
+        }
+      ]
+    },
+    "report_title_390": {
+      "top": 496,
+      "bottom": 546,
+      "viewport": 844
+    },
+    "report_320": {
+      "width": 320,
+      "overflow": 0,
+      "boxes": [
+        {
+          "selector": "#ticket-title",
+          "height": 50,
+          "width": 258,
+          "left": 31,
+          "right": 289
+        },
+        {
+          "selector": "#ticket-description",
+          "height": 146,
+          "width": 258,
+          "left": 31,
+          "right": 289
+        },
+        {
+          "selector": "#hd-create-dropzone",
+          "height": 397.59375,
+          "width": 258,
+          "left": 31,
+          "right": 289
+        },
+        {
+          "selector": "[data-ticket-create] button[type=submit]",
+          "height": 44,
+          "width": 166.0625,
+          "left": 31,
+          "right": 197.0625
+        }
+      ]
+    },
+    "report_dialog_320": {
+      "width": 320,
+      "overflow": 0,
+      "boxes": [
+        {
+          "selector": "[data-review-send]",
+          "height": 44,
+          "width": 262,
+          "left": 29,
+          "right": 291
+        },
+        {
+          "selector": "[data-review-edit]",
+          "height": 44,
+          "width": 262,
+          "left": 29,
+          "right": 291
+        }
+      ]
+    },
+    "track_320": {
+      "width": 320,
+      "overflow": 0,
+      "boxes": [
+        {
+          "selector": "#ticket-capability",
+          "height": 50,
+          "width": 246,
+          "left": 37,
+          "right": 283
+        },
+        {
+          "selector": "[data-ticket-track] button[type=submit]",
+          "height": 44,
+          "width": 246,
+          "left": 37,
+          "right": 283
+        }
+      ]
+    },
+    "queue_360": {
+      "width": 360,
+      "overflow": 0,
+      "boxes": [
+        {
+          "selector": "#queue-search-q",
+          "height": 44,
+          "width": 240.921875,
+          "left": 27,
+          "right": 267.921875
+        },
+        {
+          "selector": "[data-queue-filter=\"verification\"]",
+          "height": 44,
+          "width": 87.125,
+          "left": 125.75,
+          "right": 212.875
+        },
+        {
+          "selector": "[data-queue-search-form] button[type=submit]",
+          "height": 44,
+          "width": 57.078125,
+          "left": 275.921875,
+          "right": 333
+        }
+      ]
+    },
+    "queue_first_ticket_open_390": {
+      "top": 702,
+      "bottom": 746,
+      "viewport": 844
+    },
+    "queue_card_actions_390": {
+      "width": 390,
+      "overflow": 0,
+      "boxes": [
+        {
+          "selector": "[data-ticket-list] tbody tr:not([hidden]) [data-queue-column=\"open\"] a",
+          "height": 44,
+          "width": 103.21875,
+          "left": 204,
+          "right": 307.21875
+        }
+      ]
+    },
+    "queue_first_ticket_open_1440": {
+      "top": 615,
+      "bottom": 657,
+      "viewport": 900
+    },
+    "ticket_next_action_390": {
+      "top": 674,
+      "bottom": 718,
+      "viewport": 844
+    },
+    "ticket_detail_links_390": {
+      "width": 390,
+      "overflow": 0,
+      "boxes": [
+        {
+          "selector": ".hd-ticket-jumps a[href=\"#ticket-history\"]",
+          "height": 44,
+          "width": 85.109375,
+          "left": 142.625,
+          "right": 227.734375
+        },
+        {
+          "selector": ".hd-next-step [data-ticket-jump]",
+          "height": 44,
+          "width": 227.953125,
+          "left": 43,
+          "right": 270.953125
+        }
+      ]
+    },
+    "role_policy_320": {
+      "width": 320,
+      "overflow": 0,
+      "boxes": [
+        {
+          "selector": "[data-role-refresh]",
+          "height": 44,
+          "width": 88.625,
+          "left": 43,
+          "right": 131.625
+        },
+        {
+          "selector": "[data-hd-role-policy-section] .hd-s2-trigger",
+          "height": 44,
+          "width": 168,
+          "left": 56,
+          "right": 224
+        }
+      ]
+    },
+    "hero_editor_320": {
+      "width": 320,
+      "overflow": 0,
+      "boxes": [
+        {
+          "selector": "[data-hero-size=\"desktop\"]",
+          "height": 44,
+          "width": 82.796875,
+          "left": 60,
+          "right": 142.796875
+        },
+        {
+          "selector": "[data-hero-size=\"mobile\"]",
+          "height": 44,
+          "width": 75.3125,
+          "left": 152.796875,
+          "right": 228.109375
+        },
+        {
+          "selector": "[data-hero-preview-slots] button:last-child",
+          "height": 44,
+          "width": 44,
+          "left": 114,
+          "right": 158
+        }
+      ]
+    },
+    "master_320": {
+      "width": 320,
+      "overflow": 0,
+      "boxes": [
+        {
+          "selector": "[data-hd-new]",
+          "height": 44,
+          "width": 234,
+          "left": 43,
+          "right": 277
+        },
+        {
+          "selector": "[data-hd-rows] tr a[href*=\"kind=divisions\"]",
+          "height": 44,
+          "width": 94.234375,
+          "left": 169.765625,
+          "right": 264
+        }
+      ]
+    },
+    "master_reflow_640": {
+      "width": 630,
+      "overflow": 0,
+      "boxes": [
+        {
+          "selector": "[data-hd-new]",
+          "height": 44,
+          "width": 292.015625,
+          "left": 45,
+          "right": 337.015625
+        }
+      ]
+    }
+  },
+  "keyboard": [
+    "public skip link",
+    "both drawers and focus return",
+    "banner thumbnail selection",
+    "report validation and modal Escape",
+    "advanced queue filters",
+    "ticket detail section and role action focus",
+    "comment audience",
+    "return to the previous queue view",
+    "mobile Hero preview"
+  ],
+  "scope": "Edge lab, report preview without submission, read-only Admin work after synthetic sign-in; 640 CSS pixels represents reflow, no human UAT"
+}

@@ -213,3 +213,7 @@ Karena volume lama `helpdesk-m0_postgres-data` (PG 16.14) tidak dimodifikasi mau
 2. Kembalikan `compose.yaml` ke digest `postgres:16.14-alpine@sha256:57c72fd2a128e416c7fcc499958864df5301e940bca0a56f58fddf30ffc07777` dan mount `postgres-data:/var/lib/postgresql/data` (atau via Git checkout bersih pada `compose.yaml` & `backend.Dockerfile`/`web.Dockerfile` jika kembali ke Fase 0).
 3. Jalankan `docker compose up -d`, lakukan audit log `app`/`db` dan verifikasi kembali integritas data pada `18090`.
 4. Volume uji `postgres18-data` baru boleh dihapus setelah rollback selesai dikonfirmasi sukses.
+
+## 7. Patch keamanan gateway pada kandidat Penyempurnaan Fase 2
+
+Pemindaian Trivy terhadap image `1.30.6-alpine` menemukan empat temuan kritis dan enam temuan tinggi. Kandidat lokal memperbarui pin ke `1.30.7-alpine-slim` sesuai [technology-lock.json](../../planning/technology-lock.json). Varian slim sesuai kebutuhan konfigurasi gateway yang tidak memuat modul dinamis tambahan. Versi, digest, konfigurasi proxy, dan aturan rute yang sama wajib dipakai pada semua model ketika eksperimen lintas arsitektur dijalankan. Riwayat cutover ADR ini memakai pin sebelumnya.

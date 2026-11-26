@@ -1,0 +1,10 @@
+# Apply only when provisioning approved external integrations.
+services:
+  app:
+    volumes:
+      - type: bind
+        source: ${HELPDESK_INTEGRATION_SECRETS_DIR:?Path to the protected integration secrets directory}
+        target: /run/integrations
+        read_only: true
+        bind:
+          create_host_path: false

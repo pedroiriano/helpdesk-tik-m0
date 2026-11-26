@@ -1,5 +1,5 @@
 import { primaryProfiles, specialProfiles } from './admin-profiles.mjs';
-import { renderMasterOptions, adminItems, adminNavLink, queueViews } from './admin-navigation.mjs';
+import { renderMasterOptions, adminItems, adminNavLink } from './admin-navigation.mjs';
 /** Compose business consumers from the ORIGINAL PIUI shells, fields, cards and dialog. */
 export const businessAssets = '<link rel="stylesheet" href="/helpdesk/business.css"><script type="module" src="/helpdesk/m0-03.js"></script>';
 export function publicJourneyNav(admin = false) {
@@ -21,6 +21,7 @@ const session = '<div class="hd-session" aria-label="Sesi pengguna"><p data-hd-s
   publicJourneyNav() + '<button class="btn btn-secondary" data-hd-logout type="button" hidden>Keluar akun</button></div>';
 export function registerForm() {
   return `<form class="vy-contact-form hd-auth-card" data-hd-register data-local-mutation data-local-ready>
+    <p class="hd-environment-note" data-hd-environment hidden>Lingkungan uji. Gunakan data contoh.</p>
     <div class="hd-callout hd-callout--info">
       <p>
         <strong>Pendaftaran Akun Warga.</strong> Lengkapi data sesuai identitas yang berlaku untuk mengajukan permohonan dan memantau progres tiket layanan TIK Pemerintah Kota Depok.
@@ -66,17 +67,15 @@ export function registerForm() {
 
 export function loginForm(admin = false) {
   if (admin) {
-    return `<form class="piui-card hd-admin-login" data-hd-login data-hd-admin-login data-local-mutation data-local-ready>
+    return `<form class="hd-admin-login" data-hd-login data-hd-admin-login data-local-mutation data-local-ready>
       <div class="piui-dialog__header hd-login-header">
-        <strong id="login-modal-title">Konsol Petugas Helpdesk TIK</strong>
+        <strong id="login-modal-title">Masuk ruang petugas</strong>
         <button type="button" class="piui-icon-btn" data-close-dialog aria-label="Tutup formulir masuk">
           <svg width="18" height="18" aria-hidden="true"><use href="/admin/assets/icons/piui-sprite.svg#icon-close"></use></svg>
         </button>
       </div>
       <div class="piui-dialog__body">
-        <p class="piui-demo-notice hd-demo-notice-compact" data-hd-lab-notice>
-          Masuk menggunakan akun petugas terdaftar atau SSO ASN Pemerintah Kota Depok sesuai kewenangan peran Anda.
-        </p>
+        <p class="hd-environment-note" data-hd-environment hidden>Lingkungan uji. Gunakan data contoh.</p>
         <div class="piui-field">
           <label for="hd-admin-identifier">NIK / Email Petugas</label>
           <input class="piui-input" id="hd-admin-identifier" name="identifier" type="text" placeholder="Masukkan NIK atau email terdaftar" required autocomplete="username">
@@ -87,22 +86,22 @@ export function loginForm(admin = false) {
         </div>
         <p class="hd-status-line--sm" data-hd-login-status role="status" tabindex="-1"></p>
         <div class="hd-actions--compact">
-          <button class="piui-btn piui-btn--primary hd-flex-1" type="submit">Masuk Konsol Petugas</button>
-          <a class="piui-btn piui-btn--secondary" href="/">Portal Publik</a>
+          <button class="piui-btn piui-btn--primary hd-flex-1" type="submit">Masuk petugas</button>
+          <a class="piui-btn piui-btn--secondary" href="/">Portal publik</a>
         </div>
         <div class="hd-divider-top" data-hd-sso-panel hidden>
           <button type="button" class="piui-btn piui-btn--secondary hd-flex-1" data-hd-sso-login>Masuk SSO ASN Pemkot Depok</button>
         </div>
         
-        <div class="hd-divider-top" data-hd-lab-section>
+        <div class="hd-divider-top" data-hd-lab-section hidden>
           <p class="hd-divider-title">
-            Akses Cepat Peran Petugas (Mode UAT):
+            Masuk dengan akun contoh
           </p>
-          <p class="hd-profile-intro">Pilih salah satu dari lima profil tugas petugas untuk sesi uji UAT.</p>
+          <p class="hd-profile-intro">Pilih profil tugas untuk pengujian.</p>
           <div class="hd-lab-role-grid" aria-label="Lima profil utama petugas">
             ${primaryProfiles.map(profile => `<button type="button" class="piui-btn piui-btn--secondary hd-profile-choice" disabled data-quick-login="${profile.id}"><strong>${profile.label}</strong><span>${profile.description}</span></button>`).join('')}
           </div>
-          <details class="hd-access-details"><summary>Akun lab lainnya dan akses khusus</summary>
+          <details class="hd-access-details"><summary>Akun contoh lainnya</summary>
           <div class="piui-field hd-field-mt">
             <label for="hd-subject">Pilih akun dan lingkup kewenangannya:</label>
             <select class="piui-input hd-select-compact" id="hd-subject" name="subject" disabled>
@@ -130,6 +129,7 @@ export function loginForm(admin = false) {
 
     <!-- Panel Warga -->
     <form data-hd-login data-hd-auth-mode="warga" id="auth-panel-warga" role="tabpanel" aria-labelledby="auth-tab-warga" data-local-mutation data-local-ready>
+      <p class="hd-environment-note" data-hd-environment hidden>Lingkungan uji. Gunakan data contoh.</p>
       <p class="vy-form-privacy hd-privacy-lead" data-hd-warga-lead>
         Masuk menggunakan NIK atau email terdaftar untuk menyampaikan permohonan dan memantau status tiket Anda.
       </p>
@@ -150,6 +150,7 @@ export function loginForm(admin = false) {
 
     <!-- Panel ASN -->
     <form data-hd-login data-hd-auth-mode="asn" id="auth-panel-asn" role="tabpanel" aria-labelledby="auth-tab-asn" hidden data-local-mutation data-local-ready>
+      <p class="hd-environment-note" data-hd-environment hidden>Lingkungan uji. Gunakan data contoh.</p>
       <div class="hd-callout--asn" data-hd-lab-callout>
         <strong>Akses ASN Pemerintah Kota Depok</strong>
         <p>Masuk menggunakan akun ASN terdaftar atau melalui tombol SSO ASN resmi Pemerintah Kota Depok.</p>
@@ -174,9 +175,9 @@ export function loginForm(admin = false) {
     </form>
 
     <!-- Opsi Akses Cepat UAT (hanya tampil saat mode UAT / HELPDESK_LAB_AUTH=1) -->
-    <div class="hd-divider-top" data-hd-lab-section>
+    <div class="hd-divider-top" data-hd-lab-section hidden>
       <p class="hd-divider-title">
-        ⚡ Akses Cepat Sesi UAT / Penguji (1-Klik):
+        Masuk dengan akun contoh
       </p>
       <div class="hd-quick-row">
         <button type="button" class="btn btn-secondary hd-quick-btn" disabled data-quick-login="warga"><span class="hd-btn-icon">👤</span> Warga Mandiri (Publik A)</button>
@@ -193,7 +194,7 @@ export function loginForm(admin = false) {
     </div>
   </div>`;
 }
-const banner = (title, intro) => `<section class="vy-leaf-banner"><p class="court-badge">Helpdesk TIK Kota Depok</p><h1 class="vy-leaf-head">${title}</h1><p class="vy-leaf-brief">${intro}</p></section>`;
+export const publicPageHeading = (title, intro) => `<header class="vy-leaf-banner hd-task-heading"><h1 class="vy-leaf-head">${title}</h1><p class="vy-leaf-brief">${intro}</p></header>`;
 
 function faqSection() {
   return `<section class="vy-contact-form hd-faq-section">
@@ -352,13 +353,36 @@ function knowledgeSection(pageKind = 'knowledge') {
 
 export function publicBusinessPage(source, kind) {
  let main = '';
- if (kind === 'register') main = banner('Pendaftaran Akun Warga', 'Daftar akun mandiri untuk mengajukan permohonan dan memantau progres tiket layanan TIK Pemerintah Kota Depok.') + registerForm();
- if (kind === 'login') main = banner('Akses Layanan TIK', 'Masuk menggunakan akun Warga atau ASN Pemerintah Kota Depok untuk mengajukan dan memantau layanan TIK.') + loginForm();
- if (kind === 'catalog') main = banner('Katalog Layanan TIK', 'Pilih layanan sesuai kebutuhan dan hak akses Anda. Jika belum yakin, mulai dari laporan kendala TIK umum.') + session + '<div class="hd-actions"><a class="btn btn-primary" href="/lapor.html?id=31000000-0000-4000-8000-000000000001">Laporkan kendala TIK umum</a></div><div class="hd-search-box" data-hd-search-wrap><label for="hd-public-search" class="u-sr-only">Cari layanan atau panduan</label><div class="vy-input-group hd-search-input"><input type="search" maxlength="100" id="hd-public-search" class="vy-input" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-controls="hd-search-suggestions" aria-activedescendant="" placeholder="Cari layanan, panduan, atau informasi TIK..." autocomplete="off"><ul id="hd-search-suggestions" class="hd-suggestions-list" role="listbox" aria-label="Saran layanan dan panduan" hidden></ul></div><p id="hd-search-status" role="status"></p></div><form class="vy-contact-form hd-form-grid hd-catalog-filter" data-hd-catalog-filter hidden><div class="vy-input-group"><label for="hd-catalog-q">Filter kata kunci</label><input id="hd-catalog-q" class="vy-input" type="search" maxlength="100" placeholder="Nama atau kode layanan..."></div><div class="vy-input-group"><label for="hd-catalog-category">Kategori</label><select id="hd-catalog-category" class="vy-input"><option value="">Semua kategori</option></select></div><div class="vy-input-group"><label for="hd-catalog-access">Hak akses</label><select id="hd-catalog-access" class="vy-input"><option value="">Semua akses</option><option value="PUBLIC_GUEST">Publik tanpa login</option><option value="PUBLIC_AUTH">Publik dengan akun</option><option value="ASN_AUTH">Khusus ASN</option></select></div></form><p data-hd-status role="status" tabindex="-1">Memuat katalog…</p><div class="hd-catalog" data-hd-catalog></div><nav class="hd-actions hd-pager-nav" aria-label="Halaman katalog"><button class="btn hd-btn-pager" data-hd-prev disabled><span aria-hidden="true">←</span> Halaman Sebelumnya</button><button class="btn hd-btn-pager" data-hd-next disabled>Halaman Berikutnya <span aria-hidden="true">→</span></button></nav>';
- if (kind === 'detail') main = banner('Detail Spesifikasi Layanan', 'Periksa parameter SLA, persyaratan teknis, dan formulir permohonan sebelum mengajukan tiket.') + session + '<p data-hd-status role="status" tabindex="-1">Memuat layanan…</p><article class="vy-contact-form" data-hd-detail hidden><h2 data-hd-service-name></h2><p data-hd-service-meta></p><h3>Pratinjau formulir layanan</h3><div data-hd-fields></div><p data-hd-policy></p><p class="vy-form-privacy">Isian di atas adalah pratinjau. Gunakan tombol Buat laporan untuk mengisi dan mengirim tiket melalui formulir operasional.</p></article>';
- if (kind === 'faq') main = banner('Tanya Jawab (FAQ)', 'Pertanyaan yang sering diajukan seputar layanan TIK, permohonan fasilitas, dan penanganan kendala SPBE Kota Depok.') + faqSection();
- if (kind === 'status') main = banner('Status Layanan TIK', 'Informasi ketersediaan gerbang aplikasi, katalog layanan resmi, dan kalender operasional SPBE Kota Depok.') + statusSection();
- if (kind === 'contact') main = banner('Kontak &amp; Lokasi Layanan', 'Alamat kantor pelayanan, jam operasional, dan kanal resmi pengajuan bantuan Helpdesk TIK Pemerintah Kota Depok.') + contactSection();
+ if (kind === 'register') main = publicPageHeading('Pendaftaran Akun Warga', 'Daftar akun mandiri untuk mengajukan permohonan dan memantau progres tiket layanan TIK Pemerintah Kota Depok.') + registerForm();
+ if (kind === 'login') main = publicPageHeading('Akses Layanan TIK', 'Masuk menggunakan akun Warga atau ASN Pemerintah Kota Depok untuk mengajukan dan memantau layanan TIK.') + loginForm();
+ if (kind === 'catalog') main = publicPageHeading('Katalog layanan TIK', 'Cari layanan dan lihat persyaratan pengajuannya.') + `
+   <form class="vy-contact-form hd-form-grid hd-catalog-filter" data-hd-catalog-filter hidden><div class="vy-input-group"><label for="hd-catalog-q">Cari layanan</label><input id="hd-catalog-q" class="vy-input" type="search" maxlength="100" placeholder="Contoh: Wi-Fi atau email dinas"></div><details class="hd-catalog-options" open><summary>Filter layanan<span data-hd-filter-count hidden></span></summary><div class="hd-catalog-options__fields"><div class="vy-input-group"><label for="hd-catalog-category">Kategori</label><select id="hd-catalog-category" class="vy-input"><option value="">Semua kategori</option></select></div><div class="vy-input-group"><label for="hd-catalog-access">Hak akses</label><select id="hd-catalog-access" class="vy-input"><option value="">Semua akses</option><option value="PUBLIC_GUEST">Publik tanpa login</option><option value="PUBLIC_AUTH">Publik dengan akun</option><option value="ASN_AUTH">Khusus ASN</option></select></div></div></details></form>
+   <p data-hd-status role="status" tabindex="-1">Memuat katalog…</p><button class="btn btn-secondary" type="button" data-hd-catalog-retry hidden>Coba lagi</button><div class="hd-catalog" data-hd-catalog></div><nav class="hd-actions hd-pager-nav" aria-label="Halaman katalog"><button class="btn hd-btn-pager" data-hd-prev disabled><span aria-hidden="true">←</span> Sebelumnya</button><button class="btn hd-btn-pager" data-hd-next disabled>Berikutnya <span aria-hidden="true">→</span></button></nav>
+   <aside class="hd-catalog-help" aria-labelledby="hd-catalog-help-title">
+     <div><h2 id="hd-catalog-help-title">Belum tahu layanan yang tepat?</h2><p>Gunakan laporan umum. Petugas akan memeriksa kategori dan meneruskannya.</p></div>
+     <a class="btn btn-secondary" href="/lapor.html?id=31000000-0000-4000-8000-000000000001">Laporkan kendala umum</a>
+   </aside>
+   <section class="hd-catalog-more" aria-labelledby="hd-catalog-more-title">
+     <h2 id="hd-catalog-more-title">Cari bantuan lain</h2>
+     <div class="hd-search-box" data-hd-search-wrap><label for="hd-public-search" class="hd-search-label">Cari layanan atau panduan</label><div class="vy-input-group hd-search-input"><input type="search" maxlength="100" id="hd-public-search" class="vy-input" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-controls="hd-search-suggestions" aria-activedescendant="" placeholder="Contoh: cara melacak tiket" autocomplete="off"><ul id="hd-search-suggestions" class="hd-suggestions-list" role="listbox" aria-label="Saran layanan dan panduan" hidden></ul></div><p id="hd-search-status" role="status"></p></div>
+   </section>` + session;
+ if (kind === 'detail') main = `<nav class="hd-public-breadcrumb" aria-label="Lokasi halaman"><a href="/layanan.html">Katalog layanan</a></nav>
+   <p data-hd-status role="status" tabindex="-1">Memuat detail layanan…</p>
+   <section data-hd-detail hidden>
+     <header class="vy-leaf-banner hd-task-heading hd-service-heading">
+       <h1 class="vy-leaf-head" data-hd-service-name>Detail layanan</h1>
+       <p class="vy-leaf-brief" data-hd-service-meta></p>
+       <p class="hd-service-terms" data-hd-policy></p>
+     </header>
+     <section class="vy-contact-form hd-service-preview" aria-labelledby="hd-preview-title">
+       <h2 id="hd-preview-title">Informasi yang perlu disiapkan</h2>
+       <p>Berikut isian yang akan muncul pada formulir laporan.</p>
+       <div data-hd-fields class="hd-form-grid"></div>
+     </section>
+   </section>`;
+ if (kind === 'faq') main = publicPageHeading('Tanya Jawab (FAQ)', 'Pertanyaan yang sering diajukan seputar layanan TIK, permohonan fasilitas, dan penanganan kendala SPBE Kota Depok.') + faqSection();
+ if (kind === 'status') main = publicPageHeading('Status Layanan TIK', 'Informasi ketersediaan gerbang aplikasi, katalog layanan resmi, dan kalender operasional SPBE Kota Depok.') + statusSection();
+ if (kind === 'contact') main = publicPageHeading('Kontak &amp; Lokasi Layanan', 'Alamat kantor pelayanan, jam operasional, dan kanal resmi pengajuan bantuan Helpdesk TIK Pemerintah Kota Depok.') + contactSection();
  if (kind === 'knowledge' || kind === 'pages') main = knowledgeSection(kind);
 
  const titleMap = {
@@ -374,30 +398,45 @@ export function publicBusinessPage(source, kind) {
  };
 
  return source.replace(/<title>[\s\S]*?<\/title>/, '<title>Helpdesk TIK · ' + (titleMap[kind] || 'Layanan TIK') + '</title>')
- .replace(/<main\b[\s\S]*?<\/main>/, '<main id="main-content" class="vy-shell u-pb-96" data-hd-page="' + kind + '">' + main + '</main>')
+ .replace(/<main\b[\s\S]*?<\/main>/, '<main id="main-content" class="vy-shell hd-task-page" tabindex="-1" data-hd-page="' + kind + '">' + main + '</main>')
  .replace(/<script\b[^>]*contact\.js[^>]*><\/script>/g, '').replace('</head>', businessAssets + '</head>');
 }
 const field = (label, name, type = 'text', placeholder = '', hint = '') => `<div class="piui-field" data-hd-field="${name}"><label for="hd-${name}">${label}</label><input class="piui-input" id="hd-${name}" name="${name}" type="${type}" maxlength="200"${placeholder ? ` placeholder="${placeholder}"` : ''}>${hint ? `<small>${hint}</small>` : ''}</div>`;
 const select = (label, name, options = '', hint = '', extra = '') => `<div class="piui-field" data-hd-field="${name}"><label for="hd-${name}">${label}</label><select class="piui-input" id="hd-${name}" name="${name}">${options}</select>${hint ? `<small>${hint}</small>` : ''}${extra}</div>`;
 const orgShortcut = '<div class="hd-field-shortcuts"><a class="hd-field-shortcut" href="/admin/app/helpdesk/index.html?kind=organizations#new" data-hd-shortcut="organizations">+ Tambah PD / Unit Kerja Baru</a></div>';
 const subjectShortcut = '<div class="hd-field-shortcuts"><a class="hd-field-shortcut" href="/admin/app/helpdesk/index.html?kind=subjects#new" data-hd-shortcut="subjects">+ Buat Akun Pengguna Baru</a></div>';
+const editorialLinks = active => '<nav class="hd-actions hd-editorial-links" aria-label="Konten dan media">' +
+  ['articles','faqs','hero','media'].filter(id => id !== active)
+    .map(id => adminNavLink(adminItems.find(item => item.id === id), '', 'piui-btn piui-btn--secondary piui-btn--sm')).join('') + '</nav>';
 export function adminBusinessPage(source) {
- const main = `<main id="main-content" class="piui-main" data-hd-page="admin">
+ const main = `<main id="main-content" tabindex="-1" class="piui-main" data-hd-page="admin">
  <div class="piui-page-header"><div class="piui-page-header__titles"><h1>Master layanan dan akses</h1><p class="piui-page-subtitle">Kelola master sesuai mandat organisasi. Perubahan disimpan pada server.</p></div></div>
- <div class="piui-card hd-session"><div class="hd-session-inner"><div class="hd-session-identity"><p data-hd-session role="status" class="hd-session-name">Memeriksa sesi…</p><span class="hd-session-desc">Portal operasional petugas Helpdesk TIK Pemerintah Kota Depok.</span></div><div class="hd-actions"><a class="piui-btn piui-btn--secondary piui-btn--sm" href="/admin/auth/login.html" data-admin-account-switch>Masuk petugas</a><button class="piui-btn piui-btn--secondary piui-btn--sm" data-admin-logout hidden type="button">Keluar akun</button></div></div><p data-hd-login-status role="status" tabindex="-1"></p></div>
+ <div class="piui-card hd-session" data-admin-session-fallback><div class="hd-session-inner"><div class="hd-session-identity"><p data-hd-session role="status" class="hd-session-name">Memeriksa sesi…</p></div><div class="hd-actions"><a class="piui-btn piui-btn--secondary piui-btn--sm" href="/admin/auth/login.html" data-admin-account-switch>Masuk petugas</a><button class="piui-btn piui-btn--secondary piui-btn--sm" data-admin-logout hidden type="button">Keluar akun</button></div></div><p data-hd-login-status role="status" tabindex="-1"></p></div>
  <p data-hd-status role="status" tabindex="-1"></p>
  <section data-hd-admin hidden>
- <div class="piui-card"><div class="court-badge hd-callout--admin-violet"><strong>Konsol Administrator Helpdesk TIK Kota Depok:</strong> Pilih halaman pengelolaan sesuai tugas Anda. Periksa isian sebelum menyimpan perubahan.</div><div class="hd-master-toolbar"><div class="piui-field hd-master-picker-field"><label for="hd-master-kind">Halaman pengelolaan</label><select class="piui-input" id="hd-master-kind" disabled>${renderMasterOptions()}</select></div><div class="hd-actions hd-master-actions"><button class="piui-btn piui-btn--primary" type="button" data-hd-new>+ Tambah data</button><button class="piui-btn piui-btn--secondary" type="button" data-hd-refresh>Muat ulang</button></div></div>
- <div class="hd-table-wrap"><table class="piui-table"><caption data-hd-caption>Daftar master</caption><thead><tr><th scope="col">Data</th><th scope="col">Organisasi</th><th scope="col">Status / versi</th><th scope="col">Tindakan</th></tr></thead><tbody data-hd-rows></tbody></table></div>
- <nav class="hd-actions" aria-label="Halaman master"><button class="piui-btn piui-btn--secondary" data-hd-prev disabled>Sebelumnya</button><button class="piui-btn piui-btn--secondary" data-hd-next disabled>Berikutnya</button></nav></div>
- <form class="piui-card hd-form-panel" data-hd-master-form data-local-mutation data-local-ready>
+ <section class="piui-card hd-master-list" aria-label="Daftar master"><div class="hd-master-toolbar"><div class="hd-actions hd-master-actions"><button class="piui-btn piui-btn--primary" type="button" data-hd-new>+ Tambah data</button><button class="piui-btn piui-btn--secondary" type="button" data-hd-refresh>Muat ulang</button></div>
+   <details class="hd-master-navigation"><summary>Modul lain</summary><div class="piui-field hd-master-picker-field"><label for="hd-master-kind">Halaman pengelolaan</label><select class="piui-input" id="hd-master-kind" disabled>${renderMasterOptions()}</select></div></details>
+ </div>
+ <details class="hd-master-structure" data-master-structure hidden>
+   <summary>Struktur organisasi dan cakupan</summary>
+   <nav class="hd-actions" data-master-structure-links aria-label="PD, bidang, tim dan jadwal"></nav>
+   <form class="hd-form-grid" data-master-scope hidden>
+     <div class="piui-field"><label for="hd-master-scope-org">Cakupan PD / Unit Kerja</label><select class="piui-input" id="hd-master-scope-org"></select></div>
+     <div class="piui-field"><label for="hd-master-scope-division">Bidang</label><select class="piui-input" id="hd-master-scope-division"></select></div>
+     <div class="hd-actions hd-col-full"><button type="submit" class="piui-btn piui-btn--secondary">Terapkan cakupan</button></div>
+     <p class="hd-col-full" data-master-scope-status role="status"></p>
+   </form>
+ </details>
+ <div class="hd-table-wrap"><table class="piui-table" data-hd-master-table data-dt-compact-toolbar="search"><caption data-hd-caption>Daftar master</caption><thead><tr><th scope="col">Data</th><th scope="col">Organisasi</th><th scope="col">Status / versi</th><th scope="col">Tindakan</th></tr></thead><tbody data-hd-rows></tbody></table></div>
+ <nav class="hd-actions" aria-label="Halaman master"><button class="piui-btn piui-btn--secondary" data-hd-prev disabled>Sebelumnya</button><button class="piui-btn piui-btn--secondary" data-hd-next disabled>Berikutnya</button></nav></section>
+ <form class="piui-card hd-form-panel" data-hd-master-form data-local-mutation data-local-ready hidden>
   <div class="hd-form-panel__head">
     <div class="hd-form-panel__titles">
       <div class="hd-form-panel__kicker"><span class="hd-mode-badge" data-hd-editor-badge>Data Baru</span></div>
       <h2 data-hd-editor-title>Tambah layanan</h2>
       <p class="hd-form-panel__sub" data-hd-editor-version>Data baru</p>
     </div>
-    <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-hd-cancel-master>Bersihkan Isian</button>
+    <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-hd-cancel-master>Tutup formulir</button>
   </div>
   <div class="hd-form-grid">
  ${field('Kode *', 'code', 'text', 'Contoh: TIK-NET-01', 'Kode unik identitas tanpa spasi atau garis miring.')}${field('Nama resmi / lengkap *', 'name', 'text', 'Masukkan nama layanan, unit, kategori, atau akun...')}${select('Jenis akun *', 'subject-kind', '<option value="STAFF">Petugas / Staf Kedinasan</option><option value="ASN">Pegawai ASN Pelapor</option><option value="PUBLIC">Masyarakat / Pengguna Publik</option>', 'Menentukan tipe akun dan pilihan peran bawaan yang sah.')}${select('Peran akun *', 'subject-role', '<option value="OPERATOR">Operator Layanan</option><option value="TECHNICIAN">Teknisi Penanganan</option><option value="COORDINATOR">Koordinator Layanan</option><option value="LEADERSHIP">Pimpinan / Pengawas</option><option value="EDITOR">Editor Pengetahuan</option><option value="PUBLISHER">Penerbit Portal</option><option value="AUDITOR">Auditor Kepatuhan</option><option value="ADMIN_OPD">Admin Perangkat Daerah</option><option value="PLATFORM_ADMIN">Admin Platform</option><option value="SUPER_ADMIN">Super Admin</option><option value="ASN">ASN Pelapor</option><option value="PUBLIC">Pengguna Publik</option>', 'Peran bawaan saat akun diberi hak akses pada organisasi.')}${field('NIP / NIK / ID Referensi', 'external-ref', 'text', 'Contoh: 199001012015011001', 'Opsional; disarankan diisi sebagai nomor induk pegawai atau referensi unik.')}${field('Email kedinasan / akun', 'email', 'email', 'nama@depok.go.id', 'Opsional; digunakan untuk login lokal dan korespondensi pemberitahuan.')}${field('Nomor HP / WhatsApp', 'phone', 'tel', '081234567890', 'Opsional; nomor kontak aktif pemegang akun.')}<div class="piui-field" data-hd-field="password"><label for="hd-password">Kata sandi awal / baru (opsional)</label><input class="piui-input" id="hd-password" name="password" type="password" minlength="8" maxlength="128" autocomplete="new-password" placeholder="Minimal 8 karakter; kosongkan bila tidak diubah"><small>Isi minimal 8 karakter agar akun dapat langsung masuk memakai NIP/email dan kata sandi.</small></div>${select('OPD / organisasi *', 'org', '', '', orgShortcut)}${select('Bidang tim (opsional)', 'division', '<option value="">Tanpa bidang</option>')}${select('Kategori', 'category', '<option value="">Tanpa kategori</option>')}
@@ -411,14 +450,28 @@ export function adminBusinessPage(source) {
  <div class="piui-field hd-toggle-card" data-hd-field="active"><label class="hd-toggle-card__label"><input name="active" type="checkbox" checked> <span><strong>Status Aktif</strong><small>Tampil dan dapat dipilih pada layanan serta operasional. Hapus centang untuk mengarsipkan/menonaktifkan.</small></span></label></div><div class="piui-field hd-toggle-card" data-hd-field="reporting-visible"><label class="hd-toggle-card__label"><input name="reporting-visible" type="checkbox"> <span><strong>Direktori Laporan Publik</strong><small>Tampilkan OPD ini pada formulir pelaporan publik tanpa login.</small></span></label></div><div class="piui-field hd-toggle-card hd-toggle-card--warn hd-col-full" data-hd-field="revoked"><label class="hd-toggle-card__label"><input name="revoked" type="checkbox"> <span><strong>Cabut akses organisasi ini</strong><small>Mencabut sementara atau permanen seluruh mandat keanggotaan akun pada organisasi terpilih.</small></span></label></div>
  </div>
  <p data-hd-save-status role="status" tabindex="-1"></p>
- <div class="hd-form-footer"><button class="piui-btn piui-btn--primary" type="submit" disabled>Simpan ke server</button><button type="button" class="piui-btn piui-btn--secondary" data-hd-cancel-master>Batal / Buat Data Baru</button></div>
+ <div class="hd-form-footer"><button class="piui-btn piui-btn--primary" type="submit" disabled>Simpan ke server</button><button type="button" class="piui-btn piui-btn--secondary" data-hd-cancel-master>Batal</button></div>
  </form>
  <section class="piui-card hd-form-panel" data-hd-service-editors hidden><div class="hd-form-panel__head"><div class="hd-form-panel__titles"><h2>Formulir dan kebijakan layanan</h2><p class="hd-form-panel__sub">Versi lama dipertahankan. Simpan satu perubahan, lalu gunakan versi terbaru dari server.</p></div></div>
  <form class="hd-subform-card" data-hd-form-editor data-local-mutation data-local-ready><h3>1. Field formulir tambahan</h3><div data-hd-form-fields></div><div class="hd-actions"><button class="piui-btn piui-btn--secondary" data-hd-add-field type="button">+ Tambah field</button><button class="piui-btn piui-btn--primary" type="submit">Simpan versi formulir baru</button></div><p data-hd-form-status role="status" tabindex="-1"></p></form>
- <form class="hd-subform-card" data-hd-policy-editor data-local-mutation data-local-ready><h3>2. Kebijakan unggahan dan audience</h3><div class="hd-form-grid">${field('Ukuran maksimum (byte, maksimal 10485760)', 'upload', 'number', 'Contoh: 5242880')}<div class="piui-field"><label for="hd-mime">MIME yang diizinkan</label><select class="piui-input" id="hd-mime" name="mime" multiple><option value="image/png">PNG</option><option value="image/jpeg">JPEG</option><option value="application/pdf">PDF</option></select></div><div class="piui-field hd-col-full"><label for="hd-audience">Organisasi audience tambahan</label><select class="piui-input" id="hd-audience" name="audience" multiple></select><small>Gunakan Ctrl/Command untuk memilih lebih dari satu.</small></div></div><div class="hd-form-footer"><button class="piui-btn piui-btn--primary" type="submit">Simpan versi kebijakan baru</button></div><p data-hd-policy-status role="status" tabindex="-1"></p></form><form class="hd-subform-card" data-hd-routing-editor data-local-mutation data-local-ready hidden><h3>3. Aturan Smart Dispatch</h3><p class="hd-form-panel__sub">Aturan kategori terverifikasi didahulukan. Tim lintas OPD menjadi saran pelimpahan untuk Koordinator.</p><div class="hd-form-grid"><div class="piui-field"><label for="hd-route-category">Kategori terverifikasi</label><select class="piui-input" id="hd-route-category" name="category"></select></div><div class="piui-field"><label for="hd-route-tier">Tingkat teknisi</label><select class="piui-input" id="hd-route-tier" name="tier"><option>L1</option><option>L2</option></select></div><div class="piui-field"><label for="hd-route-org">Perangkat daerah tujuan</label><select class="piui-input" id="hd-route-org" name="organization" required></select></div><div class="piui-field"><label for="hd-route-team">Tim penanganan</label><select class="piui-input" id="hd-route-team" name="team" required></select></div><div class="piui-field"><label for="hd-route-skills">Kode kompetensi, dipisahkan koma</label><input class="piui-input" id="hd-route-skills" name="skills" required placeholder="network, wifi"></div><div class="piui-field"><label for="hd-route-reason">Alasan perubahan</label><input class="piui-input" id="hd-route-reason" name="reason" minlength="5" maxlength="2000" placeholder="Jelaskan alasan pembaruan rute dispatch..." required></div><div class="piui-field hd-toggle-card hd-col-full"><label class="hd-toggle-card__label"><input type="checkbox" name="active" checked> <span><strong>Aturan Smart Dispatch aktif</strong><small>Terapkan aturan ini otomatis saat operator memverifikasi tiket kategori terkait.</small></span></label></div></div><p role="status"></p><div class="hd-form-footer"><button class="piui-btn piui-btn--primary" type="submit" disabled>Simpan aturan</button></div></form></section>
+ <form class="hd-subform-card" data-hd-policy-editor data-local-mutation data-local-ready><h3>2. Kebijakan unggahan dan audience</h3><div class="hd-form-grid">${field('Ukuran maksimum (byte, maksimal 10485760)', 'upload', 'number', 'Contoh: 5242880')}<div class="piui-field"><label for="hd-mime">MIME yang diizinkan</label><select class="piui-input" id="hd-mime" name="mime" multiple><option value="image/png">PNG</option><option value="image/jpeg">JPEG</option><option value="application/pdf">PDF</option></select></div><div class="piui-field hd-col-full"><label for="hd-audience">Organisasi audience tambahan</label><select class="piui-input" id="hd-audience" name="audience" multiple></select><small>Gunakan Ctrl/Command untuk memilih lebih dari satu.</small></div></div><div class="hd-form-footer"><button class="piui-btn piui-btn--primary" type="submit">Simpan versi kebijakan baru</button></div><p data-hd-policy-status role="status" tabindex="-1"></p></form><form class="hd-subform-card" data-hd-routing-editor data-local-mutation data-local-ready hidden><h3>3. Aturan Smart Dispatch</h3><p class="hd-form-panel__sub">Aturan kategori terverifikasi didahulukan. Tim lintas OPD menjadi saran pelimpahan untuk Koordinator.</p><div class="hd-form-grid"><div class="piui-field"><label for="hd-route-category">Kategori terverifikasi</label><select class="piui-input" id="hd-route-category" name="category"></select></div><div class="piui-field"><label for="hd-route-tier">Tingkat teknisi</label><select class="piui-input" id="hd-route-tier" name="tier"><option>L1</option><option>L2</option></select></div><div class="piui-field"><label for="hd-route-org">Perangkat daerah tujuan</label><select class="piui-input" id="hd-route-org" name="organization" required></select></div><div class="piui-field"><label for="hd-route-division">Bidang tujuan</label><select class="piui-input" id="hd-route-division" name="division"><option value="">Semua bidang</option></select></div><div class="piui-field"><label for="hd-route-team">Tim penanganan</label><select class="piui-input" id="hd-route-team" name="team" required></select></div><div class="piui-field"><label for="hd-route-skills">Kode kompetensi, dipisahkan koma</label><input class="piui-input" id="hd-route-skills" name="skills" required placeholder="network, wifi"></div><div class="piui-field"><label for="hd-route-reason">Alasan perubahan</label><input class="piui-input" id="hd-route-reason" name="reason" minlength="5" maxlength="2000" placeholder="Jelaskan alasan pembaruan rute dispatch..." required></div><div class="piui-field hd-toggle-card hd-col-full"><label class="hd-toggle-card__label"><input type="checkbox" name="active" checked> <span><strong>Aturan Smart Dispatch aktif</strong><small>Terapkan aturan ini otomatis saat operator memverifikasi tiket kategori terkait.</small></span></label></div></div><p role="status"></p><div class="hd-form-footer"><button class="piui-btn piui-btn--primary" type="submit" disabled>Simpan aturan</button></div></form></section>
  
+  <section id="kinerja-teknis" class="piui-card" data-hd-technical-report hidden>
+    <h2 data-hd-technical-report-title>Kinerja Teknis</h2>
+    <p>Periode berdasarkan waktu aktivitas. SLA dihitung per upaya resolusi yang memiliki target dan waktu penyelesaian. Durasi kerja berasal dari catatan petugas.</p>
+    <form class="hd-form-grid">
+      <div class="piui-field"><label for="hd-technical-report-org">PD / Unit Kerja</label><select class="piui-input" id="hd-technical-report-org" required></select></div>
+      <div class="piui-field"><label for="hd-technical-report-team">Cakupan tim</label><select class="piui-input" id="hd-technical-report-team"></select></div>
+      <div class="piui-field"><label for="hd-technical-report-from">Mulai (WIB)</label><input class="piui-input" id="hd-technical-report-from" type="datetime-local" step="any" required></div>
+      <div class="piui-field"><label for="hd-technical-report-to">Sebelum (WIB)</label><input class="piui-input" id="hd-technical-report-to" type="datetime-local" step="any" required></div>
+      <div class="hd-actions hd-col-full"><button class="piui-btn piui-btn--primary" type="submit">Tampilkan kinerja teknis</button>
+        <a class="piui-btn piui-btn--secondary" data-hd-technical-report-export hidden>Unduh ringkasan CSV</a></div>
+    </form>
+    <p data-hd-technical-report-status role="status"></p>
+    <dl data-hd-technical-report-summary class="hd-detail-field-list"></dl>
+  </section>
   <section class="piui-card" data-hd-m9-section hidden>
-    <h2>Laporan, Notifikasi dan Jejak Audit (M9)</h2>
+    <h2>Laporan, notifikasi, dan jejak audit</h2>
     <div data-hd-m9-tabs class="hd-actions">
       <button type="button" class="piui-btn piui-btn--primary" data-hd-tab="reports">Laporan SLA</button>
       <button type="button" class="piui-btn piui-btn--secondary" data-hd-tab="notifications">Notifikasi &amp; Telegram</button>
@@ -426,16 +479,16 @@ export function adminBusinessPage(source) {
     </div>
 
     <!-- Panel Laporan -->
-    <div data-hd-panel="reports" class="piui-panel">
+    <div id="laporan-sla" data-hd-panel="reports" class="piui-panel">
       <h3>Laporan Kinerja SLA dan Ekspor</h3>
       <div class="hd-form-grid">
         <div class="piui-field"><label for="hd-report-org">Organisasi</label><select class="piui-input" id="hd-report-org"></select></div>
-        <div class="piui-field"><label for="hd-report-from">Dari (WIB)</label><input class="piui-input" type="datetime-local" id="hd-report-from"></div>
-        <div class="piui-field"><label for="hd-report-to">Sampai (WIB)</label><input class="piui-input" type="datetime-local" id="hd-report-to"></div>
+        <div class="piui-field"><label for="hd-report-from">Dari (WIB)</label><input class="piui-input" type="datetime-local" step="any" id="hd-report-from"></div>
+        <div class="piui-field"><label for="hd-report-to">Sebelum (WIB)</label><input class="piui-input" type="datetime-local" step="any" id="hd-report-to"></div>
       </div>
       <div class="hd-actions">
         <button type="button" class="piui-btn piui-btn--primary" data-hd-fetch-report>Tampilkan Laporan</button>
-        <button type="button" class="piui-btn piui-btn--secondary" data-hd-open-export aria-haspopup="dialog">Ajukan Ekspor Data</button>
+        <button type="button" class="piui-btn piui-btn--secondary" data-hd-open-export aria-haspopup="dialog" hidden>Ajukan Ekspor Data</button>
       </div>
       <div data-hd-report-summary class="piui-summary-card hd-summary-card" hidden>
         <p><strong>Metrik Kepatuhan:</strong> <span data-hd-rep-measure>-</span></p>
@@ -449,7 +502,7 @@ export function adminBusinessPage(source) {
     <!-- Dialog Modal Ekspor (AC20 Accessible) -->
     <dialog data-hd-export-dialog class="piui-dialog hd-dialog-box" role="dialog" aria-modal="true" aria-labelledby="hd-export-title">
       <div class="piui-dialog__header hd-dialog-header">
-        <h3 id="hd-export-title">Ekspor Data Laporan (M9)</h3>
+        <h3 id="hd-export-title">Ekspor laporan</h3>
         <button type="button" class="piui-icon-btn" data-hd-close-export aria-label="Tutup dialog ekspor">&times;</button>
       </div>
       <form data-hd-export-form class="hd-dialog-form">
@@ -469,13 +522,13 @@ export function adminBusinessPage(source) {
     <!-- Panel Telegram & Notifikasi -->
     <div data-hd-panel="notifications" class="piui-panel" hidden>
       <div class="hd-section-bar">
-        <h3>Kotak Masuk Notifikasi (M9)</h3>
+        <h3>Kotak masuk notifikasi</h3>
         <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-hd-refresh-notif>Segarkan Notifikasi</button>
       </div>
       <p data-hd-notif-status role="status"></p>
       <div class="hd-table-wrap"><table class="piui-table"><thead><tr><th scope="col">Judul / Ringkasan</th><th scope="col">Waktu</th><th scope="col">Status</th><th scope="col">Tindakan</th></tr></thead><tbody data-hd-notif-rows></tbody></table></div>
       <div class="hd-subform-card hd-table-mt">
-        <h3 data-hd-tg-heading>Pengikatan saluran notifikasi (M9)</h3>
+        <h3 data-hd-tg-heading>Hubungkan saluran notifikasi</h3>
         <form data-hd-telegram-form class="hd-form-grid">
           <div class="piui-field"><label for="hd-tg-org">Organisasi Scope</label><select class="piui-input" id="hd-tg-org"></select></div>
           <div class="piui-field"><label for="hd-tg-code">Kode sekali pakai</label><input class="piui-input" id="hd-tg-code" type="text" autocomplete="off" readonly required placeholder="Klik Terbitkan kode tantangan..."></div>
@@ -490,7 +543,7 @@ export function adminBusinessPage(source) {
       </div>
       <div class="hd-divider-top" data-hd-delivery-panel hidden>
         <div class="hd-section-bar">
-          <h3>Antrean Pengiriman Saluran (Telegram &amp; Email M9)</h3>
+          <h3>Antrean notifikasi Telegram dan email</h3>
           <div class="hd-actions hd-actions--flush">
             <select class="piui-input" id="hd-delivery-state" aria-label="Filter status pengiriman">
               <option value="">Semua status</option>
@@ -516,11 +569,11 @@ export function adminBusinessPage(source) {
   </section>
 
   <section class="piui-card" data-hd-m11-section hidden>
-    <h2>Pemeliharaan, pekerjaan sistem, dan diagnostik (M1)</h2>
+    <h2>Pemeliharaan, pekerjaan sistem, dan diagnostik</h2>
     <div data-hd-m11-tabs class="hd-actions">
       <button type="button" class="piui-btn piui-btn--primary" data-hd-tab-m11="maintenance">Mode Pemeliharaan</button>
       <button type="button" class="piui-btn piui-btn--secondary" data-hd-tab-m11="runner">Scoped Runner</button>
-      <button type="button" class="piui-btn piui-btn--secondary" data-hd-tab-m11="scheduler">Penjadwalan (M7)</button>
+      <button type="button" class="piui-btn piui-btn--secondary" data-hd-tab-m11="scheduler">Jadwal sistem</button>
       <button type="button" class="piui-btn piui-btn--secondary" data-hd-tab-m11="health">Status Redacted</button>
     </div>
 
@@ -539,12 +592,12 @@ export function adminBusinessPage(source) {
       </div>
 
       <div class="hd-subform-card hd-table-mt">
-        <h3>Konfigurasi Mode &amp; Jadwal "Under Maintenance" (M1)</h3>
+        <h3>Konfigurasi Mode dan jadwal pemeliharaan</h3>
         <form data-hd-maintenance-form class="hd-form-grid" data-local-mutation>
           <div class="piui-field"><label for="hd-maint-schedule-kind">Jenis Pemeliharaan *</label><select class="piui-input" id="hd-maint-schedule-kind"><option value="UNSCHEDULED">Tidak Terjadwal / Darurat (Aktif Seketika)</option><option value="SCHEDULED">Terjadwal (Sesuai Waktu Mulai–Selesai)</option></select><small>Pilih "Tidak Terjadwal" untuk penanganan darurat mendadak, atau "Terjadwal" untuk rencana perawatan berkala.</small></div>
           <div class="piui-field"><label for="hd-maint-display">Tampilan pada Portal Publik *</label><select class="piui-input" id="hd-maint-display"><option value="FULL_SCREEN">Layar Penuh "Under Maintenance" (Tutup Portal Publik)</option><option value="BANNER">Banner Pengumuman (Portal Tetap Terbaca)</option></select><small>Layar penuh menutup seluruh halaman Web Publik dengan pengumuman pemeliharaan (halaman Status &amp; Web Admin tetap dapat diakses).</small></div>
-          <div class="piui-field"><label for="hd-maint-mode">Pembatasan Operasi API *</label><select class="piui-input" id="hd-maint-mode"><option value="READ_ONLY">Read-Only (Blokir Semua Pengiriman / Mutasi)</option><option value="DRAIN">Drain (Tutup Pembuatan Tiket Baru, Tiket Lama Tetap Berjalan)</option><option value="NORMAL">Normal (Hentikan Semua Pemeliharaan Aktif &amp; Terjadwal)</option></select></div>
-          <div class="piui-field"><label for="hd-maint-org">Organisasi Scope</label><select class="piui-input" id="hd-maint-org"></select></div>
+          <div class="piui-field"><label for="hd-maint-mode">Pembatasan Operasi API *</label><select class="piui-input" id="hd-maint-mode"><option value="READ_ONLY">Read-Only (Blokir Semua Pengiriman / Mutasi)</option><option value="DRAIN">Drain (Tutup Pembuatan Tiket Baru, Tiket Lama Tetap Berjalan)</option><option value="NORMAL">Normal (Akhiri Pemeliharaan pada Cakupan Terpilih)</option></select></div>
+          <div class="piui-field"><label for="hd-maint-org">Cakupan Pemeliharaan</label><select class="piui-input" id="hd-maint-org"></select><small>Cakupan kota dapat menampilkan pengumuman di seluruh portal. Cakupan PD membatasi operasi tiket yang menjadi tanggung jawab PD tersebut.</small></div>
           <div class="piui-field"><label for="hd-maint-start">Waktu Mulai (WIB) *</label><input class="piui-input" type="datetime-local" id="hd-maint-start" required></div>
           <div class="piui-field"><label for="hd-maint-end">Estimasi Selesai (WIB) *</label><input class="piui-input" type="datetime-local" id="hd-maint-end" required></div>
           <div class="piui-field hd-col-full"><label for="hd-maint-reason">Pesan Pengumuman untuk Pengguna *</label><textarea class="piui-input" id="hd-maint-reason" rows="2" maxlength="500" placeholder="Contoh: Pembaruan keamanan dan infrastruktur server SPBE Kota Depok sedang berlangsung..." required></textarea></div>
@@ -598,7 +651,7 @@ export function adminBusinessPage(source) {
     <!-- Panel Penjadwalan M7 -->
     <div data-hd-panel-m11="scheduler" class="piui-panel" hidden>
       <div class="hd-section-bar">
-        <h3>Antrean Penjadwalan &amp; Dead-Letter (M7)</h3>
+        <h3>Jadwal sistem dan pekerjaan gagal</h3>
         <div class="hd-actions hd-actions--flush">
           <select class="piui-input" id="hd-scheduler-state" aria-label="Filter status job">
             <option value="">Semua status</option>
@@ -622,23 +675,73 @@ export function adminBusinessPage(source) {
     </div>
   </section>
 
+  <section class="piui-card" data-hd-availability-section hidden>
+    <section id="roster" class="hd-roster-panel" data-hd-roster hidden aria-label="Jadwal dan kapasitas tim">
+      <div class="hd-roster-toolbar">
+        <details data-hd-roster-scope>
+          <summary><span data-hd-roster-scope-label>Pilih cakupan jadwal</span><span class="hd-roster-scope-action">Ubah cakupan</span></summary>
+          <div class="hd-form-grid">
+        <div class="piui-field"><label for="hd-roster-org">PD / Unit Kerja</label><select class="piui-input" id="hd-roster-org"></select></div>
+        <div class="piui-field"><label for="hd-roster-division">Bidang</label><select class="piui-input" id="hd-roster-division"><option value="">Semua bidang</option></select></div>
+        <div class="piui-field"><label for="hd-roster-team">Tim teknis</label><select class="piui-input" id="hd-roster-team"></select></div>
+          </div>
+          <button class="piui-btn piui-btn--secondary" type="button" data-hd-roster-summary-all hidden>Hitung kapasitas gabungan</button>
+        </details>
+        <button class="piui-btn piui-btn--primary" type="button" data-hd-roster-new hidden>Tambah jadwal</button>
+      </div>
+      <p data-hd-roster-capacity role="status"></p>
+      <p data-hd-roster-status role="status" tabindex="-1"></p>
+      <div class="hd-table-wrap"><table class="piui-table" data-hd-roster-table data-dt-compact-toolbar="search"><caption class="u-sr-only">Jadwal pada tim terpilih</caption><thead><tr><th scope="col">Teknisi</th><th scope="col">Keahlian</th><th scope="col">Periode (WIB)</th><th scope="col">Status saat ini</th><th scope="col">Kapasitas</th><th scope="col">Diperbarui (WIB)</th><th scope="col">Tindakan</th></tr></thead><tbody data-hd-roster-rows></tbody></table></div>
+      <div class="hd-actions"><button class="piui-btn piui-btn--secondary" type="button" data-hd-roster-more hidden>Muat jadwal berikutnya</button></div>
+      <form data-hd-roster-form class="hd-form-grid hd-roster-editor" hidden>
+        <h3 class="hd-col-full" data-hd-roster-editor-title tabindex="-1">Tambah jadwal</h3>
+        <div class="piui-field"><label for="hd-roster-subject">Teknisi</label><select class="piui-input" id="hd-roster-subject" name="subject" required></select></div>
+        <div class="piui-field"><label for="hd-roster-skills">Kode keahlian, dipisahkan koma</label><input class="piui-input" id="hd-roster-skills" name="skills" required placeholder="network, wifi" maxlength="820"></div>
+        <div class="piui-field"><label for="hd-roster-from">Mulai (WIB)</label><input class="piui-input" id="hd-roster-from" name="from" type="datetime-local" required></div>
+        <div class="piui-field"><label for="hd-roster-until">Selesai (WIB)</label><input class="piui-input" id="hd-roster-until" name="until" type="datetime-local" required></div>
+        <div class="piui-field"><label for="hd-roster-active">Status jadwal</label><select class="piui-input" id="hd-roster-active" name="active"><option value="true">Aktif</option><option value="false">Nonaktif</option></select></div>
+        <div class="piui-field"><label for="hd-roster-limit">Kapasitas tiket aktif</label><input class="piui-input" id="hd-roster-limit" name="capacity" type="number" min="1" max="100"><small>Isi untuk mengaktifkan rekomendasi berdasarkan kapasitas. Kosong mempertahankan batas yang sudah tersimpan.</small></div>
+        <div class="piui-field"><label for="hd-roster-reason">Alasan perubahan</label><input class="piui-input" id="hd-roster-reason" name="reason" minlength="5" maxlength="2000" required></div>
+        <div class="hd-actions hd-col-full"><button class="piui-btn piui-btn--primary" type="submit">Simpan jadwal</button><button class="piui-btn piui-btn--secondary" type="button" data-hd-roster-reset>Batal</button></div>
+      </form>
+    </section>
+    <section class="hd-subform-card" data-hd-personal-roster hidden>
+      <h3>Jadwal Saya</h3>
+      <div class="piui-field"><label for="hd-personal-roster-org">PD / Unit Kerja</label><select class="piui-input" id="hd-personal-roster-org"></select></div>
+      <p data-hd-personal-roster-status role="status"></p>
+      <ul data-hd-personal-roster-items></ul>
+      <button type="button" class="piui-btn piui-btn--secondary" data-hd-personal-roster-more hidden>Muat jadwal berikutnya</button>
+      <h3>Ketidakhadiran Saya</h3>
+      <p>Periode ini berlaku untuk seluruh jadwal akun Anda.</p>
+      <ul data-hd-absence-items></ul>
+      <button type="button" class="piui-btn piui-btn--secondary" data-hd-absence-more hidden>Muat catatan berikutnya</button>
+      <form data-hd-absence-form class="hd-form-grid">
+        <div class="piui-field"><label for="hd-absence-from">Mulai (WIB)</label><input class="piui-input" id="hd-absence-from" name="starts" type="datetime-local" required></div>
+        <div class="piui-field"><label for="hd-absence-until">Selesai (WIB)</label><input class="piui-input" id="hd-absence-until" name="ends" type="datetime-local" required></div>
+        <div class="piui-field"><label for="hd-absence-reason">Alasan umum</label><input class="piui-input" id="hd-absence-reason" name="reason" minlength="5" maxlength="2000" required><small>Gunakan alasan singkat tanpa informasi sensitif.</small></div>
+        <div class="hd-actions hd-col-full"><button class="piui-btn piui-btn--primary" type="submit">Simpan ketidakhadiran</button><button type="button" class="piui-btn piui-btn--secondary" data-hd-absence-reset hidden>Kembali ke formulir baru</button></div>
+        <p data-hd-absence-status role="status" tabindex="-1"></p>
+      </form>
+    </section>
+  </section>
   <section class="piui-card" data-hd-rules-section hidden>
     <div class="hd-section-bar">
       <div>
         <h2>Konfigurasi Aturan Layanan, Routing, SLA &amp; Eskalasi</h2>
-        <p class="hd-section-bar__sub">Kelola status aktif aturan operasional M4–M7 secara auditabel dan optimistik.</p>
+        <p class="hd-section-bar__sub">Tinjau dan kelola aturan yang berlaku pada layanan.</p>
       </div>
       <div class="hd-actions hd-actions--flush">
         <select class="piui-input" id="hd-rule-owner" aria-label="Pilih domain aturan">
-          <option value="classification">Klasifikasi (M4)</option>
-          <option value="routing">Routing Teknisi (M5)</option>
-          <option value="sla">Kalender SLA (M6)</option>
-          <option value="escalation">Eskalasi (M7)</option>
+          <option value="classification">Klasifikasi tiket</option>
+          <option value="routing">Aturan penugasan teknisi</option>
+          <option value="sla">Kalender target penanganan</option>
+          <option value="escalation">Eskalasi tiket</option>
         </select>
         <button type="button" class="piui-btn piui-btn--primary" data-hd-new-rule>+ Tambah Aturan Baru</button>
         <button type="button" class="piui-btn piui-btn--secondary" data-hd-refresh-rules>Muat Ulang</button>
       </div>
     </div>
+
     <p data-hd-rules-status role="status"></p>
     <div class="hd-table-wrap"><table class="piui-table"><thead><tr><th scope="col">Kode Aturan</th><th scope="col">Ringkasan</th><th scope="col">Versi</th><th scope="col">Status</th><th scope="col">Tindakan</th></tr></thead><tbody data-hd-rules-rows></tbody></table></div>
     <form class="hd-subform-card hd-form-panel hd-table-mt" data-hd-rule-form>
@@ -662,17 +765,46 @@ export function adminBusinessPage(source) {
 
   <!-- Pengelolaan Portal & Navigasi Publik (M2) -->
   <section class="piui-card hd-form-panel" data-hd-role-policy-section hidden>
-    <div class="hd-form-panel__head"><div class="hd-form-panel__titles"><h2>Kebijakan akses peran</h2><p class="hd-form-panel__sub">Pilih peran dan tindakan yang boleh diberikan. Perubahan berlaku pada semua akun dengan peran tersebut. Izin setiap akun tetap mengikuti OPD dan penugasannya.</p></div><button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-role-refresh>Muat ulang</button></div>
-    <form data-local-mutation data-local-ready><div class="piui-field"><label for="hd-role-policy-select">Peran yang dikonfigurasi</label><select class="piui-input" id="hd-role-policy-select" disabled></select></div><div data-role-choices></div><div class="piui-field"><label for="hd-role-policy-reason">Alasan perubahan kebijakan *</label><textarea class="piui-input" id="hd-role-policy-reason" required minlength="5" maxlength="1000" rows="2" placeholder="Uraikan alasan penyesuaian hak akses peran (min. 5 karakter)..."></textarea></div><div class="hd-form-footer"><button type="submit" class="piui-btn piui-btn--primary" disabled>Simpan kebijakan</button></div><p role="status"></p></form>
+    <form data-local-mutation data-local-ready>
+      <div class="hd-role-toolbar">
+        <div class="piui-field"><label for="hd-role-policy-select">Peran</label><select class="piui-input" id="hd-role-policy-select" disabled></select></div>
+        <div class="piui-field"><label for="hd-role-module">Modul</label><select class="piui-input" id="hd-role-module" disabled><option value="">Semua modul</option></select></div>
+        <button type="button" class="piui-btn piui-btn--secondary" data-role-refresh>Muat ulang</button>
+      </div>
+      <p data-role-scope></p>
+      <p role="status" data-role-feedback></p>
+      <div class="hd-role-summary" data-role-summary hidden><p data-role-changes aria-live="polite"></p><a class="piui-btn piui-btn--secondary" data-role-review-link href="#hd-role-policy-reason" hidden>Ke tinjauan</a></div>
+      <div data-role-choices></div>
+      <div data-role-editor hidden>
+        <div class="piui-field"><label for="hd-role-policy-reason">Alasan perubahan kebijakan *</label><textarea class="piui-input" id="hd-role-policy-reason" required minlength="5" maxlength="1000" rows="2" placeholder="Jelaskan alasan perubahan, minimal 5 karakter"></textarea></div>
+        <div class="hd-form-footer"><button type="submit" class="piui-btn piui-btn--primary" disabled>Tinjau perubahan</button></div>
+      </div>
+    </form>
   </section>
   <section class="piui-card hd-form-panel" data-hd-hero-section hidden>
-    <div class="hd-form-panel__head"><div class="hd-form-panel__titles"><h2>Lima banner beranda</h2><p class="hd-form-panel__sub">Pilih gambar, isi judul dan teks alternatif, lalu susun urutan. Gambar baru bisa dipilih setelah ditandai untuk Banner Hero dan lolos pemindaian di Pustaka Media.</p></div><div class="hd-actions hd-actions--flush"><a class="piui-btn piui-btn--secondary piui-btn--sm" href="/admin/app/helpdesk/index.html?kind=media" data-admin-nav-id="media" hidden>Buka Pustaka Media</a><button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-hero-more hidden>Muat pilihan gambar berikutnya</button><button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-hero-refresh>Muat ulang</button></div></div>
+    <div class="hd-form-panel__head"><div class="hd-form-panel__titles"><h2>Lima banner beranda</h2><p class="hd-form-panel__sub">Pilih gambar, isi judul dan teks alternatif, lalu susun urutan. Gambar baru bisa dipilih setelah ditandai untuk Banner Hero dan lolos pemindaian di Pustaka Media.</p></div><div class="hd-actions hd-actions--flush"><button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-hero-more hidden>Muat pilihan gambar berikutnya</button><button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-hero-refresh>Muat ulang</button></div></div>
+    ${editorialLinks('hero')}
+    <section class="hd-subform-card hd-hero-preview" aria-labelledby="hd-hero-preview-heading">
+      <h3 id="hd-hero-preview-heading">Pratinjau banner</h3>
+      <p data-hero-live role="status">Memeriksa versi yang tayang…</p>
+      <div class="hd-actions">
+        <button type="button" class="piui-btn piui-btn--secondary" data-hero-view="draft" aria-pressed="true">Draf</button>
+        <button type="button" class="piui-btn piui-btn--secondary" data-hero-view="published" aria-pressed="false">Sedang Tayang</button>
+      </div>
+      <div class="hd-actions" role="group" aria-label="Ukuran pratinjau">
+        <button type="button" class="piui-btn piui-btn--secondary" data-hero-size="desktop" aria-pressed="true">Desktop</button>
+        <button type="button" class="piui-btn piui-btn--secondary" data-hero-size="mobile" aria-pressed="false">Mobile</button>
+      </div>
+      <figure class="hd-hero-preview-frame" data-hero-preview-frame><img width="1600" height="600" alt="" hidden><figcaption data-hero-preview-caption></figcaption></figure>
+      <div class="hd-actions" data-hero-preview-slots role="group" aria-label="Pilih banner pada pratinjau"></div>
+      <p data-hero-preview-scan role="status"></p>
+    </section>
     <form data-local-mutation data-local-ready><div data-hero-slots class="hd-hero-editor-grid"></div><div class="piui-field"><label for="hd-hero-reason">Alasan perubahan atau penerbitan *</label><textarea class="piui-input" id="hd-hero-reason" required minlength="5" maxlength="1000" rows="2" placeholder="Jelaskan alasan pembaruan draf atau penerbitan banner..."></textarea></div><div class="hd-form-footer"><button type="submit" class="piui-btn piui-btn--secondary" disabled>Simpan draf</button><button type="button" class="piui-btn piui-btn--primary" data-hero-publish disabled>Terbitkan draf</button></div><p role="status"></p></form>
   </section>
   <section class="piui-card" data-hd-navigation-section hidden>
     <div class="hd-section-bar">
       <div>
-        <h2>Pengelolaan Portal &amp; Navigasi Publik (M2)</h2>
+        <h2>Navigasi portal publik</h2>
         <p class="hd-section-bar__sub">Konfigurasi hierarki menu navigasi portal publik dan pembatasan wewenang audience SPBE Kota Depok.</p>
       </div>
       <div class="hd-actions hd-actions--flush">
@@ -705,9 +837,10 @@ export function adminBusinessPage(source) {
 
   <!-- Basis Pengetahuan & Editorial Artikel / Halaman Portal (M8) -->
   <section class="piui-card" data-hd-articles-section hidden>
+    ${editorialLinks('articles')}
     <div class="hd-editorial-toolbar">
       <div>
-        <h2>Basis Pengetahuan &amp; Editorial Portal (M8)</h2>
+        <h2>Panduan dan konten portal</h2>
         <p>Manajemen siklus hidup artikel panduan dan halaman portal resmi SPBE Kota Depok (DRAFT &rarr; REVIEW &rarr; PUBLISHED &rarr; ARCHIVED).</p>
       </div>
       <div class="hd-actions hd-actions--flush">
@@ -743,9 +876,14 @@ export function adminBusinessPage(source) {
         <div class="piui-field"><label for="hd-art-alt">Ringkasan / Alt Deskripsi</label><input class="piui-input" id="hd-art-alt" name="alt" maxlength="200" placeholder="Ringkasan singkat isi panduan..."></div>
         <div class="piui-field hd-col-full hd-editorial-body"><label for="hd-art-body" data-hd-art-body-label>Isi panduan (teks atau HTML dasar) *</label><textarea class="piui-input" id="hd-art-body" name="body" rows="7" required placeholder="Tuliskan langkah-langkah panduan operasional dengan bahasa yang mudah dipahami..."></textarea></div>
       </div>
+      <details class="hd-subform-card" data-editorial-preview>
+        <summary>Pratinjau konten</summary>
+        <h4 data-editorial-preview-title></h4>
+        <div class="hd-editorial-preview-body" data-editorial-preview-body></div>
+      </details>
       <p data-hd-article-status role="status"></p>
       <div class="hd-form-footer">
-        <button type="submit" class="piui-btn piui-btn--primary">Simpan Draft Artikel</button>
+        <button type="submit" class="piui-btn piui-btn--primary">Simpan draf</button>
         <button type="button" class="piui-btn piui-btn--secondary" data-hd-close-art-form>Batal</button>
       </div>
     </form>
@@ -754,32 +892,29 @@ export function adminBusinessPage(source) {
   <!-- Pustaka Media Terpadu Dua Owner (M3/M8) -->
   <section class="piui-card" data-hd-media-section hidden>
     <div class="hd-section-bar">
-      <div>
-        <h2>Pustaka Media Terpadu (M3/M8)</h2>
-        <p class="hd-section-bar__sub">Pustaka media dua-owner memisahkan berkas privat tiket penanganan (M3) dari media editorial publik portal pengetahuan (M8). Terproteksi pemindaian antivirus ClamAV.</p>
-      </div>
       <div class="hd-actions hd-actions--flush">
-        <button type="button" class="piui-btn piui-btn--primary" data-hd-toggle-upload>+ Unggah Media Editorial (M8)</button>
-        <button type="button" class="piui-btn piui-btn--secondary" data-hd-refresh-media>Muat Ulang Berkas</button>
+        <button type="button" class="piui-btn piui-btn--primary" data-hd-toggle-upload aria-controls="hd-media-upload" aria-expanded="false">Unggah media editorial</button>
+        <button type="button" class="piui-btn piui-btn--secondary" data-hd-refresh-media>Muat ulang</button>
+        <a class="piui-btn piui-btn--secondary" href="#hd-media-publication" data-hd-open-media-publication>Tinjauan publikasi</a>
       </div>
     </div>
 
     <!-- Panel Form Unggah Dropzone M8 -->
-    <div data-hd-media-upload-panel class="piui-card hd-upload-panel" hidden>
+    <div id="hd-media-upload" data-hd-media-upload-panel class="piui-card hd-upload-panel" hidden>
       <div class="hd-dialog-header">
-        <h3>Unggah Media Editorial Publik Baru (M8)</h3>
+        <h3 data-hd-upload-title tabindex="-1">Unggah media editorial</h3>
         <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-hd-close-upload>Batal / Tutup</button>
       </div>
       <form data-hd-media-upload-form><div class="piui-field"><label for="media-upload-org">Organisasi pemilik media</label><select class="piui-input" id="media-upload-org" name="organization_id" required></select></div>
         <div class="hd-dropzone" id="hd-admin-media-dropzone" tabindex="0" role="button" aria-label="Dropzone unggah media editorial">
-          <input type="file" id="hd-admin-media-file" class="hd-dropzone-input" accept="image/png,image/jpeg,application/pdf">
+          <input type="file" id="hd-admin-media-file" class="hd-dropzone-input" tabindex="-1" accept="image/png,image/jpeg,application/pdf">
           <span class="hd-dropzone__icon">📤</span>
           <p class="hd-dropzone__title">Tarik &amp; lepas gambar/dokumen ke sini, atau <mark class="hd-media-mark">jelajahi berkas</mark></p>
           <p class="hd-dropzone__hint">Mendukung format PNG, JPEG, WebP, SVG, PDF. Ukuran maks 10 MB per berkas.</p>
           <div class="hd-dropzone__badges">
             <span class="hd-dropzone__badge">Maks 10 MB</span>
             <span class="hd-dropzone__badge hd-media-clamav">🛡️ Pemindaian ClamAV Aktif</span>
-            <span class="hd-dropzone__badge">Owner M8 Publik</span>
+            <span class="hd-dropzone__badge">Media editorial</span>
           </div>
         </div>
         
@@ -819,15 +954,35 @@ export function adminBusinessPage(source) {
         </div>
         <label class="piui-field" data-hd-media-banner-option hidden><span><input name="hero_candidate" type="checkbox"> Siapkan gambar ini untuk Banner Hero</span><small>Pilih untuk gambar PNG atau JPEG yang Anda izinkan untuk ditampilkan di beranda setelah ditinjau penerbit.</small></label>
         <p data-hd-media-upload-status role="status" tabindex="-1" class="hd-nav-status"></p>
+        <a class="piui-btn piui-btn--secondary" data-hd-open-uploaded-hero href="/admin/app/helpdesk/index.html?kind=hero" hidden>Lanjut ke Banner Hero</a>
         <div class="hd-actions">
           <button type="submit" class="piui-btn piui-btn--primary" data-hd-media-submit>Unggah &amp; Pindai Antivirus ClamAV</button>
         </div>
       </form>
     </div>
 
-    <section class="hd-subform-card" aria-labelledby="media-publication-title">
-      <h2 id="media-publication-title">Tinjauan dan publikasi salinan media</h2>
-      <p class="hd-form-panel__sub">Unggahan baru tersimpan privat. Editor menyiapkan berkas hasil redaksi yang berbeda. Penerbit meninjau sumber M8 (atau lampiran tiket M3 pada organisasi yang sama). Berkas tersedia setelah konten tujuan diterbitkan.</p>
+    <!-- Filter & Tab Toolbar -->
+    <div class="hd-media-toolbar">
+      <div class="hd-actions hd-actions--flush" data-hd-media-tabs role="group" aria-label="Jenis berkas">
+        <button type="button" class="piui-btn piui-btn--primary" data-hd-tab-media="M8" aria-pressed="true">Media editorial</button>
+        <button type="button" class="piui-btn piui-btn--secondary" data-hd-tab-media="M3" aria-pressed="false">Lampiran tiket privat</button>
+      </div>
+      <div class="hd-media-filter">
+        <label for="hd-media-filter-status">Status berkas</label>
+        <select class="piui-input" id="hd-media-filter-status">
+          <option value="ALL">Semua Berkas</option>
+          <option value="CLEAN">Lolos pemindaian</option>
+          <option value="QUARANTINED">Karantina</option>
+        </select>
+      </div>
+    </div>
+
+    <div data-hd-media-status role="status" class="hd-media-status"></div>
+    <div data-hd-media-container class="hd-media-grid"></div>
+
+    <details class="hd-media-publication" id="hd-media-publication">
+      <summary>Tinjauan dan publikasi salinan media</summary>
+      <p class="hd-form-panel__sub">Unggahan baru tersimpan privat. Editor menyiapkan berkas hasil redaksi yang berbeda. Penerbit meninjau media editorial atau lampiran tiket dari organisasi yang sama. Berkas tersedia setelah konten tujuan diterbitkan.</p>
       <form data-hd-media-publication>
         <fieldset class="hd-step-card">
           <legend>Langkah 1 · Media Sumber &amp; Salinan Redaksi</legend>
@@ -842,7 +997,7 @@ export function adminBusinessPage(source) {
         <fieldset class="hd-step-card">
           <legend>Langkah 2 · Target Konten Editorial &amp; Persetujuan</legend>
           <div class="hd-form-grid">
-            <div class="piui-field"><label for="media-target-pick">Pilih artikel / halaman tujuan *</label><select class="piui-input" id="media-target-pick"><option value="">Pilih konten editorial M8 atau isi UUID manual…</option></select></div>
+            <div class="piui-field"><label for="media-target-pick">Pilih artikel / halaman tujuan *</label><select class="piui-input" id="media-target-pick"><option value="">Pilih artikel atau halaman tujuan…</option></select></div>
             <div class="piui-field"><label for="media-target-id">ID artikel atau halaman tujuan *</label><input class="piui-input" id="media-target-id" name="target_id" required pattern="[a-fA-F0-9-]{36}" placeholder="Terisi otomatis dari pilihan tujuan"></div>
             <div class="piui-field"><label for="media-target-audience">Audience konten tujuan</label><select class="piui-input" id="media-target-audience" name="target_audience"><option value="PUBLIC_GUEST">Publik tanpa login</option><option value="PUBLIC_AUTH">Publik dengan akun</option><option value="ASN_AUTH">ASN sesuai organisasi</option><option value="STAFF_ONLY">Petugas sesuai organisasi</option></select></div>
             <div class="piui-field"><label for="media-approval-id">ID persetujuan server (untuk menghubungkan)</label><input class="piui-input" id="media-approval-id" name="approval_id" placeholder="Klik 'Gunakan ID' dari tabel persetujuan di bawah"></div>
@@ -857,25 +1012,8 @@ export function adminBusinessPage(source) {
         <button type="button" class="piui-btn piui-btn--secondary piui-btn--sm" data-hd-refresh-approvals>Segarkan Persetujuan</button>
       </div>
       <div class="hd-table-wrap"><table class="piui-table"><thead><tr><th scope="col">ID Persetujuan</th><th scope="col">Sumber &rarr; Tujuan</th><th scope="col">Status</th><th scope="col">Alasan</th><th scope="col">Tindakan</th></tr></thead><tbody data-hd-media-approvals-rows></tbody></table></div>
-    </section>
-    <!-- Filter & Tab Toolbar -->
-    <div class="hd-media-toolbar">
-      <div class="hd-actions hd-actions--flush" data-hd-media-tabs>
-        <button type="button" class="piui-btn piui-btn--primary" data-hd-tab-media="M8">Pustaka Editorial Publik (M8)</button>
-        <button type="button" class="piui-btn piui-btn--secondary" data-hd-tab-media="M3">Media Privat Tiket (M3)</button>
-      </div>
-      <div class="hd-media-filter">
-        <label for="hd-media-filter-status">Filter Status:</label>
-        <select class="piui-input" id="hd-media-filter-status">
-          <option value="ALL">Semua Berkas</option>
-          <option value="CLEAN">Hanya Bersih (CLEAN)</option>
-          <option value="QUARANTINED">Karantina (QUARANTINED)</option>
-        </select>
-      </div>
-    </div>
-
-    <div data-hd-media-status role="status" class="hd-media-status"></div>
-    <div data-hd-media-container class="hd-media-grid"></div>
+    </details>
+    ${editorialLinks('media')}
 
     <!-- Modal Dialog Detail Teknis Media (WAI-ARIA) -->
     <dialog data-hd-media-detail-dialog class="piui-dialog hd-media-detail-dialog" role="dialog" aria-modal="true" aria-labelledby="hd-media-detail-title">
@@ -896,7 +1034,7 @@ export function adminBusinessPage(source) {
       <button type="button" class="piui-icon-btn" data-hd-arch-close aria-label="Tutup dialog konfirmasi">&times;</button>
     </div>
     <form data-hd-arch-form class="hd-dialog-form">
-      <p class="hd-dialog-note" data-hd-arch-desc></p>
+      <p class="hd-dialog-note" data-hd-arch-desc></p><ul class="hd-review-details" data-hd-arch-details hidden></ul>
       <div class="piui-field" data-hd-arch-reason-wrap>
         <label for="hd-arch-reason">Alasan perubahan (minimal 5 karakter)</label>
         <textarea class="piui-input" id="hd-arch-reason" rows="3" maxlength="2000" placeholder="Jelaskan alasan arsip, penonaktifan, atau pencabutan..."></textarea>
@@ -940,52 +1078,143 @@ export function adminLoginPage(source) {
 }
 
 export function adminDashboard(source, health) {
-  const main = `<main id="main-content" class="piui-main" data-hd-page="dashboard">
+  const main = `<main id="main-content" tabindex="-1" class="piui-main" data-hd-page="dashboard">
     <header class="piui-page-header"><div class="piui-page-header__titles"><h1>Dasbor petugas</h1></div></header>
-    <section class="piui-card" aria-label="Koneksi dan sesi">
-      ${health}
-      <p data-hd-session role="status">Memeriksa sesi…</p>
-      <a class="piui-btn piui-btn--secondary" href="/admin/auth/login.html" data-hd-dashboard-login>Masuk sebagai petugas</a>
+    <div class="hd-dashboard-start"><section class="piui-card hd-work-start" data-admin-work-start hidden aria-labelledby="hd-work-start-title">
+      <div class="hd-dashboard-work-copy"><h2 id="hd-work-start-title" data-admin-work-identity></h2><p data-admin-work-description></p></div>
+      <a class="piui-btn piui-btn--primary" data-admin-work-link></a>
     </section>
-    <section class="piui-card hd-work-start" data-admin-work-start hidden aria-labelledby="hd-work-start-title"><h2 id="hd-work-start-title" data-admin-work-title></h2><p data-admin-work-description></p><a class="piui-btn piui-btn--primary" data-admin-work-link></a></section>
-    <nav class="hd-actions" aria-label="Tindakan petugas">
-      <a class="piui-btn piui-btn--primary" href="/admin/app/tickets/index.html?filter=verification" data-hd-dashboard-grant="ticket.verify" hidden>${queueViews.verification}</a>
-      <a class="piui-btn piui-btn--primary" href="/admin/app/tickets/index.html?filter=dispatch" data-hd-dashboard-grant="ticket.dispatch" hidden>${queueViews.dispatch}</a>
-      <a class="piui-btn piui-btn--primary" href="/admin/app/tickets/index.html?filter=my-tasks" data-hd-dashboard-grant="ticket.resolve" hidden>${queueViews['my-tasks']}</a>
-      ${adminNavLink(adminItems.find(i => i.id === 'reports'), '', 'piui-btn piui-btn--secondary')}
-      ${adminNavLink(adminItems.find(i => i.id === 'services'), '', 'piui-btn piui-btn--secondary')}
-      ${adminNavLink(adminItems.find(i => i.id === 'memberships'), '', 'piui-btn piui-btn--secondary')}
-      ${adminNavLink(adminItems.find(i => i.id === 'articles'), '', 'piui-btn piui-btn--secondary')}
-    </nav>
-    <section class="piui-card" aria-labelledby="hd-dashboard-heading">
-      <h2 id="hd-dashboard-heading">Kinerja tiket</h2>
-      <p role="status" data-hd-dashboard-status></p>
+    </div>
+    <a class="piui-btn piui-btn--primary" href="/admin/auth/login.html" data-hd-dashboard-login hidden>Masuk sebagai petugas</a>
+    <section class="piui-card hd-dashboard-report" aria-labelledby="hd-dashboard-heading">
+      <div class="hd-dashboard-report-head">
+        <h2 id="hd-dashboard-heading" tabindex="-1">Kinerja tiket</h2>
+        <p data-hd-dashboard-context hidden><span data-hd-dashboard-scope-name></span><span data-hd-dashboard-range></span></p>
+      </div>
+      <div data-hd-dashboard-results aria-busy="false" hidden>
+        <div class="piui-kpi-grid hd-dashboard-kpis">
+          <article class="piui-card"><h3>Tiket diterima</h3><p class="piui-card__value" data-hd-dashboard-accepted></p><button type="button" data-hd-dashboard-drill="accepted" aria-label="Lihat tiket diterima" hidden><span aria-hidden="true">↗</span></button></article>
+          <article class="piui-card" data-kpi-tone="active" aria-describedby="hd-dashboard-cohort"><h3>Masih aktif dalam periode</h3><p class="piui-card__value" data-hd-dashboard-backlog></p><button type="button" data-hd-dashboard-drill="backlog" aria-label="Lihat tiket aktif" hidden><span aria-hidden="true">↗</span></button></article>
+          <article class="piui-card" data-kpi-tone="success"><h3>Selesai ditangani</h3><p class="piui-card__value" data-hd-dashboard-completed></p><button type="button" data-hd-dashboard-drill="completed" aria-label="Lihat tiket selesai" hidden><span aria-hidden="true">↗</span></button></article>
+          <article class="piui-card"><h3>Selesai tepat waktu</h3><p class="piui-card__value" data-hd-dashboard-rate></p></article>
+        </div>
+      </div>
+      <div class="hd-dashboard-loading" data-hd-dashboard-loading aria-hidden="true" hidden><span></span><span></span><span></span><span></span></div>
+      <p role="status" aria-atomic="true" class="hd-dash-feedback" data-hd-dashboard-status>Memeriksa sesi…</p>
+      <div class="hd-dash-recovery">
+        <button type="button" class="piui-btn piui-btn--secondary" data-hd-dashboard-retry hidden>Coba lagi</button>
+        <button type="button" class="piui-btn piui-btn--secondary" data-hd-dashboard-expand-period hidden>Lihat 30 hari</button>
+      </div>
+      <p id="hd-dashboard-cohort" class="hd-dashboard-note" hidden><strong>Masih aktif dalam periode</strong> menghitung laporan yang diterima dalam periode ini dan masih dalam proses. <strong>Seluruh tiket aktif saat ini</strong> juga mencakup laporan yang diterima sebelum periode ini.</p>
+      <details class="hd-dashboard-details" data-hd-dashboard-settings hidden><summary>Periode dan rincian SLA</summary>
       <form class="hd-form-grid" data-hd-dashboard-filter hidden>
-        <div class="piui-field"><label for="hd-dashboard-org">Organisasi</label><select class="piui-input" id="hd-dashboard-org" required></select></div>
+        <div class="piui-field"><label for="hd-dashboard-org">Perangkat daerah dalam mandat</label><select class="piui-input" id="hd-dashboard-org" required></select></div>
         <div class="piui-field"><label for="hd-dashboard-period">Periode penerimaan (WIB)</label><select class="piui-input" id="hd-dashboard-period"><option value="7">7 hari terakhir</option><option value="30">30 hari terakhir</option></select></div>
         <div class="hd-actions"><button type="submit" class="piui-btn piui-btn--primary">Perbarui ringkasan</button></div>
       </form>
-      <div data-hd-dashboard-results hidden>
-        <div class="piui-kpi-grid">
-          <article class="piui-card"><h3>Tiket diterima</h3><p class="piui-card__value" data-hd-dashboard-accepted></p></article>
-          <article class="piui-card"><h3>Masih aktif</h3><p class="piui-card__value" data-hd-dashboard-backlog></p></article>
-          <article class="piui-card"><h3>Selesai</h3><p class="piui-card__value" data-hd-dashboard-completed></p></article>
-          <article class="piui-card"><h3>Selesai tepat waktu</h3><p class="piui-card__value" data-hd-dashboard-rate></p></article>
-        </div>
-        <p><label for="hd-dashboard-meter">Persentase tepat waktu dari penyelesaian terukur</label></p>
+      <div data-hd-dashboard-detail-results hidden>
+        <p class="hd-dashboard-note" data-hd-dashboard-window></p>
+        <p><label for="hd-dashboard-meter" data-hd-dashboard-ratio></label></p>
         <meter id="hd-dashboard-meter" min="0" max="100" hidden></meter>
         <div class="hd-table-wrap"><table class="piui-table">
           <caption>Rincian pengukuran SLA</caption>
           <thead><tr><th scope="col">Pengukuran</th><th scope="col">Jumlah tiket</th></tr></thead>
           <tbody data-hd-dashboard-metrics></tbody>
         </table></div>
-        <p data-hd-dashboard-watermark></p>
+        <p class="hd-dashboard-note" data-hd-dashboard-watermark></p>
+      </div>
+      </details>
+    </section>
+    <section class="piui-card hd-dashboard-analysis" data-hd-dashboard-analysis hidden aria-labelledby="hd-dashboard-analysis-title">
+      <header class="hd-analysis-header">
+        <div><h2 id="hd-dashboard-analysis-title">Analisis operasional</h2><p class="hd-dashboard-note" data-hd-analysis-context></p></div>
+        <div class="hd-analysis-tools">
+          <div class="hd-analysis-source" role="group" aria-label="Sumber analisis" data-hd-analysis-source hidden>
+            <button type="button" aria-pressed="true" data-hd-analysis-live-mode>Data sistem</button>
+            <button type="button" aria-pressed="false" data-hd-analysis-demo-mode>Data contoh</button>
+          </div>
+          <a class="piui-btn piui-btn--secondary" data-hd-analysis-cohort-export hidden>Ekspor periode</a>
+        </div>
+      </header>
+      <p class="hd-analysis-demo-notice" data-hd-analysis-demo-note role="status" hidden><strong>Simulasi.</strong> Angka analisis memakai data contoh. Kartu ringkasan di atas memakai data sistem.</p>
+        <section class="hd-analysis-panel hd-analysis-trend" aria-labelledby="hd-trend-title">
+          <header class="hd-analysis-panel-head"><div>
+            <h3 id="hd-trend-title">Tren penerimaan harian</h3>
+            <p class="hd-dashboard-note">Dikelompokkan menurut tanggal tiket diterima (WIB).</p>
+          </div><p class="hd-analysis-total" data-hd-analysis-trend-total></p></header>
+          <p class="hd-analysis-empty" data-hd-analysis-trend-empty hidden>Belum ada tiket diterima dalam periode ini.</p>
+          <div class="hd-analysis-chart" data-hd-analysis-chart hidden>
+            <ul class="hd-trend-legend" aria-label="Legenda"><li data-series="active">Masih aktif</li><li data-series="completed">Selesai</li><li data-series="cancelled">Dibatalkan</li></ul>
+            <div class="hd-trend-frame">
+              <div class="hd-trend-scale" aria-hidden="true" data-hd-analysis-scale></div>
+              <div class="hd-trend-scroll" role="group" aria-labelledby="hd-trend-title"><div class="hd-trend-plot" data-hd-analysis-trend></div></div>
+            </div>
+          </div>
+          <details><summary>Lihat angka per tanggal</summary>
+          <div class="hd-table-wrap"><table class="piui-table" data-dt-disabled><caption>Tren tiket per tanggal (WIB)</caption>
+            <thead><tr><th scope="col">Tanggal</th><th scope="col">Diterima</th><th scope="col">Masih aktif</th><th scope="col">Selesai ditangani</th></tr></thead>
+            <tbody data-hd-analysis-daily></tbody></table></div></details>
+        </section>
+      <div class="hd-analysis-grid">
+        <section class="hd-analysis-panel" aria-labelledby="hd-age-title"><header class="hd-analysis-panel-head"><div><h3 id="hd-age-title">Usia tiket aktif</h3>
+          <p class="hd-dashboard-note">Waktu kalender sejak tiket diterima.</p></div></header>
+          <p class="hd-analysis-empty" data-hd-analysis-age-empty hidden>Belum ada tiket aktif dalam periode ini.</p>
+          <ul class="hd-analysis-bars" data-hd-analysis-age></ul></section>
+        <section class="hd-analysis-panel" aria-labelledby="hd-deadline-title"><header class="hd-analysis-panel-head"><div><h3 id="hd-deadline-title">Tenggat penyelesaian</h3>
+          <p class="hd-dashboard-note">Dihitung dari target SLA terakhir untuk tiket aktif.</p></div></header>
+          <p class="hd-analysis-empty" data-hd-analysis-deadline-empty hidden>Belum ada tenggat untuk ditampilkan.</p>
+          <ul class="hd-analysis-bars" data-hd-analysis-deadline></ul></section>
+      </div>
+      <p class="hd-dashboard-note" data-hd-analysis-access hidden>Mandat Anda mencakup ringkasan. Rincian per tiket memerlukan izin baca tiket tingkat PD.</p>
+      <section class="hd-analysis-panel" data-hd-analysis-table hidden aria-labelledby="hd-analysis-table-title">
+        <header class="hd-analysis-table-head">
+          <h3 id="hd-analysis-table-title" tabindex="-1">Tiket dalam periode</h3>
+          <button type="button" class="hd-analysis-drill" data-hd-analysis-back>Kembali ke ringkasan</button>
+        </header>
+        <p data-hd-analysis-selection class="hd-dashboard-note"></p>
+        <form class="hd-form-grid" data-hd-analysis-search>
+          <div class="piui-field"><label for="hd-analysis-query">Cari nomor atau judul tiket</label><input type="search" class="piui-input" id="hd-analysis-query" maxlength="120"></div>
+          <div class="hd-actions"><button type="submit" class="piui-btn piui-btn--primary">Cari</button>
+          <button type="button" class="piui-btn piui-btn--secondary" data-hd-analysis-reset>Hapus filter rincian</button></div>
+        </form>
+        <p role="status" aria-atomic="true" class="hd-dash-feedback" data-hd-analysis-table-status></p>
+        <div class="hd-dash-recovery"><button type="button" class="piui-btn piui-btn--secondary" data-hd-analysis-table-retry hidden>Coba muat tabel lagi</button></div>
+        <div class="hd-table-wrap hd-analysis-ticket-scroll" data-hd-analysis-ticket-content role="region" aria-labelledby="hd-analysis-table-title" tabindex="0" aria-busy="false"><table class="piui-table" data-dt-disabled>
+          <caption>Daftar tiket dalam mandat</caption>
+          <thead><tr><th scope="col">Tiket</th><th scope="col">Status</th><th scope="col">Diterima (WIB)</th><th scope="col">Usia aktif</th><th scope="col">Target SLA (WIB)</th></tr></thead>
+          <tbody data-hd-analysis-rows></tbody>
+        </table></div>
+        <div class="hd-actions" aria-label="Halaman tabel tiket">
+          <button type="button" class="piui-btn piui-btn--secondary" data-hd-analysis-prev disabled>Sebelumnya</button>
+          <button type="button" class="piui-btn piui-btn--secondary" data-hd-analysis-next disabled>Berikutnya</button>
+        </div>
+      </section>
+      <div class="hd-analysis-grid">
+        <section class="hd-analysis-panel" data-hd-analysis-capacity hidden><h3>Kapasitas tim saat ini</h3>
+          <p role="status" class="hd-dash-feedback" data-hd-analysis-capacity-status></p><dl data-hd-analysis-capacity-values></dl>
+          <a class="piui-btn piui-btn--secondary" data-hd-analysis-roster>Buka jadwal dan kapasitas</a></section>
+        <section class="hd-analysis-panel" data-hd-analysis-performance><h3>Kinerja teknis</h3>
+          <p class="hd-dashboard-note">Dihitung dari waktu aktivitas dalam periode terpilih.</p>
+          <p role="status" class="hd-dash-feedback" data-hd-analysis-performance-status></p><dl data-hd-analysis-performance-values></dl>
+          <div class="hd-actions"><a class="piui-btn piui-btn--secondary" data-hd-analysis-performance-link>Buka laporan teknis</a>
+          <a class="piui-btn piui-btn--secondary" data-hd-analysis-csv hidden>Ekspor aktivitas teknis (CSV)</a></div>
+        </section>
       </div>
     </section>
+    <details class="hd-dashboard-session"><summary>Koneksi dan sesi</summary>
+      ${health}
+      <p data-hd-session role="status">Memeriksa sesi…</p>
+    </details>
+    <nav class="hd-actions hd-dashboard-links" aria-label="Pintasan petugas">
+      ${adminNavLink(adminItems.find(i => i.id === 'reports'), '', 'piui-btn piui-btn--secondary')}
+      ${adminNavLink(adminItems.find(i => i.id === 'services'), '', 'piui-btn piui-btn--secondary')}
+      ${adminNavLink(adminItems.find(i => i.id === 'memberships'), '', 'piui-btn piui-btn--secondary')}
+      ${adminNavLink(adminItems.find(i => i.id === 'articles'), '', 'piui-btn piui-btn--secondary')}
+    </nav>
   </main>`;
   const mainRegion = /^[ \t]*<main\b[^>]*>[\s\S]*?<\/main>/m;
   if (!mainRegion.test(source)) throw new Error('Kontainer utama dashboard PIUI Zero tidak ditemukan');
-  return source.replace(/<title>[^<]+<\/title>/, '<title>Dashboard · Helpdesk TIK Kota Depok</title>')
+  return source.replace(/<title>[^<]+<\/title>/, '<title>Dasbor petugas · Helpdesk TIK Kota Depok</title>')
     .replace(mainRegion, main)
     .replace('</head>', businessAssets + '</head>');
 }

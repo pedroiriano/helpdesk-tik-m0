@@ -41,8 +41,7 @@ func scanMaintenanceList(rows pgx.Rows) ([]api.MaintenancePolicy, error) {
 }
 
 // InsertMaintenancePolicy records a new maintenance policy in identity.maintenance_policies.
-func (s Store) InsertMaintenancePolicy(ctx context.Context, in api.MaintenancePolicyInput) (*api.MaintenancePolicy, error) {
-	id := web.ID()
+func InsertMaintenancePolicy(ctx context.Context, tx pgx.Tx, id string, in api.MaintenancePolicyInput) (*api.MaintenancePolicy, error) {
 	now := time.Now().UTC()
 
 	var orgVal any = nil
@@ -60,43 +59,20 @@ func (s Store) InsertMaintenancePolicy(ctx context.Context, in api.MaintenancePo
 	}
 
 	if in.Mode == "NORMAL" {
-		// End active and scheduled future windows without violating CHECK(ends_at > starts_at).
-		if in.TargetID != "" && web.UUID(in.TargetID) {
-			var err error
-			if orgVal != nil {
-				_, err = s.Pool.Exec(ctx, `
-					UPDATE identity.maintenance_policies
-					SET starts_at = LEAST(starts_at, now() - interval '1 second'), ends_at = now(), updated_at = now()
-					WHERE id = $1 AND ends_at > now() AND (org_id IS NULL OR org_id = $2)
-				`, in.TargetID, orgVal)
-			} else {
-				_, err = s.Pool.Exec(ctx, `
-					UPDATE identity.maintenance_policies
-					SET starts_at = LEAST(starts_at, now() - interval '1 second'), ends_at = now(), updated_at = now()
-					WHERE id = $1 AND ends_at > now()
-				`, in.TargetID)
-			}
-			if err != nil {
-				return nil, err
-			}
-		} else if orgVal != nil {
-			_, err := s.Pool.Exec(ctx, `
-				UPDATE identity.maintenance_policies
-				SET starts_at = LEAST(starts_at, now() - interval '1 second'), ends_at = now(), updated_at = now()
-				WHERE ends_at > now() AND (org_id IS NULL OR org_id = $1)
-			`, orgVal)
-			if err != nil {
-				return nil, err
-			}
-		} else {
-			_, err := s.Pool.Exec(ctx, `
-				UPDATE identity.maintenance_policies
-				SET starts_at = LEAST(starts_at, now() - interval '1 second'), ends_at = now(), updated_at = now()
-				WHERE ends_at > now()
-			`)
-			if err != nil {
-				return nil, err
-			}
+		var target any
+		if in.TargetID != "" {
+			target = in.TargetID
+		}
+		tag, err := tx.Exec(ctx, `UPDATE identity.maintenance_policies
+			SET starts_at = LEAST(starts_at, now() - interval '1 second'), ends_at = now(),
+			    version = version + 1, updated_at = now()
+			WHERE ends_at > now() AND org_id IS NOT DISTINCT FROM $1::uuid
+			  AND ($2::uuid IS NULL OR id = $2::uuid)`, orgVal, target)
+		if err != nil {
+			return nil, err
+		}
+		if target != nil && tag.RowsAffected() == 0 {
+			return nil, web.Fail(404, "Jendela pemeliharaan aktif tidak ditemukan pada cakupan ini")
 		}
 		return &api.MaintenancePolicy{
 			ID:           id,
@@ -113,7 +89,7 @@ func (s Store) InsertMaintenancePolicy(ctx context.Context, in api.MaintenancePo
 		}, nil
 	}
 
-	_, err := s.Pool.Exec(ctx, `
+	_, err := tx.Exec(ctx, `
 		INSERT INTO identity.maintenance_policies (id, version, org_id, mode, schedule_kind, display_mode, starts_at, ends_at, message, created_at, updated_at)
 		VALUES ($1, 1, $2, $3, $4, $5, $6, $7, $8, $9, $9)
 	`, id, orgVal, in.Mode, scheduleKind, displayMode, in.StartsAt, in.EndsAt, in.Message, now)
@@ -136,20 +112,15 @@ func (s Store) InsertMaintenancePolicy(ctx context.Context, in api.MaintenancePo
 	}, nil
 }
 
-// ActiveMaintenancePolicy checks if there is any active maintenance window for the given org (or global).
+// An empty organization selects the city-wide policy only.
 func (s Store) ActiveMaintenancePolicy(ctx context.Context, orgID string) (*api.MaintenancePolicy, error) {
-	query := `
-		SELECT ` + maintenanceColumns + `
+	query := `SELECT ` + maintenanceColumns + `
 		FROM identity.maintenance_policies
-		WHERE now() >= starts_at AND now() <= ends_at
-	`
-	args := []any{}
-	if orgID != "" && web.UUID(orgID) {
-		query += ` AND (org_id IS NULL OR org_id = $1)`
-		args = append(args, orgID)
-	}
-	query += ` ORDER BY created_at DESC, (display_mode = 'FULL_SCREEN') DESC LIMIT 1`
-
+		WHERE now() >= starts_at AND now() < ends_at
+		  AND (org_id IS NULL OR org_id = NULLIF($1,'')::uuid)
+		ORDER BY CASE mode WHEN 'READ_ONLY' THEN 0 WHEN 'DRAIN' THEN 1 ELSE 2 END,
+		         (org_id IS NULL) DESC, created_at DESC, id DESC LIMIT 1`
+	args := []any{orgID}
 	p, err := scanMaintenancePolicy(s.Pool.QueryRow(ctx, query, args...))
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, nil
@@ -175,7 +146,9 @@ func (s Store) MaintenanceOverview(ctx context.Context, orgID string, recentLimi
 		WHERE starts_at > now() AND ends_at > now()
 	`
 	upcomingArgs := []any{}
-	if orgID != "" && web.UUID(orgID) {
+	if orgID == "" {
+		upcomingSQL += ` AND org_id IS NULL`
+	} else {
 		upcomingSQL += ` AND (org_id IS NULL OR org_id = $1)`
 		upcomingArgs = append(upcomingArgs, orgID)
 	}

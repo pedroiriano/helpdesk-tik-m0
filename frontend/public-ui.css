@@ -128,6 +128,9 @@
   color: #c9d1d9 !important;
   text-decoration: none !important;
 }
+/* Make the native menu's first focus synchronous with opening. */
+[data-helpdesk-public] .vy-hdr-flyout.is-open { transition-property: opacity, transform; }
+
 [data-helpdesk-public] #vy-topbar_glide .vy-hdr-glyph:hover {
   color: #58a6ff !important;
 }
@@ -4301,3 +4304,92 @@ dialog .hd-actions {
     flex: 1 1 100%;
   }
 }
+
+/* Landing carousel and section links have separate layout budgets. */
+[data-helpdesk-public] .vy-ref-hero {
+  height: min(100svh, 53rem);
+  background: #d8e4f0;
+}
+[data-helpdesk-public] .vy-ref-hero .vy-stage__tab {
+  overflow: hidden;
+  border: 1px solid #77879a;
+  border-radius: 10px;
+  background: #16283a;
+  opacity: .92;
+}
+[data-helpdesk-public] .vy-ref-hero .vy-stage__tab[aria-selected="true"] {
+  border: 2px solid #f2ce8e;
+  box-shadow: 0 0 0 2px #243c54;
+  opacity: 1;
+}
+[data-helpdesk-public] .vy-ref-hero .vy-stage__tab > span:not(.vy-stage__tab-indicator) {
+  padding: 5px 8px;
+  background: #16283a;
+  border-radius: 5px;
+  letter-spacing: .015em;
+}
+[data-helpdesk-public] .vy-ref-hero__descriptor { text-shadow: none; }
+@media (max-width: 639px) { [data-helpdesk-public] .vy-ref-hero__descriptor { display: none; } }
+[data-helpdesk-public] .hd-landing-links {
+  position: relative;
+  inset: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 18px;
+  padding: 8px clamp(16px, 3.5vw, 48px);
+  background: #111b27;
+  border-block: 1px solid #2f4863;
+  overflow: visible;
+}
+[data-helpdesk-public] .hd-landing-links a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 44px;
+  padding: 4px 8px;
+  color: #dbe9f7;
+  font: inherit;
+  line-height: 1.4;
+  font-size: .875rem;
+  font-weight: 600;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: normal;
+}
+[data-helpdesk-public] .hd-landing-links a:is(:hover, :focus-visible) { color: #a7d5ff; text-decoration: underline; }
+@media (max-width: 639px) {
+  [data-helpdesk-public] .vy-ref-hero { height: min(100svh, 38rem); }
+  [data-helpdesk-public] .vy-ref-hero .vy-stage__view {
+    justify-self: center;
+    width: min(100%, 430px);
+    overflow: hidden;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #d8e4f0, #c4d8eb);
+  }
+  [data-helpdesk-public] .vy-ref-hero .vy-stage__tab { border-radius: 7px; }
+  [data-helpdesk-public] .vy-ref-hero .vy-stage__tab > span:not(.vy-stage__tab-indicator) { padding: 2px 4px; }
+  [data-helpdesk-public] .hd-landing-links {
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap: 0 4px;
+    padding: 6px 12px;
+  }
+  [data-helpdesk-public] .hd-landing-links a {
+    justify-content: center;
+    padding-inline: 2px;
+    font-size: .75rem;
+    text-align: center;
+  }
+}
+
+[data-helpdesk-public] :is(.hd-flow,.hd-access) .vy-path-card {
+  padding: clamp(14px,2.5vw,24px);
+  min-block-size: 0;
+}
+[data-helpdesk-public] .hd-flow__head { margin-block-end: clamp(16px,2.4vw,28px); }
+[data-helpdesk-public] .hd-flow__desc { color: #b7c6d6; margin-block-end: 12px; }
+[data-helpdesk-public] :is(.vy-gallery-grid,.hd-flow .vy-paths-grid,.hd-access .vy-paths-grid) { gap: clamp(12px,2vw,20px); }
+[data-helpdesk-public] .vy-faq { margin-block-start: 16px; }
+[data-helpdesk-public] .vy-faq__q { min-block-size: 44px; line-height: 1.4; }
+[data-helpdesk-public] .vy-tail-mid { gap: clamp(16px,2.5vw,30px); }
+[data-helpdesk-public] .vy-tail-paths a { overflow-wrap: anywhere; }

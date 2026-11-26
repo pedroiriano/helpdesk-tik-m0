@@ -276,6 +276,6 @@ func (s *Service) TransitionContent(ctx context.Context, id string, in api.Edito
 	return s.Store.TransitionContent(ctx, id, in.ExpectedVersion, nextState, in.Reason, actorID, scope)
 }
 
-func (s *Service) SearchArticles(ctx context.Context, query string, audience string, isStaff bool, limit int, scopes ...api.Scope) ([]api.SearchHit, error) {
-	return s.Store.SearchArticles(ctx, query, audience, isStaff, limit, scopes...)
+func (s *Service) SearchArticles(ctx context.Context, query string, audience string, isStaff bool, limit int, after string, scopes ...api.Scope) ([]api.SearchHit, error) {
+	return s.Store.SearchArticles(ctx, query, audience, isStaff, limit, after, scopes...)
 }

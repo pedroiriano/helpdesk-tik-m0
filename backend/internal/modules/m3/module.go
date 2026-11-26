@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	identity "helpdesk.local/m0/internal/modules/m1/api"
@@ -17,6 +18,7 @@ import (
 	sla "helpdesk.local/m0/internal/modules/m6/api"
 	"helpdesk.local/m0/internal/platform/blob"
 	"helpdesk.local/m0/internal/platform/delivery"
+	"helpdesk.local/m0/internal/platform/web"
 )
 
 type Module struct {
@@ -118,8 +120,25 @@ func (m *Module) ReadBlob(storageKey string) ([]byte, error) {
 	return m.service.Files.Read(storageKey)
 }
 
-func (m *Module) SearchTickets(ctx context.Context, actorID string, isGuest bool, guestCapHash []byte, orgIDs []string, query string, limit int, roles ...string) ([]m3api.SearchHit, error) {
-	return m.service.Store.SearchTickets(ctx, actorID, isGuest, guestCapHash, orgIDs, query, limit, roles...)
+func (m *Module) SearchTickets(ctx context.Context, actorID string, isGuest bool, guestCapHash []byte, orgIDs []string, query string, limit int, after string, roles ...string) ([]m3api.SearchHit, error) {
+	return m.service.Store.SearchTickets(ctx, actorID, isGuest, guestCapHash, orgIDs, query, limit, after, roles...)
+}
+
+// TechnicalFacts exposes bounded activities to the authorized reports adapter.
+func (m *Module) TechnicalFacts(ctx context.Context, scope m3api.TechnicalPerformanceScope) ([]m3api.TechnicalFact, error) {
+	return m.service.Store.TechnicalFacts(ctx, scope)
+}
+
+func (m *Module) DashboardPaused(ctx context.Context, org string, ids []string, asOf time.Time) (map[string]bool, error) {
+	return m.service.Store.DashboardPaused(ctx, org, ids, asOf)
+}
+
+func (m *Module) DashboardTickets(ctx context.Context, actor identity.Actor, ids []string, q string, page web.Page) ([]m3api.DashboardTicket, error) {
+	if !actor.HasTeamMandate(page.Organization, "", "ticket.read") {
+		return nil, web.Fail(403, "Mandat baca tiket tingkat PD diperlukan")
+	}
+	scope := store.Scope{ID: actor.ID, Role: actor.Role, Orgs: []string{page.Organization}}
+	return m.service.Store.DashboardTickets(ctx, scope, ids, q, page)
 }
 
 // ReportScope returns only current M3-owned references within the requested organization.

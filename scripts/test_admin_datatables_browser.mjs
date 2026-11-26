@@ -375,6 +375,8 @@ async function checkMobileResponsive(cdp, url, selectorContext, label) {
   await waitFor(() => cdp.eval(`Boolean(document.querySelector(${JSON.stringify(selectorContext)})?.closest('.hd-dt-shell'))`), 10000, `mobile shell on ${label}`);
   const mob = await cdp.eval(`(() => {
     const shell = document.querySelector(${JSON.stringify(selectorContext)}).closest('.hd-dt-shell');
+    const options = shell.querySelector('.hd-dt-compact');
+    if (options) options.querySelector('summary').click();
     const mSort = shell.querySelector('.hd-dt-control--mobile-sort');
     const searchEl = shell.querySelector('[data-dt-search]');
     const thead = shell.querySelector('thead');

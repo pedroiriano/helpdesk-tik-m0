@@ -1,0 +1,82 @@
+{
+  "timestamp": "2026-11-24T05:58:57.685346+00:00",
+  "task_id": "RM0-04",
+  "follow_up": "UX Prioritas 1",
+  "status": "DONE_VERIFIED_LAB",
+  "result": "PASS",
+  "requirements": [
+    "AC04",
+    "AC11",
+    "AC13",
+    "AC19",
+    "AC20"
+  ],
+  "preview": "http://127.0.0.1:18191",
+  "gateway_image": "sha256:a9d9211b7137fb5e0c0662fe1c395911edcff506779601ebe92a554b1ac7abc6",
+  "git_head": "8f9ab58a668830ad1bf92b8d70580eae36a7bef8",
+  "working_tree_snapshot": true,
+  "affected_source_sha256": {
+    "frontend/landing-page.mjs": "5e8b885c853554d0123b7d50036d4d9757efe6f442adf6d77576ce29936f25e9",
+    "frontend/business-pages.mjs": "780b5055549e0a2f5bd7cf8bb7ef1dc739a5d482fee67313e07558f21b53608b",
+    "frontend/ticket-pages.mjs": "99ae92b4390cbff60b5e30f9d4d288d4f5bb54d93e9b23423f247711af394b40",
+    "frontend/business.css": "18dcf0f72c991b6bcb0c37af1b07cc070b16dcd647ebc167f24cf6732d35976a",
+    "frontend/src/features/dashboard.ts": "8fd062d63bde676c660328bf5cea7c46122039fbf4c00b80594d8845ac7a98ff",
+    "frontend/src/features/m0-03.ts": "4787dc61f0990eec1f7e3a01bf218ec90f5ee29e92d73bac8228c5889e95bfd2",
+    "frontend/src/features/m0-04.ts": "fc54c7003c919ba7de784af049ec09196aa94fd0915cef75be301a1ef6c6c0bc",
+    "scripts/test_rm0_04_browser.mjs": "22d63f8f517127d6955404aba0caa13d7e3af35bf5aa5e13f738ad05038b6ed1",
+    "docs/05_ATURAN_UI_UX_WEB_PUBLIK.md": "63a8cb0722071b5337a46be284b2a8ec68d7c24d7728ec265142691f2f101e53",
+    "docs/06_ATURAN_UI_UX_WEB_ADMIN.md": "51fa1a03447e5afaea72d8d1f0630a7facfc08ed3e43a29c614e28d5c63d95d6"
+  },
+  "verified": {
+    "public": "Three mobile primary actions, catalog access labels, guest receipt copy and tracking without capability in the URL, attachment retry, ASN draft isolation",
+    "queue": "Dashboard primary action verified as Operator, PD scope, real search and server status filtering, selection and scroll restored after detail, zero horizontal overflow at 1280 and 390 CSS px",
+    "detail_dispatch": "Audience labels for reply/internal, selected roster information, real assignment, stale version conflict with reload, technician resolution. MANUAL and HANDOFF view branches tested with simulated proposal responses.",
+    "privacy": "Referrer-Policy unchanged, ticket filters and cursors scoped to browser history entry plus actor/mandates, no Web Storage for tickets. Older browsers without Navigation API use normal queue link, browser Back can restore the matching entry."
+  },
+  "resolved_attempts": [
+    "No-referrer masks history URLs. Final implementation uses an explicit same-origin Navigation entry marker with only a validated queue filter.",
+    "PIUI forbids Web Storage for ticket scripts. Prior attempt was removed and final parity gate passed."
+  ],
+  "tests": [
+    {
+      "command": "npm.cmd --prefix frontend run build (typecheck, Vite, templates; same build in pinned Node Docker image)",
+      "exit_code": 0
+    },
+    {
+      "command": "python -X utf8 scripts/test_piui_build.py",
+      "exit_code": 0
+    },
+    {
+      "command": "node scripts/test_ux_flow.mjs; node scripts/test_ticket_actions.mjs; node scripts/test_admin_navigation.mjs; node scripts/test_admin_profiles.mjs",
+      "exit_code": 0
+    },
+    {
+      "command": "HELPDESK_BASE_URL=http://127.0.0.1:18191 python -X utf8 scripts/smoke_local.py",
+      "exit_code": 0
+    },
+    {
+      "command": "node scripts/test_rm0_04_browser.mjs (FROM_SUITE=THROUGH_SUITE=R4-D_form_lost_response_draft_tracking, origin 18191)",
+      "exit_code": 0,
+      "report": "qa/remediation/rm0-04/ux-prioritas-1/browser-public/browser-final.json"
+    },
+    {
+      "command": "node scripts/test_rm0_04_browser.mjs (FROM_SUITE=THROUGH_SUITE=R4-E_queue_lifecycle_conflict, prior synthetic fixture ticket, origin 18191)",
+      "exit_code": 0,
+      "report": "qa/remediation/rm0-04/ux-prioritas-1/browser-verified/browser-final.json"
+    },
+    {
+      "command": "node --input-type=module (Edge CDP, simulated MANUAL/HANDOFF responses, no dispatch writes, origin 18191)",
+      "exit_code": 0,
+      "report": "qa/remediation/rm0-04/ux-prioritas-1/dispatch-views.json"
+    }
+  ],
+  "other_gateways": {
+    "18090": "WORKING_UNCHANGED_HEALTHY",
+    "18192": "BASELINE_FASE_2_UAT_UNCHANGED_HEALTHY"
+  },
+  "limits": [
+    "Representative Edge desktop/mobile and fixture tests only.",
+    "Manual/handoff UI verified with synthetic responses; no new cross-PD mutation executed.",
+    "Human UAT and release authorization not part of this follow-up."
+  ]
+}

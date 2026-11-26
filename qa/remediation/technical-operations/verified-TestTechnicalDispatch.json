@@ -1,0 +1,8 @@
+{
+  "suite": "TestTechnicalDispatch",
+  "timestamp": "2026-11-24T08:15:26.572811+00:00",
+  "result": "PASS",
+  "baseline_migration": "043",
+  "target": "disposable PostgreSQL",
+  "output": "=== RUN   TestTechnicalDispatch\n2026/11/24 08:16:26 web.WriteError: Tiket tidak ditemukan\n2026/11/24 08:16:26 web.WriteError: Tiket berubah atau tidak dalam antrean disposisi\n2026/11/24 08:16:27 web.WriteError: Tiket tidak ditemukan\n2026/11/24 08:16:27 web.WriteError: Tiket tidak ditemukan\n--- PASS: TestTechnicalDispatch (1.40s)\nPASS\nok  \thelpdesk.local/m0/internal/bootstrap\t1.422s"
+}

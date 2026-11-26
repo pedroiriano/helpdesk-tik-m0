@@ -30,6 +30,8 @@ export function createPublicUI(landing) {
     if (!html.includes('helpdesk/maintenance-banner.js')) {
       html = html.replace('</body>', '<script src="/helpdesk/maintenance-banner.js" defer></script></body>');
     }
+    html = html.replace(/(<main\b[^>]*\bid="main-content")(?![^>]*\btabindex=)/, '$1 tabindex="-1"');
+    html = html.replace('>Skip to main content</a>', '>Lewati ke konten utama</a>');
     const images = ['bantuan-operator', 'wifi-jaringan', 'cloud-layanan', 'perawatan-tik'];
     html = html.replace(/<source\b[^>]*ball-0[1-4][^>]*>/g, '');
     html = html.replace(/<img\b[^>]*src="[^"]*ball-0([1-4])[^"]*"[^>]*>/g, (image, number) => {

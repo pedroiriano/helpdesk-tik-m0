@@ -1,0 +1,164 @@
+{
+  "task_id": "M0-UX-PUBLIC-F3",
+  "date_jakarta": "2026-11-26",
+  "acceptance": "AC11, bahasa antarmuka, Web Publik dan konsistensi UI lokal",
+  "result": "DONE_VERIFIED_LAB",
+  "gateway": "http://127.0.0.1:18090/",
+  "changes": [
+    "Kode modul dan bahasa pengembangan diganti pada teks operasional statis serta dinamis di Publik dan Admin.",
+    "Penanda Lingkungan uji dan arahan Gunakan data contoh muncul pada akses, pendaftaran dan pembuatan laporan sesuai konfigurasi autentikasi server.",
+    "Hero lima banner tetap manual dan dibatasi satu viewport. Pintasan, kartu, galeri, FAQ dan footer memiliki jarak lebih terkendali.",
+    "Pencarian katalog tampil lebih awal. Filter ponsel dapat dibuka dengan keyboard dan menampilkan jumlah pilihan aktif. Detail layanan menempatkan ketentuan dekat tombol laporan.",
+    "Ilustrasi panduan unggulan diringkas. Pencarian, tautan daftar dan detail dinamis tetap berfungsi.",
+    "Ringkasan Dasbor mencantumkan PD dan periode WIB. Status tiket menerangkan tindakan pelapor."
+  ],
+  "copy_examples": [
+    {
+      "before": "Klasifikasi (M4)",
+      "after": "Klasifikasi tiket"
+    },
+    {
+      "before": "Routing Teknisi (M5)",
+      "after": "Aturan penugasan teknisi"
+    },
+    {
+      "before": "Kalender SLA (M6)",
+      "after": "Kalender target penanganan"
+    },
+    {
+      "before": "Job Penjadwalan & Dead-Letter (M7)",
+      "after": "Jadwal sistem dan pekerjaan gagal"
+    },
+    {
+      "before": "Basis Pengetahuan & Editorial Portal (M8)",
+      "after": "Panduan dan konten portal"
+    },
+    {
+      "before": "Ekspor Data Laporan (M9)",
+      "after": "Ekspor laporan"
+    },
+    {
+      "before": "Layanan pengembangan terhubung",
+      "after": "Koneksi layanan berhasil"
+    }
+  ],
+  "retained_language": [
+    {
+      "where": "/akses.html, /daftar.html, /lapor.html, /admin/auth/login.html",
+      "retained": "Lingkungan uji dan Gunakan data contoh",
+      "reason": "Petunjuk sebelum memasukkan data pada lingkungan uji"
+    },
+    {
+      "where": "Atribut HTML, permintaan API, kontrak dan log",
+      "retained": "M3, M8 dan kode modul/internal lain",
+      "reason": "Identitas pemilik media serta kontrak penelitian"
+    },
+    {
+      "where": "/admin/app/helpdesk/index.html?kind=audit dan diagnostik berizin",
+      "retained": "Identitas teknis dari sumber audit",
+      "reason": "Keterlacakan dan diagnosis"
+    },
+    {
+      "where": "Konten editorial serta isi tiket dan komentar",
+      "retained": "Teks asli dari penyimpanan",
+      "reason": "Pembersihan menyasar teks antarmuka buatan aplikasi"
+    }
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd --prefix frontend run build",
+      "result": "PASS"
+    },
+    {
+      "command": "python -X utf8 scripts/test_ui_phase3_copy.py",
+      "result": "PASS",
+      "proof": "25 HTML hasil build, termasuk teks panel tersembunyi dan atribut aksesibel"
+    },
+    {
+      "command": "python -X utf8 scripts/test_piui_build.py",
+      "result": "PASS"
+    },
+    {
+      "command": "node scripts/test_admin_navigation.mjs",
+      "result": "PASS"
+    },
+    {
+      "command": "python -X utf8 scripts/smoke_local.py",
+      "result": "PASS",
+      "proof": "Gateway, readiness, rute, header keamanan serta kesetaraan byte CSS dan JavaScript"
+    },
+    {
+      "command": "$env:EDGE_MAINT_CDP_PORT='9349'; node scripts/test_ui_phase3_browser.mjs",
+      "result": "PASS",
+      "artifact": "browser.json",
+      "proof": "Penerimaan image aktif pada 400 × 498, 390 × 844 dan 1440 × 900"
+    },
+    {
+      "command": "$env:EDGE_MAINT_CDP_PORT='9353'; node .local/ui-ux-20261126/audit.mjs phase3-final",
+      "result": "PASS",
+      "proof": "49 kombinasi halaman dan viewport sebelum penyesuaian spasi katalog terakhir. Nol luapan halaman, stylesheet hilang, atau exception JavaScript"
+    },
+    {
+      "command": "$env:EDGE_MAINT_CDP_PORT='9351'; $env:HELPDESK_UX_REPORT_DIR='qa/remediation/ui-ux-phase3/ticket-flow'; $env:HELPDESK_BASE_URL='http://127.0.0.1:18090'; node scripts/test_ux_priority3_browser.mjs",
+      "result": "PASS",
+      "artifact": "ticket-flow/accessibility.json"
+    },
+    {
+      "command": "$env:EDGE_MAINT_CDP_PORT='9352'; $env:HELPDESK_UX_REPORT_DIR='qa/remediation/ui-ux-phase3/admin-workspace'; node scripts/test_admin_workspace_phase2_browser.mjs",
+      "result": "PASS",
+      "artifact": "admin-workspace/browser.json"
+    },
+    {
+      "command": "git -c core.safecrlf=false diff --check",
+      "result": "PASS"
+    }
+  ],
+  "runtime": {
+    "web_image": "sha256:6724313d9a0c7f7f9a6be18fb09db04159af01927acc0f64c94b284fc96c9c8e",
+    "rollback_tag": "helpdesk-m0-web:pre-ux-phase3-20261126",
+    "active_port": 18090,
+    "healthy_services": [
+      "web",
+      "app",
+      "db",
+      "scanner"
+    ],
+    "working_db_rows": {
+      "tickets": 136,
+      "attachments": 51,
+      "media": 17
+    }
+  },
+  "limits": [
+    "Edge dengan viewport emulasi dan akun lab. Kegagalan koneksi disimulasikan pada browser lokal.",
+    "Tidak menyimpan laporan, penugasan, data master, perubahan kebijakan atau media selama pengujian.",
+    "UAT manusia, perangkat fisik, pembaca layar dan otorisasi rilis produksi belum dilakukan."
+  ],
+  "layout_metrics_css_px": {
+    "hero_400x498_shortcuts_height": 102,
+    "catalog_390x844_first_result_top": 528,
+    "knowledge_390x844_first_regular_card_top": 606
+  },
+  "changed_files": [
+    "frontend/business-pages.mjs",
+    "frontend/ticket-pages.mjs",
+    "frontend/public-copy.json",
+    "frontend/guide-copy.json",
+    "frontend/landing-page.mjs",
+    "frontend/public-ui.css",
+    "frontend/public-pages.css",
+    "frontend/business.css",
+    "frontend/src/components/ServiceStatus.tsx",
+    "frontend/src/features/m0-03.ts",
+    "frontend/src/features/m0-04.ts",
+    "frontend/src/features/fase2-admin.ts",
+    "frontend/src/features/journey.ts",
+    "frontend/src/features/dashboard.ts",
+    "docs/05_ATURAN_UI_UX_WEB_PUBLIK.md",
+    "docs/06_ATURAN_UI_UX_WEB_ADMIN.md",
+    "scripts/test_ui_phase3_copy.py",
+    "scripts/test_ui_phase3_browser.mjs",
+    "scripts/test_admin_workspace_phase2_browser.mjs",
+    "scripts/smoke_local.py"
+  ]
+}

@@ -8,7 +8,7 @@
   "vite": "8.3.5",
   "pgx": "5.12.0",
   "postgresql": "18.7",
-  "nginx": "1.30.6",
+  "nginx": "1.30.7",
   "migration_tool": "psql 18.7 via migrations/apply.sh; per-migration transaction, advisory lock and checksum ledger",
   "test_tools": [
     "Go testing 1.27.4",
@@ -21,7 +21,7 @@
     "database": "sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015",
     "app_runtime": "scratch (empty filesystem)"
   },
-  "gateway_digest": "sha256:901e593c95dc85f5a729f5765516321366ef4ac401821431d408897e95287d0a",
+  "gateway_digest": "sha256:8c950211a641ec5b23f265450517001f6bcca533666120ebe36cb4cff3d00a55",
   "scanner": {
     "product": "ClamAV",
     "version": "1.5.4",

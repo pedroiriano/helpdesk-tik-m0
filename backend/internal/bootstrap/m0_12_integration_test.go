@@ -181,7 +181,7 @@ func TestM012Integration(t *testing.T) {
 			"category_id":        "40000000-0000-4000-8000-000000000001",
 			"priority":           "HIGH",
 			"reason":             "Verifikasi lengkap intake operator terhadap jaringan loket",
-			"classifier_version": 1,
+			"classifier_version": operator.request("GET", "/tickets/"+ticketID, nil, 200, "", nil)["classification"].(map[string]any)["rule_version"],
 			"evidence_digest":    "0000000000000000000000000000000000000000000000000000000000000000",
 		}, 200, "", nil)
 		if verResp["verification"] != "VERIFIED" {
@@ -203,13 +203,21 @@ func TestM012Integration(t *testing.T) {
 		}
 		ver = int64(dispResp["version"].(float64))
 
+		started := tech.request("POST", "/tickets/"+ticketID+"/transitions", map[string]any{
+			"expected_version": ver, "action": "START", "reason": "Mulai penanganan fixture",
+		}, 200, "", nil)
+		ver = int64(started["version"].(float64))
+
 		// 5. Pencatatan vendor dengan PIC internal aktif
 		vendorResp := tech.request("POST", fmt.Sprintf("/tickets/%s/vendor-cases", ticketID), map[string]any{
-			"expected_version": ver,
-			"vendor_id":        "00000000-0000-4000-8000-000000000099",
-			"internal_pic_id":  "20000000-0000-4000-8000-000000000009",
-			"reference_no":     "TELKOM-INC-2026-999",
-			"summary":          "Kabel fiber optik putus di trotoar utama",
+			"expected_version":   ver,
+			"vendor_id":          "00000000-0000-4000-8000-000000000099",
+			"internal_pic_id":    "20000000-0000-4000-8000-000000000009",
+			"external_reference": "VND-FIXTURE-012",
+			"contract_reference": "KONTRAK-FIXTURE-012",
+			"expected_return_at": time.Now().Add(2 * time.Hour).UTC(),
+			"next_followup_at":   time.Now().Add(time.Hour).UTC(),
+			"summary":            "Kabel fiber optik putus di trotoar utama",
 		}, 201, "", nil)
 		ver = int64(vendorResp["version"].(float64))
 
@@ -235,6 +243,7 @@ func TestM012Integration(t *testing.T) {
 
 		// 8. Pemohon confirm -> status CLOSED
 		confResp := guest.request("POST", fmt.Sprintf("/tickets/%s/confirmation", ticketID), map[string]any{
+			"attempt_id":       resResp["active_attempt_id"],
 			"expected_version": ver,
 			"decision":         "ACCEPT",
 		}, 200, "", nil)
@@ -266,7 +275,7 @@ func TestM012Integration(t *testing.T) {
 			"category_id":        "40000000-0000-4000-8000-000000000001",
 			"priority":           "NORMAL",
 			"reason":             "Verifikasi intake",
-			"classifier_version": 1,
+			"classifier_version": operator.request("GET", "/tickets/"+ticketID, nil, 200, "", nil)["classification"].(map[string]any)["rule_version"],
 			"evidence_digest":    "0000000000000000000000000000000000000000000000000000000000000000",
 		}, 200, "", nil)
 		ver = int64(vResp["version"].(float64))
@@ -281,6 +290,11 @@ func TestM012Integration(t *testing.T) {
 		}, 200, "", nil)
 		ver = int64(dResp["version"].(float64))
 
+		started := tech.request("POST", "/tickets/"+ticketID+"/transitions", map[string]any{
+			"expected_version": ver, "action": "START", "reason": "Mulai penanganan fixture",
+		}, 200, "", nil)
+		ver = int64(started["version"].(float64))
+
 		rResp := tech.request("POST", fmt.Sprintf("/tickets/%s/resolve", ticketID), map[string]any{
 			"expected_version": ver,
 			"summary":          "Resolusi awal teknisi",
@@ -289,6 +303,7 @@ func TestM012Integration(t *testing.T) {
 
 		// Pemohon menolak resolusi dengan alasan (>= 5 karakter)
 		rejectResp := pub1.request("POST", fmt.Sprintf("/tickets/%s/confirmation", ticketID), map[string]any{
+			"attempt_id":       rResp["active_attempt_id"],
 			"expected_version": ver,
 			"decision":         "REJECT",
 			"reason":           "Masalah internet masih kambuh, mohon dicek ulang router",
@@ -365,7 +380,7 @@ func TestM012Integration(t *testing.T) {
 			"category_id":        "40000000-0000-4000-8000-000000000001",
 			"priority":           "HIGH",
 			"reason":             "Verifikasi sebelum handoff",
-			"classifier_version": 1,
+			"classifier_version": operator.request("GET", "/tickets/"+ticketID, nil, 200, "", nil)["classification"].(map[string]any)["rule_version"],
 			"evidence_digest":    "0000000000000000000000000000000000000000000000000000000000000000",
 		}, 200, "", nil)
 		ver = int64(vResp["version"].(float64))
@@ -517,12 +532,21 @@ func TestM012Integration(t *testing.T) {
 			"approved_by": "20000000-0000-4000-8000-000000000017",
 		}, 400, "", nil)
 
-		// Valid dual control diterima
-		superAdmin.request("POST", "/admin/operations", map[string]any{
-			"kind":        "BACKUP_MANIFEST",
-			"reason":      "Valid dual control",
-			"approved_by": "20000000-0000-4000-8000-000000000018",
+		// Approval must identify a distinct actor from the authenticated session.
+		job := superAdmin.request("POST", "/admin/operations", map[string]any{
+			"kind":   "BACKUP_MANIFEST",
+			"reason": "Valid dual control",
 		}, 202, "", nil)
+		approvePath := "/admin/operations/" + job["id"].(string) + "/approve"
+		approval := map[string]any{
+			"expected_version": job["version"],
+			"reason":           "Setujui pencadangan manifes",
+		}
+		superAdmin.request("POST", approvePath, approval, 403, "", nil)
+		approvedJob := secondAdmin.request("POST", approvePath, approval, 200, "", nil)
+		if approvedJob["state"] != "APPROVED" {
+			t.Fatalf("Expected APPROVED backup job, got %v", approvedJob["state"])
+		}
 
 		// 6. Pengarsipan tiket terminal CLOSED & Restore
 		tkt := pub1.request("POST", "/tickets", map[string]any{
@@ -542,7 +566,7 @@ func TestM012Integration(t *testing.T) {
 			"category_id":        "40000000-0000-4000-8000-000000000001",
 			"priority":           "NORMAL",
 			"reason":             "Verifikasi",
-			"classifier_version": 1,
+			"classifier_version": operator.request("GET", "/tickets/"+tID, nil, 200, "", nil)["classification"].(map[string]any)["rule_version"],
 			"evidence_digest":    "0000000000000000000000000000000000000000000000000000000000000000",
 		}, 200, "", nil)
 		tVer = int64(vR["version"].(float64))
@@ -557,6 +581,11 @@ func TestM012Integration(t *testing.T) {
 		}, 200, "", nil)
 		tVer = int64(dR["version"].(float64))
 
+		started := tech.request("POST", "/tickets/"+tID+"/transitions", map[string]any{
+			"expected_version": tVer, "action": "START", "reason": "Mulai penanganan fixture",
+		}, 200, "", nil)
+		tVer = int64(started["version"].(float64))
+
 		rR := tech.request("POST", fmt.Sprintf("/tickets/%s/resolve", tID), map[string]any{
 			"expected_version": tVer,
 			"summary":          "Penyelesaian tiket",
@@ -564,6 +593,7 @@ func TestM012Integration(t *testing.T) {
 		tVer = int64(rR["version"].(float64))
 
 		cR := pub1.request("POST", fmt.Sprintf("/tickets/%s/confirmation", tID), map[string]any{
+			"attempt_id":       rR["active_attempt_id"],
 			"expected_version": tVer,
 			"decision":         "ACCEPT",
 		}, 200, "", nil)
@@ -649,10 +679,31 @@ func TestM012Integration(t *testing.T) {
 			t.Fatalf("Expected status ready, got %v", readyResp["status"])
 		}
 
+		// Run the actual scheduler only after the preceding deterministic lifecycle tests.
+		flushDeliveries()
+		schedulerCtx, stopScheduler := context.WithCancel(ctx)
+		schedulerStopped := make(chan struct{})
+		go func() {
+			defer close(schedulerStopped)
+			runtime.RunScheduler(schedulerCtx)
+		}()
+		defer func() {
+			stopScheduler()
+			<-schedulerStopped
+		}()
+		deadline := time.Now().Add(8 * time.Second)
+		for runtime.schedulerHeartbeat.Load() == 0 && time.Now().Before(deadline) {
+			time.Sleep(50 * time.Millisecond)
+		}
+		if runtime.schedulerHeartbeat.Load() == 0 {
+			t.Fatal("Scheduler did not publish a heartbeat")
+		}
+
 		// Redacted health report (AC24)
 		healthResp := platformAdmin.request("GET", "/admin/health", nil, 200, "", nil)
 		if healthResp["status"] != "HEALTHY" {
-			t.Fatalf("Expected HEALTHY health status, got %v", healthResp["status"])
+			t.Fatalf("Expected HEALTHY health status, got %v (worker=%v scanner=%v storage=%v dead=%v)",
+				healthResp["status"], healthResp["worker"], healthResp["scanner"], healthResp["storage"], healthResp["dead_letters"])
 		}
 
 		modules, ok := healthResp["modules"].(map[string]any)
@@ -664,7 +715,7 @@ func TestM012Integration(t *testing.T) {
 		rawHealth := fmt.Sprintf("%v", healthResp)
 		for _, forbidden := range []string{password, "postgres://", "password="} {
 			if strings.Contains(rawHealth, forbidden) {
-				t.Fatalf("Secret leaked in redacted health check: %s", forbidden)
+				t.Fatal("Sensitive data found in redacted health check")
 			}
 		}
 	})

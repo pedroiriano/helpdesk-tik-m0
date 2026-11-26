@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-11-24T06:21:55.688Z",
+  "base_url": "http://127.0.0.1:18191",
+  "browser": "Microsoft Edge Headless (CDP)",
+  "suites": {
+    "R4-G_m8_page_editorial_search_reader": {
+      "status": "PASS",
+      "slug": "rm004-e2e-halaman-1795501319270",
+      "rendered": true,
+      "searchHitFound": true,
+      "archivedUnavailable": true
+    }
+  },
+  "from_suite": "R4-G_m8_page_editorial_search_reader",
+  "through_suite": "R4-G_m8_page_editorial_search_reader",
+  "csp_violations": [],
+  "console_errors": [],
+  "exceptions": [],
+  "result": "PASS"
+}

@@ -52,7 +52,7 @@ schemas = {
     "TicketCreate": obj({"service_id": UUID, "form_version": VERSION, "title": {**TEXT, "maxLength": 200}, "description": TEXT, "answers": {"type": "object", "maxProperties": 100, "additionalProperties": {"type": ["string", "number", "boolean", "null"], "maxLength": 4000}}}),
     "Ticket": obj({"id": UUID, "version": VERSION, "number": TEXT, "service_id": UUID, "requester_kind": enum("GUEST", "PUBLIC", "ASN"), "requester_id": UUID, "requester_org_id": {"type": ["string", "null"], "format": "uuid"}, "service_owner_org_id": UUID, "state": STATES, "verification": enum("PENDING", "VERIFIED"), "title": TEXT, "description": TEXT, "accepted_at": UTC, "updated_at": UTC, "policy_version": VERSION}),
     "Verification": obj({"expected_version": VERSION, "category_id": UUID, "priority": enum("LOW", "NORMAL", "HIGH", "CRITICAL"), "reason": TEXT, "classifier_version": VERSION, "evidence_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}),
-    "Dispatch": obj({"expected_version": VERSION, "team_id": UUID, "assignee_id": UUID, "proposal_version": VERSION, "reason": TEXT}),
+    "Dispatch": obj({"expected_version": VERSION, "team_id": UUID, "assignee_id": UUID, "proposal_version": VERSION, "reason": TEXT, "manual": {"type": "boolean"}}, optional=("manual",)),
     "Transition": obj({"expected_version": VERSION, "action": enum("START", "REQUEST_INFORMATION", "SUPPLY_INFORMATION", "CANCEL", "REOPEN"), "reason": TEXT}),
     "ResolutionCreate": obj({"expected_version": VERSION, "summary": TEXT, "evidence_ids": arr(UUID)}),
     "Resolution": obj({"id": UUID, "version": VERSION, "ticket_id": UUID, "resolved_at": UTC, "confirmation_due_at": UTC, "summary": TEXT}),
@@ -84,17 +84,36 @@ schemas = {
        "policy_version":{"type":["integer","null"],"minimum":1},"denominator":NONNEG,"count":NONNEG,
        "measure":{"type":"string","const":"SLA"},"accepted":NONNEG,"backlog":NONNEG,"completed":NONNEG,
        "breached":NONNEG,"cancelled":NONNEG,"unmeasured":NONNEG,"gross_seconds":NONNEG,"net_seconds":NONNEG,
-       "sla_percent":{"type":["number","null"],"minimum":0,"maximum":100}}),
+       "sla_percent":{"type":["number","null"],"minimum":0,"maximum":100},"analytics":ref("DashboardAnalytics")},optional=("analytics",)),
+    "DashboardDay": obj({"day":{"type":"string","format":"date"},"accepted":NONNEG,"active":NONNEG,"completed":NONNEG}),
+    "DashboardBucket": obj({"key":enum("age_lt24","age_24_72","age_gte72","overdue","due_soon","on_track","paused","unmeasured"),"count":NONNEG}),
+    "DashboardAnalytics": obj({"evaluated_at":UTC,"daily":arr(ref("DashboardDay")),"age":arr(ref("DashboardBucket")),"deadline":arr(ref("DashboardBucket"))}),
+    "DashboardRow": obj({"id":UUID,"number":TEXT,"title":TEXT,"state":STATES,"accepted_at":UTC,"due_at":NULL_DATE,"age_seconds":NULL_COUNT,
+        "deadline":enum("none","overdue","due_soon","on_track","paused","unmeasured")}),
     "Audit": obj({"id": UUID, "actor_id": UUID, "action": TEXT, "object_id": UUID, "scope": TEXT, "reason": TEXT, "outcome": enum("SUCCESS", "DENIED", "FAILED"), "correlation_id": UUID, "occurred_at": UTC}),
-    "SearchHit": obj({"id": UUID, "owner": enum("M2", "M3", "M8"), "kind": enum("SERVICE", "TICKET", "ARTICLE", "PAGE", "MEDIA"), "title": TEXT, "snippet": TEXT}),
+    "SearchHit": obj({"id": UUID, "owner": enum("M2", "M3", "M8"), "kind": enum("SERVICE", "TICKET", "ARTICLE", "PAGE", "FAQ", "MEDIA"), "title": TEXT, "snippet": TEXT}),
+    "TechnicalAvailability": obj({"status": enum("INACTIVE","ABSENT","OUTSIDE_SCHEDULE","UNCONFIGURED","UNKNOWN_LOAD","AVAILABLE","FULL"), "remaining":NULL_COUNT, "assessed_at":UTC}),
+    "RosterTeam": obj({"id":UUID,"name":TEXT,"division_id":{"type":["string","null"],"format":"uuid"},"division_name":{"type":["string","null"]}}),
+    "TechnicalTeam": obj({"id":UUID,"name":TEXT}),
+    "TechnicalPerformance": obj({"from":UTC,"to":UTC,"as_of":UTC,"watermark":NULL_DATE,"timezone":{"const":"Asia/Jakarta"},"cohort":{"const":"ACTIVITY"},
+        **{name:NONNEG for name in ("resolved_tickets","resolution_attempts","confirmed","auto_closed","reopened","work_logs","work_seconds","sla_met","sla_measured","sla_unmeasured","gross_seconds","net_seconds")},
+        "sla_percent":{"type":["number","null"],"minimum":0,"maximum":100}}),
+    "TechnicalCapacity": obj({"technicians":NONNEG, "measured":NONNEG, "remaining":NONNEG, "available":NONNEG, "assessed_at":UTC}),
+    "TechnicianAbsence": obj({"id":UUID, "version":VERSION, "starts_at":UTC, "ends_at":UTC, "cancelled":{"type":"boolean"}, "updated_at":UTC}),
+    "TechnicianAbsenceWrite": obj({"starts_at":UTC, "ends_at":UTC, "reason":TEXT}),
+    "Roster": obj({"id": UUID, "version": VERSION, "team_id": UUID, "subject_id": UUID, "skills": arr(TEXT), "available_from": UTC, "available_until": UTC, "active": {"type":"boolean"}, "capacity":{"type":["integer","null"], "minimum":1, "maximum":100}, "updated_at":UTC, "availability":ref("TechnicalAvailability"), "team_name":TEXT}, optional=("availability","team_name")),
+    "RosterWrite": obj({"expected_version":{"type":"integer","minimum":0}, "subject_id":UUID, "skills":arr(TEXT), "available_from":UTC, "available_until":UTC, "active":{"type":"boolean"}, "reason":TEXT, "capacity":{"type":"integer","minimum":1,"maximum":100}}, optional=("capacity",)),
     "NavigationWrite": obj({"expected_version": VERSION, "route": {"type": "string", "pattern": "^/(?!/)[a-zA-Z0-9/_-]*$"}, "label": TEXT, "audience": AUDIENCE, "position": {"type": "integer", "minimum": 0}}),
     "MembershipWrite": obj({"expected_version": VERSION, "subject_id": UUID, "organization_id": UUID, "permissions": arr(TEXT), "expires_at": UTC, "reason": TEXT}),
     "RuleWrite": obj({"expected_version": VERSION, "code": TEXT, "rule_version": VERSION, "active": {"type": "boolean"}, "reason": TEXT}),
-    "Maintenance": obj({"expected_version": VERSION, "organization_id": UUID, "starts_at": UTC, "ends_at": UTC, "mode": enum("READ_ONLY", "DRAIN"), "message": TEXT}),
+    "Maintenance": obj({"expected_version": VERSION, "organization_id": UUID, "org_id": UUID, "target_id": UUID,
+        "starts_at": UTC, "ends_at": UTC, "mode": enum("READ_ONLY", "DRAIN", "NORMAL"), "message": TEXT,
+        "schedule_kind": enum("SCHEDULED", "UNSCHEDULED"), "display_mode": enum("BANNER", "FULL_SCREEN")},
+        optional=("expected_version", "organization_id", "org_id", "target_id", "message", "schedule_kind", "display_mode")),
     "SystemJob": obj({"kind": enum("BACKUP_MANIFEST","HEALTH_REPORT","PURGE_REQUEST"), "target_id": UUID, "reason": TEXT}),
     "PurgeRequest": obj({"expected_version": VERSION, "object_id": UUID, "retention_policy_version": VERSION, "reason": TEXT}),
     "HealthAdmin": obj({"status":enum("HEALTHY","DEGRADED","BUSY"),"modules":{"type":"object","additionalProperties":enum("HEALTHY","UNAVAILABLE")},
-       "scanner":enum("HEALTHY","UNAVAILABLE"),"storage":enum("HEALTHY","UNAVAILABLE"),"worker":enum("HEALTHY","UNAVAILABLE"),
+       "scanner":enum("HEALTHY","UNAVAILABLE"),"scanner_signature_age_seconds":NULL_COUNT,"storage":enum("HEALTHY","UNAVAILABLE"),"worker":enum("HEALTHY","UNAVAILABLE"),
        "outbox_lag":NULL_COUNT,"inbox_lag":NULL_COUNT,"oldest_delivery_seconds":NULL_COUNT,"dead_letters":NULL_COUNT,"observed_at":UTC}),
     "SystemJobResult": obj({"id":UUID,"version":VERSION,"kind":TEXT,"requested_by":UUID,"target_id":UUID,
        "state":enum("PENDING","REQUESTED","APPROVED","QUEUED","RUNNING","SUCCEEDED","FAILED","DISABLED"),"reason":TEXT,
@@ -171,7 +190,7 @@ operation("get", "/catalog/services", "ListServices", "M2", "catalog.read", "Ser
 operation("get", "/catalog/services/{id}", "ReadService", "M2", "catalog.read", "Service", fr="FR17", public=True)
 operation("get", "/catalog/services/{id}/form", "ReadServiceForm", "M2", "catalog.read", "Form", fr="FR11", public=True)
 operation("post", "/tickets", "CreateTicket", "M3", "ticket.create", "Ticket", "TicketCreate", 201, "FR11 FR29", True)
-operation("get", "/tickets", "ListTickets", "M3", "ticket.read", "Ticket", fr="FR02 FR28 FR29")
+operation("get", "/tickets", "ListTickets", "M3", "ticket.read", "Ticket", fr="FR02 FR28 FR29", query=("state","service_id","q"))
 operation("get", "/tickets/{id}", "ReadTicket", "M3", "ticket.read", "Ticket", fr="FR29")
 operation("post", "/tickets/bulk", "BulkTicketCommand", "M3", "ticket.bulk", "BulkResult", "BulkCommand", fr="FR02")
 operation("post", "/tickets/{id}/work-logs", "RecordWorkLog", "M3", "ticket.worklog", request="WorkLog", status=201, fr="FR27")
@@ -213,13 +232,26 @@ for group in ("knowledge/articles", "portal/pages"):
     operation("post", "/"+group, "Create"+command, "M8", "content.write", "Content", "ContentWrite", 201, "FR12 FR18")
     operation("put", "/"+group+"/{id}", "Update"+command, "M8", "content.write", "Content", "ContentWrite", fr="FR12 FR18")
     operation("post", "/"+group+"/{id}/transitions", "Transition"+command, "M8", "content.publish", "Content", "EditorialTransition", fr="FR12 FR18")
-operation("get", "/search", "SearchScopedOwners", "M2|M3|M8", "search.read", "SearchHit", fr="FR06", query=("owner", "q"))
+operation("get", "/search", "SearchScopedOwners", "M2|M3|M8", "search.read", "SearchHit", fr="FR06", query=("owner", "q", "kind"))
+operation("get", "/staff/roster-teams", "ListRosterTeams", "M1", "scoped roster management", "RosterTeam", fr="FR24", query=("organization_id",))
+operation("get", "/reports/technical-teams", "ListTechnicalReportTeams", "M9", "report.read or technician self", "TechnicalTeam", fr="FR27", query=("organization_id",))
+operation("get", "/reports/technical-performance", "ReadTechnicalPerformance", "M9", "report.read or technician self", "TechnicalPerformance", fr="FR27", query=("organization_id","team_id","from","to"))
+operation("get", "/reports/technical-performance.csv", "ExportTechnicalPerformance", "M9", "report.export + report.read or technician self", "TechnicalPerformance", fr="FR27", query=("organization_id","team_id","from","to"))
+schemas["Ticket"]["properties"]["assignment_needs_review"] = {"type":"boolean"}
+operation("get", "/admin/technical-capacity", "ReadTechnicalCapacity", "M5", "scoped roster management", "TechnicalCapacity", fr="FR24", query=("organization_id","team_id","skill"))
+operation("get", "/technicians/me/rosters", "ListPersonalRosters", "M5", "ticket.read + ticket.resolve (self)", "Roster", fr="FR24", query=("organization_id",))
+operation("get", "/technicians/me/absences", "ListTechnicianAbsences", "M5", "ticket.read + ticket.resolve (self)", "TechnicianAbsence", fr="FR24")
+operation("post", "/technicians/me/absences", "RecordTechnicianAbsence", "M5", "ticket.read + ticket.resolve (self)", "TechnicianAbsence", "TechnicianAbsenceWrite", status=201, fr="FR24")
+operation("post", "/technicians/me/absences/{absence_id}/cancel", "CancelTechnicianAbsence", "M5", "ticket.read + ticket.resolve (self)", "TechnicianAbsence", "VersionedReason", fr="FR24")
+operation("get", "/admin/teams/{id}/rosters", "ListManagedRosters", "M5", "scoped roster management", "Roster", fr="FR24", query=("organization_id",))
+operation("post", "/admin/teams/{id}/rosters", "CreateRoster", "M5", "scoped roster management", "Roster", "RosterWrite", status=201, fr="FR24", query=("organization_id",))
+operation("put", "/admin/teams/{id}/rosters/{roster_id}", "UpdateRoster", "M5", "scoped roster management", "Roster", "RosterWrite", fr="FR24", query=("organization_id",))
 operation("get", "/notifications", "ListNotifications", "M9", "notification.read", "Notification", fr="FR21")
 operation("post", "/notifications/{id}/read", "MarkNotificationRead", "M9", "notification.read", request="VersionedReason", fr="FR21")
 operation("post", "/notifications/sink-challenges", "IssueSinkChallenge", "M9", "notification.binding", "SinkChallenge", "SinkChallengeInput", 201, "FR21")
 operation("post", "/notifications/telegram-bindings", "VerifyTelegramBinding", "M9", "notification.binding", request="TelegramBinding", status=201, fr="FR21")
 operation("post", "/notifications/telegram-bindings/{id}/revoke", "RevokeTelegramBinding", "M9", "notification.binding", request="VersionedReason", fr="FR21")
-operation("get", "/reports", "ReadScopedReport", "M9", "report.read", "Report", fr="FR03 FR16 FR27", query=("from", "to", "organization_id"))
+operation("get", "/reports", "ReadScopedReport", "M9", "report.read", "Report", fr="FR03 FR16 FR27", query=("from", "to", "organization_id", "view"))
 operation("post", "/reports/exports", "RequestReportExport", "M9", "report.export", "Operation", "ReportQuery", 202, "FR02 FR16 FR27")
 operation("get", "/reports/exports/{id}", "ReadReportExport", "M9", "report.export", "Operation", fr="FR02")
 operation("get", "/reports/exports/{id}/download", "DownloadReportExport", "M9", "report.export", "Download", fr="FR02")
@@ -275,6 +307,8 @@ fase2_contracts.extend(schemas,operation,obj,arr,enum,ref,UUID,TEXT,UTC,VERSION)
 import fase3_contracts
 fase3_contracts.extend(schemas,operation,obj,arr,enum,ref,UUID,TEXT,UTC,VERSION)
 
+operation("get", "/reports/dashboard-tickets", "ListDashboardTickets", "M9", "report.read + ticket.read tingkat PD", "DashboardRow", fr="FR16", query=("from","to","organization_id","day","segment","q"))
+
 RUNTIME_COMMANDS={'ListReportingDirectory','ListDivision','CreateDivision','UpdateDivision','RevokeMediaApproval','RegisterPublicSubject','ApproveSanitizedMedia','CreateLabSession','RevokeSession','ReadSession','ReadLabBootstrap','ListServices','ReadService','ReadServiceForm','CreateService','UpdateService','UpdateServiceForm','GrantMembership','ListOrganization','CreateOrganization','UpdateOrganization','ListTeam','CreateTeam','UpdateTeam','ListMembership','UpdateMembership','ListAdminServices','ReadAdminService','ReadAdminServiceForm','ListCategories','CreateCategory','UpdateCategory','ReadCatalogServicePolicy','ReadAdminServicePolicy','UpdateServicePolicy'}
 
 def build_openapi():
@@ -299,10 +333,22 @@ def build_openapi():
                        {"name": "cursor", "in": "query", "schema": {"type": "string", "maxLength": 512}},
                        {"name": "sort", "in": "query", "schema": enum("id_asc"), "description": "Stable UUID ordering; scope filter before cursor/limit. Other sort modes are rejected."}]
         for query in op["query"]:
+            if query == "view" and op["command"] == "ReadScopedReport":
+                params.append({"name":"view","in":"query","required":False,"schema":enum("dashboard"),
+                               "description":"Tambahkan agregat dasbor untuk cohort penerimaan. Periode ini maksimal 31 hari."})
+                continue
+            if op["command"] == "ListDashboardTickets" and query in ("day","segment","q"):
+                shape = {"day":{"type":"string","format":"date"},"segment":enum("active","completed","age_lt24","age_24_72","age_gte72","overdue","due_soon","on_track","paused","unmeasured"),"q":{"type":"string","maxLength":120}}[query]
+                params.append({"name":query,"in":"query","required":False,"schema":shape})
+                continue
+            if op["command"] == "ReadTechnicalCapacity" and query == "team_id":
+                params.append({"name": query, "in": "query", "required":True, "style":"form", "explode":True,
+                               "schema":{"type":"array","minItems":1,"maxItems":100,"items":UUID}})
+                continue
             shape = enum("M2", "M3", "M8") if query == "owner" and path.endswith("/search") else enum("M3", "M8") if query == "owner" else UTC if query in ("from", "to") else UUID if query.endswith("_id") else TEXT
-            params.append({"name": query, "in": "query", "required": query not in ("tier","mode","view","q","status","state","code","error") or query == "q" and path.endswith("/search"), "schema": enum("L1","L2") if query=="tier" else enum("reassign") if query=="mode" else enum("published") if query=="view" else enum("CLEAN") if query=="status" and path.endswith("/media") else shape})
+            params.append({"name": query, "in": "query", "required": query not in ("tier","mode","view","q","status","state","code","error","kind","skill") and (op["command"], query) not in {("ListTickets","service_id"), ("ListStaffDirectory","team_id"),("ReadTechnicalPerformance","team_id"),("ExportTechnicalPerformance","team_id")} or query == "q" and path.endswith("/search"), "schema": enum("L1","L2") if query=="tier" else enum("MEDIA") if query=="kind" and path.endswith("/search") else enum("reassign") if query=="mode" else enum("published") if query=="view" else enum("CLEAN") if query=="status" and path.endswith("/media") else shape})
         if op["command"] in ("CreateTicket", "ExchangeGuestCapability"):
-            params.append({"name": "X-Guest-Capability", "in": "header", "required": op["command"] == "ExchangeGuestCapability", "schema": {"type": "string", "pattern": "^[A-Za-z0-9_-]{43}$"}, "description": "Client generates >=256 random bits; secret never URL/log/draft. Required for unauthenticated guest create; hash only at rest."})
+            params.append({"name": "X-Guest-Capability", "in": "header", "required": op["command"] == "ExchangeGuestCapability", "schema": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "description": "Client generates >=256 random bits; secret never URL/log/draft. Required for unauthenticated guest create; hash only at rest."})
         body_name = op["request"]
         if body_name == "ServiceWrite" and "{id}" in path:
             body_name = "ServiceUpdate"
@@ -312,9 +358,13 @@ def build_openapi():
             schemas[body_name] = obj({"expected_version": VERSION, "attempt_id": UUID})
         entry = {"operationId": op["command"] + ("Alias"+str(index) if op["alias"] else ""), "summary": op["command"],
                  "x-command": op["command"], "x-owner": op["owner"], "x-permission": op["permission"], "x-requirements": op["fr"],
-                 "x-runtime-status": "IMPLEMENTED_RM0_05" if (op['command'] in fase2_contracts.COMMANDS or op['command'] in fase3_contracts.COMMANDS) else "IMPLEMENTED_RM0_04" if op['command'] in role_hero_contracts.COMMANDS else "IMPLEMENTED_M0_11" if op['command'] in m0_11_contracts.COMMANDS else "IMPLEMENTED_M0_10" if op['command'] in m0_10_contracts.COMMANDS else "IMPLEMENTED_M0_09" if op['command'] in m0_09_contracts.COMMANDS else "IMPLEMENTED_M0_08" if op['command'] in m0_08_contracts.COMMANDS else "IMPLEMENTED_M0_07" if op['command'] in m0_07_contracts.COMMANDS else "IMPLEMENTED_M0_06" if op['command'] in m0_06_contracts.COMMANDS else "IMPLEMENTED_M0_05" if op['command'] in m0_05_contracts.COMMANDS else "IMPLEMENTED_M0_04" if op['command'] in m0_04_contracts.COMMANDS else "IMPLEMENTED_M0_03" if op['command'] in RUNTIME_COMMANDS else "NOT_IMPLEMENTED", "x-authorization": "Trusted principal, live object/scope/revocation checks. Hidden object 404; visible forbidden action 403; config admin has no implicit ticket read.",
+                 "x-runtime-status": "IMPLEMENTED_RM0_05" if (op["command"] in {"ListManagedRosters", "CreateRoster", "UpdateRoster", "ReadTechnicalCapacity", "ListPersonalRosters", "ListTechnicianAbsences", "RecordTechnicianAbsence", "CancelTechnicianAbsence", "ListRosterTeams", "ListTechnicalReportTeams", "ReadTechnicalPerformance", "ExportTechnicalPerformance"} or op['command'] in fase2_contracts.COMMANDS or op['command'] in fase3_contracts.COMMANDS) else "IMPLEMENTED_RM0_04" if op['command'] in role_hero_contracts.COMMANDS else "IMPLEMENTED_M0_11" if op['command'] in m0_11_contracts.COMMANDS else "IMPLEMENTED_M0_10" if op['command'] in m0_10_contracts.COMMANDS else "IMPLEMENTED_M0_09" if op['command'] in m0_09_contracts.COMMANDS else "IMPLEMENTED_M0_08" if op['command'] in m0_08_contracts.COMMANDS else "IMPLEMENTED_M0_07" if op['command'] in m0_07_contracts.COMMANDS else "IMPLEMENTED_M0_06" if op['command'] in m0_06_contracts.COMMANDS else "IMPLEMENTED_M0_05" if op['command'] in m0_05_contracts.COMMANDS else "IMPLEMENTED_M0_04" if op['command'] in m0_04_contracts.COMMANDS else "IMPLEMENTED_M0_03" if op['command'] in RUNTIME_COMMANDS else "NOT_IMPLEMENTED", "x-authorization": "Trusted principal, live object/scope/revocation checks. Hidden object 404; visible forbidden action 403; config admin has no implicit ticket read.",
                  "security": [{"SessionCookie": []}], "parameters": params,
                  "responses": {str(op["status"]): {"description": "Accepted job with scope-bound polling" if op["status"] == 202 else "Durable primary result; downstream delivery may still be pending", "content": {"application/json": {"schema": response, "example": sample(response)}}}}}
+        if op["command"] == "ListDashboardTickets":
+            entry["x-runtime-status"] = "IMPLEMENTED_M0_DASHBOARD_F2"
+        if op["command"] == "ExportTechnicalPerformance":
+            entry["responses"]["200"]["content"] = {"text/csv": {"schema": {"type":"string"}}}
         if op["public"]:
             entry["security"] += [{}]
         if op['command']=='ReadLabBootstrap':
@@ -323,6 +373,8 @@ def build_openapi():
             entry['parameters'].append({'name':'version','in':'query','schema':VERSION,'description':'Optional historical immutable form version, still subject to live service visibility.'})
         if op['command'] in ('ListTeam','ListCategories','ListOrganization','ListMembership','ListDivision','ListReportingDirectory','ListHandoffTargets'):
             entry['parameters'].append({'name':'organization_id','in':'query','schema':UUID,'description':'Optional organization filter intersected with live actor scope before pagination.'})
+        if op['command']=='ListTeam':
+            entry['parameters'].append({'name':'division_id','in':'query','schema':UUID,'description':'Optional division filter applied inside the authorized organization scope before pagination.'})
         if op['command']=='ListReportingDirectory':
             entry['parameters'].extend([{'name':'mode','in':'query','schema':enum('asn')},{'name':'q','in':'query','schema':{'type':'string','maxLength':120}}])
         if op['command'] in ('ReadRoutingRule','WriteRoutingRule'):
@@ -400,6 +452,7 @@ def build_events():
         shape = obj(dict(payload))
         if name in ("TicketCreated","TicketStateChanged"):
             shape["properties"]["sla_clock"] = schemas["SLAClock"]
+            shape["properties"]["awaiting_vendor"] = {"type": "boolean"}
         if name == "ResolutionProposed":
             shape["properties"]["requester_id"] = UUID
         if name == "TicketStateChanged":

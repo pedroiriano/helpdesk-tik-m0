@@ -13,7 +13,7 @@ const priorities: Record<string, string> = {
   LOW: 'Rendah', NORMAL: 'Normal', HIGH: 'Tinggi', CRITICAL: 'Kritis',
 };
 
-export function ticketState(ticket: Ticket) {
+export function ticketState(ticket: Pick<Ticket, 'state'>) {
   return states[ticket.state] ?? 'Status belum tersedia';
 }
 
@@ -22,8 +22,8 @@ export function priorityLabel(priority?: string) {
 }
 
 export function requesterGuidance(ticket: Ticket) {
-  if (ticket.state === 'NEEDS_INFORMATION') return 'Buka tiket dan lengkapi informasi yang diminta petugas.';
-  if (ticket.state === 'RESOLVED') return 'Periksa hasil penanganan, lalu konfirmasi atau sampaikan keberatan.';
+  if (ticket.state === 'NEEDS_INFORMATION') return 'Petugas meminta informasi tambahan. Buka tiket dan lengkapi informasi yang diminta.';
+  if (ticket.state === 'RESOLVED') return 'Petugas telah mengirim hasil penanganan. Periksa hasilnya, lalu konfirmasi atau sampaikan keberatan.';
   if (ticket.state === 'CLOSED') return 'Riwayat dan hasil penanganan tersedia di detail tiket.';
   if (ticket.state === 'CANCELLED') return 'Lihat alasan pembatalan pada riwayat tiket.';
   if (ticket.verification !== 'VERIFIED') return 'Petugas akan memeriksa kelengkapan laporan Anda.';

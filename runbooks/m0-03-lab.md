@@ -31,6 +31,8 @@ docker compose up -d --no-deps --build --pull never --wait --wait-timeout 120 we
 
 Lanjutkan seed/app hanya jika exit job migrator adalah 0. prepare_local hanya membuat secret yang belum ada. Seed memakai guard synthetic_lab dan ON CONFLICT DO NOTHING, sehingga tidak menimpa perubahan master. Jangan memakai down -v, truncate, drop atau rotasi secret. Readiness memeriksa sembilan marker foundation dan dua domain marker versi 3, bukan semua fitur produk.
 
+Seed lab bawaan menambahkan izin baca laporan pada mandat PD Diskominfo milik fixture Super Admin. Untuk stack lab yang sudah berjalan, jalankan `docker compose --profile lab run --rm --no-deps --pull never seed-lab dashboard`. Izin berlaku pada sesi sintetis dengan mandat PD aktif dan tidak menambahkan izin ekspor.
+
 ## Verifikasi terarah
 
 ```powershell

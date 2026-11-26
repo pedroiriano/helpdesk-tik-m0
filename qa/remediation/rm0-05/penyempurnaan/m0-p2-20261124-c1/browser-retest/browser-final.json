@@ -1,0 +1,15 @@
+{
+  "timestamp": "2026-11-24T04:36:22.081Z",
+  "base_url": "http://127.0.0.1:18191",
+  "browser": "Microsoft Edge Headless (CDP)",
+  "suites": {
+    "R4-B_csp_routes_overflow_faq": {
+      "status": "FAIL",
+      "error": "mobile_375:/lapor.html horizontal overflow 397 > 375: [{\"tag\":\"HTML\",\"id\":\"\",\"cls\":\"\",\"r\":375,\"sw\":397},{\"tag\":\"BODY\",\"id\":\"top\",\"cls\":\"\",\"r\":367,\"sw\":389},{\"tag\":\"HEADER\",\"id\":\"vy-topbar_glide_frame\",\"cls\":\"\",\"r\":382,\"sw\":381},{\"tag\":\"DIV\",\"id\":\"vy-topbar_glide\",\"cls\":\"\",\"r\":397,\"sw\":381},{\"tag\":\"BUTTON\",\"id\":\"vy-topbar-glide-panel-btn\",\"cls\":\"vy-hdr-glyph vy-hdr-burger\",\"r\":389,\"sw\":40},{\"tag\":\"svg\",\"id\":\"\",\"cls\":\"[object SVGAnimatedString]\",\"r\":381,\"sw\":28},{\"tag\":\"NAV\",\"id\":\"vy-topbar-glide-flyout\",\"cls\":\"vy-hdr-flyout\",\"r\":381,\"sw\":365},{\"tag\":\"DIV\",\"id\":\"\",\"cls\":\"vy-hdr-panel-deck\",\"r\":381,\"sw\":365},{\"tag\":\"DIV\",\"id\":\"\",\"cls\":\"vy-hdr-panel-strips\",\"r\":381,\"sw\":365},{\"tag\":\"A\",\"id\":\"\",\"cls\":\"vy-hdr-reel-strip\",\"r\":378,\"sw\":0},{\"tag\":\"SPAN\",\"id\":\"\",\"cls\":\"vy-hdr-reel-strip__head\",\"r\":378,\"sw\":0},{\"tag\":\"MAIN\",\"id\":\"main-content\",\"cls\":\"vy-shell u-pb-96\",\"r\":367,\"sw\":389}]"
+    }
+  },
+  "csp_violations": [],
+  "console_errors": [],
+  "exceptions": [],
+  "result": "FAIL"
+}

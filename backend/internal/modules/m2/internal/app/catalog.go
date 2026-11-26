@@ -260,6 +260,6 @@ func (s *Service) ListNavigation(ctx context.Context, audience string) ([]api.Na
 	return s.Store.ListNavigation(ctx, audience)
 }
 
-func (s *Service) SearchServices(ctx context.Context, query, kind string, orgs []string, limit int) ([]api.SearchHit, error) {
-	return s.Store.SearchServices(ctx, query, kind, orgs, limit)
+func (s *Service) SearchServices(ctx context.Context, query, kind string, orgs []string, limit int, after string) ([]api.SearchHit, error) {
+	return s.Store.SearchServices(ctx, query, kind, orgs, limit, after)
 }

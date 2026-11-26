@@ -1,0 +1,88 @@
+{
+  "timestamp": "2026-11-24T06:45:50.703742+00:00",
+  "task_id": "RM0-04",
+  "follow_up": "UX Prioritas 3",
+  "status": "DONE_VERIFIED_LAB",
+  "result": "PASS",
+  "requirements": [
+    "AC11",
+    "AC19",
+    "AC20"
+  ],
+  "preview": "http://127.0.0.1:18191",
+  "git_head": "8f9ab58a668830ad1bf92b8d70580eae36a7bef8",
+  "working_tree_snapshot": true,
+  "images": {
+    "app": "sha256:780aa87d68d12d56a0e53c0f3a20d38cd7390b2a26be800802c2a1b0d2576b8b",
+    "web": "sha256:c2ea84081d2bb3bb0a915c05cb1a33748efc6da02f027956a16103a9ce38b121"
+  },
+  "changed_source_sha256": {
+    "frontend/public-ui.mjs": "b781d6334994b5b655ba6bf14468622fe08d3ee7cddb2024865e2d963aedebb6",
+    "frontend/public-ui.css": "57bb1e843213eba73e688cec91230492c29e80329b87debc4a4987300355d5bf",
+    "frontend/public-pages.css": "05519b970fa10e2531b59c186af41bd0b626d79389a24e01e44a3696add08fc6",
+    "frontend/business.css": "570ddd79db83b2698b05bd2633dca5575ea8d8b9ee232c6caa3cff95bd5ece8d",
+    "frontend/business-pages.mjs": "9892e95778b01e5d330ec6e25aed13639003218bb6ee51a0e29849b9c6b8651a",
+    "frontend/ticket-pages.mjs": "f70407cc066eb9aa6dcc614b390f35f4f54bae44894d2780366879745b8b9a44",
+    "frontend/build-templates.mjs": "43fd36b803bdab5e6242f96c93389c92ced63f169e1d2d2a34bf770818465cf8",
+    "frontend/src/features/m0-03.ts": "4a0a830f87c5671a7864340f561d6588c441e8b915ed4dd0a1c301fda7ab480c",
+    "frontend/src/features/m0-04.ts": "e5d9255a71c7ff9c6e8c7fbfe3c9c307d2f88a6dd4854061fe1f61e2782079aa",
+    "frontend/src/features/admin-datatable.ts": "47026cb8f8b1a06e16d19030fcc71dd91c6962b162eaeb295ab290093b8ab082",
+    "scripts/test_ux_priority3_browser.mjs": "c3a6ef6f99cbe872066f15246b8e3dd3fd1e5c3b1ec89164760e0175f16f4ba7",
+    "docs/05_ATURAN_UI_UX_WEB_PUBLIK.md": "ed540ca17c84fa0ef5a7328f49b0948391a164ac54ec26ec75b00f62137c4b76",
+    "docs/06_ATURAN_UI_UX_WEB_ADMIN.md": "14ecaaf0709fb0182e870dc6be36cdb0f0cff16c573b221a66b38c79a01c5c40",
+    "docs/releases/RM0_05_UJI_KEMUDAHAN_PENGGUNAAN.md": "01c022277f5dbe0d79a6058a470567b462f04a22787aaeb691e0e889a5805db5"
+  },
+  "verified": [
+    "public skip link",
+    "both drawers and focus return",
+    "report validation and modal Escape",
+    "mobile Hero preview",
+    "10 representative surface/viewport combinations without horizontal document overflow",
+    "All sampled operational targets at least 44 × 44 CSS px (0.25px rounding tolerance)",
+    "Report and queue lifecycle including idempotent upload retry, queue restore, and dispatch version conflict"
+  ],
+  "resolved_attempts": [
+    "Public flyout transitioned visibility while native menu attempted to focus the first link. The open-state transition excludes visibility so the panel can receive focus immediately.",
+    "CDP Enter uses carriage-return text to activate native buttons in the test."
+  ],
+  "tests": [
+    {
+      "command": "npm.cmd --prefix frontend run build; python -X utf8 scripts/test_piui_build.py",
+      "exit_code": 0
+    },
+    {
+      "command": "node scripts/test_ux_flow.mjs; node scripts/test_admin_navigation.mjs",
+      "exit_code": 0
+    },
+    {
+      "command": "HELPDESK_BASE_URL=http://127.0.0.1:18191 node scripts/test_ux_priority3_browser.mjs",
+      "exit_code": 0,
+      "report": "qa/remediation/rm0-04/ux-prioritas-3/accessibility.json"
+    },
+    {
+      "command": "HELPDESK_BASE_URL=http://127.0.0.1:18191 node scripts/test_rm0_04_browser.mjs (R4-D through R4-E)",
+      "exit_code": 0,
+      "report": "qa/remediation/rm0-04/ux-prioritas-3/workflow/browser-final.json",
+      "provenance": "Workflow regression after keyboard/dropzone changes and before final CSS-only flyout focus/layout refinement. Final keyboard and layout proof above used final preview image."
+    },
+    {
+      "command": "HELPDESK_BASE_URL=http://127.0.0.1:18191 python -X utf8 scripts/smoke_local.py",
+      "exit_code": 0
+    },
+    {
+      "command": "python -X utf8 scripts/verify_package.py",
+      "exit_code": 0
+    }
+  ],
+  "human_ux": {
+    "status": "PENDING_HUMAN_UAT",
+    "observations": 0,
+    "tasks": 4,
+    "guide": "docs/releases/RM0_05_UJI_KEMUDAHAN_PENGGUNAAN.md"
+  },
+  "limits": [
+    "Representative Edge viewport and keyboard checks. No comprehensive accessibility certification or assistive-technology audit.",
+    "Preview 18191 uses the new frontend image. Application 18090 and Fase 2 UAT 18192 use their prior healthy images.",
+    "The four observational tasks complement formal RM0-05 acceptance and have no fabricated human results."
+  ]
+}

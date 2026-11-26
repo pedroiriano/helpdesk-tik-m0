@@ -16,7 +16,7 @@ from pathlib import Path
 
 BASE_URL = os.environ.get("HELPDESK_BASE_URL", "http://127.0.0.1:18090")
 DIST_DIR = Path("frontend/dist")
-QA_DIR = Path("qa/m0-13")
+QA_DIR = Path(os.environ["HELPDESK_LINK_REPORT_DIR"]) if "HELPDESK_LINK_REPORT_DIR" in os.environ else Path("qa/m0-13")
 
 # Rute semantik kanonikal yang wajib aktif
 SEMANTIC_ROUTES = [

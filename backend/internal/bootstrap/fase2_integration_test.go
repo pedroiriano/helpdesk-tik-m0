@@ -52,6 +52,10 @@ func TestFase2Integration(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer fault.Close(ctx)
+	// Explicit capacity for the synthetic configuration used by auto recommendations.
+	if _, err := fault.Exec(ctx, "UPDATE assignment.rosters SET capacity=8"); err != nil {
+		t.Fatal(err)
+	}
 
 	t.Setenv("HELPDESK_UPLOAD_ROOT", t.TempDir())
 	t.Setenv("HELPDESK_SCANNER", "127.0.0.1:1")
@@ -113,6 +117,39 @@ func TestFase2Integration(t *testing.T) {
 			t.Fatal("expected internal staff entries for orgA")
 		}
 
+		teamDirectory := "/staff/directory?organization_id=" + orgA + "&team_id="
+		public.request("GET", teamDirectory+teamA, nil, 403, "", nil)
+		operator.request("GET", teamDirectory+teamA, nil, 403, "", nil)
+		coord.request("GET", teamDirectory+teamA, nil, 200, "", nil)
+		adminA.request("GET", teamDirectory+"invalid", nil, 400, "", nil)
+		adminA.request("GET", teamDirectory+teamB, nil, 404, "", nil)
+		eligible := items(adminA.request("GET", teamDirectory+teamA, nil, 200, "", nil))
+		found := false
+		for _, row := range eligible {
+			person := row.(map[string]any)
+			eq(person["role"], "TECHNICIAN")
+			if person["id"] == techID {
+				found = true
+			}
+			if person["id"] == "20000000-0000-4000-8000-000000000007" {
+				t.Fatal("technician from another PD appeared in team directory")
+			}
+		}
+		eq(found, true)
+
+		division := adminA.request("POST", "/admin/divisions", map[string]any{
+			"organization_id": orgA, "name": "Bidang Uji Filter M1", "active": true,
+		}, 201, "", nil)["id"].(string)
+		team := adminA.request("POST", "/admin/teams", map[string]any{
+			"organization_id": orgA, "division_id": division, "name": "Tim Uji Filter M1", "active": true,
+		}, 201, "", nil)["id"].(string)
+		filtered := "/admin/teams?organization_id=" + orgA + "&division_id="
+		matches := items(adminA.request("GET", filtered+division+"&limit=1", nil, 200, "", nil))
+		eq(len(matches), 1)
+		eq(matches[0].(map[string]any)["id"], team)
+		adminA.request("GET", filtered+"invalid", nil, 400, "", nil)
+		adminB.request("GET", filtered+division, nil, 404, "", nil)
+
 		public.request("GET", "/admin/operations", nil, 403, "", nil)
 		super.request("POST", "/admin/operations", map[string]any{
 			"kind": "BACKUP_MANIFEST", "target_id": orgA, "reason": reason,
@@ -149,6 +186,7 @@ func TestFase2Integration(t *testing.T) {
 		v := operator.request("POST", p1+"/verify", map[string]any{
 			"expected_version": 1, "category_id": catA, "priority": "NORMAL", "classifier_version": 2, "reason": reason,
 		}, 200, "", nil)
+		drain()
 		prop := coord.request("GET", p1+"/dispatch-proposal?tier=L1", nil, 200, "", nil)
 		v = coord.request("POST", p1+"/dispatch", map[string]any{
 			"expected_version": v["version"], "team_id": teamA, "assignee_id": techID,
@@ -356,4 +394,167 @@ func TestFase2Integration(t *testing.T) {
 			t.Fatalf("expected M4-M7 audit entries drained to M9, got %s", raw)
 		}
 	}
+	t.Run("penyempurnaan-maintenance", func(t *testing.T) {
+		now := time.Now().UTC()
+		policy := func(org, mode string, start, end time.Time) map[string]any {
+			in := map[string]any{"mode": mode, "starts_at": start, "ends_at": end, "message": reason}
+			if org != "" {
+				in["organization_id"] = org
+			}
+			return in
+		}
+		create := map[string]any{
+			"service_id": svcA, "service_version": 1, "form_version": 1, "policy_version": 1,
+			"title": "Periksa isolasi pemeliharaan", "description": reason,
+			"answers": map[string]string{"ringkasan": "Pengujian dua organisasi"},
+		}
+		localB := policy(orgB, "READ_ONLY", now.Add(-time.Minute), now.Add(time.Hour))
+		adminA.request("POST", "/admin/maintenance", localB, 403, "", nil)
+		// Super Admin fixture is scoped to A; provision the B window directly on the isolated owner DB.
+		bWindow := web.ID()
+		if _, err := fault.Exec(ctx, "INSERT INTO identity.maintenance_policies(id,org_id,mode,starts_at,ends_at,message) VALUES($1,$2,$3,$4,$5,$6)",
+			bWindow, orgB, "READ_ONLY", localB["starts_at"], localB["ends_at"], reason); err != nil {
+			t.Fatal(err)
+		}
+		eq(public.request("GET", "/maintenance/status", nil, 200, "", nil)["active"], nil)
+		created := public.request("POST", "/tickets", create, 201, "", nil)
+		p := "/tickets/" + created["id"].(string)
+		localA := policy(orgA, "DRAIN", now.Add(-time.Minute), now.Add(time.Hour))
+		adminA.request("POST", "/admin/maintenance", localA, 201, "", nil)
+		public.request("POST", "/tickets", create, 503, "", nil)
+		verified := operator.request("POST", p+"/verify", map[string]any{
+			"expected_version": 1, "category_id": catA, "priority": "NORMAL", "classifier_version": 2, "reason": reason,
+		}, 200, "", nil)
+		handoff := map[string]any{"expected_version": verified["version"], "target_org_id": orgB, "target_team_id": teamB, "reason": reason}
+		coord.request("POST", p+"/handoffs", handoff, 503, "", nil)
+
+		global := super.request("POST", "/admin/maintenance", policy("", "READ_ONLY", now.Add(-time.Minute), now.Add(time.Hour)), 201, "", nil)
+		active := public.request("GET", "/maintenance/status", nil, 200, "", nil)["active"].(map[string]any)
+		eq(active["id"], global["id"])
+		stopA := policy(orgA, "NORMAL", now, now.Add(time.Minute))
+		stopA["target_id"] = global["id"]
+		adminA.request("POST", "/admin/maintenance", stopA, 404, "", nil)
+		delete(stopA, "target_id")
+		adminA.request("POST", "/admin/maintenance", stopA, 201, "", nil)
+		public.request("POST", "/tickets", create, 503, "", nil)
+		super.request("POST", "/admin/maintenance", policy("", "NORMAL", now, now.Add(time.Minute)), 201, "", nil)
+		public.request("POST", "/tickets", create, 201, "", nil)
+		eq(public.request("GET", "/maintenance/status", nil, 200, "", nil)["active"], nil)
+		coord.request("POST", p+"/handoffs", handoff, 503, "", nil)
+		if _, err := fault.Exec(ctx, "UPDATE identity.maintenance_policies SET ends_at=now() WHERE id=$1", bWindow); err != nil {
+			t.Fatal(err)
+		}
+		coord.request("POST", p+"/handoffs", handoff, 201, "", nil)
+	})
+	t.Run("penyempurnaan-roster-search", func(t *testing.T) {
+		path := "/admin/teams/" + teamA + "/rosters"
+		scope := "?organization_id=" + orgA
+		adminB.request("GET", path+scope, nil, 403, "", nil)
+		public.request("GET", path+scope, nil, 403, "", nil)
+		list := items(adminA.request("GET", path+scope+"&limit=100", nil, 200, "", nil))
+		var old map[string]any
+		for _, row := range list {
+			if v := row.(map[string]any); v["subject_id"] == techID {
+				old = v
+			}
+		}
+		if old == nil {
+			t.Fatal("fixture roster unavailable")
+		}
+		now := time.Now().UTC().Truncate(time.Second)
+		in := map[string]any{"subject_id": techID, "expected_version": 0, "skills": old["skills"],
+			"available_from": now.Add(-time.Minute), "available_until": now.Add(time.Hour), "active": true, "reason": reason}
+		adminA.request("POST", path+scope, in, 409, "", nil)
+		in["expected_version"], in["active"] = old["version"], false
+		edit := path + "/" + old["id"].(string) + scope
+		adminA.request("PUT", edit, in, 200, "", nil)
+		adminA.request("PUT", edit, in, 409, "", nil)
+		in["expected_version"], in["active"] = 0, true
+		in["subject_id"] = "20000000-0000-4000-8000-000000000007"
+		adminA.request("POST", path+scope, in, 422, "", nil)
+		in["subject_id"] = techID
+		in["capacity"] = 8
+		key := web.ID()
+		newRoster := adminA.request("POST", path+scope, in, 201, key, nil)
+		eq(adminA.request("POST", path+scope, in, 201, key, nil)["id"], newRoster["id"])
+		ticket := public.request("POST", "/tickets", map[string]any{
+			"service_id": svcA, "service_version": 1, "form_version": 1, "policy_version": 1,
+			"title": "Rekomendasi roster teknisi", "description": reason, "answers": map[string]string{"ringkasan": "Uji roster"},
+		}, 201, "", nil)
+		ticketPath := "/tickets/" + ticket["id"].(string)
+		coord.request("GET", ticketPath+"/dispatch-proposal?tier=L1", nil, 409, "", nil)
+		operator.request("POST", ticketPath+"/verify", map[string]any{
+			"expected_version": 1, "category_id": catA, "priority": "NORMAL", "classifier_version": 2, "reason": reason,
+		}, 200, "", nil)
+		drain()
+		eq(coord.request("GET", ticketPath+"/dispatch-proposal?tier=L1", nil, 200, "", nil)["assignee_id"], techID)
+		in["expected_version"], in["active"] = newRoster["version"], false
+		adminA.request("PUT", path+"/"+newRoster["id"].(string)+scope, in, 200, "", nil)
+		fallback := coord.request("GET", ticketPath+"/dispatch-proposal?tier=L1", nil, 200, "", nil)
+		eq(fallback["status"], "MANUAL")
+		if fallback["assignee_id"] == techID {
+			t.Fatal("disabled roster was recommended")
+		}
+		candidates := fallback["candidates"].([]any)
+		if len(candidates) == 0 {
+			t.Fatal("no live fallback technician in the organization")
+		}
+		candidate := candidates[0].(map[string]any)["roster"].(map[string]any)
+		manual := map[string]any{
+			"expected_version": fallback["ticket_version"], "proposal_version": fallback["ticket_version"],
+			"team_id": teamB, "assignee_id": techID, "manual": true, "tier": "L1", "reason": reason,
+		}
+		coord.request("POST", ticketPath+"/dispatch", manual, 422, "", nil)
+		manual["team_id"], manual["assignee_id"] = candidate["team_id"], candidate["subject_id"]
+		eq(coord.request("POST", ticketPath+"/dispatch", manual, 200, "", nil)["assignee_id"], candidate["subject_id"])
+		drain()
+		var writes int
+		if err := fault.QueryRow(ctx, "SELECT count(*) FROM notify_audit.audit_entries WHERE action='WriteRoster'").Scan(&writes); err != nil || writes != 3 {
+			t.Fatalf("expected 3 durable roster audit entries, got %d (%v)", writes, err)
+		}
+
+		anon := testClient{t, base, &http.Client{Timeout: 10 * time.Second}}
+		paginate := func(c testClient, route string) {
+			first := c.request("GET", route+"&limit=1", nil, 200, "", nil)
+			cursor, ok := first["next_cursor"].(string)
+			if !ok || len(items(first)) != 1 {
+				t.Fatalf("missing search page or cursor for %s: items=%d", route, len(items(first)))
+			}
+			second := c.request("GET", route+"&limit=1&cursor="+cursor, nil, 200, "", nil)
+			if len(items(second)) != 1 || items(first)[0].(map[string]any)["id"] == items(second)[0].(map[string]any)["id"] {
+				t.Fatal("duplicate or missing second search page")
+			}
+			c.request("GET", route+"X&limit=1&cursor="+cursor, nil, 400, "", nil)
+		}
+		paginate(public, "/search?owner=M2&q=Lab")
+		paginate(public, "/search?owner=M3&q=Fase")
+		pageOne := public.request("GET", "/tickets?q=Fase&limit=1&service_id="+svcA, nil, 200, "", nil)
+		eq(len(items(pageOne)), 1)
+		queueCursor := pageOne["next_cursor"].(string)
+		pageTwo := public.request("GET", "/tickets?q=Fase&limit=1&service_id="+svcA+"&cursor="+queueCursor, nil, 200, "", nil)
+		eq(len(items(pageTwo)), 1)
+		if items(pageOne)[0].(map[string]any)["id"] == items(pageTwo)[0].(map[string]any)["id"] {
+			t.Fatal("ticket queue search repeated the same ticket")
+		}
+		for _, visibility := range []string{"PUBLIC", "PUBLIC", "PRIVATE"} {
+			id := web.ID()
+			if _, err := fault.Exec(ctx, `INSERT INTO knowledge.media
+				(id,principal_id,org_id,storage_key,status,visibility,mime,size_bytes,sha256,alt,caption,license,source)
+				VALUES($1,'20000000-0000-4000-8000-000000000014',$2,$3,'CLEAN',$4,'image/png',1,$5,'Audio pencarian fixture','','','')`,
+				id, orgA, id, visibility, make([]byte, 32)); err != nil {
+				t.Fatal(err)
+			}
+		}
+		paginate(anon, "/search?owner=M8&kind=MEDIA&q=Audio")
+		page := anon.request("GET", "/search?owner=M8&kind=MEDIA&q=Audio", nil, 200, "", nil)
+		eq(len(items(page)), 2)
+		anon.request("GET", "/search?owner=M8&kind=MEDIA&q=Audio&cursor=malformed", nil, 400, "", nil)
+		first := operator.request("GET", "/search?owner=M3&q=Fase&limit=1", nil, 200, "", nil)
+		cursor := first["next_cursor"].(string)
+		if _, err := fault.Exec(ctx, "UPDATE identity.memberships SET revoked_at=now() WHERE subject_id='20000000-0000-4000-8000-000000000004'"); err != nil {
+			t.Fatal(err)
+		}
+		eq(len(items(operator.request("GET", "/search?owner=M3&q=Fase&limit=1&cursor="+cursor, nil, 200, "", nil))), 0)
+	})
+
 }

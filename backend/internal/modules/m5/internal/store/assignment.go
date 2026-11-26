@@ -29,12 +29,16 @@ func (s Store) FindRule(ctx context.Context, serviceID, level, category string) 
 }
 
 func (s Store) EligibleRosters(ctx context.Context, teamID, org string, skills []string) ([]api.RosterEntry, error) {
+	return s.EligibleTeamRosters(ctx, []string{teamID}, org, skills)
+}
+
+func (s Store) EligibleTeamRosters(ctx context.Context, teams []string, org string, skills []string) ([]api.RosterEntry, error) {
 	rows, err := s.Pool.Query(ctx, `SELECT r.id::text,r.version,r.subject_id::text,r.team_id::text,r.skills,r.available_from,r.available_until,
-    (SELECT count(*) FROM assignment.load_projection p WHERE p.assignee_id=r.subject_id AND p.service_owner_org_id=$3 AND p.state IN ('ASSIGNED','IN_PROGRESS')),
+    r.capacity,
     (SELECT max(updated_at) FROM assignment.load_projection WHERE service_owner_org_id=$3)
     FROM assignment.rosters r
-    WHERE r.team_id=$1 AND r.available_from<=now() AND r.available_until>now() AND r.skills @> $2::text[]
-    ORDER BY 8,r.subject_id,r.id`, teamID, skills, org)
+    WHERE r.team_id=ANY($1::uuid[]) AND r.active AND r.available_from<=now() AND r.available_until>now() AND r.skills @> $2::text[]
+    ORDER BY r.subject_id,r.id`, teams, skills, org)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +46,7 @@ func (s Store) EligibleRosters(ctx context.Context, teamID, org string, skills [
 	var out []api.RosterEntry
 	for rows.Next() {
 		var r api.RosterEntry
-		if err := rows.Scan(&r.ID, &r.Version, &r.SubjectID, &r.TeamID, &r.Skills, &r.AvailableFrom, &r.AvailableUntil, &r.ActiveTickets, &r.ProjectionAsOf); err != nil {
+		if err := rows.Scan(&r.ID, &r.Version, &r.SubjectID, &r.TeamID, &r.Skills, &r.AvailableFrom, &r.AvailableUntil, &r.Capacity, &r.ProjectionAsOf); err != nil {
 			return nil, err
 		}
 		out = append(out, r)
@@ -51,7 +55,7 @@ func (s Store) EligibleRosters(ctx context.Context, teamID, org string, skills [
 }
 
 func (s Store) ListRosterTechnicians(ctx context.Context, teamID string) ([]api.RosterEntry, error) {
-	rows, err := s.Pool.Query(ctx, `SELECT DISTINCT id::text, subject_id::text, team_id::text, skills FROM assignment.rosters WHERE ($1='' OR team_id::text=$1) AND available_from<=now() AND available_until>now() ORDER BY id`, teamID)
+	rows, err := s.Pool.Query(ctx, `SELECT DISTINCT id::text, subject_id::text, team_id::text, skills FROM assignment.rosters WHERE active AND ($1='' OR team_id::text=$1) AND available_from<=now() AND available_until>now() ORDER BY id`, teamID)
 	if err != nil {
 		return nil, err
 	}

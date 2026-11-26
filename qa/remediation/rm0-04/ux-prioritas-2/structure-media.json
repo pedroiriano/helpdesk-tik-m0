@@ -1,0 +1,11 @@
+{
+  "result": "PASS",
+  "origin": "http://127.0.0.1:18191",
+  "reviewCancelled": true,
+  "impactSections": 3,
+  "divisionScoped": true,
+  "rosterPrefilled": true,
+  "eligibleTechnicians": 2,
+  "upload": "CLEAN",
+  "heroCandidateListed": true
+}

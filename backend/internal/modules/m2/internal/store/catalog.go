@@ -225,8 +225,8 @@ func (s Store) ListNavigation(ctx context.Context, audience string) ([]api.Navig
 	return items, nil
 }
 
-func (s Store) SearchServices(ctx context.Context, query, kind string, orgs []string, limit int) ([]api.SearchHit, error) {
-	if limit <= 0 || limit > 100 {
+func (s Store) SearchServices(ctx context.Context, query, kind string, orgs []string, limit int, after string) ([]api.SearchHit, error) {
+	if limit <= 0 || limit > 101 {
 		limit = 20
 	}
 
@@ -237,9 +237,10 @@ func (s Store) SearchServices(ctx context.Context, query, kind string, orgs []st
 		LEFT JOIN catalog.categories c ON c.id = s.category_id
 		WHERE `+visible+`
 		  AND (s.name ILIKE $5 OR s.code ILIKE $5 OR (c.name IS NOT NULL AND c.name ILIKE $5))
+		AND (NULLIF($7,'')::uuid IS NULL OR s.id>NULLIF($7,'')::uuid)
 		ORDER BY s.id ASC
 		LIMIT $6
-	`, false, []string{}, kind, orgs, pattern, limit)
+	`, false, []string{}, kind, orgs, pattern, limit, after)
 	if err != nil {
 		return nil, err
 	}

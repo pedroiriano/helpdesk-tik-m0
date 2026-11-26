@@ -1,8 +1,8 @@
 """HTTP contract smoke of the local gateway; no business writes."""
-import json, urllib.request, urllib.error
+import json, os, urllib.request, urllib.error
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
-BASE='http://127.0.0.1:18090'
+BASE=os.environ.get('HELPDESK_BASE_URL','http://127.0.0.1:18090')
 class NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, *args):
         return None
@@ -29,7 +29,10 @@ for path, expected in [('/',200),('/admin/',200),('/api/v1/health/live',200),('/
 for rel_path in [
     'css/main.css',
     'helpdesk/public-ui.css',
+    'helpdesk/public-pages.css',
     'helpdesk/business.css',
+    'helpdesk/m0-03.js',
+    'helpdesk/m0-04.js',
     'admin/assets/css/main.css',
     'admin/assets/js/components/popup-layer.js',
     'admin/assets/icons/piui-sprite.svg',

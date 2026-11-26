@@ -13,6 +13,8 @@ import (
 )
 
 type DeliveryOptions = app.DeliveryOptions
+type TechnicalFactsReader = app.TechnicalFactsReader
+type DashboardPort = app.DashboardPort
 
 type Module struct {
 	pool               *pgxpool.Pool
@@ -20,6 +22,8 @@ type Module struct {
 	productionDelivery bool
 	preferTelegram     bool
 	service            *app.Service
+	technicalFacts     TechnicalFactsReader
+	dashboard          DashboardPort
 }
 
 func New(pool *pgxpool.Pool, scope func(context.Context, string, []string) ([]string, error)) *Module {
@@ -48,8 +52,16 @@ func (m *Module) SourceForM3() *delivery.Source {
 
 func (m *Module) Register(mux *http.ServeMux, authPort m1api.Port, origin string) {
 	h := app.NewHandler(m.service, authPort, origin)
+	h.Dashboard = m.dashboard
 	h.Register(mux)
+	if m.technicalFacts != nil {
+		h.RegisterTechnicalReports(mux, m.technicalFacts)
+	}
 }
+
+func (m *Module) BindTechnicalFacts(reader TechnicalFactsReader) { m.technicalFacts = reader }
+
+func (m *Module) BindDashboard(reader DashboardPort) { m.dashboard = reader }
 
 func (m *Module) EnableLabSink(enabled bool) { m.service.Lab = enabled }
 

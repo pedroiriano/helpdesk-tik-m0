@@ -103,7 +103,8 @@ def verify(root=ROOT):
 if __name__=='__main__':
     try:
         result=verify()
-        print('PASS package consistency: 9 modules, 13 tasks, 25 acceptance, 29 source groups, 21 chapters')
+        print(f"PASS package consistency: {result['modules']} modules, {result['tasks']} tasks, "
+              f"{result['acceptance']} acceptance, {result['source_requirement_groups']} source groups, {result['chapters']} chapters")
         print('NOT_RUN application tests, agent runtime loading, UAT and deployment')
     except (ValueError,KeyError,OSError,json.JSONDecodeError) as e:
         print('FAIL '+str(e));sys.exit(1)

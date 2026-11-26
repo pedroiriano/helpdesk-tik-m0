@@ -17,6 +17,7 @@ export const adminGroups = [
     items: [
       {id:'dashboard',label:'Dasbor petugas',href:'/admin/app/dashboard/index.html',icon:'dashboard',description:'Pilih pekerjaan dan pantau ringkasan sesuai tugas Anda.',footer:true},
       {id:'tickets',label:'Antrean tiket',href:'/admin/app/tickets/index.html',icon:'ticket',permissions:['ticket.read'],description:'Periksa laporan masuk dan lanjutkan penanganan sesuai tugas Anda.',footer:true},
+      {id:'availability',kind:'availability',label:'Ketersediaan Tim',icon:'calendar',permissions:['rules.write','ticket.resolve'],description:'Periksa jadwal, kapasitas dan ketidakhadiran teknisi.'},
       {id:'notifications',kind:'notifications',label:'Notifikasi',icon:'bell',permissions:['notification.read'],description:'Periksa pemberitahuan dan pengaturan saluran notifikasi.'},
     ],
   },
@@ -124,6 +125,13 @@ export function canNavigate(item, session) {
   if (item.audience === 'public') return true;
   const staff = session?.actor.kind === 'STAFF';
   if (item.audience === 'guest') return !staff;
+  if (item.id === 'availability') return session?.actor.kind === 'STAFF' &&
+    session.actor.memberships.some(m => m.organization_active &&
+      ((m.permissions.includes('identity.grant') && m.permissions.includes('rules.write')) ||
+      (session.actor.role === 'COORDINATOR' && m.permissions.includes('ticket.dispatch')) ||
+      (session.actor.role === 'TECHNICIAN' && m.permissions.includes('ticket.read') && m.permissions.includes('ticket.resolve'))));
+  if (item.id === 'reports' && session?.actor.role === 'TECHNICIAN' &&
+      session.actor.memberships.some(m => m.organization_active && m.permissions.includes('ticket.read') && m.permissions.includes('ticket.resolve'))) return true;
   if (item.role && session?.actor.role !== item.role) return false;
   return !!staff && (!item.permissions?.length || session.actor.memberships.some(m =>
     m.organization_active && (!item.organization || m.organization_id === item.organization) && item.permissions.some(p => m.permissions.includes(p))));
@@ -156,7 +164,7 @@ const escape = value => String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&
 export function adminNavLink(item, pathname = '', className = 'piui-nav-link') {
   const context = adminPageContext('/admin/' + pathname);
   const current = context.item?.id === item.id ? ` aria-current="${context.detail ? 'location' : 'page'}"` : '';
-  return `<a href="${escape(item.href)}" class="${className}" data-admin-nav-id="${item.id}" title="${escape(item.label)}"${current}${item.audience ? '' : ' hidden'}><svg width="20" height="20" aria-hidden="true"><use href="${adminIconHref(item.icon)}"></use></svg><span class="piui-nav-link__text">${escape(item.label)}</span></a>`;
+  return `<a href="${escape(item.href)}" class="${className}" data-admin-nav-id="${item.id}" title="${escape(item.label)}" aria-label="${escape(item.label)}"${current}${item.audience ? '' : ' hidden'}><svg width="20" height="20" aria-hidden="true"><use href="${adminIconHref(item.icon)}"></use></svg><span class="piui-nav-link__text">${escape(item.label)}</span></a>`;
 }
 
 function renderSubmenu(sub, pathname) {
@@ -164,7 +172,7 @@ function renderSubmenu(sub, pathname) {
   const hasPublic = sub.items.some(i => i.audience === 'public');
   const hasActive = sub.items.some(i => context.item?.id === i.id);
   const expanded = hasActive;
-  return `<li class="hd-nav-submenu-row"${hasPublic ? '' : ' hidden'}><div class="hd-nav-submenu" data-admin-submenu="${escape(sub.id)}" data-open="${expanded ? 'true' : 'false'}"><button type="button" class="piui-nav-link hd-nav-submenu__toggle" aria-expanded="${expanded ? 'true' : 'false'}" title="${escape(sub.label)}"><svg width="20" height="20" aria-hidden="true"><use href="${adminIconHref(sub.icon)}"></use></svg><span class="piui-nav-link__text hd-nav-submenu__label">${escape(sub.label)}</span><svg class="hd-nav-submenu__chevron" width="16" height="16" aria-hidden="true"><use href="/admin/assets/icons/piui-sprite.svg#icon-chevron-down"></use></svg></button><ul class="piui-nav-sublist"${expanded ? '' : ' hidden'}>${sub.items.map(item => `<li>${adminNavLink(item, pathname)}</li>`).join('')}</ul></div></li>`;
+  return `<li class="hd-nav-submenu-row"${hasPublic ? '' : ' hidden'}><div class="hd-nav-submenu" data-admin-submenu="${escape(sub.id)}" data-open="${expanded ? 'true' : 'false'}"><button type="button" class="piui-nav-link hd-nav-submenu__toggle" aria-expanded="${expanded ? 'true' : 'false'}" title="${escape(sub.label)}"><svg width="20" height="20" aria-hidden="true"><use href="${adminIconHref(sub.icon)}"></use></svg><span class="piui-nav-link__text hd-nav-submenu__label">${escape(sub.label)}</span><svg class="hd-nav-submenu__chevron" width="16" height="16" aria-hidden="true"><use href="/admin/assets/icons/piui-sprite.svg#icon-chevron-down"></use></svg></button><ul class="piui-nav-sublist" aria-label="${escape(sub.label)}"${expanded ? '' : ' hidden'}>${sub.items.map(item => `<li>${adminNavLink(item, pathname)}</li>`).join('')}</ul></div></li>`;
 }
 
 export function renderAdminNav(label, pathname) {

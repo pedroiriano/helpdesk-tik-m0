@@ -16,11 +16,13 @@ import (
 	"helpdesk.local/m0/internal/platform/delivery"
 	"helpdesk.local/m0/internal/platform/web"
 	"sort"
+	"time"
 )
 
 type Service struct {
-	Store    store.Store
-	Identity m1.Port
+	Store      store.Store
+	Identity   m1.Port
+	LoadSource *delivery.Source
 }
 
 func (s *Service) Propose(ctx context.Context, ticketID string, ticketVersion int64, serviceID, org, level, category string) (api.Proposal, error) {
@@ -63,41 +65,34 @@ func (s *Service) Propose(ctx context.Context, ticketID string, ticketVersion in
 	if err != nil {
 		return api.Proposal{}, err
 	}
-	seen := map[string]bool{}
-	for _, roster := range rosters {
-		if seen[roster.SubjectID] {
-			continue
+	candidates, err := s.assessCandidates(ctx, org, rosters, nil)
+	if err != nil {
+		return api.Proposal{}, err
+	}
+	for _, candidate := range candidates {
+		if candidate.Roster.Availability == available {
+			result.Candidates = append(result.Candidates, candidate)
 		}
-		actor, err := s.Identity.Access(ctx, roster.SubjectID)
-		if errors.As(err, &failure) && failure.Status == 404 {
-			continue
-		}
-		if err != nil {
-			return api.Proposal{}, err
-		}
-		if actor.Kind != "STAFF" || actor.Role != "TECHNICIAN" || !actor.Can("ticket.read", org) || !actor.Can("ticket.resolve", org) {
-			continue
-		}
-		teamEligible := false
-		for _, membership := range actor.Memberships {
-			if membership.OrganizationActive && membership.OrganizationID == org && (membership.TeamID == nil || *membership.TeamID == rule.TeamID) {
-				teamEligible = true
-				break
-			}
-		}
-		if !teamEligible {
-			continue
-		}
-		seen[roster.SubjectID] = true
-		result.Candidates = append(result.Candidates, api.Candidate{Roster: roster, Name: actor.Name})
 	}
 	if len(result.Candidates) == 0 {
+		result.Explanation = "Tidak ada kandidat yang tersedia dengan jadwal, kompetensi dan kapasitas terukur yang sesuai. Periksa roster atau muat ulang proyeksi."
 		return result, nil
 	}
+	sort.Slice(result.Candidates, func(i, j int) bool {
+		a, b := result.Candidates[i].Roster, result.Candidates[j].Roster
+		left, right := a.ActiveTickets**b.Capacity, b.ActiveTickets**a.Capacity
+		if left != right {
+			return left < right
+		}
+		if x, y := *a.Capacity-a.ActiveTickets, *b.Capacity-b.ActiveTickets; x != y {
+			return x > y
+		}
+		return a.SubjectID < b.SubjectID
+	})
 	preferred := result.Candidates[0].Roster
 	result.Status = "RECOMMENDED"
 	result.TeamID, result.AssigneeID, result.ProjectionAsOf = rule.TeamID, preferred.SubjectID, preferred.ProjectionAsOf
-	result.Explanation = fmt.Sprintf("Routing %s, skill dan roster cocok. Beban terproyeksi %d tiket aktif. Ini saran, bukan reservasi kapasitas.", level, preferred.ActiveTickets)
+	result.Explanation = fmt.Sprintf("Routing %s, skill dan roster cocok. Beban terproyeksi %d dari %d tiket aktif. Konfirmasi untuk menetapkan teknisi.", level, preferred.ActiveTickets, *preferred.Capacity)
 	if rule.CategoryID != "" {
 		result.Explanation = "Aturan kategori terverifikasi. " + result.Explanation
 	}
@@ -107,6 +102,7 @@ func (s *Service) Propose(ctx context.Context, ticketID string, ticketVersion in
 		roster := c.Roster
 		roster.ActiveTickets = 0
 		roster.ProjectionAsOf = nil
+		roster.WaitingVendor, roster.WaitingReporter = nil, nil
 		entries = append(entries, roster)
 	}
 	sort.Slice(entries, func(i, j int) bool { return entries[i].ID < entries[j].ID })
@@ -189,10 +185,11 @@ func (s *Service) Consume(ctx context.Context, v delivery.Event) error {
 	switch v.Type {
 	case "TicketCreated", "TicketStateChanged":
 		var snapshot struct {
-			State    string            `json:"state"`
-			Assignee *string           `json:"assignee_id"`
-			Org      string            `json:"service_owner_org_id"`
-			Dispatch *api.DispatchFact `json:"dispatch,omitempty"`
+			State          string            `json:"state"`
+			AwaitingVendor *bool             `json:"awaiting_vendor"`
+			Assignee       *string           `json:"assignee_id"`
+			Org            string            `json:"service_owner_org_id"`
+			Dispatch       *api.DispatchFact `json:"dispatch,omitempty"`
 		}
 		if json.Unmarshal(v.Payload, &snapshot) != nil || !validTicketState(snapshot.State) || !web.UUID(snapshot.Org) || (snapshot.Assignee != nil && !web.UUID(*snapshot.Assignee)) {
 			return delivery.ErrIntegrity
@@ -209,13 +206,13 @@ func (s *Service) Consume(ctx context.Context, v delivery.Event) error {
 				return err
 			}
 		}
-		_, err = tx.Exec(ctx, `INSERT INTO assignment.load_projection(id,ticket_id,source_version,assignee_id,state,updated_at,service_owner_org_id)
-          VALUES($1,$2,$3,$4,$5,$6,$7)
+		_, err = tx.Exec(ctx, `INSERT INTO assignment.load_projection(id,ticket_id,source_version,assignee_id,state,updated_at,service_owner_org_id,awaiting_vendor)
+          VALUES($1,$2,$3,$4,$5,$6,$7,$8)
           ON CONFLICT(ticket_id) DO UPDATE SET source_version=EXCLUDED.source_version,
-            assignee_id=EXCLUDED.assignee_id,state=EXCLUDED.state,updated_at=EXCLUDED.updated_at,service_owner_org_id=EXCLUDED.service_owner_org_id
+            assignee_id=EXCLUDED.assignee_id,state=EXCLUDED.state,updated_at=EXCLUDED.updated_at,service_owner_org_id=EXCLUDED.service_owner_org_id,awaiting_vendor=EXCLUDED.awaiting_vendor
           WHERE assignment.load_projection.source_version<EXCLUDED.source_version
              OR (assignment.load_projection.service_owner_org_id IS NULL AND assignment.load_projection.source_version=EXCLUDED.source_version)`,
-			web.ID(), v.Aggregate, v.Version, snapshot.Assignee, snapshot.State, v.Occurred, snapshot.Org)
+			web.ID(), v.Aggregate, v.Version, snapshot.Assignee, snapshot.State, v.Occurred, snapshot.Org, snapshot.AwaitingVendor)
 	}
 	if err != nil {
 		return err
@@ -234,4 +231,83 @@ func validTicketState(state string) bool {
 	default:
 		return false
 	}
+}
+
+func (s *Service) ManualCandidates(ctx context.Context, dispatcher m1.Actor, org string) ([]api.Candidate, error) {
+	if !dispatcher.Can("ticket.dispatch", org) {
+		return nil, web.Fail(403, "Izin penugasan tiket diperlukan")
+	}
+	page := web.Page{Limit: 100}
+	names := make(map[string]string)
+	var ids []string
+	for {
+		teams, err := s.Identity.DispatchTeams(ctx, org, page)
+		if err != nil {
+			return nil, err
+		}
+		for _, team := range teams {
+			if dispatcher.HasTeamMandate(org, team.ID, "ticket.dispatch") {
+				names[team.ID] = team.Name
+				ids = append(ids, team.ID)
+			}
+		}
+		if len(teams) <= page.Limit {
+			break
+		}
+		page.Cursor = teams[len(teams)-1].ID
+	}
+	rosters, err := s.Store.EligibleTeamRosters(ctx, ids, org, []string{})
+	if err != nil {
+		return nil, err
+	}
+	return s.assessCandidates(ctx, org, rosters, names)
+}
+
+func (s *Service) assessCandidates(ctx context.Context, org string, rosters []api.RosterEntry, names map[string]string) ([]api.Candidate, error) {
+	current, err := s.projectionCurrent(ctx)
+	if err != nil {
+		return nil, err
+	}
+	subjects := make([]string, 0, len(rosters))
+	for _, r := range rosters {
+		subjects = append(subjects, r.SubjectID)
+	}
+	at := time.Now().UTC()
+	loads, err := s.Store.Loads(ctx, subjects, at)
+	if err != nil {
+		return nil, err
+	}
+	candidates := make([]api.Candidate, 0, len(rosters))
+	seen := map[string]bool{}
+	for _, roster := range rosters {
+		binding := roster.TeamID + ":" + roster.SubjectID
+		if seen[binding] {
+			continue
+		}
+		seen[binding] = true
+		actor, err := s.Identity.Access(ctx, roster.SubjectID)
+		var failure *web.Error
+		if errors.As(err, &failure) && failure.Status == 404 {
+			continue
+		}
+		if err != nil {
+			return nil, err
+		}
+		eligible := actor.Role == "TECHNICIAN" && actor.HasTeamMandate(org, roster.TeamID, "ticket.read", "ticket.resolve")
+		load := loads[roster.SubjectID]
+		assessment := evaluateAvailability(at, api.ManagedRoster{Active: true, Capacity: roster.Capacity, AvailableFrom: roster.AvailableFrom, AvailableUntil: roster.AvailableUntil}, eligible, load, current)
+		roster.Availability = assessment.Status
+		if roster.Availability == inactive || roster.Availability == unavailable || roster.Availability == outsideSchedule {
+			continue
+		}
+		roster.ActiveTickets = load.Active
+		if current {
+			roster.WaitingReporter = &load.WaitingReporter
+			if load.UnclassifiedActive == 0 {
+				roster.WaitingVendor = &load.WaitingVendor
+			}
+		}
+		candidates = append(candidates, api.Candidate{Roster: roster, Name: actor.Name, TeamName: names[roster.TeamID]})
+	}
+	return candidates, nil
 }

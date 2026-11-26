@@ -1,11 +1,13 @@
 import type { Components } from './business-types.generated';
 import { api, APIError } from './transport';
+import { bindDashboardAnalysis } from './dashboard-analysis';
+import { dashboardFeedback } from './dashboard-feedback';
 
-type Mandate = { organization_active: boolean; organization_id: string; permissions: string[] };
+type Session = Components['Session'];
 const date = new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Jakarta' });
 const number = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 1 });
 
-export function initDashboard(memberships: Mandate[], role = '') {
+export function initDashboard(session: Session | undefined) {
   const dashboard = document.querySelector<HTMLElement>('[data-hd-page="dashboard"]');
   if (!dashboard) return;
   const get = <T extends HTMLElement>(selector: string) => dashboard.querySelector<T>(selector)!;
@@ -13,36 +15,70 @@ export function initDashboard(memberships: Mandate[], role = '') {
   const organizations = get<HTMLSelectElement>('#hd-dashboard-org');
   const period = get<HTMLSelectElement>('#hd-dashboard-period');
   const results = get('[data-hd-dashboard-results]');
+  const settings = get<HTMLDetailsElement>('[data-hd-dashboard-settings]');
+  const detailResults = get('[data-hd-dashboard-detail-results]');
+  const context = get('[data-hd-dashboard-context]');
   const state = get('[data-hd-dashboard-status]');
-  const active = memberships.filter(m => m.organization_active);
-  const scopes = [...new Set(active.filter(m => m.permissions.includes('report.read')).map(m => m.organization_id))];
-  get('[data-hd-dashboard-login]').hidden = active.length > 0;
-  for (const link of dashboard.querySelectorAll<HTMLElement>('[data-hd-dashboard-grant]')) {
-    const grant = link.dataset.hdDashboardGrant ?? '';
-    link.hidden = !active.some(m => m.permissions.includes(grant)) || grant === 'ticket.resolve' && role !== 'TECHNICIAN';
-  }
+  const heading = get('#hd-dashboard-heading');
+  const skeleton = get('[data-hd-dashboard-loading]');
+  const retry = get<HTMLButtonElement>('[data-hd-dashboard-retry]');
+  const widerPeriod = get<HTMLButtonElement>('[data-hd-dashboard-expand-period]');
+  const cohort = get('#hd-dashboard-cohort');
+  const login = get('[data-hd-dashboard-login]');
+  const analysis = bindDashboardAnalysis(dashboard, session);
+  let pending: AbortController | undefined;
+  document.addEventListener('hd:unauthorized', () => {
+    pending?.abort();
+    analysis.clear();
+    context.hidden = settings.hidden = results.hidden = detailResults.hidden = form.hidden =
+      skeleton.hidden = cohort.hidden = retry.hidden = widerPeriod.hidden = true;
+    results.setAttribute('aria-busy', 'false');
+    dashboardFeedback(state, 'error', 'Sesi telah berakhir. Masuk kembali untuk melihat laporan.');
+    login.hidden = false;
+  });
+  const staff = session?.actor.kind === 'STAFF';
+  const active = staff ? session.actor.memberships.filter(m => m.organization_active) : [];
+  const scopes = [...new Set(active.filter(m => !m.team_id && m.permissions.includes('report.read')).map(m => m.organization_id))];
+  login.hidden = staff;
   if (!scopes.length) {
-    if (active.length) get('#hd-dashboard-heading').textContent = 'Mulai pekerjaan';
-    state.textContent = active.length ? 'Pilih pintasan tugas di atas sesuai peran dan mandat organisasi Anda.' : 'Masuk dengan akun petugas untuk membuka ruang kerja Anda.';
+    const assigned = new Set(active.map(m => m.organization_id)).size;
+    dashboardFeedback(state, 'empty', staff
+      ? `Mandat aktif di ${number.format(assigned)} PD. Ringkasan tiket tersedia untuk pemegang mandat laporan tingkat PD.`
+      : 'Masuk dengan akun petugas untuk membuka ruang kerja Anda.');
     return;
   }
   for (const org of scopes) {
-    organizations.append(new Option(scopes.length === 1 ? 'Organisasi dalam mandat Anda' : org, org));
+    organizations.append(new Option(scopes.length === 1 ? 'PD dalam mandat Anda' : 'PD ' + (organizations.length + 1), org));
   }
-  form.hidden = false;
-  let pending: AbortController | undefined;
+  const scopeName = get('[data-hd-dashboard-scope-name]');
+  const showScope = () => {
+    scopeName.textContent = organizations.selectedOptions[0]?.text ?? 'PD dalam mandat Anda';
+    analysis.setScopeLabel(scopeName.textContent);
+  };
+  void api<{items: Components['DirectoryEntry'][]}>('/reporting/directory?limit=100').then(directory => {
+    for (const option of organizations.options) {
+      const name = directory.items.find(item => item.id === option.value)?.name;
+      if (name) option.textContent = name;
+    }
+    showScope();
+  }).catch(() => {});
+  settings.hidden = form.hidden = false;
 
   async function load() {
     pending?.abort();
     const request = new AbortController();
     pending = request;
-    results.hidden = true;
-    state.textContent = 'Memuat ringkasan tiket…';
+    analysis.clear();
+    results.hidden = detailResults.hidden = context.hidden = cohort.hidden = retry.hidden = widerPeriod.hidden = true;
+    skeleton.hidden = false;
+    results.setAttribute('aria-busy', 'true');
+    dashboardFeedback(state, 'loading', 'Memuat ringkasan tiket…');
     const now = Date.now();
     const to = new Date(now).toISOString();
     const days = period.value === '30' ? 30 : 7;
     const from = new Date(now - days * 86400000).toISOString();
-    const params = new URLSearchParams({from, to, organization_id: organizations.value});
+    const organization = organizations.value;
+    const params = new URLSearchParams({from, to, organization_id: organization, view:'dashboard'});
     try {
       const report = await api<Components['Report']>('/reports?' + params, 'GET', undefined, undefined, undefined, {}, request.signal);
       if (request.signal.aborted) return;
@@ -50,8 +86,13 @@ export function initDashboard(memberships: Mandate[], role = '') {
       get('[data-hd-dashboard-backlog]').textContent = number.format(report.backlog);
       get('[data-hd-dashboard-completed]').textContent = number.format(report.completed);
       const rate = report.sla_percent === null ? 'Belum terukur' : number.format(report.sla_percent) + '%';
-      get('[data-hd-dashboard-rate]').textContent = rate;
+      const rateValue = get('[data-hd-dashboard-rate]');
+      rateValue.textContent = rate;
+      rateValue.dataset.unmeasured = String(report.sla_percent === null);
       const meter = get<HTMLMeterElement>('#hd-dashboard-meter');
+      get('[data-hd-dashboard-ratio]').textContent = report.sla_percent === null
+        ? 'Belum ada penyelesaian dengan target dan waktu selesai yang dapat diukur.'
+        : `${number.format(report.count)} dari ${number.format(report.denominator)} penyelesaian terukur tepat waktu (${rate}).`;
       meter.hidden = report.sla_percent === null;
       meter.value = report.sla_percent ?? 0;
       meter.textContent = rate;
@@ -72,23 +113,38 @@ export function initDashboard(memberships: Mandate[], role = '') {
         row.append(name, amount);
         rows.append(row);
       }
+      get('[data-hd-dashboard-window]').textContent =
+        `Diterima mulai ${date.format(new Date(from))} hingga sebelum ${date.format(new Date(to))} WIB. Selesai ditangani mencakup tiket yang menunggu konfirmasi pelapor dan tiket yang sudah ditutup. Tiket dibatalkan: ${number.format(report.cancelled)}.`;
       const watermark = report.watermark ? date.format(new Date(report.watermark)) + ' WIB' : 'Belum ada fakta';
+      const policy = report.policy_version === null
+        ? 'Tidak ada satu versi kebijakan yang dilaporkan.'
+        : `Versi kebijakan SLA ${number.format(report.policy_version)}.`;
       get('[data-hd-dashboard-watermark]').textContent =
-        `Fakta terbaru · ${watermark}. Dibaca ${date.format(new Date(report.as_of))} WIB.`;
-      state.textContent = report.accepted ? `Tiket diterima ${date.format(new Date(from))} hingga ${date.format(new Date(to))} WIB.` : 'Belum ada tiket diterima dalam periode ini.';
-      results.hidden = false;
+        `Pembaruan data: ${watermark}. Dibaca ${date.format(new Date(report.as_of))} WIB. ${policy}`;
+      showScope();
+      get('[data-hd-dashboard-range]').textContent = `${days} hari terakhir (WIB)`;
+      context.hidden = false;
+      dashboardFeedback(state, report.accepted ? 'ready' : 'empty', report.accepted ? '' : 'Belum ada tiket diterima dalam periode ini.');
+      widerPeriod.hidden = report.accepted > 0 || days === 30;
+      skeleton.hidden = true;
+      results.hidden = detailResults.hidden = cohort.hidden = false;
+      results.setAttribute('aria-busy', 'false');
+      analysis.render(report.analytics, params, { accepted:report.accepted, backlog:report.backlog, completed:report.completed });
     } catch (error) {
       if (request.signal.aborted) return;
-      state.textContent = error instanceof APIError ? error.message : 'Ringkasan gagal dimuat. Periksa koneksi lalu perbarui ringkasan.';
+      skeleton.hidden = true;
+      results.setAttribute('aria-busy', 'false');
+      const forbidden = error instanceof APIError && error.status === 403;
+      dashboardFeedback(state, 'error', forbidden
+        ? 'Akses laporan untuk perangkat daerah ini tidak tersedia. Periksa mandat atau pilih PD lain.'
+        : 'Ringkasan gagal dimuat. Periksa koneksi lalu coba lagi.');
+      retry.hidden = forbidden;
     }
   }
 
   form.addEventListener('submit', event => { event.preventDefault(); void load(); });
-  document.addEventListener('hd:unauthorized', () => {
-    pending?.abort();
-    results.hidden = form.hidden = true;
-    state.textContent = 'Sesi telah berakhir. Masuk kembali untuk melihat laporan.';
-    get('[data-hd-dashboard-login]').hidden = false;
-  });
+  form.addEventListener('change', () => { void load(); });
+  retry.addEventListener('click', () => { heading.focus(); void load(); });
+  widerPeriod.addEventListener('click', () => { heading.focus(); period.value = '30'; void load(); });
   void load();
 }

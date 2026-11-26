@@ -1,3 +1,4 @@
+import { hasDeactivationReview, masterImpact } from './master-impact';
 import { sessionBus } from './session-events';
 import { initAdminDataTables } from './admin-datatable';
 import { initSelect2ComboBoxes } from './select2-combobox';
@@ -13,6 +14,9 @@ import { syncJourney, serviceLoginHref, loginDestination } from './journey';
 import { initDashboard } from './dashboard';
 import { initKnowledgeBase, safeArticle } from "./knowledge";
 import { api, APIError, errorText, csrf } from './transport';
+import { bindTechnicalPerformance } from './technical-performance';
+import { applyReportLink } from './report-link-context';
+import { bindRoster, bindPersonalRoster } from './roster';
 import type { Components } from './business-types.generated';
 import { setupSearchCombobox } from './search-combobox';
 import {
@@ -107,6 +111,8 @@ async function loadAuthBootstrap(): Promise<AuthState> {
 async function registerUser(form: HTMLFormElement): Promise<void> {
   try {
     const boot = await loadAuthBootstrap();
+    const notice = $('[data-hd-environment]', form);
+    if (notice) notice.hidden = !boot.lab_auth_enabled;
     const submit = $('button[type=submit]', form) as HTMLButtonElement | null;
     if (!boot.public_auth_enabled) {
       if (submit) submit.disabled = true;
@@ -166,6 +172,8 @@ async function registerUser(form: HTMLFormElement): Promise<void> {
 async function login(form: HTMLFormElement, bootstrap: Promise<AuthState>, initializePicker: boolean): Promise<void> {
   try {
     const boot = await bootstrap;
+    const notice = $('[data-hd-environment]', form);
+    if (notice) notice.hidden = !boot.lab_auth_enabled;
     const isAdminLogin = form.hasAttribute('data-hd-admin-login');
     const labSubjects = boot.lab_auth_enabled ? (isAdminLogin ? adminSubjects(boot.subjects) : boot.subjects) : [];
     const submit = $('button[type=submit]', form) as HTMLButtonElement | null;
@@ -173,17 +181,14 @@ async function login(form: HTMLFormElement, bootstrap: Promise<AuthState>, initi
     status(
       '[data-hd-login-status]',
       boot.lab_auth_enabled
-        ? 'Masukkan NIK/email dan kata sandi, atau gunakan akses cepat sesi UAT di bawah.'
+        ? 'Masuk dengan akun terdaftar atau pilih akun contoh.'
         : 'Masukkan NIK/email dan kata sandi akun terdaftar.',
       form,
     );
 
     if (initializePicker) {
+      for (const sec of nodes('[data-hd-lab-section]')) sec.hidden = !boot.lab_auth_enabled;
       if (!boot.lab_auth_enabled) {
-        for (const sec of nodes('[data-hd-lab-section]')) sec.hidden = true;
-        for (const n of nodes('[data-hd-lab-notice]')) {
-          n.textContent = 'Lingkungan produksi Helpdesk TIK Kota Depok. Masuk dengan akun terdaftar atau SSO ASN.';
-        }
         for (const c of nodes('[data-hd-lab-callout]')) {
           const title = element('strong', 'Akses ASN Pemerintah Kota Depok');
           const desc = element('p', 'Masuk dengan akun ASN terdaftar atau tombol SSO ASN resmi di bawah.');
@@ -246,10 +251,10 @@ async function login(form: HTMLFormElement, bootstrap: Promise<AuthState>, initi
           // Administrator quick entry uses the least privileged available admin variant.
           const subject = role ? (profile ? quickLoginSubject(labSubjects,profile.id) : labSubjects.find(s=>s.role === roleCodes[role])) : labSubjects.find(s=>s.id === subjectSelect?.value);
           const feedback = '[data-hd-lab-status]';
-          if (!subject) { status(feedback, 'Pilih identitas lab terlebih dahulu.'); subjectSelect?.focus(); return; }
+          if (!subject) { status(feedback, 'Pilih akun contoh terlebih dahulu.'); subjectSelect?.focus(); return; }
           switching = true;
           button.disabled = true;
-          status(feedback, 'Mengaktifkan sesi lab…');
+          status(feedback, 'Masuk dengan akun contoh…');
           try {
             const payload = { lab_subject_id: subject.id, csrf_token: boot.csrf_token };
             const path = '/auth/sessions';
@@ -317,6 +322,9 @@ async function catalog(): Promise<void> {
   const qInput = $<HTMLInputElement>('#hd-catalog-q');
   const catSelect = $<HTMLSelectElement>('#hd-catalog-category');
   const accessSelect = $<HTMLSelectElement>('#hd-catalog-access');
+  const filterOptions = $<HTMLDetailsElement>('.hd-catalog-options', filterForm ?? document);
+  const filterCount = $('[data-hd-filter-count]');
+  const retry = $<HTMLButtonElement>('[data-hd-catalog-retry]');
   const prevBtn = $('[data-hd-prev]') as HTMLButtonElement | null;
   const nextBtn = $('[data-hd-next]') as HTMLButtonElement | null;
   let allServices: Service[] = [];
@@ -327,6 +335,11 @@ async function catalog(): Promise<void> {
     const q = qInput?.value.trim().toLowerCase() ?? '';
     const cat = catSelect?.value ?? '';
     const acc = accessSelect?.value ?? '';
+    if (filterCount) {
+      const count = Number(Boolean(cat)) + Number(Boolean(acc));
+      filterCount.textContent = String(count);
+      filterCount.hidden = count === 0;
+    }
     const filtered = allServices.filter(s =>
       (!q || s.name.toLowerCase().includes(q) || s.code.toLowerCase().includes(q)) &&
       (!cat || s.category_id === cat) &&
@@ -339,15 +352,13 @@ async function catalog(): Promise<void> {
     for (const service of slice) {
       const card = element('article', '', 'vy-contact-form');
       card.classList.add('hd-service-option');
-      const topRow = element('div', '');
-      topRow.className = 'hd-service-option__meta';
-      const codeBadge = element('p', service.code, 'court-badge');
-      const isGuest = service.access_mode === 'PUBLIC_GUEST';
-      const audText = isGuest ? 'Bisa Tanpa Login (Warga)' : (service.access_mode === 'ASN_AUTH' ? 'Khusus ASN Depok' : audience(service.access_mode));
-      const audBadge = element('span', audText, 'court-badge');
+      const topRow = element('div', '', 'hd-service-option__meta');
+      const codeBadge = element('span', service.code, 'hd-service-code');
+      const audBadge = element('span', audience(service.access_mode), 'hd-service-audience');
+      audBadge.dataset.serviceAccess = service.access_mode;
       topRow.append(codeBadge, audBadge);
       const title = element('h2', service.name);
-      const contentDiv = element('div', '');
+      const contentDiv = element('div', '', 'hd-service-option__copy');
       contentDiv.append(topRow, title);
       const actDiv = element('div', '', 'hd-actions');
       const btnLapor = element('a', '', 'btn btn-primary');
@@ -360,12 +371,19 @@ async function catalog(): Promise<void> {
       card.append(contentDiv, actDiv);
       root.append(card);
     }
-    status('[data-hd-status]', slice.length ? `${slice.length} layanan pada halaman ini (${filtered.length} cocok).` : 'Belum ada layanan yang cocok dengan filter atau hak akses ini.');
+    status('[data-hd-status]', slice.length ? `Menampilkan ${pageIndex*pageSize+1}–${pageIndex*pageSize+slice.length} dari ${filtered.length} layanan.` : 'Tidak ada layanan yang cocok. Coba kata kunci atau filter lain.');
     if (prevBtn) prevBtn.disabled = pageIndex === 0;
     if (nextBtn) nextBtn.disabled = pageIndex + 1 >= totalPages;
   }
 
-  status('[data-hd-status]', 'Memuat katalog sesuai hak akses…');
+  filterForm?.addEventListener('submit', event => event.preventDefault());
+  if (filterOptions) {
+    const compact = matchMedia('(max-width: 760px)');
+    filterOptions.open = !compact.matches;
+    compact.addEventListener('change', event => { filterOptions.open = !event.matches; });
+  }
+  retry?.addEventListener('click', () => location.reload());
+  status('[data-hd-status]', 'Memuat katalog layanan…');
   root.setAttribute('aria-busy', 'true');
   try {
     const [svcRes, catRes] = await Promise.allSettled([
@@ -385,15 +403,21 @@ async function catalog(): Promise<void> {
     prevBtn?.addEventListener('click', () => { if (pageIndex > 0) { pageIndex--; renderSlice(); } });
     nextBtn?.addEventListener('click', () => { pageIndex++; renderSlice(); });
     renderSlice();
-  } catch (e) {
-    status('[data-hd-status]', errorText(e));
+  } catch {
+    status('[data-hd-status]', 'Katalog gagal dimuat. Coba lagi.');
+    if (retry) retry.hidden = false;
     if (prevBtn) prevBtn.disabled = true;
     if (nextBtn) nextBtn.disabled = true;
   } finally {
     root.removeAttribute('aria-busy');
   }
 }
-const audience = (mode: string) => ({ PUBLIC_GUEST: 'Publik tanpa login', PUBLIC_AUTH: 'Publik dengan akun', ASN_AUTH: 'ASN sesuai organisasi', STAFF_ONLY: 'Petugas sesuai organisasi' })[mode] ?? mode;
+const audience = (mode: Service['access_mode']) => ({
+  PUBLIC_GUEST: 'Bisa tanpa akun',
+  PUBLIC_AUTH: 'Perlu akun',
+  ASN_AUTH: 'Khusus ASN',
+  STAFF_ONLY: 'Khusus petugas',
+})[mode];
 const SERVICE_SLUGS: Record<string, string> = {
   'akses-internet-opd': 'TIK-NET-01',
   'jaringan-internet-intranet': 'TIK-NET-01',
@@ -470,24 +494,20 @@ async function detail(): Promise<void> {
   const detailContainer = $('[data-hd-detail]');
   const topActions = element('div', '', 'hd-actions hd-detail-top-actions');
   const btnCreateTop = element('a', '', 'btn btn-primary');
-  btnCreateTop.innerHTML = '<span class="hd-btn-icon">🚀</span> Ajukan Permohonan / Buat Tiket Sekarang →';
+  btnCreateTop.textContent = 'Buat laporan';
   btnCreateTop.href = '/lapor.html?id=' + encodeURIComponent(id);
   topActions.append(btnCreateTop);
-  detailContainer?.prepend(topActions);
-  const btnCreateBottom = element('a', '', 'btn btn-primary');
-  btnCreateBottom.innerHTML = '<span class="hd-btn-icon">🚀</span> Lanjutkan Mengisi Formulir Tiket →';
-  btnCreateBottom.href = '/lapor.html?id=' + encodeURIComponent(id);
-  detailContainer?.append(btnCreateBottom);
+  detailContainer?.querySelector('.hd-service-heading')?.append(topActions);
   try {
     const service = await api<Service>('/catalog/services/' + id);
     const [form, policy] = await Promise.all([
       api<FormSnapshot>('/catalog/services/' + id + '/form'),
       api<Policy>('/catalog/services/' + id + '/policy')
     ]);
+    document.title = service.name + ' · Helpdesk TIK';
     status('[data-hd-service-name]', service.name);
-    const isGuest = service.access_mode === 'PUBLIC_GUEST';
-    const audLabel = isGuest ? 'Layanan Terbuka untuk Publik (Dapat Dilaporkan Tanpa Login)' : (service.access_mode === 'ASN_AUTH' ? 'Khusus Pegawai / ASN Pemerintah Kota Depok' : audience(service.access_mode));
-    status('[data-hd-service-meta]', `${audLabel} · Formulir versi ${form.form_version} · Kode: ${service.code}`);
+    const audLabel = audience(service.access_mode);
+    status('[data-hd-service-meta]', `${audLabel} · ${service.code}`);
     const fields = $('[data-hd-fields]')!;
     fields.replaceChildren();
     for (const field of form.fields) {
@@ -515,9 +535,9 @@ async function detail(): Promise<void> {
       group.append(label, input);
       fields.append(group);
     }
-    status('[data-hd-policy]', `Ketentuan Lampiran: Kebijakan versi ${policy.policy_version} · Batas berkas ${(policy.upload_max_bytes / 1048576).toLocaleString('id-ID')} MiB · Format didukung: ${policy.allowed_mime.join(', ')}`);
+    status('[data-hd-policy]', `Batas lampiran ${(policy.upload_max_bytes / 1048576).toLocaleString('id-ID')} MB · ${policy.allowed_mime.map(type => ({"image/jpeg":"JPEG","image/png":"PNG","application/pdf":"PDF"} as Record<string,string>)[type] ?? type).join(', ')}`);
     $('[data-hd-detail]')!.hidden = false;
-    status('[data-hd-status]', form.fields.length ? 'Formulir spesifikasi dimuat dari server.' : 'Layanan ini belum memiliki field formulir.');
+    status('[data-hd-status]', '');
   } catch (e) { status('[data-hd-status]', errorText(e)); }
 }
 
@@ -564,7 +584,35 @@ async function admin(): Promise<void> {
     }
   } catch {}
 
-  const orgLabel = (id: string) => orgs.find(o => o.id === id)?.name ?? 'Organisasi terikat';
+  const structureKinds = ['organizations','divisions','teams'];
+  const structureQuery = new URLSearchParams(location.search);
+  const uuidParam = (name: string) => {
+    const param = structureQuery.get(name) ?? '';
+    return /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i.test(param) ? param : '';
+  };
+  const scopeOrg = ['divisions','teams'].includes(select.value) ? uuidParam('organization_id') : '';
+  const scopeDivision = select.value === 'teams' && scopeOrg ? uuidParam('division_id') : '';
+  const pathFor = (kind: string, organization = '', division = '', team = '') => {
+    const params = new URLSearchParams({kind});
+    if (organization) params.set('organization_id',organization);
+    if (division) params.set('division_id',division);
+    if (team) params.set('team_id',team);
+    return '/admin/app/helpdesk/index.html?'+params+(kind === 'availability' && team ? '#roster' : '');
+  };
+  const scopedOrgRecord = scopeOrg && !orgs.some(org => org.id === scopeOrg)
+    ? (await api<Page<Components['Organization']>>('/admin/organizations?organization_id='+encodeURIComponent(scopeOrg)+'&limit=1')
+      .catch(() => ({items:[]}))).items[0]
+    : undefined;
+  if (scopedOrgRecord) orgs.push(scopedOrgRecord);
+  const orgLabel = (id: string) => orgs.find(o => o.id === id)?.name ?? (scopedOrgRecord?.id === id ? scopedOrgRecord.name : 'Organisasi terikat');
+  const manageLink = (kind: string, label: string, organization?: string, division?: string, team?: string) => {
+    const target = adminItems.find(item => item.kind === kind);
+    if (!target || !canNavigate(target,session)) return undefined;
+    const link = element('a',label,'piui-btn piui-btn--secondary piui-btn--sm');
+    link.href = pathFor(kind,organization,division,team);
+    if (kind === select.value) link.setAttribute('aria-current','page');
+    return link;
+  };
   if (form) {
     options(control(form, 'org') as HTMLSelectElement, orgs.map(o => ({ value: o.id, label: o.name })));
     options(control(form, 'member-subject') as HTMLSelectElement, subjects.map(s => ({ value: s.id, label: `${s.name} · ${s.role}` })));
@@ -582,6 +630,70 @@ async function admin(): Promise<void> {
       label: orgs.find(org => org.id === id)?.name ?? (ids.length === 1 ? 'Organisasi dalam mandat Anda' : `Organisasi ${id}`),
     }));
   };
+  const structure = $('[data-master-structure]');
+  if (structure && structureKinds.includes(select.value)) {
+    structure.hidden = false;
+    const links = $('[data-master-structure-links]',structure);
+    for (const [kind,label,parent] of [
+      ['organizations','PD / Unit Kerja',''], ['divisions','Bidang',scopeOrg], ['teams','Tim teknis',scopeOrg],
+      ['availability','Ketersediaan Tim',scopeOrg],
+    ]) {
+      const link = manageLink(kind,label,parent,kind === 'teams' ? scopeDivision : '');
+      if (link) links?.append(link);
+    }
+    const filter = $<HTMLFormElement>('[data-master-scope]', structure);
+    const orgFilter = $<HTMLSelectElement>('#hd-master-scope-org',structure);
+    const divisionFilter = $<HTMLSelectElement>('#hd-master-scope-division',structure);
+    if (filter && orgFilter && divisionFilter && select.value !== 'organizations') {
+      filter.hidden = false;
+      options(orgFilter,[{value:'',label:'Semua PD dalam mandat'},...orgs.map(org=>({value:org.id,label:org.name}))]);
+      orgFilter.value = scopeOrg;
+      const showDivision = select.value === 'teams';
+      const divisionField = divisionFilter.closest<HTMLElement>('.piui-field');
+      if (divisionField) divisionField.hidden = !showDivision;
+      let scopeRequest = 0;
+      const loadDivisions = async (divisionId = '') => {
+        const stamp = ++scopeRequest;
+        const org = orgFilter.value;
+        divisionFilter.replaceChildren(new Option('Semua bidang',''));
+        divisionFilter.disabled = true;
+        if (!showDivision || !org) return;
+        try {
+          const page = await api<Page<Components['Division']>>('/admin/divisions?limit=100&organization_id='+encodeURIComponent(org));
+          if (stamp !== scopeRequest) return;
+          for (const item of page.items) divisionFilter.add(new Option(item.name,item.id));
+          if (divisionId && ![...divisionFilter.options].some(option=>option.value===divisionId)) {
+            divisionFilter.add(new Option('Bidang terpilih',divisionId));
+          }
+          divisionFilter.value = divisionId;
+          divisionFilter.disabled = false;
+          status('[data-master-scope-status]',page.next_cursor
+            ? 'Untuk memilih bidang berikutnya, buka daftar Bidang dan gunakan tautan Tim teknis pada barisnya.' : '',structure);
+        } catch (error) {
+          if (stamp === scopeRequest) status('[data-master-scope-status]',errorText(error),structure);
+        }
+      };
+      orgFilter.addEventListener('change',()=>void loadDivisions());
+      void loadDivisions(scopeDivision);
+      filter.addEventListener('submit',event=>{
+        event.preventDefault();
+        location.assign(pathFor(select.value,orgFilter.value,divisionFilter.value));
+      });
+    }
+  }
+  const rosterMandates = (session?.actor.memberships ?? []).filter(m =>
+    m.organization_active && ((m.permissions.includes('identity.grant') && m.permissions.includes('rules.write')) ||
+      (session?.actor.role === 'COORDINATOR' && m.permissions.includes('ticket.dispatch'))));
+  bindRoster(scopedOrganizationOptions('rules.write','ticket.dispatch').filter(org =>
+    rosterMandates.some(m => m.organization_id === org.value)));
+  if (session.actor.role === 'TECHNICIAN') bindPersonalRoster(scopedOrganizationOptions('ticket.resolve').filter(org =>
+    session?.actor.memberships.some(m => m.organization_active && m.organization_id === org.value &&
+      m.permissions.includes('ticket.read') && m.permissions.includes('ticket.resolve'))));
+  const ownTechnicalReport = session.actor.role === 'TECHNICIAN';
+  const reportMandates = session.actor.memberships.filter(m => m.organization_active &&
+    (ownTechnicalReport ? m.permissions.includes('ticket.read') && m.permissions.includes('ticket.resolve') : m.permissions.includes('report.read')));
+  const openTechnicalReport = bindTechnicalPerformance(scopedOrganizationOptions(ownTechnicalReport ? 'ticket.resolve' : 'report.read')
+    .filter(org => reportMandates.some(m => m.organization_id === org.value)), reportMandates, ownTechnicalReport);
   const maintenanceOrg = $<HTMLSelectElement>('#hd-maint-org');
   if (maintenanceOrg) {
     const maintScopes = scopedOrganizationOptions('system.maintenance');
@@ -742,7 +854,8 @@ async function admin(): Promise<void> {
     });
   }
 
-  function configure(row?: Master) {
+  let masterTrigger: HTMLElement | undefined;
+  function configure(row?: Master, open = Boolean(row)) {
     selected = row;
     if (form) form.reset();
     const kind = select.value;
@@ -762,7 +875,7 @@ async function admin(): Promise<void> {
     }
 
     if (form) {
-      form.hidden = false;
+      form.hidden = !open;
       const allowed = fields[kind];
       nodes<HTMLElement>('[data-hd-field]', form).forEach(wrapper => {
         const visible = allowed.includes(wrapper.dataset.hdField!);
@@ -836,6 +949,21 @@ async function admin(): Promise<void> {
         division.value = row?.division_id ?? '';
         void refreshDivision(true);
       }
+      if (!row && scopeOrg && ['divisions','teams'].includes(kind)) {
+        const org = control(form,'org') as HTMLSelectElement;
+        if (scopedOrgRecord && ![...org.options].some(option => option.value === scopeOrg)) {
+          org.add(new Option(scopedOrgRecord.name,scopeOrg));
+        }
+        if ([...org.options].some(option => option.value === scopeOrg)) org.value = scopeOrg;
+        if (kind === 'teams') {
+          const division = control(form,'division') as HTMLSelectElement;
+          if (scopeDivision && org.value === scopeOrg && ![...division.options].some(option => option.value === scopeDivision)) {
+            division.add(new Option('Bidang terpilih',scopeDivision));
+          }
+          division.value = org.value === scopeOrg ? scopeDivision : '';
+          void refreshDivision(true);
+        }
+      }
       const orgCreateLocked = kind === 'organizations' && !row && !can('identity.organization.create');
       if (submit) submit.disabled = orgCreateLocked;
       if (orgCreateLocked) {
@@ -892,14 +1020,18 @@ async function admin(): Promise<void> {
 
   let listEpoch = 0;
 
-  async function load() {
+  async function load(keepEditor = false) {
     const epoch = ++listEpoch;
     const requestedKind = select.value;
     syncJourney(session); syncAdminShell(session);
 
+    const availabilitySec = $('[data-hd-availability-section]');
+    if (availabilitySec) availabilitySec.hidden = true;
     const maintSec = $('[data-hd-m11-section]');
     const rulesSec = $('[data-hd-rules-section]');
     const m9Sec = $('[data-hd-m9-section]');
+    const technicalSec = $('[data-hd-technical-report]');
+    if (technicalSec) technicalSec.hidden = true;
     const mediaSec = $('[data-hd-media-section]');
     const heroSec = $('[data-hd-hero-section]');
     const roleSec = $('[data-hd-role-policy-section]');
@@ -918,29 +1050,40 @@ async function admin(): Promise<void> {
     if (navSec) navSec.hidden = true;
     if (artSec) artSec.hidden = true;
     if (masterCard) masterCard.hidden = true;
-    if (form) form.hidden = true;
+    if (form && !keepEditor) form.hidden = true;
     const serviceEditors = $('[data-hd-service-editors]');
-    if (serviceEditors) serviceEditors.hidden = true;
+    if (serviceEditors && !keepEditor) serviceEditors.hidden = true;
 
     if (requestedKind === 'maintenance') {
       if (maintSec) maintSec.hidden = false;
       status('[data-hd-caption]', 'Pemeliharaan Sistem ("Under Maintenance") & Scoped Runner');
-      status('[data-hd-status]', 'Kelola mode "Under Maintenance" (Terjadwal maupun Tidak Terjadwal / Darurat), job operasional, dan diagnostik.');
+      status('[data-hd-status]', 'Kelola pemeliharaan terjadwal atau darurat, pekerjaan sistem, dan diagnostik.');
       void loadMaintenanceOverview();
       void loadOperationsList();
+      return;
+    }
+
+    if (requestedKind === 'availability' || (requestedKind === 'rules' && location.hash === '#roster' && rosterMandates.length)) {
+      if (availabilitySec) availabilitySec.hidden = false;
+      status('[data-hd-status]', '');
       return;
     }
 
     if (requestedKind === 'rules') {
       if (rulesSec) rulesSec.hidden = false;
       status('[data-hd-caption]', 'Aturan Layanan, Routing, SLA & Eskalasi');
-      status('[data-hd-status]', 'Kelola aturan operasional M4–M7 sesuai mandat rules.write.');
+      status('[data-hd-status]', 'Kelola klasifikasi, penugasan teknisi, target penanganan, dan eskalasi sesuai mandat.');
       void refreshRulesPanel();
       return;
     }
 
     if (['notifications', 'reports', 'audit'].includes(requestedKind)) {
-      if (m9Sec) {
+      if (requestedKind === 'reports' && technicalSec && openTechnicalReport) {
+        technicalSec.hidden = false;
+        void openTechnicalReport();
+      }
+      const canReadOrganization = reportMandates.some(m => !m.team_id) && !ownTechnicalReport;
+      if (m9Sec && (requestedKind !== 'reports' || canReadOrganization)) {
         m9Sec.hidden = false;
         switchM9Tab(requestedKind);
         if (requestedKind === 'notifications') void loadNotificationsInbox();
@@ -965,7 +1108,7 @@ async function admin(): Promise<void> {
     if (requestedKind === 'media') {
       if (mediaSec) mediaSec.hidden = false;
       status('[data-hd-caption]', 'Pustaka Media Terpadu');
-      status('[data-hd-status]', 'Pustaka media dua-owner: M3 tiket privat & M8 editorial publik.');
+      status('[data-hd-status]', '');
       void loadAdminMedia(currentMediaOwner);
       void loadMediaPickersAndApprovals();
       return;
@@ -996,10 +1139,9 @@ async function admin(): Promise<void> {
 
     // Standard Master (services, categories, organizations, divisions, teams, memberships)
     if (masterCard) masterCard.hidden = false;
-    if (form) form.hidden = false;
     const newBtn = $<HTMLButtonElement>('[data-hd-new]');
     if (newBtn) {
-      newBtn.hidden = false;
+      newBtn.hidden = requestedKind === 'organizations' && !can('identity.organization.create');
       newBtn.textContent = `+ Tambah ${names[requestedKind] ?? 'data'}`;
     }
     $('[data-hd-refresh]')!.hidden = false;
@@ -1009,8 +1151,12 @@ async function admin(): Promise<void> {
     root.replaceChildren();
     status('[data-hd-status]', 'Memuat master dari server…');
     try {
-      const extraQuery = requestedKind === 'subjects' ? '&include_inactive=1' : '';
-      const page = await api<Page<Master>>(`/admin/${requestedKind}?limit=100${extraQuery}${cursor ? '&cursor=' + encodeURIComponent(cursor) : ''}`);
+      const query = new URLSearchParams({limit:'100'});
+      if (requestedKind === 'subjects') query.set('include_inactive','1');
+      if (['divisions','teams'].includes(requestedKind) && scopeOrg) query.set('organization_id', scopeOrg);
+      if (requestedKind === 'teams' && scopeDivision) query.set('division_id',scopeDivision);
+      if (cursor) query.set('cursor',cursor);
+      const page = await api<Page<Master>>('/admin/'+requestedKind+'?'+query);
       if (epoch !== listEpoch) return;
       next = page.next_cursor;
       if (requestedKind === 'subjects' && !cursor) {
@@ -1039,10 +1185,16 @@ async function admin(): Promise<void> {
         const edit = element('button', 'Ubah', 'piui-btn piui-btn--secondary piui-btn--sm');
         edit.type = 'button';
         edit.addEventListener('click', () => {
+          masterTrigger = edit;
           configure(row);
           focusMasterForm();
         });
         actWrap.append(edit);
+        const related = requestedKind === 'organizations' ? manageLink('divisions','Buka Bidang',row.id)
+          : requestedKind === 'divisions' && row.organization_id ? manageLink('teams','Buka Tim Teknis',row.organization_id,row.id)
+          : requestedKind === 'teams' && row.active && row.organization_id
+            ? manageLink('availability','Buka Ketersediaan Tim',row.organization_id,row.division_id ?? '',row.id) : undefined;
+        if (related) actWrap.append(related);
 
         const isMembership = requestedKind === 'memberships';
         const currentlyRevokedOrInactive = isMembership ? Boolean(row.revoked) : row.active === false;
@@ -1057,8 +1209,20 @@ async function admin(): Promise<void> {
             : 'piui-btn piui-btn--secondary piui-btn--sm hd-btn-warn-outline'
         );
         toggleBtn.type = 'button';
-        toggleBtn.addEventListener('click', () => {
+        toggleBtn.addEventListener('click', async () => {
+          if (toggleBtn.disabled) return;
+          const review = !currentlyRevokedOrInactive && hasDeactivationReview(requestedKind);
+          let details: string[] = [];
+          if (review) {
+            toggleBtn.disabled = true;
+            status('[data-hd-status]','Memeriksa data yang terkait…');
+            details = await masterImpact(requestedKind,row);
+            toggleBtn.disabled = false;
+            status('[data-hd-status]','Tinjau dampak sebelum menonaktifkan data.');
+            if (!toggleBtn.isConnected || !session) return;
+          }
           openAdminConfirmDialog({
+            details,
             title: isMembership
               ? (currentlyRevokedOrInactive ? `Pulihkan akses ${label}?` : `Cabut akses ${label}?`)
               : (currentlyRevokedOrInactive ? `Aktifkan kembali ${label}?` : `Arsipkan / nonaktifkan ${label}?`),
@@ -1129,8 +1293,9 @@ async function admin(): Promise<void> {
         tr.append(td);
         root.append(tr);
       }
-      status('[data-hd-caption]', `Master ${names[requestedKind]} · Halaman ${history.length + 1}`);
-      status('[data-hd-status]', `${page.items.length} data pada halaman ini. Gunakan pencarian, filter, urutkan kolom, atau tombol Tambah/Ubah/Nonaktifkan.`);
+      status('[data-hd-caption]', 'Master '+names[requestedKind]+(scopeOrg ? ' · '+orgLabel(scopeOrg) : '')
+        +(scopeDivision ? ' · Bidang terpilih' : '')+' · Halaman '+(history.length+1));
+      status('[data-hd-status]', `${page.items.length} data pada halaman ini.`);
     } catch (e) {
       next = null;
       status('[data-hd-status]', errorText(e));
@@ -1139,8 +1304,16 @@ async function admin(): Promise<void> {
     ($('[data-hd-next]') as HTMLButtonElement).disabled = !next;
   }
 
-  $('[data-hd-new]')?.addEventListener('click', () => { configure(); focusMasterForm(); });
-  nodes('[data-hd-cancel-master]').forEach(btn => btn.addEventListener('click', () => configure()));
+  $('[data-hd-new]')?.addEventListener('click', event => {
+    masterTrigger = event.currentTarget as HTMLElement;
+    configure(undefined, true);
+    focusMasterForm();
+  });
+  nodes('[data-hd-cancel-master]').forEach(btn => btn.addEventListener('click', () => {
+    if (pending) return;
+    configure();
+    (masterTrigger?.isConnected ? masterTrigger : $('[data-hd-new]:not([hidden]), [data-hd-refresh]'))?.focus();
+  }));
   $('[data-hd-refresh]')?.addEventListener('click', () => { configure(); void load(); });
   $('[data-hd-prev]')?.addEventListener('click', () => { cursor = history.pop() ?? ''; void load(); });
   $('[data-hd-next]')?.addEventListener('click', () => { if (next) { history.push(cursor); cursor = next; void load(); } });
@@ -1194,22 +1367,43 @@ async function admin(): Promise<void> {
         body.reason = value(form, 'reason');
       }
       const path = `/admin/${kind}${rowAtSubmit ? '/' + rowAtSubmit.id : ''}`;
+      const persist = async (fromReview: boolean) => {
+      pending = true;
+      if (submit) submit.disabled = true;
       try {
         const result = await api<{ id: string; version: number }>(path, rowAtSubmit ? 'PUT' : 'POST', body, saveKey(path, body));
-        await load();
+        await load(true);
         if (selected === rowAtSubmit && (rowAtSubmit || kind === 'memberships')) {
           configure({ ...rowAtSubmit, ...body, id: result.id, version: result.version } as Master);
         } else if (selected === rowAtSubmit && !rowAtSubmit && kind === 'subjects') {
           configure();
         }
-        status('[data-hd-save-status]', `Tersimpan pada server. Versi ${result.version}.`);
+        status(form.hidden ? '[data-hd-status]' : '[data-hd-save-status]', `Tersimpan pada server. Versi ${result.version}.`);
       } catch (e) {
+        if (fromReview) throw new Error(errorText(e));
         status('[data-hd-save-status]', errorText(e));
         $('[data-hd-save-status]')?.focus();
       } finally {
         pending = false;
         if (submit) submit.disabled = !session;
       }
+      };
+      if (rowAtSubmit && rowAtSubmit.active !== false && body.active === false && hasDeactivationReview(kind)) {
+        status('[data-hd-save-status]', 'Memeriksa data yang terkait…');
+        const details = await masterImpact(kind,rowAtSubmit);
+        pending = false;
+        if (submit) submit.disabled = !session;
+        if (!session || selected !== rowAtSubmit || select.value !== kind) return;
+        status('[data-hd-save-status]', 'Tinjau dampak sebelum menonaktifkan data.');
+        openAdminConfirmDialog({
+          title:'Nonaktifkan '+(rowAtSubmit.name ?? 'data terpilih')+'?',
+          description:'Periksa data yang terkait dengan versi '+rowAtSubmit.version+' sebelum menyimpan.',
+          details, confirmLabel:'Simpan dan nonaktifkan', confirmTone:'warn',
+          onConfirm:() => persist(true),
+        });
+        return;
+      }
+      await persist(false);
     });
   }
 
@@ -1263,7 +1457,7 @@ async function admin(): Promise<void> {
       selected = await api<Master>('/admin/services/' + selected.id);
       status('[data-hd-editor-version]', `Versi ${selected.version}`);
       await loadEditors(selected);
-      await load();
+      await load(true);
     }
   }
 
@@ -1375,7 +1569,7 @@ async function admin(): Promise<void> {
   }
 
   const reportOrg = $<HTMLSelectElement>('#hd-report-org');
-  if (reportOrg) options(reportOrg, scopedOrganizationOptions('report.read', 'report.export'));
+  if (reportOrg) options(reportOrg, scopedOrganizationOptions('report.read').filter(org => reportMandates.some(m => !m.team_id && m.organization_id === org.value)));
   const notificationOrg = $<HTMLSelectElement>('#hd-tg-org');
   if (notificationOrg) options(notificationOrg, scopedOrganizationOptions('notification.binding'));
 
@@ -1389,6 +1583,14 @@ async function admin(): Promise<void> {
     const d = new Date();
     toInput.value = new Date(d.getTime() + 7 * 3600000).toISOString().slice(0, 16);
   }
+  if (reportOrg && fromInput && toInput) applyReportLink(reportOrg, fromInput, toInput);
+  const openExport = $('[data-hd-open-export]');
+  const syncExport = () => {
+    if (openExport) openExport.hidden = !reportMandates.some(m =>
+      m.organization_id === reportOrg?.value && !m.team_id && m.permissions.includes('report.export'));
+  };
+  reportOrg?.addEventListener('change', syncExport);
+  syncExport();
 
   $('[data-hd-fetch-report]')?.addEventListener('click', async () => {
     const org = ($('#hd-report-org') as HTMLSelectElement)?.value;
@@ -1430,7 +1632,7 @@ async function admin(): Promise<void> {
   });
 
   const exportDialog = $<HTMLDialogElement>('[data-hd-export-dialog]');
-  $('[data-hd-open-export]')?.addEventListener('click', () => {
+  openExport?.addEventListener('click', () => {
     if (exportDialog) {
       if (typeof exportDialog.showModal === 'function') exportDialog.showModal();
       else exportDialog.setAttribute('open', '');
@@ -1511,7 +1713,7 @@ async function admin(): Promise<void> {
         prodTgMode = true;
         if (chatWrap) chatWrap.hidden = false;
         if (chatField) chatField.required = true;
-        if (tgHead) tgHead.textContent = 'Pengikatan Telegram Notifikasi (M9)';
+        if (tgHead) tgHead.textContent = 'Hubungkan notifikasi Telegram';
         if (tgChallengeBtn) tgChallengeBtn.textContent = 'Terbitkan kode verifikasi';
         if (tgBindBtn) tgBindBtn.textContent = 'Hubungkan Telegram';
       }
@@ -1522,7 +1724,7 @@ async function admin(): Promise<void> {
       try {
         const challenge = await api<{code: string}>('/notifications/sink-challenges', 'POST', {scope_org_id: orgField.value});
         codeField.value = challenge.code;
-        status('[data-hd-telegram-status]', prodTgMode ? 'Kode tantangan berlaku 5 menit; masukkan ID Chat Telegram lalu klik Hubungkan.' : 'Kode sink lab berlaku lima menit.');
+        status('[data-hd-telegram-status]', prodTgMode ? 'Kode tantangan berlaku 5 menit; masukkan ID Chat Telegram lalu klik Hubungkan.' : 'Kode uji berlaku lima menit.');
       } catch (err) {
         status('[data-hd-telegram-status]', errorText(err));
       }
@@ -1542,7 +1744,7 @@ async function admin(): Promise<void> {
         codeField.value = '';
         if (chatField) chatField.value = '';
         if (bound) bound.hidden = false;
-        status('[data-hd-telegram-status]', prodTgMode ? 'Pengikatan Telegram aktif dan terverifikasi.' : 'Pengikatan sink lab aktif.');
+        status('[data-hd-telegram-status]', prodTgMode ? 'Pengikatan Telegram aktif dan terverifikasi.' : 'Saluran notifikasi uji terhubung.');
       } catch (err) {
         status('[data-hd-telegram-status]', errorText(err));
       }
@@ -1555,7 +1757,7 @@ async function admin(): Promise<void> {
         });
         binding = undefined;
         if (bound) bound.hidden = true;
-        status('[data-hd-telegram-status]', 'Pengikatan sink lab dicabut.');
+        status('[data-hd-telegram-status]', 'Saluran notifikasi uji dilepas.');
       } catch (err) {
         status('[data-hd-telegram-status]', errorText(err));
       }
@@ -1603,9 +1805,9 @@ async function admin(): Promise<void> {
     return d.toLocaleString('id-ID', { timeZone: 'Asia/Jakarta', dateStyle: 'medium', timeStyle: 'short' }) + ' WIB';
   };
 
-  async function stopMaintenancePolicy(targetId?: string, label = 'pemeliharaan saat ini') {
+  async function stopMaintenancePolicy(targetId?: string, label = 'Pemeliharaan', targetOrg?: string) {
     const now = Date.now();
-    const org = ($('#hd-maint-org') as HTMLSelectElement | null)?.value || '';
+    const org = targetOrg ?? (($('#hd-maint-org') as HTMLSelectElement | null)?.value || '');
     const body: Record<string, unknown> = {
       mode: 'NORMAL',
       schedule_kind: 'UNSCHEDULED',
@@ -1630,7 +1832,9 @@ async function admin(): Promise<void> {
     const tbody = $('[data-hd-maint-rows]');
     if (!tbody) return;
     try {
-      const ov = await api<Components['AdminMaintenanceOverview']>('/admin/maintenance');
+      const org = maintenanceOrg?.value ?? '';
+      const ov = await api<Components['AdminMaintenanceOverview']>('/admin/maintenance' + (org ? '?organization_id=' + encodeURIComponent(org) : ''));
+      if ((maintenanceOrg?.value ?? '') !== org) return;
       const active = (ov.active ?? null) as Components['MaintenanceWindow'] | null;
       const upcoming = ov.upcoming ?? [];
       const recent = ov.recent ?? [];
@@ -1681,7 +1885,7 @@ async function admin(): Promise<void> {
       for (const row of combined.values()) {
         const sMs = new Date(row.starts_at).getTime();
         const eMs = new Date(row.ends_at).getTime();
-        const isActiveNow = Number.isFinite(sMs) && Number.isFinite(eMs) && nowMs >= sMs && nowMs <= eMs;
+        const isActiveNow = Number.isFinite(sMs) && Number.isFinite(eMs) && nowMs >= sMs && nowMs < eMs;
         const isFuture = Number.isFinite(sMs) && Number.isFinite(eMs) && nowMs < sMs && eMs > nowMs;
         const stateText = isActiveNow ? 'AKTIF SEKARANG' : isFuture ? 'TERJADWAL' : 'SELESAI / TIDAK AKTIF';
         const kindDisplay = `${row.schedule_kind === 'UNSCHEDULED' ? 'Tidak Terjadwal / Darurat' : 'Terjadwal'} · ${row.display_mode === 'FULL_SCREEN' ? 'Layar Penuh' : 'Banner'}`;
@@ -1708,7 +1912,7 @@ async function admin(): Promise<void> {
               confirmTone: 'warn',
               requireReason: false,
               onConfirm: async () => {
-                await stopMaintenancePolicy(row.id, isFuture ? 'Jadwal pemeliharaan' : 'Mode pemeliharaan');
+                await stopMaintenancePolicy(row.id, isFuture ? 'Jadwal pemeliharaan' : 'Mode pemeliharaan', row.org_id ?? '');
               },
             });
           });
@@ -1725,11 +1929,12 @@ async function admin(): Promise<void> {
     }
   }
 
+  maintenanceOrg?.addEventListener('change', () => void loadMaintenanceOverview());
   $('[data-hd-maint-refresh]')?.addEventListener('click', () => void loadMaintenanceOverview());
   $('[data-hd-maint-stop]')?.addEventListener('click', () => {
     openAdminConfirmDialog({
-      title: 'Hentikan semua pemeliharaan aktif?',
-      description: 'Portal Web Publik dan seluruh operasi tulis API akan segera dikembalikan ke kondisi normal.',
+      title: 'Akhiri pemeliharaan pada cakupan terpilih?',
+      description: 'Jadwal aktif dan mendatang pada cakupan terpilih akan diakhiri. Cakupan lain mengikuti jadwal masing-masing.',
       confirmLabel: 'Ya, Kembalikan Normal',
       confirmTone: 'primary',
       requireReason: false,
@@ -1797,7 +2002,7 @@ async function admin(): Promise<void> {
         await loadMaintenanceOverview();
         const modeDesc =
           mode === 'NORMAL'
-            ? 'Mode NORMAL diaktifkan; sistem kembali beroperasi penuh.'
+            ? 'Pemeliharaan pada cakupan terpilih telah diakhiri.'
             : `Kebijakan "${scheduleKind === 'UNSCHEDULED' ? 'Tidak Terjadwal / Darurat' : 'Terjadwal'}" (${displayMode === 'FULL_SCREEN' ? 'Layar Penuh Under Maintenance' : 'Banner'}, ${mode}) berhasil diterapkan.`;
         status('[data-hd-maint-status]', modeDesc);
       } catch (err) {
@@ -1897,6 +2102,7 @@ async function admin(): Promise<void> {
         status: string;
         modules: Record<string, string>;
         scanner: string;
+        scanner_signature_age_seconds?: number | null;
         storage: string;
         worker: string;
         outbox_lag: number | null;
@@ -1913,7 +2119,10 @@ async function admin(): Promise<void> {
         tr.append(element('td', comp), element('td', st), element('td', note));
         rows.append(tr);
       };
-      addRow('Pemindai ClamAV', health.scanner, 'Pemeriksaan ketersediaan pemindai antivirus');
+      const definitionAge = health.scanner_signature_age_seconds;
+      addRow('Pemindai ClamAV', health.scanner, definitionAge == null
+        ? 'Usia definisi belum dapat diperiksa'
+        : 'Definisi dimuat · usia ' + Math.floor(definitionAge / 3600) + ' jam');
       addRow('Penyimpanan privat', health.storage, 'Uji tulis, baca, dan hapus berkas probe');
       addRow('Scheduler', health.worker, 'Heartbeat eksekusi auto-close');
       addRow('Outbox', health.outbox_lag == null ? 'UNAVAILABLE' : String(health.outbox_lag),
@@ -1930,15 +2139,16 @@ async function admin(): Promise<void> {
   // Pustaka Media Terpadu (M3/M8) Handlers
   // =========================================================================
   let currentMediaOwner: 'M3' | 'M8' = 'M8';
+  const mediaOwnerLabels = {M8:'Media editorial', M3:'Lampiran tiket privat'} as const;
+  let mediaRequest: AbortController | undefined;
   const mediaTabs = nodes<HTMLButtonElement>('[data-hd-tab-media]');
   function switchMediaTab(owner: 'M3' | 'M8') {
     currentMediaOwner = owner;
     for (const tab of mediaTabs) {
-      if (tab.dataset.hdTabMedia === owner) {
-        tab.className = 'piui-btn piui-btn--primary';
-      } else {
-        tab.className = 'piui-btn piui-btn--secondary';
-      }
+      const active = tab.dataset.hdTabMedia === owner;
+      tab.classList.toggle('piui-btn--primary', active);
+      tab.classList.toggle('piui-btn--secondary', !active);
+      tab.setAttribute('aria-pressed', String(active));
     }
     void loadAdminMedia(owner);
   }
@@ -1955,16 +2165,24 @@ async function admin(): Promise<void> {
 
   // Toggle Media Upload Panel
   const uploadPanel = $('[data-hd-media-upload-panel]');
-  $('[data-hd-toggle-upload]')?.addEventListener('click', () => {
-    if (uploadPanel) {
-      uploadPanel.hidden = !uploadPanel.hidden;
-      if (!uploadPanel.hidden) {
-        uploadPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    }
-  });
+  const uploadToggle = $('[data-hd-toggle-upload]');
+  const setUploadOpen = (open: boolean) => {
+    if (!uploadPanel) return;
+    uploadPanel.hidden = !open;
+    uploadToggle?.setAttribute('aria-expanded', String(open));
+    if (open) $('[data-hd-upload-title]', uploadPanel)?.focus();
+    else uploadToggle?.focus();
+  };
+  uploadToggle?.addEventListener('click', () => setUploadOpen(Boolean(uploadPanel?.hidden)));
   $('[data-hd-close-upload]')?.addEventListener('click', () => {
-    if (uploadPanel) uploadPanel.hidden = true;
+    setUploadOpen(false);
+  });
+  $('[data-hd-open-media-publication]')?.addEventListener('click', event => {
+    const review = $<HTMLDetailsElement>('#hd-media-publication');
+    if (!review) return;
+    event.preventDefault();
+    review.open = true;
+    $('summary', review)?.focus();
   });
 
   // Dropzone Interaction for Media Upload
@@ -2013,9 +2231,11 @@ async function admin(): Promise<void> {
   }
 
   if (dropzoneEl && fileInputEl) {
-    dropzoneEl.addEventListener('click', () => fileInputEl.click());
+    dropzoneEl.addEventListener('click', event => {
+      if (event.target !== fileInputEl) fileInputEl.click();
+    });
     dropzoneEl.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') {
+      if (e.target === dropzoneEl && (e.key === 'Enter' || e.key === ' ')) {
         e.preventDefault();
         fileInputEl.click();
       }
@@ -2091,6 +2311,10 @@ async function admin(): Promise<void> {
     if (uploadToggle) uploadToggle.hidden = organizations.length === 0;
     const bannerUpload = $('[data-hd-media-banner-option]');
     const bannerInput = control(mediaUploadForm,'hero_candidate') as HTMLInputElement;
+    const openUploadedHero = $<HTMLAnchorElement>('[data-hd-open-uploaded-hero]',mediaUploadForm);
+    const canEditHero = () => session?.actor.memberships.some(m => m.organization_active &&
+      m.organization_id === '10000000-0000-4000-8000-000000000001' && m.permissions.includes('hero.write'));
+    if (openUploadedHero) mediaUploadForm.addEventListener('change',() => {openUploadedHero.hidden=true;});
     const updateBannerOption = () => {
       const allowed = session?.actor.memberships.some(m=>m.organization_active && m.organization_id === orgSelect.value &&
         m.organization_id === '10000000-0000-4000-8000-000000000001' && m.permissions.includes('hero.write'));
@@ -2159,13 +2383,15 @@ async function admin(): Promise<void> {
         }
 
         const scanResult = await putRes.json();
-        status('[data-hd-media-upload-status]', `Media berhasil diunggah! Status Pemindai: ${scanResult.status || 'CLEAN'}.`);
+        const forHero = bannerInput.checked;
+        const state = typeof scanResult.status === 'string' ? scanResult.status : 'BELUM TERSEDIA';
+        status('[data-hd-media-upload-status]', state === 'CLEAN'
+          ? 'Media tersimpan dan lolos pemindaian · CLEAN.'+(forHero ? ' Gambar dapat dipilih pada Banner Hero.' : '')
+          : 'Status pemindaian: '+state+'. Gambar tersedia setelah lolos pemindaian.');
         clearSelectedFile();
         mediaUploadForm.reset();
-        setTimeout(() => {
-          if (uploadPanel) uploadPanel.hidden = true;
-          switchMediaTab('M8');
-        }, 1200);
+        if (openUploadedHero) openUploadedHero.hidden = !(forHero && state === 'CLEAN' && canEditHero());
+        switchMediaTab('M8');
       } catch (err) {
         status('[data-hd-media-upload-status]', 'Gagal unggah: ' + errorText(err));
       } finally {
@@ -2232,7 +2458,7 @@ async function admin(): Promise<void> {
 
     addDetailField('UUID Media', item.id, true);
     addDetailField('Versi sumber', String(item.version));
-    addDetailField('Owner Domain', `${item.owner} (${item.owner === 'M8' ? 'Editorial Publik' : 'Privat Tiket Penanganan'})`);
+    addDetailField('Jenis berkas', item.owner === 'M8' ? 'Media editorial' : 'Lampiran tiket privat');
     addDetailField('Status Pemindaian', item.status);
     addDetailField('Tingkat Visibilitas', item.visibility || 'PRIVATE');
     addDetailField('Deskripsi Alt', item.alt || '-');
@@ -2255,24 +2481,28 @@ async function admin(): Promise<void> {
     const container = $('[data-hd-media-container]');
     const statusEl = $('[data-hd-media-status]');
     if (!container) return;
+    mediaRequest?.abort();
+    const request = new AbortController();
+    mediaRequest = request;
     container.replaceChildren();
-    if (statusEl) statusEl.textContent = `Memuat berkas media dari domain ${owner}…`;
+    if (statusEl) statusEl.textContent = `Memuat ${mediaOwnerLabels[owner].toLowerCase()}…`;
 
     const filterVal = (filterStatusSelect?.value || 'ALL').toUpperCase();
 
     try {
-      const res = await api<{ items: MediaDetailItem[] }>(`/media?owner=${owner}&limit=50`);
+      const res = await api<{ items: MediaDetailItem[] }>(`/media?owner=${owner}&limit=50`, 'GET', undefined, undefined, undefined, {}, request.signal);
+      if (request.signal.aborted) return;
       let items = res.items || [];
       if (filterVal !== 'ALL') {
         items = items.filter(it => it.status.toUpperCase() === filterVal);
       }
 
       if (statusEl) {
-        statusEl.textContent = `${items.length} berkas media ditemukan pada domain ${owner} (status filter: ${filterVal}).`;
+        statusEl.textContent = `${items.length} berkas ditampilkan.`;
       }
 
       if (!items.length) {
-        container.append(element('p', `Belum ada berkas media pada domain ${owner} untuk filter ini.`, 'piui-empty-state'));
+        container.append(element('p', 'Belum ada berkas yang sesuai dengan pilihan ini.', 'piui-empty-state'));
         return;
       }
 
@@ -2299,8 +2529,9 @@ async function admin(): Promise<void> {
 
         // Top Row: Owner Badge & Status Badge
         const topRow = element('div', '', 'hd-actions hd-media-top-row');
-        const ownerBadge = element('span', `${item.owner} · ${item.owner === 'M8' ? 'Publik' : 'Privat'}`, item.owner === 'M8' ? 'hd-badge-m8' : 'hd-badge-m3');
-        const statusBadge = element('span', item.status, item.status === 'CLEAN' ? 'hd-badge-clean' : item.status === 'QUARANTINED' ? 'hd-badge-quarantined' : 'court-badge');
+        const ownerBadge = element('span', item.owner === 'M8' ? 'Editorial' : 'Privat', item.owner === 'M8' ? 'hd-badge-m8' : 'hd-badge-m3');
+        const scanLabels: Record<string,string> = {CLEAN:'Lolos pemindaian', QUARANTINED:'Karantina', PENDING:'Menunggu pemindaian', REJECTED:'Ditolak', MISSING:'Berkas hilang'};
+        const statusBadge = element('span', scanLabels[item.status] ?? item.status, item.status === 'CLEAN' ? 'hd-badge-clean' : item.status === 'QUARANTINED' ? 'hd-badge-quarantined' : 'court-badge');
         topRow.append(ownerBadge, statusBadge);
 
         // Title / Alt
@@ -2308,7 +2539,7 @@ async function admin(): Promise<void> {
 
         // Size & Date
         const meta = element('div', '', 'hd-media-meta');
-        const sizeText = element('span', `${(item.size_bytes / 1024).toFixed(1)} KB · ${item.visibility || 'PRIVATE'}`);
+        const sizeText = element('span', `${(item.size_bytes / 1024).toFixed(1)} KB`);
         const dateText = element('span', item.created_at ? new Date(item.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '');
         meta.append(sizeText, dateText);
 
@@ -2349,7 +2580,7 @@ async function admin(): Promise<void> {
         container.append(card);
       }
     } catch (err) {
-      if (statusEl) statusEl.textContent = 'Gagal memuat media: ' + errorText(err);
+      if (!request.signal.aborted && statusEl) statusEl.textContent = 'Gagal memuat media. ' + errorText(err);
     }
   }
 
@@ -2496,7 +2727,7 @@ async function admin(): Promise<void> {
     }
     const saveBtn = artForm ? $<HTMLButtonElement>('button[type="submit"]', artForm) : null;
     if (saveBtn) {
-      saveBtn.textContent = isFaq ? 'Simpan Draft FAQ' : isPage ? 'Simpan Draft Halaman' : 'Simpan Draft Artikel';
+      saveBtn.textContent = articleDraft?.state === 'PUBLISHED' ? 'Simpan perubahan tayang' : 'Simpan draf';
     }
   }
 
@@ -2514,11 +2745,23 @@ async function admin(): Promise<void> {
     syncEditorialFormFields();
   }
 
+  const editorialPreview = $<HTMLDetailsElement>('[data-editorial-preview]',artForm ?? document);
+  function renderEditorialPreview() {
+    if (!artForm || !editorialPreview?.open) return;
+    const title = value(artForm,'title');
+    status('[data-editorial-preview-title]',title || 'Judul belum diisi',editorialPreview);
+    const body = $('[data-editorial-preview-body]',editorialPreview);
+    body?.replaceChildren(safeArticle(value(artForm,'body')));
+  }
+  editorialPreview?.addEventListener('toggle',renderEditorialPreview);
+  artForm?.addEventListener('input',renderEditorialPreview);
+
   function editArticle(item?: EditorialArticle) {
     if (!artForm) return;
     articleDraft = item;
     slugEditedManually = Boolean(item);
     artForm.reset();
+    if (editorialPreview) editorialPreview.open = false;
     syncEditorialFormFields();
     status('[data-hd-article-form-title]', item ? `Sunting ${editorialNoun()}` : `Tulis ${editorialNoun()} baru`, artForm);
     status('[data-hd-article-badge]', item ? `Mengedit · v${item.version}` : 'Draft Baru', artForm);
@@ -2576,17 +2819,24 @@ async function admin(): Promise<void> {
         if (scoped('content.publish')) {
           const action = element('button', transition[1], 'piui-btn piui-btn--secondary piui-btn--sm');
           action.type = 'button';
-          action.addEventListener('click', async () => {
-            action.disabled = true;
-            try {
-              await api(`${editorialApiBase()}/${it.id}/transitions`, 'POST', {
-                expected_version: it.version, action: transition[0], reason: `${transition[1]} ${noun}`,
-              });
-              await loadArticles();
-            } catch (err) {
-              editorialStatus(errorText(err));
-              action.disabled = false;
-            }
+          const path = editorialApiBase()+'/'+it.id+'/transitions';
+          const transitionKey = intent();
+          action.addEventListener('click', () => {
+            openAdminConfirmDialog({
+              title:transition[1]+' '+noun+'?',
+              description:'Perubahan hanya berlaku pada konten ini sesuai peran dan cakupan PD Anda.',
+              details:[it.title, 'Pembaca: '+({PUBLIC_GUEST:'Publik',PUBLIC_AUTH:'Akun masyarakat',ASN_AUTH:'ASN',STAFF_ONLY:'Petugas'} as Record<string,string>)[it.audience],
+                'Versi '+it.version],
+              confirmLabel:transition[1],
+              confirmTone:transition[0] === 'ARCHIVE' ? 'warn' : 'primary',
+              onConfirm:async () => {
+                const payload = {expected_version:it.version, action:transition[0], reason:transition[1]+' '+noun};
+                try {
+                  await api(path, 'POST', payload, transitionKey(path,payload));
+                  await loadArticles();
+                } catch (err) { throw new Error(errorText(err)); }
+              },
+            });
           });
           actWrap.append(action);
         }
@@ -2672,11 +2922,11 @@ async function admin(): Promise<void> {
 
   configure();
   await load();
-  if (location.hash === '#new') {
-    configure();
+  if (adminPanel) adminPanel.hidden = false;
+  if (location.hash === '#new' && $('[data-hd-new]:not([hidden])')?.getClientRects().length) {
+    configure(undefined, true);
     focusMasterForm();
   }
-  if (adminPanel) adminPanel.hidden = false;
 }
 
 async function publicFaqPage(): Promise<void> {
@@ -2802,7 +3052,7 @@ async function main() {
     if (page === 'faq') await publicFaqPage();
     if (page === 'status') await statusPage();
     if (page === 'admin') await admin();
-    if (page === 'dashboard') initDashboard(session?.actor.memberships ?? [], session?.actor.role);
+    if (page === 'dashboard') initDashboard(session);
     if (page === 'knowledge' || page === 'pages') initKnowledgeBase();
   }
 }

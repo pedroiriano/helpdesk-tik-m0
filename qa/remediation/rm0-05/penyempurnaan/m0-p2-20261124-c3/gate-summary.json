@@ -1,0 +1,190 @@
+{
+  "candidate_id": "m0-p2-20261124-c3",
+  "manifest_sha256": "4703fa01d24b414da39f3af453627e3355b58adf2b29d7a0e1fb4b392d3e6a63",
+  "recorded_at": "2026-11-24T04:57:04.455763+00:00",
+  "checkpoint_ci": {
+    "report": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c1/local-ci.json",
+    "scope": "Kandidat c1, langkah yang masih memiliki input efektif sama dipakai kembali secara proporsional.",
+    "verified_steps": [
+      {
+        "name": "adr_unique_numbering",
+        "result": "PASS",
+        "exit_code": 0,
+        "command": "internal:check_unique_adrs"
+      },
+      {
+        "name": "package_validator_tests",
+        "result": "PASS",
+        "exit_code": 0,
+        "command": "C:\\Python313\\python.exe -m unittest discover -s scripts -p test_verify_package.py"
+      },
+      {
+        "name": "business_contracts_check",
+        "result": "PASS",
+        "exit_code": 0,
+        "command": "C:\\Python313\\python.exe scripts/build_business_contracts.py --check"
+      },
+      {
+        "name": "business_contracts_tests",
+        "result": "PASS",
+        "exit_code": 0,
+        "command": "C:\\Python313\\python.exe -X utf8 -m unittest tests/contract/test_business_contracts.py"
+      },
+      {
+        "name": "go_module_boundaries",
+        "result": "PASS",
+        "exit_code": 0,
+        "command": "C:\\Python313\\python.exe scripts/check_boundaries.py"
+      },
+      {
+        "name": "go_boundary_negative",
+        "result": "PASS",
+        "exit_code": 0,
+        "command": "C:\\Python313\\python.exe scripts/test_boundaries.py"
+      },
+      {
+        "name": "piui_build_parity",
+        "result": "PASS",
+        "exit_code": 0,
+        "command": "C:\\Python313\\python.exe scripts/test_piui_build.py"
+      },
+      {
+        "name": "go_127_vet_and_test",
+        "result": "PASS",
+        "exit_code": 0,
+        "command": "docker build --pull=false --target test -t helpdesk-m0-ci-go-test:0.1.0 -f infra/docker/backend.Dockerfile ."
+      },
+      {
+        "name": "node_26_frontend_mjs_suites",
+        "result": "PASS",
+        "exit_code": 0,
+        "command": "docker run --rm -v C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith:/work:ro -w /work node:26.13.1-alpine@sha256:6bd9ab43c0ec0190ca7b2d193906cb8b7edf6e7f4afa43ddeccd6452710bffb5 sh -c set -e; node scripts/test_admin_navigation.mjs; node scripts/test_admin_profiles.mjs; node scripts/test_ticket_actions.mjs; node scripts/test_ux_flow.mjs; node scripts/test_business_intent.mjs; node scripts/test_public_cache.mjs"
+      },
+      {
+        "name": "pg_18_disposable_migrations",
+        "result": "PASS",
+        "exit_code": 0,
+        "command": "C:\\Python313\\python.exe -X utf8 scripts/test_owner_migrations.py --report C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith\\qa\\remediation\\rm0-05\\penyempurnaan\\m0-p2-20261124-c1\\ci-migrations.json"
+      }
+    ]
+  },
+  "final": {
+    "source": {
+      "result": "PASS",
+      "working_tree": true,
+      "files": 885,
+      "production_deltas_from_phase1": [
+        "infra/docker/web.Dockerfile"
+      ]
+    },
+    "compose": {
+      "result": "PASS",
+      "evidence": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/compose.txt",
+      "exit_code": 0
+    },
+    "security": {
+      "result": "PASS",
+      "evidence": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/security-gate.json",
+      "sbom": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/sbom-m0.json",
+      "exit_code": 0
+    },
+    "npm": {
+      "result": "PASS",
+      "evidence": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c1/npm-audit.json",
+      "exit_code": 0,
+      "vulnerabilities": 0,
+      "lockfiles_unchanged": true
+    },
+    "trivy": {
+      "result": "PASS_NO_CRITICAL_HIGH",
+      "image_findings": {
+        "app": {},
+        "web": {
+          "MEDIUM": 7,
+          "LOW": 4
+        }
+      },
+      "evidence": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c1/trivy-app.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/trivy-web.json"
+      ],
+      "before": [
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c1/trivy-web.json",
+        "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c2/trivy-web.json"
+      ],
+      "db_metadata": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c1/trivy-db-metadata.json",
+      "scan_exit_code": 0,
+      "follow_up": {
+        "scope": "Sisa 11 temuan medium/low pada image web terpin; gerbang lab kritis/tinggi lulus dan risiko keputusan produksi tetap terbuka.",
+        "recommended_review_owner": "Lead implementer dan infrastruktur",
+        "upstream_fixes_reported": {
+          "libcrypto3": "3.5.9-r1",
+          "libssl3": "3.5.9-r1",
+          "zlib": "1.4-r0"
+        }
+      }
+    },
+    "links": {
+      "result": "PASS",
+      "report": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/link_audit.json",
+      "count": 707,
+      "broken": 0,
+      "exit_code": 0
+    },
+    "http_modal_mobile": {
+      "result": "PASS",
+      "exit_code": 0,
+      "origin": "http://127.0.0.1:18192",
+      "command": "python -X utf8 scripts/test_modal_and_mobile.py",
+      "scope": "HTTP dan markup kanonis; bukti browser terpisah"
+    },
+    "browser": {
+      "result": "PASS",
+      "report": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser-coverage.json",
+      "suite_count": 13,
+      "last_resumed_exit_code": 0
+    },
+    "lifecycle": {
+      "result": "PASS",
+      "report": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/lifecycle.json",
+      "subtests": [
+        "Subtest1_E2E_Guest_Ticket_Lifecycle",
+        "Subtest2_AC04_AC15_Auto_Close_Concurrency_Race_Condition",
+        "Subtest3_AC06_AC20_AC23_Public_ASN_Search_Dynamic_Revocation",
+        "Subtest4_AC06_AC16_AC17_Inter_OPD_Handoff_And_Escalation",
+        "Subtest5_AC19_Draft_Autosave_Competing_Tabs_Isolation",
+        "Subtest6_AC22_AC24_Maintenance_Scoped_Runner_Purge_Archive",
+        "Subtest7_AC20_AC23_Report_Analytics_Honest_Denominator_CSV",
+        "Subtest8_AC07_AC18_Malware_Quarantine_And_Media_Reuse",
+        "Subtest9_M0_Architecture_Readiness_And_Liveness_Probes"
+      ],
+      "exit_code": 0
+    },
+    "recovery": {
+      "result": "PASS",
+      "report": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c1/recovery.json",
+      "first_http_seconds": 6.295,
+      "rpo_lost_fixture_commits": 0,
+      "scope": "DB tmpfs dan app process sintetis; tidak mencakup recovery produksi",
+      "exit_code": 0
+    },
+    "runtime": {
+      "result": "PASS",
+      "report": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/runtime.json",
+      "smoke_18192": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/smoke-uat.txt",
+      "exit_code": 0
+    },
+    "package": {
+      "result": "PASS",
+      "command": "python -X utf8 scripts/verify_package.py",
+      "evidence": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/package.txt",
+      "exit_code": 0
+    }
+  },
+  "scope_limits": [
+    "Perubahan runtime Fase 2 hanya base image gateway. Konfigurasi Nginx, kode produk Go/Frontend, migrasi dan seed byte-identik terhadap snapshot Fase 1.",
+    "Bukti Go, kontrak, Node, builder dan migrasi terikat pada input tooling/runtime terkait yang tidak berubah atau pada subtes lifecycle terbaru. Tes browser dituntaskan per iris dampak dengan image gateway final yang sama.",
+    "Pemindaian image Trivy mencakup app scratch dan gateway, memakai DB pada trivy-db-metadata.json. Temuan medium/low tersisa tercatat dan tidak diklasifikasikan sebagai selesai diperbaiki. Cakupan tidak meliputi DB/scanner pihak ketiga.",
+    "Paritas C3/F9/G-OPT, uji beban produksi dan UAT manusia menunggu pelaksanaan tersendiri."
+  ]
+}

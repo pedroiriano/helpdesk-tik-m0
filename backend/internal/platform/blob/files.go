@@ -282,3 +282,36 @@ func (f Files) Scan(ctx context.Context, data []byte) (string, error) {
 	}
 	return "", fmt.Errorf("scan incomplete")
 }
+
+// SignatureAge reports the age of definitions loaded by clamd without exposing daemon details.
+func (f Files) SignatureAge(ctx context.Context, now time.Time) (int64, error) {
+	d := net.Dialer{Timeout: 2 * time.Second}
+	conn, err := d.DialContext(ctx, "tcp", f.Scanner)
+	if err != nil {
+		return 0, errors.New("signature age unavailable")
+	}
+	defer conn.Close()
+	deadline := time.Now().Add(2 * time.Second)
+	if limit, ok := ctx.Deadline(); ok && limit.Before(deadline) {
+		deadline = limit
+	}
+	if err := conn.SetDeadline(deadline); err != nil {
+		return 0, err
+	}
+	if _, err := io.WriteString(conn, "zVERSION\x00"); err != nil {
+		return 0, err
+	}
+	value, err := bufio.NewReader(io.LimitReader(conn, 512)).ReadString(0)
+	if err != nil {
+		return 0, errors.New("signature age unavailable")
+	}
+	parts := strings.SplitN(strings.TrimRight(value, "\r\n\x00"), "/", 3)
+	if len(parts) != 3 || !strings.HasPrefix(parts[0], "ClamAV ") {
+		return 0, errors.New("signature age unavailable")
+	}
+	released, err := time.Parse(time.ANSIC, parts[2])
+	if err != nil || released.After(now) {
+		return 0, errors.New("signature age unavailable")
+	}
+	return int64(now.Sub(released) / time.Second), nil
+}

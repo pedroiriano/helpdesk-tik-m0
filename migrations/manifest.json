@@ -293,6 +293,34 @@
       "owner": "M8",
       "scope": "Additive FAQ content kind, category grouping, sort order and canonical seed FAQs",
       "sha256": "53716c3c6af6c759332c00554c50b2ab3a39cacf21803a0bd21e6f47824b241b"
+    },
+    {
+      "id": "043",
+      "path": "migrations/m5/043-roster-active.sql",
+      "owner": "M5",
+      "scope": "Additive roster activation without deleting operational history",
+      "sha256": "efb2a574a3df154c61f3d0e528328b75dd2962ccb49fc41d522f69c46b7da28c"
+    },
+    {
+      "id": "044",
+      "path": "migrations/m5/044-technical-availability.sql",
+      "owner": "M5",
+      "scope": "Optional roster capacity and account-scoped technician absences",
+      "sha256": "9c28cdbc056781d60372db7324b2cfcb2fdd0634eb2d198057e9280aed6d528f"
+    },
+    {
+      "id": "045",
+      "path": "migrations/m5/045-technical-workload.sql",
+      "owner": "M5",
+      "scope": "Vendor workload fact and technician projection index",
+      "sha256": "de5a3ddd87ad1a5ded7b62bd71f75da8955167cf7fff85400299bb70db13be70"
+    },
+    {
+      "id": "046",
+      "path": "migrations/m3/046-technical-performance.sql",
+      "owner": "M3",
+      "scope": "Technical work log attribution and report access-path indexes",
+      "sha256": "9e326150aad2ec33853a3e7d4ff8ca5e2cba69c766766e61db07ed9c788180d1"
     }
   ]
 }

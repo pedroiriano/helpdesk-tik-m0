@@ -32,6 +32,13 @@ type Team struct {
 	Name           string  `json:"name"`
 	Active         bool    `json:"active"`
 }
+type RosterTeam struct {
+	ID           string  `json:"id"`
+	Name         string  `json:"name"`
+	DivisionID   *string `json:"division_id"`
+	DivisionName *string `json:"division_name"`
+}
+
 type Binding struct {
 	ID             string   `json:"id"`
 	Version        int64    `json:"version"`

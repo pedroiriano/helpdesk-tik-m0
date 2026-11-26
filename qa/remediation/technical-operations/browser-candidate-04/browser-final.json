@@ -1,0 +1,19 @@
+{
+  "timestamp": "2026-11-24T08:15:46.132Z",
+  "base_url": "http://127.0.0.1:18193",
+  "browser": "Microsoft Edge Headless (CDP)",
+  "suites": {
+    "technical-operations": {
+      "status": "PASS",
+      "roster": "persistent",
+      "dispatch": "capacity indicator",
+      "report": "390 × 844, keyboard and scoped export"
+    }
+  },
+  "from_suite": "technical-operations",
+  "through_suite": "technical-operations",
+  "csp_violations": [],
+  "console_errors": [],
+  "exceptions": [],
+  "result": "PASS"
+}

@@ -8,6 +8,8 @@ Fondasi M0 tersedia: satu proses Go dengan sembilan batas modul, satu build fron
 
 Audit 10 November menemukan gap keamanan dan correctness setelah pengembangan historis sampai M0-13. RM0-01 selesai diverifikasi untuk kandidat lab. RM0-02 selesai diverifikasi untuk kandidat lab, termasuk integrasi, migrasi serta browser image final pada desktop/mobile dan keyboard. Lihat qa/remediation/rm0-02/completion.json. Matriks dan hasil tercatat di qa/remediation/rm0-01/completion.json. Status penerimaan lintas fase dibaca bersama planning/remediation_backlog.csv dan status/PROJECT_STATE.md. UAT manusia serta pengesahan organisasi masih menunggu bukti. Dokumen rilis berstatus draf. Snapshot capaian M0-04 di atas dipertahankan sebagai riwayat awal.
 
+Versi pengembangan terbaru tersedia pada [port 18090](http://127.0.0.1:18090/) dengan migrasi 001–046. Konsolidasi lokal mencakup Ketersediaan Tim, Smart Dispatch berbasis kapasitas, dan Pencapaian Saya. Status RM0-05 mengikuti [paket UAT dan keputusan domain](docs/releases/RM0_05_UAT_AND_DECISION_PACKET.md).
+
 ## Workspace dan aplikasi lokal
 
 Root tetap: `C:\Datas\Proyek\Aplikasi\helpdesk-monolith`. Aturan riset: `D:\Jurnal\Microservices`.

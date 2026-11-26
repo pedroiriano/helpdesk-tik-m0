@@ -12,7 +12,7 @@ services:
       HELPDESK_SSO_AUTH_URL: '${HELPDESK_SSO_AUTH_URL:-}'
       HELPDESK_SSO_TOKEN_URL: '${HELPDESK_SSO_TOKEN_URL:-}'
       HELPDESK_SSO_JWKS_URL: '${HELPDESK_SSO_JWKS_URL:-}'
-      HELPDESK_SSO_REDIRECT_URL: '${HELPDESK_SSO_REDIRECT_URL:-}'
+      HELPDESK_SSO_REDIRECT_URI: '${HELPDESK_SSO_REDIRECT_URI:-${HELPDESK_SSO_REDIRECT_URL:-}}'
       HELPDESK_NOTIFY_TELEGRAM_ENABLED: '${HELPDESK_NOTIFY_TELEGRAM_ENABLED:-0}'
       HELPDESK_NOTIFY_SMTP_ENABLED: '${HELPDESK_NOTIFY_SMTP_ENABLED:-0}'
       HELPDESK_SMTP_HOST: '${HELPDESK_SMTP_HOST:-}'
@@ -24,6 +24,7 @@ services:
   scanner:
     environment:
       CLAMAV_NO_FRESHCLAMD: 'false'
+    networks: [database, scanner-updates]
     volumes: !override
       - ./infra/scanner/clamd.conf:/etc/clamav/clamd.conf:ro
       - clamav-db:/var/lib/clamav
@@ -43,3 +44,6 @@ services:
 
 volumes:
   clamav-db: {}
+
+networks:
+  scanner-updates: {}

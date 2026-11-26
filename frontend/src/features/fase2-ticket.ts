@@ -248,16 +248,6 @@ export async function loadQueueServiceFilter(): Promise<void> {
   } catch {}
 }
 
-export async function searchTicketsAcl(q: string, state: string, serviceId: string): Promise<Ticket[]> {
-  const res = await api<{ items: { id: string }[] }>(`/search?owner=M3&q=${encodeURIComponent(q)}&limit=12`);
-  if (!res.items.length) return [];
-  const fetched = await Promise.allSettled(res.items.map(hit => api<Ticket>(`/tickets/${encodeURIComponent(hit.id)}`)));
-  return fetched
-    .filter((r): r is PromiseFulfilledResult<Ticket> => r.status === 'fulfilled')
-    .map(r => r.value)
-    .filter(t => (!state || t.state === state) && (!serviceId || t.service_id === serviceId));
-}
-
 export async function runBulkArchive(targets: { id: string; expected_version: number }[], reason: string): Promise<string> {
   const res = await api<{ items: { id: string; outcome: string }[] }>('/tickets/bulk', 'POST', {
     action: 'ARCHIVE',

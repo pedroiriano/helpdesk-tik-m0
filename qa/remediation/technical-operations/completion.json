@@ -1,0 +1,154 @@
+{
+  "task_id": "M0-TECH",
+  "timestamp": "2026-11-24T08:18:37.327969+00:00",
+  "result": "PASS",
+  "scope": "application",
+  "status": "DONE_VERIFIED_LAB",
+  "candidate": {
+    "base_git_head": "8f9ab58a668830ad1bf92b8d70580eae36a7bef8",
+    "source": "worktree lokal dengan perubahan sebelumnya, bukan snapshot commit bersih",
+    "compose_project": "helpdesk-technical-lab",
+    "url": "http://127.0.0.1:18193",
+    "app_image_id": "sha256:b84e3a631395f6a72a7363ef31b48e0a964eda00aaeab41ac52b97117d6e6aee",
+    "nginx_image_id": "sha256:ccdebfce60ff4811d386dde970d1a87d3fe76c90c9844e306076ef551a2841f0",
+    "migrations": [
+      "044",
+      "045",
+      "046"
+    ],
+    "health_live": {
+      "18090": "PASS",
+      "18191": "PASS",
+      "18192": "PASS",
+      "18193": "PASS"
+    }
+  },
+  "stages": [
+    {
+      "stage": 1,
+      "label": "Ketersediaan dan kapasitas",
+      "requirements": [
+        "FR24",
+        "AC02",
+        "AC06"
+      ],
+      "evidence": "verified-TestTechnicalAvailability.json",
+      "checks": [
+        "migrasi 043 menuju 046 dengan roster lama",
+        "mandat koordinator dan penolakan operator/lintas PD",
+        "jadwal, overlap, CAS bersamaan, akun nonaktif dan kapasitas gabungan",
+        "ketidakhadiran milik sendiri, pembatalan dan audit"
+      ],
+      "changed_files": [
+        "backend/internal/modules/m1",
+        "backend/internal/modules/m5",
+        "frontend/src/features/roster.ts",
+        "migrations/m5/044-technical-availability.sql"
+      ],
+      "command": "python -X utf8 scripts/test_technical_operations.py TestTechnicalAvailability --report qa/remediation/technical-operations/verified-TestTechnicalAvailability.json",
+      "result": "PASS"
+    },
+    {
+      "stage": 2,
+      "label": "Beban kerja dan Smart Dispatch",
+      "requirements": [
+        "FR24",
+        "FR28",
+        "AC06",
+        "AC13",
+        "AC17"
+      ],
+      "evidence": "verified-TestTechnicalDispatch.json",
+      "checks": [
+        "proyeksi tertunda, penuh, berhalangan dan jalur manual berizin",
+        "satu konfirmasi sah atas dua permintaan bersamaan",
+        "reassign dan replay",
+        "vendor tetap dalam beban aktif",
+        "handoff sebelum/sesudah penerimaan dan isolasi PD",
+        "indikator PIC berhalangan pada antrean"
+      ],
+      "changed_files": [
+        "backend/internal/modules/m3/internal/app",
+        "backend/internal/modules/m3/internal/store",
+        "backend/internal/modules/m5",
+        "frontend/src/features/m0-04.ts",
+        "migrations/m5/045-technical-workload.sql"
+      ],
+      "command": "python -X utf8 scripts/test_technical_operations.py TestTechnicalDispatch --report qa/remediation/technical-operations/verified-TestTechnicalDispatch.json",
+      "result": "PASS"
+    },
+    {
+      "stage": 3,
+      "label": "Pencapaian dan laporan",
+      "requirements": [
+        "FR27",
+        "AC23"
+      ],
+      "evidence": "verified-TestTechnicalPerformance.json",
+      "checks": [
+        "dua teknisi, satu tiket, dua upaya, work log, konfirmasi, auto-close dan reopen",
+        "timestamp batas periode dan penyebut SLA kosong",
+        "atribusi upaya sesuai pelaksana",
+        "kesesuaian CSV/JSON dan penolakan ekspor di luar mandat"
+      ],
+      "changed_files": [
+        "backend/internal/modules/m3/internal/store/technical_performance.go",
+        "backend/internal/modules/m9",
+        "frontend/src/features/technical-performance.ts",
+        "contracts/openapi/business.json",
+        "migrations/m3/046-technical-performance.sql"
+      ],
+      "command": "python -X utf8 scripts/test_technical_operations.py TestTechnicalPerformance --report qa/remediation/technical-operations/verified-TestTechnicalPerformance.json",
+      "result": "PASS"
+    }
+  ],
+  "verification": [
+    {
+      "command": "python -X utf8 scripts/build_business_contracts.py --check",
+      "result": "PASS"
+    },
+    {
+      "command": "python -X utf8 -m unittest tests/contract/test_business_contracts.py",
+      "result": "PASS",
+      "tests": 8
+    },
+    {
+      "command": "npm.cmd run build (frontend)",
+      "result": "PASS"
+    },
+    {
+      "command": "node scripts/test_admin_navigation.mjs",
+      "result": "PASS"
+    },
+    {
+      "command": "python -X utf8 scripts/test_piui_build.py",
+      "result": "PASS"
+    },
+    {
+      "command": "go test ./... -count=1 (backend, sebelum penyesuaian akhir akses roster; kandidat akhir dicakup uji integrasi terisolasi)",
+      "result": "PASS"
+    },
+    {
+      "command": "HELPDESK_BASE_URL=http://127.0.0.1:18193 HELPDESK_BROWSER_FROM_SUITE=technical-operations HELPDESK_BROWSER_THROUGH_SUITE=technical-operations HELPDESK_BROWSER_REPORT_DIR=qa/remediation/technical-operations/browser-candidate-04 EDGE_CDP_PORT=9288 node scripts/test_rm0_04_browser.mjs",
+      "result": "PASS",
+      "evidence": "browser-candidate-04/browser-final.json"
+    },
+    {
+      "command": "python -X utf8 scripts/test_fase2_backend.py --report qa/remediation/technical-operations/fase2-regression-candidate-03.json",
+      "result": "PASS",
+      "evidence": "fase2-regression-candidate-03.json"
+    }
+  ],
+  "corrections": [
+    "Grant SELECT/INSERT/UPDATE owner M5 ditambahkan pada migration 044 setelah SQLSTATE 42501.",
+    "Runner integrasi menormalkan CRLF pada daftar checksum baseline yang dikirim ke Docker.",
+    "Smoke menggunakan reload CDP eksplisit untuk URL berfragmen, kategori dari endpoint aktif, dan event Enter lengkap."
+  ],
+  "limits": {
+    "lab": "PostgreSQL disposable dan Edge desktop serta mobile 390 x 844 menggunakan akun dan data sintetis.",
+    "historical_projection": "Jumlah vendor pada snapshot lama dapat belum terukur. Beban aktif total tetap menggunakan state kanonis.",
+    "reports": "CSV ringkasan mengevaluasi cakupan kembali. Capaian tanpa atribusi tim yang dapat dibuktikan tidak masuk ringkasan tim.",
+    "domain_uat_release": "Keputusan domain DEC-M01/DEC-M06, UAT manusia, pengesahan rilis, protected CI, dan uji arsitektur C3/F9/G-OPT belum dijalankan pada perubahan ini.",
+    "operations": "18090, 18191, dan 18192 diperiksa read-only; perubahan dijalankan pada Compose uji 18193."
+  }
+}

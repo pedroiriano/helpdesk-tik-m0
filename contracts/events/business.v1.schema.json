@@ -263,6 +263,9 @@
                 "policy_source"
               ],
               "additionalProperties": false
+            },
+            "awaiting_vendor": {
+              "type": "boolean"
             }
           },
           "required": [
@@ -541,6 +544,9 @@
                 "policy_source"
               ],
               "additionalProperties": false
+            },
+            "awaiting_vendor": {
+              "type": "boolean"
             },
             "dispatch": {
               "type": "object",

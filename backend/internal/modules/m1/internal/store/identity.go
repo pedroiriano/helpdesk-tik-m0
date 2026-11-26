@@ -112,7 +112,9 @@ func (s Store) Organizations(ctx context.Context, orgs []string, p web.Page) ([]
 	return out, rows.Err()
 }
 func (s Store) Teams(ctx context.Context, orgs []string, p web.Page) ([]api.Team, error) {
-	rows, err := s.Pool.Query(ctx, `SELECT id::text,version,org_id::text,name,active,division_id::text FROM identity.teams WHERE org_id=ANY($1::uuid[]) AND ($2='' OR id::text>$2) ORDER BY id LIMIT $3`, orgs, p.Cursor, p.Limit+1)
+	rows, err := s.Pool.Query(ctx, `SELECT id::text,version,org_id::text,name,active,division_id::text FROM identity.teams
+		WHERE org_id=ANY($1::uuid[]) AND ($2='' OR id::text>$2)
+		AND ($4='' OR division_id::text=$4) ORDER BY id LIMIT $3`, orgs, p.Cursor, p.Limit+1, p.Division)
 	if err != nil {
 		return nil, err
 	}
@@ -272,7 +274,7 @@ func (s Store) ActiveTeamInOrg(ctx context.Context, team, org string) (bool, err
 	return active, err
 }
 
-func (s Store) StaffInOrg(ctx context.Context, org string) ([]api.Subject, error) {
+func (s Store) StaffInOrg(ctx context.Context, org, team string) ([]api.Subject, error) {
 	rows, err := s.Pool.Query(ctx, `SELECT s.id::text,s.display_name,s.kind,s.role_code
 		FROM identity.subjects s
 		WHERE s.kind='STAFF' AND s.active AND EXISTS (
@@ -280,9 +282,13 @@ func (s Store) StaffInOrg(ctx context.Context, org string) ([]api.Subject, error
 			JOIN identity.organizations o ON o.id=m.org_id
 			WHERE m.subject_id=s.id AND o.active AND m.org_id=$1
 			  AND m.revoked_at IS NULL AND m.valid_until>now()
-			  AND ('ticket.read'=ANY(m.permissions) OR 'ticket.resolve'=ANY(m.permissions) OR 'ticket.vendor'=ANY(m.permissions))
+			  AND (
+			    ($2='' AND ('ticket.read'=ANY(m.permissions) OR 'ticket.resolve'=ANY(m.permissions) OR 'ticket.vendor'=ANY(m.permissions)))
+			    OR ($2<>'' AND s.role_code='TECHNICIAN' AND (m.team_id IS NULL OR m.team_id::text=$2)
+			      AND ARRAY['ticket.read','ticket.resolve']::text[] <@ m.permissions)
+			  )
 		)
-		ORDER BY s.display_name,s.id`, org)
+		ORDER BY s.display_name,s.id`, org, team)
 	if err != nil {
 		return nil, err
 	}

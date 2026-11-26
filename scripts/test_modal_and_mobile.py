@@ -19,7 +19,7 @@ try:
 except Exception:
     pass
 
-BASE_URL = "http://127.0.0.1:18090"
+BASE_URL = __import__("os").environ.get("HELPDESK_BASE_URL", "http://127.0.0.1:18090")
 
 def log(msg, success=True):
     icon = "[PASS]" if success else "[FAIL]"
@@ -174,7 +174,7 @@ def test_all_pages_http():
     pages = [
         # Web Publik (13 Halaman)
         ("/", "Landing Page Publik"),
-        ("/layanan.html", "Katalog 16 Layanan TIK"),
+        ("/layanan.html", "Katalog Layanan"),
         ("/detail-layanan.html", "Detail Layanan TIK"),
         ("/lapor.html", "Formulir Laporan Baru"),
         ("/tiket.html", "Daftar Tiket Layanan"),

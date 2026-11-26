@@ -27,7 +27,10 @@ func diagnostics(pools database.Pools, bindings []delivery.Binding, root, scanne
 			result.Status = "BUSY"
 			return result
 		}
-		type probe struct{ key, state string }
+		type probe struct {
+			key, state   string
+			signatureAge *int64
+		}
 		outcomes := make(chan probe, len(pools)+2)
 		files := blob.Files{Root: root, Scanner: scanner}
 		for i := range pools {
@@ -36,7 +39,7 @@ func diagnostics(pools database.Pools, bindings []delivery.Binding, root, scanne
 				if pools.ProbeOwner(ctx, i) != nil {
 					state = "UNAVAILABLE"
 				}
-				outcomes <- probe{fmt.Sprintf("M%d", i+1), state}
+				outcomes <- probe{key: fmt.Sprintf("M%d", i+1), state: state}
 			}(i)
 		}
 		go func() {
@@ -44,7 +47,13 @@ func diagnostics(pools database.Pools, bindings []delivery.Binding, root, scanne
 			if decision, err := files.Scan(ctx, []byte("Helpdesk diagnostics fixture")); err == nil && decision == "CLEAN" {
 				state = "HEALTHY"
 			}
-			outcomes <- probe{"scanner", state}
+			var age *int64
+			if state == "HEALTHY" {
+				if seconds, err := files.SignatureAge(ctx, now); err == nil {
+					age = &seconds
+				}
+			}
+			outcomes <- probe{key: "scanner", state: state, signatureAge: age}
 		}()
 		go func() {
 			state := "UNAVAILABLE"
@@ -57,7 +66,7 @@ func diagnostics(pools database.Pools, bindings []delivery.Binding, root, scanne
 					state = "HEALTHY"
 				}
 			}
-			outcomes <- probe{"storage", state}
+			outcomes <- probe{key: "storage", state: state}
 		}()
 		var queue sync.WaitGroup
 		pending := make(chan delivery.Backlog, len(bindings))
@@ -84,6 +93,7 @@ func diagnostics(pools database.Pools, bindings []delivery.Binding, root, scanne
 			switch p.key {
 			case "scanner":
 				result.Scanner = p.state
+				result.ScannerSignatureAge = p.signatureAge
 			case "storage":
 				result.Storage = p.state
 			default:

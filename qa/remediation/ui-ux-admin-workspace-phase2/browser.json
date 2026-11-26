@@ -1,0 +1,184 @@
+{
+  "result": "PASS",
+  "origin": "http://127.0.0.1:18090",
+  "observations": {
+    "dashboard_390": {
+      "boxes": {
+        "action": {
+          "top": 248,
+          "bottom": 292
+        },
+        "kpis": {
+          "top": 409,
+          "bottom": 623
+        }
+      },
+      "viewport": 844,
+      "overflow": 0,
+      "missingStyles": 0
+    },
+    "dashboard_1440": {
+      "boxes": {
+        "action": {
+          "top": 257,
+          "bottom": 301
+        },
+        "kpis": {
+          "top": 446,
+          "bottom": 557
+        }
+      },
+      "viewport": 900,
+      "overflow": 0,
+      "missingStyles": 0
+    },
+    "roster_390": {
+      "boxes": {
+        "context": {
+          "top": 233,
+          "bottom": 318
+        },
+        "action": {
+          "top": 326,
+          "bottom": 370
+        },
+        "first": {
+          "top": 597,
+          "bottom": 641
+        }
+      },
+      "viewport": 844,
+      "overflow": 0,
+      "missingStyles": 0
+    },
+    "roster_1440": {
+      "boxes": {
+        "context": {
+          "top": 278,
+          "bottom": 340
+        },
+        "action": {
+          "top": 278,
+          "bottom": 322
+        },
+        "first": {
+          "top": 633,
+          "bottom": 667
+        }
+      },
+      "viewport": 900,
+      "overflow": 0,
+      "missingStyles": 0
+    },
+    "organizations_390": {
+      "boxes": {
+        "action": {
+          "top": 318,
+          "bottom": 362
+        },
+        "search": {
+          "top": 513,
+          "bottom": 557
+        },
+        "first": {
+          "top": 770,
+          "bottom": 814
+        }
+      },
+      "viewport": 844,
+      "overflow": 0,
+      "missingStyles": 0
+    },
+    "services_1440": {
+      "boxes": {
+        "action": {
+          "top": 376,
+          "bottom": 420
+        },
+        "search": {
+          "top": 466,
+          "bottom": 506
+        },
+        "first": {
+          "top": 621,
+          "bottom": 655
+        }
+      },
+      "viewport": 900,
+      "overflow": 0,
+      "missingStyles": 0
+    },
+    "role_policies_390": {
+      "boxes": {
+        "refresh": {
+          "top": 326,
+          "bottom": 370
+        },
+        "module": {
+          "top": 495,
+          "bottom": 539
+        }
+      },
+      "viewport": 844,
+      "overflow": 0,
+      "missingStyles": 0
+    },
+    "role_policies_1440": {
+      "boxes": {
+        "refresh": {
+          "top": 318,
+          "bottom": 362
+        },
+        "module": {
+          "top": 466,
+          "bottom": 510
+        }
+      },
+      "viewport": 900,
+      "overflow": 0,
+      "missingStyles": 0
+    },
+    "media_390": {
+      "boxes": {
+        "upload": {
+          "top": 233,
+          "bottom": 277
+        },
+        "filter": {
+          "top": 422,
+          "bottom": 466
+        },
+        "first": {
+          "top": 542,
+          "bottom": 726
+        }
+      },
+      "viewport": 844,
+      "overflow": 0,
+      "missingStyles": 0
+    },
+    "media_1440": {
+      "boxes": {
+        "upload": {
+          "top": 278,
+          "bottom": 322
+        },
+        "first": {
+          "top": 469,
+          "bottom": 793
+        }
+      },
+      "viewport": 900,
+      "overflow": 0,
+      "missingStyles": 0
+    }
+  },
+  "checks": [
+    "dashboard KPI before filters and report refresh",
+    "roster collapsed scope, add and edit, cancel and focus return",
+    "master search, add, edit, cancel, focus return and #new deep link",
+    "protected role, permission groups, change summary, review and cancellation",
+    "media genres, upload and publication focus, detail dialog"
+  ],
+  "limits": "Edge emulation with lab roles. No schedule, master, permissions or media mutations."
+}

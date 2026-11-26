@@ -50,22 +50,23 @@ type ReportQuery struct {
 }
 
 type Report struct {
-	AsOf          time.Time  `json:"as_of"`
-	Watermark     *time.Time `json:"watermark"`
-	Timezone      string     `json:"timezone"`
-	PolicyVersion *int64     `json:"policy_version"`
-	Denominator   int64      `json:"denominator"`
-	Count         int64      `json:"count"`
-	Measure       string     `json:"measure"`
-	Accepted      int64      `json:"accepted"`
-	Backlog       int64      `json:"backlog"`
-	Completed     int64      `json:"completed"`
-	Breached      int64      `json:"breached"`
-	Cancelled     int64      `json:"cancelled"`
-	Unmeasured    int64      `json:"unmeasured"`
-	GrossSeconds  int64      `json:"gross_seconds"`
-	NetSeconds    int64      `json:"net_seconds"`
-	SLAPercent    *float64   `json:"sla_percent"`
+	AsOf          time.Time           `json:"as_of"`
+	Watermark     *time.Time          `json:"watermark"`
+	Timezone      string              `json:"timezone"`
+	PolicyVersion *int64              `json:"policy_version"`
+	Denominator   int64               `json:"denominator"`
+	Count         int64               `json:"count"`
+	Measure       string              `json:"measure"`
+	Accepted      int64               `json:"accepted"`
+	Backlog       int64               `json:"backlog"`
+	Completed     int64               `json:"completed"`
+	Breached      int64               `json:"breached"`
+	Cancelled     int64               `json:"cancelled"`
+	Unmeasured    int64               `json:"unmeasured"`
+	GrossSeconds  int64               `json:"gross_seconds"`
+	NetSeconds    int64               `json:"net_seconds"`
+	SLAPercent    *float64            `json:"sla_percent"`
+	Analytics     *DashboardAnalytics `json:"analytics,omitempty"`
 }
 
 type Operation struct {

@@ -129,6 +129,7 @@ function adminPage(file, source) {
         .replace('Data Transaksi', 'Antrean Tiket Petugas'));
     source = source.replace(/<a href="\/admin\/app\/users\/index\.html" class="piui-nav-link"[^>]*>[\s\S]*?<\/a>/g, link => link.replace('Kelola Data Pengguna &amp; Hak Akses', 'Kelola Master Layanan, Organisasi &amp; Hak Akses').replace('Data Pengguna', 'Master Layanan &amp; Akses').replaceAll('/admin/app/users/index.html', '/admin/app/helpdesk/index.html'));
     source = source.replaceAll('Cari rute, audit ID, perintah...', 'Cari menu dan halaman...').replaceAll('Menu Navigasi PIUI Zero', 'Menu petugas');
+    source = source.replace(/(<main\b[^>]*\bid="main-content")(?![^>]*\btabindex=)/, '$1 tabindex="-1"');
     const desktopNav = renderAdminNav('Navigasi Utama', file);
     const mobileNav = renderAdminNav('Navigasi Mobile', file);
     source = source.replace(/<nav aria-label="Navigasi Utama">[\s\S]*?<\/nav>/, desktopNav);

@@ -4,10 +4,12 @@ import { spawn } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 const BASE = process.env.HELPDESK_BASE_URL || 'http://127.0.0.1:18090';
 const EDGE = process.env.EDGE_BIN || 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
 const CDP_PORT = Number(process.env.EDGE_MAINT_CDP_PORT || 9238);
+const REPORT_SERVICE = process.env.HELPDESK_MAINT_TEST_SERVICE_ID || '31000000-0000-4000-8000-000000000001';
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -80,7 +82,7 @@ class CDPClient {
   }
 }
 
-async function waitFor(fn, timeoutMs = 12000, msg = 'condition') {
+export async function waitFor(fn, timeoutMs = 12000, msg = 'condition') {
   const deadline = Date.now() + timeoutMs;
   let lastErr;
   while (Date.now() < deadline) {
@@ -93,7 +95,7 @@ async function waitFor(fn, timeoutMs = 12000, msg = 'condition') {
   throw new Error(`waitFor timeout (${msg})${lastErr ? ': ' + lastErr.message : ''}`);
 }
 
-async function launchEdge() {
+export async function launchEdge() {
   const userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'helpdesk-maint-edge-'));
   const proc = spawn(EDGE, [
     '--headless=new',
@@ -150,7 +152,7 @@ async function launchEdge() {
   };
 }
 
-async function logoutSession(cdp) {
+export async function logoutSession(cdp) {
   await cdp.eval(`(async () => {
     try {
       const me = await fetch('/api/v1/auth/me', { credentials: 'include' });
@@ -168,7 +170,7 @@ async function logoutSession(cdp) {
   await cdp.send('Network.clearBrowserCookies');
 }
 
-async function loginRoleKeyword(cdp, roleKeyword) {
+export async function loginRoleKeyword(cdp, roleKeyword) {
   await cdp.navigate(`${BASE}/admin/auth/login.html`, 600);
   await waitFor(() => cdp.eval(`(() => { const s = document.querySelector('#hd-subject'); return s && s.options.length > 0; })()`), 8000, 'lab subjects');
   const picked = await cdp.eval(`(() => {
@@ -349,6 +351,9 @@ async function main() {
     assert.equal(block503, 503, 'Write API must return 503 during READ_ONLY maintenance');
     console.log('  [OK] Unscheduled (Darurat) FULL_SCREEN Under Maintenance overlay + 503 write guard verified');
 
+    // READ_ONLY takes precedence over DRAIN while both windows are active.
+    await resetMaintenanceClean(cdp);
+    await waitFor(() => cdp.eval("(async () => (await (await fetch('/api/v1/maintenance/status')).json()).active === null)()"), 5000, 'READ_ONLY ended');
     // 4. Test BANNER + DRAIN mode locks ticket creation form on /lapor.html while keeping catalog readable
     await cdp.navigate(`${BASE}/admin/app/helpdesk/index.html?kind=maintenance`, 750);
     await waitFor(() => cdp.eval(`document.querySelector('[data-hd-maint-stop]') !== null`), 8000);
@@ -364,7 +369,7 @@ async function main() {
     })()`);
     await waitFor(() => cdp.eval(`document.querySelector('[data-hd-maint-live-title]')?.textContent?.includes('(DRAIN)')`), 10000, 'admin DRAIN applied');
 
-    await cdp.navigate(`${BASE}/lapor.html?id=31000000-0000-4000-8000-000000000001`, 800);
+    await cdp.navigate(`${BASE}/lapor.html?id=${encodeURIComponent(REPORT_SERVICE)}`, 800);
     const laporDrain = await waitFor(() => cdp.eval(`(() => {
       const f = document.querySelector('form[data-ticket-create]');
       if (!f || f.hidden) return null;
@@ -434,7 +439,9 @@ async function main() {
   }
 }
 
-main().catch(err => {
-  console.error('FAIL Under Maintenance E2E:', err);
-  process.exit(1);
-});
+if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) {
+  main().catch(err => {
+    console.error('FAIL Under Maintenance E2E:', err);
+    process.exit(1);
+  });
+}

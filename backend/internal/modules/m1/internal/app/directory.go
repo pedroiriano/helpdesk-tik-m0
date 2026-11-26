@@ -58,3 +58,55 @@ func (s *Service) registerReportingDirectory(mux *http.ServeMux) {
 		web.JSON(w, 200, web.List(rows, p.Limit, func(entry api.DirectoryEntry) string { return entry.ID }))
 	})
 }
+
+func (s *Service) registerRosterTeams(mux *http.ServeMux) {
+	mux.HandleFunc("GET /api/v1/staff/roster-teams", func(w http.ResponseWriter, r *http.Request) {
+		if err := s.rosterTeams(w, r); err != nil {
+			web.WriteError(w, err)
+		}
+	})
+}
+
+func (s *Service) rosterTeams(w http.ResponseWriter, r *http.Request) error {
+	ctx := r.Context()
+	actor, err := s.Authenticate(ctx, Credentials(r))
+	if err != nil {
+		return err
+	}
+	page, err := web.Pagination(r)
+	if err != nil {
+		return err
+	}
+	org := r.URL.Query().Get("organization_id")
+	if !web.UUID(org) {
+		return web.Fail(422, "Organisasi tidak valid")
+	}
+	ids := []string{}
+	if actor.CanManageRoster(org, "") {
+		ids = nil
+	} else {
+		for _, member := range actor.Memberships {
+			if member.TeamID != nil && actor.CanManageRoster(org, *member.TeamID) {
+				ids = append(ids, *member.TeamID)
+			}
+		}
+		if len(ids) == 0 {
+			return web.Fail(403, "Izin pengelolaan jadwal diperlukan")
+		}
+	}
+	rows, err := s.Store.RosterTeams(ctx, org, ids, page)
+	if err != nil {
+		return err
+	}
+	w.Header().Set("Cache-Control", "no-store")
+	web.JSON(w, 200, web.List(rows, page.Limit, func(item api.RosterTeam) string { return item.ID }))
+	return nil
+}
+
+func (s *Service) DispatchTeams(ctx context.Context, org string, page web.Page) ([]api.DirectoryEntry, error) {
+	if !web.UUID(org) {
+		return nil, web.Fail(422, "Organisasi tidak valid")
+	}
+	// The handoff directory also lists teams for a known target organization.
+	return s.Store.HandoffTargets(ctx, "00000000-0000-4000-8000-000000000000", org, page)
+}

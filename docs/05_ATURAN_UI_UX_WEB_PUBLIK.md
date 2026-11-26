@@ -62,6 +62,15 @@ Halaman umum memakai banner judul dengan clearance header. Detail memakai breadc
 
 Gunakan komponen PIUI yang sama untuk tombol, kartu, daftar, filter, accordion, breadcrumb dan navigasi terkait. Konten spesifik fitur mengisi slot komponen. Halaman detail statis dan dinamis harus mengikuti token yang sama.
 
+- Halaman tugas memakai satu clearance pada kontainer utama. Judul dan ringkasan berada dalam satu blok. Untuk detail layanan, nama layanan menjadi judul utama dan satu tindakan laporan ditempatkan dekat ketentuan akses.
+- Tampilkan formulir laporan setelah kontrol dan validasinya siap. Satukan tahapan dan layanan terpilih di atas formulir. Pada 390 × 844, kolom judul harus utuh di layar awal. Letakkan batas unggahan di pemilih lampiran, petunjuk draf di area status draf, dan petunjuk penyimpanan kunci di area kunci tamu.
+- Halaman detail panduan membatasi lebar bacaan, memakai satu judul dengan jarak antarbaris rapat, serta memberikan indentasi untuk daftar dan ruang bagi kutipan, tabel dan blok kode.
+- Dahulukan pencarian katalog dan hasil. Pada ponsel, kategori dan akses berada dalam satu kontrol Filter layanan dengan jumlah pilihan aktif. Tampilkan syarat akses dan batas lampiran dekat tombol Buat laporan. Pencarian lintas panduan menjadi bagian bantuan lain.
+- Daftar panduan menampilkan pencarian, pengantar singkat dan daftar hasil. Ilustrasi unggulan berukuran kecil di ponsel agar pengguna dapat melihat daftar lebih awal.
+- Pakai nama tugas pada menu, tombol, status, dan label aksesibel. Penanda Lingkungan uji dan arahan Gunakan data contoh ditampilkan pada masuk, daftar, dan formulir laporan saat konfigurasi server mengaktifkan akun uji. Perilaku ini berlaku pula pada tautan langsung.
+- Pada layar pendek, lima thumbnail berada di dalam tinggi hero. Pintasan bagian berada di bawah hero dan boleh membungkus. Tahapan pengisian laporan memakai tiga kolom ringkas di ponsel.
+
+
 Kartu langkah memakai padding 24 px pada semua sisi, gap nomor ke isi 12 px dan gap judul ke uraian 12 px. Kartu pendukung memakai gap 16 px dan justify-content flex-start. Hindari space-between yang menghasilkan ruang kosong besar di antara judul dan uraian.
 
 Metadata label/nilai sejajar pada grid. Uraian panjang harus membungkus. Kartu tidak memakai tinggi tetap yang memotong teks. Gunakan minmax(0, 1fr) dan min-width 0 pada grid yang menampung konten panjang. Jangan menyembunyikan overflow dokumen untuk menutupi kesalahan layout.
@@ -180,6 +189,8 @@ Jangan mengklaim simpan atau kirim berhasil dari tombol UI tanpa konfirmasi serv
 - Heading, kartu, gambar, input dan footer harus membungkus tanpa luapan horizontal.
 - Galeri memakai dua kolom desktop dan satu kolom mobile. Kartu akses memakai tiga, dua, lalu satu kolom sesuai breakpoint.
 - Fokus keyboard terlihat. Interaksi tidak boleh bergantung hanya pada hover atau warna.
+- Tautan **Lewati ke konten utama** memindahkan fokus ke konten. Saat panel navigasi terbuka, fokus masuk ke menu. Escape menutup menu dan mengembalikan fokus ke tombol pembuka.
+- Kontrol utama dan pilihan yang disentuh menggunakan target minimal 44 × 44 px. Formulir dan ringkasan dialog tersusun satu kolom di layar sempit. Input berkas tersembunyi berada di luar urutan Tab; pengguna membuka pemilih melalui kontrol lampiran.
 - Pertahankan prefers-reduced-motion, alt yang sesuai dan urutan DOM. Hero dengan navigasi thumbnail memakai pergantian manual.
 - Pembesaran teks tidak boleh memotong informasi. Pada ruang sempit, bungkus atau susun ulang komponen.
 
@@ -237,12 +248,15 @@ Arahan 13 November 2026 mengganti kelompok panah, penghitung serta jeda dengan p
 
 ## Alur tugas dan orientasi sesi 13 November 2026
 
+- Aksi awal Beranda adalah **Buat Laporan**, **Lacak Tiket Tamu**, dan **Tiket Saya**. Kartu katalog menampilkan kebutuhan akun dalam label singkat sebelum pelapor membuka formulir.
 - Entry laporan umum memilih layanan terlebih dahulu. Tautan laporan layanan membawa ID atau slug yang dapat diselesaikan server.
 - Navigasi layanan mengikuti sesi tamu, pemohon, atau petugas. Menu internal dan pintasan mengikuti permission pada organisasi aktif. Penyaringan visual melengkapi otorisasi server. Hindari kelompok menu kosong.
 - Login dari layanan mempertahankan service dan intent report/detail. Gunakan tujuan lokal tetap yang ditentukan kode; jangan menerima URL tujuan bebas dari query.
 - Sebelum commit laporan, sediakan ringkasan layanan, judul, uraian, isian khusus dan lampiran. Gunakan dialog native, validasi wajib, fokus yang terlihat, serta tombol kembali mengedit dengan isian tetap tersimpan. Ringkasan memakai textContent dan tidak memuat kunci rahasia.
+- Detail tiket mendahulukan nomor, status, prioritas, penanggung jawab teknis, target penyelesaian dan tindakan sesuai akses. Tautan Percakapan, Riwayat dan Lampiran memindahkan fokus ke bagian tujuan. Rincian tahapan dapat dibuka saat dibutuhkan.
 - Tampilkan label status dan prioritas melalui helper bersama. Pisahkan status workflow dan hasil verifikasi. Prioritas tanpa keputusan tampil sebagai belum ditetapkan. Petunjuk berikutnya mengikuti state dan jenis pengguna.
 - Target SLA, ukuran berkas serta batas konfirmasi mengikuti policy/tiket/attempt aktif dari server. Bila data belum tersedia, jelaskan keterbatasan tanpa angka rekaan.
+- Bukti pengiriman tamu menempatkan **Salin Kunci Pelacakan** di samping **Buka Pelacakan**. Saat izin papan klip ditolak, kunci dapat disalin dari bidang sementara yang kosong saat kehilangan fokus.
 - Tamu yang membuka Tiket saya memperoleh pilihan masuk akun atau pelacakan tamu. Input kunci pelacakan bertopeng, dapat dikoreksi saat gagal, dan tidak masuk URL, ringkasan, draft atau storage browser.
 - Kegagalan daftar memiliki tindakan coba lagi pada cursor yang sama. Pertahankan pagination server, status loading/empty/error dan pencegahan kirim ganda.
 - Escape semua teks dan atribut dari data tidak tepercaya pada shell HTML lama. Gunakan textContent pada komponen baru. Konten panjang dan baris uraian harus terbaca pada ponsel.
@@ -251,7 +265,7 @@ Arahan 13 November 2026 mengganti kelompok panah, penghitung serta jeda dengan p
 
 - Kontrol yang hanya berlaku untuk tamu harus dinonaktifkan bagi akun login. Menyembunyikan kontrol required saja masih dapat menghentikan validasi native.
 - Satu helper ketersediaan aksi mengikuti owner, mandat aktif, state, penugasan, arsip dan window. Buka kembali memerlukan pemohon sah atau Operator berizin. Backend memeriksa ulang setiap command.
-- Petunjuk tindakan berikut menyediakan tautan ke verifikasi, penugasan, mulai penanganan, informasi tambahan, hasil pekerjaan atau konfirmasi yang sedang berlaku.
+- Ringkasan detail memperlihatkan status, pihak yang perlu bertindak, dan tenggat yang diberikan server. Petunjuk tindakan berikut menyediakan tautan ke verifikasi, penugasan, mulai penanganan, informasi tambahan, hasil pekerjaan atau konfirmasi yang sedang berlaku.
 - Teknisi mengirim hasil penanganan untuk diperiksa. RESOLVED tampil sebagai menunggu konfirmasi; CLOSED tampil sebagai selesai. Hasil upaya yang relevan tetap terbaca setelah ditutup.
 - Catatan konfirmasi memakai attempt aktif dan waktu WIB. Jika hasil gagal dimuat, jelaskan keterbatasannya dan hentikan keputusan sampai data tersedia. Batas 24 jam adalah waktu kalender dari server dan penutupan otomatis memerlukan guard pemberitahuan serta feedback.
 - Respons manusia pertama mencakup balasan petugas yang terlihat pemohon. Catatan INTERNAL serta komentar pemohon tidak dihitung sebagai respons petugas. Komentar petugas pada masa konfirmasi tidak boleh disebut feedback pemohon.

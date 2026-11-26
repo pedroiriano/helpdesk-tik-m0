@@ -24,9 +24,9 @@ export function landingPage(source) {
     .replace(/(<p class="vy-ref-hero__mobile-value">)[^<]*(<\/p>)/, '$1Laporkan kendala TIK, pantau tiket, atau cari panduan layanan Kota Depok.$2')
     .replace(/(<a class="vy-ref-hero__mobile-cta")[^>]*>[\s\S]*?<\/a>/,
       '<div class="hd-hero-cta-wrap" role="group" aria-label="Aksi Utama Pelayanan">' +
-      '<a class="btn btn-primary hd-hero-btn hd-hero-btn--primary" href="/lapor.html">Buat laporan</a>' +
+      '<a class="btn btn-primary hd-hero-btn hd-hero-btn--primary" href="/layanan.html">Buat laporan</a>' +
       '<a class="btn btn-secondary hd-hero-btn hd-hero-btn--secondary" href="/lacak.html">Lacak tiket tamu</a>' +
-      '<a class="btn btn-secondary hd-hero-btn hd-hero-btn--secondary" href="/akses.html">Masuk akun</a>' +
+      '<a class="btn btn-secondary hd-hero-btn hd-hero-btn--secondary" href="/tiket.html">Tiket saya</a>' +
       '</div>');
   source = source.replace(/<img class="vy-stage__img"[\s\S]*?>/, '<img class="vy-stage__img" src="'+asset+'02_Hero_Tanpa_Teks/'+heroes[0][0]+'" width="1600" height="600" fetchpriority="high" alt="'+heroes[0][2]+'">');
   const tabTemplate = source.match(/<button class="vy-stage__tab"[\s\S]*?<\/button>/)[0];
@@ -51,7 +51,7 @@ export function landingPage(source) {
           </a>
 
           <a class="vy-hdr-reel-strip" href="/layanan.html">
-            <span class="vy-hdr-reel-strip__seq">( 16 Layanan Resmi )</span>
+            <span class="vy-hdr-reel-strip__seq">( Layanan TIK )</span>
             <span class="vy-hdr-reel-strip__chip" aria-hidden="true">
               <img decoding="async" src="${asset}03_Ilustrasi_Pendukung/ilustrasi-bantuan-operator.png" width="240" height="135" alt="" loading="lazy">
             </span>
@@ -109,14 +109,14 @@ export function landingPage(source) {
   source = source.replace(/<div class="vy-hdr-panel-strips">[\s\S]*?<\/div>/, drawerNav);
   // Keep the original slider controls and selected-tab behaviour, with a service-focused composition.
   source = source.replace(/<div class="vy-stage__info">[\s\S]*?(?=<nav class="vy-quick-nav")/, '</div></div>');
-  const quickNav = `<nav class="vy-quick-nav" aria-label="Navigasi Cepat Halaman">
+  const quickNav = `<nav class="vy-quick-nav hd-landing-links" aria-label="Pintasan beranda">
           <a href="#alur-pelaporan">Alur Pelaporan</a>
           <a href="#akses">Akses Layanan</a>
-          <a href="/layanan.html">Katalog 16 Layanan</a>
+          <a href="/layanan.html">Katalog Layanan</a>
           <a href="/panduan.html">Basis Pengetahuan</a>
           <a href="/faq.html">Tanya Jawab (FAQ)</a>
         </nav>`;
-  source = source.replace(/<nav class="vy-quick-nav"[\s\S]*?<\/nav>/, quickNav);
+  source = source.replace(/<nav class="vy-quick-nav"[\s\S]*?<\/nav>(\s*<\/div>\s*<\/section>)/, (_, closeHero) => closeHero + quickNav);
   source = source.replace(/<div class="vy-ref-hero__paths"[\s\S]*?<\/div>/, '')
     .replace(/<div class="vy-ref-hero__spec"[\s\S]*?<\/div>/, '')
     .replace(/<span class="vy-ref-hero__rail[\s\S]*?<\/span>/g,'');
@@ -151,15 +151,14 @@ export function landingPage(source) {
     .replaceAll('aria-label="Filter court plays"', 'aria-label="Filter kategori bantuan"')
     .replaceAll('aria-label="CourtSpec — back to top"', 'aria-label="Helpdesk TIK — kembali ke atas"')
     .replace('Apakah data pada grafik merupakan data warga?', 'Apakah ilustrasi menampilkan data warga?')
-    .replace('Tidak. Grafik dan kartu menggunakan data contoh untuk memeriksa tampilan dan interaksi.', 'Tidak. Ilustrasi merupakan aset visual panduan layanan dan tidak memuat data pribadi warga.')
-    .replace('Pilih kategori untuk melihat contoh informasi yang perlu disiapkan. Seluruh contoh memakai data sintetis.', 'Pilih kategori layanan TIK Kota Depok untuk melihat informasi yang perlu disiapkan saat melapor.');
+    .replace('Tidak. Grafik dan kartu menggunakan data contoh untuk memeriksa tampilan dan interaksi.', 'Tidak. Ilustrasi merupakan aset visual panduan layanan dan tidak memuat data pribadi warga.');
   const guideLabels = ['akun','jaringan','aplikasi','perangkat'];
   let labelIndex = 0;
   source = source.replace(/(aria-label=")Open [^"]+ detail(")/g, (_, start, end) => start+'Buka panduan '+guideLabels[labelIndex++ % 4]+end);
   for (const [key, label] of Object.entries({finishing:'Akun', handles:'Jaringan', shooting:'Aplikasi', footwork:'Perangkat'})) {
     source = source.replace(new RegExp('(<button[^>]*data-filter="'+key+'"[^>]*>)[^<]*'), '$1'+label);
   }
-  source = source.replace('<span class="vy-console-count" id="vy-gallery-count" aria-live="polite">4 / 4</span>', '<span class="vy-console-count" id="vy-gallery-count" aria-live="polite">4 / 4</span><button type="button" class="btn btn-secondary vy-btn-open-lightbox" id="btn-open-gallery-lightbox" title="Buka penampil galeri resolusi penuh">🖼️ Buka Mode Galeri (Lightbox)</button>');
+  source = source.replace('<span class="vy-console-count" id="vy-gallery-count" aria-live="polite">4 / 4</span>', '<span class="vy-console-count" id="vy-gallery-count" aria-live="polite">4 / 4</span><button type="button" class="btn btn-secondary vy-btn-open-lightbox" id="btn-open-gallery-lightbox" title="Buka penampil galeri resolusi penuh">Buka galeri</button>');
   source = source.replaceAll('<!-- 1. Full-Viewport Cinematic Basketball Stage -->', '<!-- 1. Full-Viewport Cinematic Hero Stage -->')
     .replaceAll('<!-- 2. Problem Manifesto & 4 Specialized Basketball Pipelines -->', '<!-- 2. Alur Pelaporan & 4 Kategori Layanan TIK -->')
     .replaceAll('<!-- 6. Interactive 24h Basketball Telemetry Chart -->', '<!-- 6. Grafik Aktivitas Layanan TIK -->')
@@ -219,25 +218,25 @@ function footer() {
           <p>Portal resmi pelayanan dan bantuan teknologi informasi komunikasi bagi masyarakat, aparatur sipil negara, dan perangkat daerah Pemerintah Kota Depok.</p>
         </div>
         <nav class="vy-tail-paths" aria-label="Navigasi footer">
-          <h2 class="vy-eyebrow">Jelajahi Portal</h2>
-          <a href="/layanan.html">Katalog 16 Layanan TIK</a>
-          <a href="/panduan.html">Basis Pengetahuan SPBE</a>
-          <a href="/lapor.html">Buat Tiket Laporan Baru</a>
+          <h2 class="vy-eyebrow">Navigasi</h2>
+          <a href="/layanan.html">Katalog Layanan</a>
+          <a href="/panduan.html">Panduan</a>
+          <a href="/lapor.html">Buat laporan</a>
           <a href="/faq.html">Pertanyaan Umum (FAQ)</a>
           <a href="/tiket.html">Tiket Saya</a>
-          <a href="/status.html">Status Layanan SPBE</a>
+          <a href="/status.html">Status layanan</a>
           <a href="/lacak.html">Lacak Tiket Tamu</a>
-          <a href="/kontak.html">Kontak &amp; Lokasi Layanan</a>
+          <a href="/kontak.html">Kontak layanan</a>
         </nav>
         <div class="vy-tail-top">
-          <h2 class="vy-eyebrow">Koneksi &amp; Petugas</h2>
+          <h2 class="vy-eyebrow">Bantuan petugas</h2>
           <div data-helpdesk-health></div>
           <a class="vy-detail-link" href="/admin/auth/login.html">Ruang Kerja Petugas &rarr;</a>
         </div>
         <div class="vy-tail-biz">
           <p>Dinas Komunikasi dan Informatika Kota Depok · Gedung Dibaleka II Lantai 7 Balai Kota Depok, Jl. Margonda Raya No. 54.</p>
           <div class="vy-tail-share">
-            <a href="/status.html">Status &amp; Aksesibilitas</a>
+            <a href="/status.html">Status layanan</a>
             <a href="#top" aria-label="Kembali ke atas">Kembali ke atas ↑</a>
           </div>
         </div>
@@ -250,12 +249,12 @@ function footer() {
 function accessCards() {
   const badges = [
     '<span class="vy-eyebrow vy-eyebrow--public">Layanan Publik &amp; Tamu Aktif</span>',
-    '<span class="vy-eyebrow vy-eyebrow--asn">Autentikasi Terpadu ASN Aktif</span>',
-    '<span class="vy-eyebrow vy-eyebrow--admin">Konsol Penanganan &amp; SLA Aktif</span>'
+    '<span class="vy-eyebrow vy-eyebrow--asn">Layanan kedinasan</span>',
+    '<span class="vy-eyebrow vy-eyebrow--admin">Penanganan tiket</span>'
   ];
   return '<div id="akses" class="hd-access"><span class="vy-eyebrow">AKSES LAYANAN RESMI</span><h2 class="vy-h2">Untuk Kebutuhan Anda.</h2><div class="vy-paths-grid">'+[
-    ['Masyarakat Umum','Layanan publik terpadu (WiFi Publik, Aplikasi DSW) dan tanggap darurat insiden siber (Depok-CSIRT) tanpa perlu login. Pelacakan menggunakan token kriptografis aman.','bantuan-operator'],
-    ['ASN Kota Depok','Layanan kedinasan penuh (Email Dinas @depok.go.id, Subdomain/Hosting, TTE BSrE, Integrasi SPLP, Colocation Server). Masuk via akun ASN (lab) dengan autosave draft.','kolaborasi-opd'],
+    ['Masyarakat Umum','Layanan publik terpadu (WiFi Publik, Aplikasi DSW) dan tanggap darurat insiden siber (Depok-CSIRT) tanpa perlu login. Gunakan kunci pelacakan untuk membuka kembali laporan tamu.','bantuan-operator'],
+    ['ASN Kota Depok','Layanan kedinasan penuh (Email Dinas @depok.go.id, Subdomain/Hosting, TTE BSrE, Integrasi SPLP, Colocation Server). Masuk dengan akun ASN untuk menggunakan layanan kedinasan dan melanjutkan draf laporan.','kolaborasi-opd'],
     ['Petugas Layanan','Ruang kerja terpadu untuk verifikasi, disposisi teknisi, koordinasi vendor, jeda waktu penanganan, dan pemantauan target SLA.','tiket-helpdesk'],
-  ].map(([title,body,image],index)=>'<article class="vy-path-card"><img class="hd-service-art" src="'+asset+'03_Ilustrasi_Pendukung/ilustrasi-'+image+'.png" width="512" height="512" loading="lazy" alt=""><h3 class="vy-path-card__title">'+title+'</h3><p>'+body+'</p><a class="btn" href="'+['/layanan.html','/akses.html','/admin/app/helpdesk/index.html'][index]+'">'+['Lihat Layanan Publik','Masuk akun ASN (lab)','Ruang Petugas'][index]+' →</a>'+badges[index]+'</article>').join('')+'</div></div>';
+  ].map(([title,body,image],index)=>'<article class="vy-path-card"><img class="hd-service-art" src="'+asset+'03_Ilustrasi_Pendukung/ilustrasi-'+image+'.png" width="512" height="512" loading="lazy" alt=""><h3 class="vy-path-card__title">'+title+'</h3><p>'+body+'</p><a class="btn" href="'+['/layanan.html','/akses.html','/admin/app/helpdesk/index.html'][index]+'">'+['Lihat Layanan Publik','Masuk dengan akun ASN','Ruang Petugas'][index]+' →</a>'+badges[index]+'</article>').join('')+'</div></div>';
 }

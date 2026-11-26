@@ -1,0 +1,76 @@
+{
+  "candidate_id": "m0-p2-20261124-c3",
+  "target": "http://127.0.0.1:18191",
+  "gateway_image": "sha256:bcb6c658b20f8a159b98b1f3fad770a1ac521964100495f13e04fb2163fd9ac8",
+  "aggregation": "Passed checks from separate runs against identical effective service images. Failed attempts retained. Runner changes limited to readiness, fixtures, selectors, and response assertions.",
+  "suite_count": 13,
+  "suites": {
+    "R4-B_csp_routes_overflow_faq": {
+      "report": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser/browser-final.json",
+      "report_sha256": "a5e526240f4740349e0f764394221b332df91dadc990025f9a83cc1beb0d7ef1",
+      "status": "PASS"
+    },
+    "candidate_access_profiles": {
+      "report": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser/browser-final.json",
+      "report_sha256": "a5e526240f4740349e0f764394221b332df91dadc990025f9a83cc1beb0d7ef1",
+      "status": "PASS"
+    },
+    "candidate_catalog_routing": {
+      "report": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser/browser-final.json",
+      "report_sha256": "a5e526240f4740349e0f764394221b332df91dadc990025f9a83cc1beb0d7ef1",
+      "status": "PASS"
+    },
+    "candidate_role_hero": {
+      "report": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser/browser-final.json",
+      "report_sha256": "a5e526240f4740349e0f764394221b332df91dadc990025f9a83cc1beb0d7ef1",
+      "status": "PASS"
+    },
+    "RM0_03_R3_H_backup_manifest_ui": {
+      "report": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser/browser-final.json",
+      "report_sha256": "a5e526240f4740349e0f764394221b332df91dadc990025f9a83cc1beb0d7ef1",
+      "status": "PASS"
+    },
+    "R4-D_form_lost_response_draft_tracking": {
+      "report": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser-resume-2/browser-final.json",
+      "report_sha256": "855427c079012e3a8dadb4614bf655e7fd655c02a45dec26d77b551d0b77d8e7",
+      "status": "PASS"
+    },
+    "R4-E_queue_lifecycle_conflict": {
+      "report": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser-resume-2/browser-final.json",
+      "report_sha256": "855427c079012e3a8dadb4614bf655e7fd655c02a45dec26d77b551d0b77d8e7",
+      "status": "PASS"
+    },
+    "R4-F_m9_reports_export": {
+      "report": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser-resume-2/browser-final.json",
+      "report_sha256": "855427c079012e3a8dadb4614bf655e7fd655c02a45dec26d77b551d0b77d8e7",
+      "status": "PASS"
+    },
+    "R4-G_m8_page_editorial_search_reader": {
+      "report": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser-resume-2/browser-final.json",
+      "report_sha256": "855427c079012e3a8dadb4614bf655e7fd655c02a45dec26d77b551d0b77d8e7",
+      "status": "PASS"
+    },
+    "R4-H_lightbox_and_media": {
+      "report": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser-resume-2/browser-final.json",
+      "report_sha256": "855427c079012e3a8dadb4614bf655e7fd655c02a45dec26d77b551d0b77d8e7",
+      "status": "PASS"
+    },
+    "R4-I_footer_zoom_reduced_motion": {
+      "report": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser-resume-3/browser-final.json",
+      "report_sha256": "ebcfc533430c1fd12abd550f775dcc1f7d4437039816c4d75b932496bab2d192",
+      "status": "PASS"
+    },
+    "Fase2_UI_and_Ops": {
+      "report": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser-resume-4/browser-final.json",
+      "report_sha256": "1087f1dfe61de6f0fd240467aab49fdbe7b17fcf510ef3a6b5f6f259de475bd3",
+      "status": "PASS"
+    },
+    "Fase3_AuthConfig_and_DeliveryQueue": {
+      "report": "qa/remediation/rm0-05/penyempurnaan/m0-p2-20261124-c3/browser-resume-4/browser-final.json",
+      "report_sha256": "1087f1dfe61de6f0fd240467aab49fdbe7b17fcf510ef3a6b5f6f259de475bd3",
+      "status": "PASS"
+    }
+  },
+  "result": "PASS",
+  "r4_i_scope": "640px CSS viewport approximating reflow at 200%; prefers-reduced-motion emulation, footer and keyboard coverage in other suites."
+}

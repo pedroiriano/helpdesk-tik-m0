@@ -1,0 +1,61 @@
+{
+  "task_id": "M0-DASHBOARD-ANALYSIS-EXAMPLE",
+  "timestamp": "2026-11-26T04:25:06.7930078+00:00",
+  "acceptance": "AC11 AC06 (penyempurnaan Analisis)",
+  "result": "DONE_VERIFIED_LAB",
+  "report": "qa/remediation/dashboard-analysis-example/completion.json",
+  "files": [
+    "frontend/business-pages.mjs",
+    "frontend/business.css",
+    "frontend/src/features/dashboard-analysis.ts",
+    "frontend/src/features/dashboard-example.ts",
+    "docs/06_ATURAN_UI_UX_WEB_ADMIN.md",
+    "scripts/test_admin_dashboard_example_browser.mjs",
+    "planning/backlog.csv",
+    "status/PROJECT_STATE.md",
+    "status/evidence.jsonl",
+    "qa/remediation/dashboard-analysis-example/browser.json",
+    "qa/remediation/dashboard-analysis-example/completion.json"
+  ],
+  "commands": [
+    "npm.cmd --prefix frontend run build",
+    "python -X utf8 scripts/test_piui_build.py",
+    "docker image tag sha256:071f587d76810f4dfe431cbcee12a5a12b28dc0ab39af3abf7f256fe745579f8 helpdesk-m0-web:pre-dashboard-example-20261126",
+    "docker compose build --quiet web",
+    "docker compose up -d --no-deps --no-build --pull never --wait --wait-timeout 60 web",
+    "python -X utf8 scripts/smoke_local.py",
+    "$env:EDGE_MAINT_CDP_PORT='9360'; $env:HELPDESK_EXAMPLE_CAPTURE='.local/dashboard-analysis-example.png'; node scripts/test_admin_dashboard_example_browser.mjs",
+    "$env:EDGE_MAINT_CDP_PORT='9356'; node scripts/test_admin_dashboard_analysis_browser.mjs",
+    "git -c core.safecrlf=false diff --check"
+  ],
+  "runtime": {
+    "port": 18090,
+    "web_image": "sha256:174f3b8c2d1ac6798273c011ea351c929e77083d8e83d23e3b91630abbf4eff9",
+    "rollback_tag": "helpdesk-m0-web:pre-dashboard-example-20261126",
+    "app_image": "sha256:715a274563329445509fcd9ed6f9b3463a5b4be8664229bca59206729296c085",
+    "healthy_services": [
+      "app",
+      "web",
+      "db",
+      "scanner"
+    ],
+    "working_db_rows": {
+      "tickets": 136,
+      "attachments": 51,
+      "media": 17
+    }
+  },
+  "limits": [
+    "Tampilan diperiksa di Edge 1280 × 780 dan emulasi 390 × 844 dengan akun lab Super Admin. Regresi data sistem memakai Koordinator dan Super Admin.",
+    "Mode non-lab diverifikasi lewat simulasi respons sesi pada browser lab. UAT pengguna dan perangkat fisik masih terbuka.",
+    "Fixture bersifat ilustratif di Web Admin. Aktivasi data contoh tidak memanggil API, mengubah KPI sistem, ataupun membuat tiket di database."
+  ],
+  "checks": {
+    "layout": "PASS: lebar tren mengisi 896/896 px pada desktop dan 336/336 px pada ponsel; panel usia/tenggat satu baris di desktop dan bertumpuk di ponsel.",
+    "empty": "PASS: panel kosong 168 px menggantikan plot angka nol dengan satu pesan; tabel per tanggal tetap tersedia.",
+    "example": "PASS: 80 diterima, 30 aktif, 49 selesai dan 1 dibatalkan. Kelompok usia dan tenggat menjumlah ke 30. Kapasitas dan kinerja berisi ilustrasi. Batang grafik benar-benar terlukis.",
+    "isolation": "PASS: KPI sistem tetap sama; tidak ada panggilan API contoh, tombol rincian, atau tautan ekspor pada mode simulasi. Kembali ke Data sistem memulihkan data API.",
+    "regression": "PASS: agregat dan tabel sistem, drill-down, pencarian, ekspor serta izin lintas PD.",
+    "browser": "browser.json"
+  }
+}

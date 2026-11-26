@@ -1,0 +1,83 @@
+{
+  "task_id": "M0-DASHBOARD-F3",
+  "timestamp": "2026-11-26T04:14:13.5735465+00:00",
+  "acceptance": "AC11 AC06 (penerimaan Dasbor)",
+  "result": "DONE_VERIFIED_LAB",
+  "report": "qa/remediation/dashboard-acceptance-phase3/completion.json",
+  "files": [
+    "frontend/admin-profiles.mjs",
+    "frontend/business-pages.mjs",
+    "frontend/business.css",
+    "frontend/src/features/admin-shell.ts",
+    "frontend/src/features/dashboard.ts",
+    "frontend/src/features/dashboard-analysis.ts",
+    "frontend/src/features/dashboard-feedback.ts",
+    "docs/06_ATURAN_UI_UX_WEB_ADMIN.md",
+    "scripts/test_admin_dashboard_acceptance_browser.mjs",
+    "planning/backlog.csv",
+    "status/PROJECT_STATE.md",
+    "status/evidence.jsonl",
+    "qa/remediation/dashboard-acceptance-phase3/browser.json",
+    "qa/remediation/dashboard-acceptance-phase3/completion.json"
+  ],
+  "commands": [
+    "npm.cmd --prefix frontend run build",
+    "python -X utf8 scripts/test_piui_build.py",
+    "node scripts/test_admin_navigation.mjs",
+    "docker image tag sha256:24fb7a914dfacaa8bc32c680b6a838524fc2d72f2696a3353fdfd8db346fd493 helpdesk-m0-web:pre-dashboard-f3-20261126",
+    "docker compose build --quiet web",
+    "docker compose up -d --no-deps --no-build --pull never --wait --wait-timeout 60 web",
+    "python -X utf8 scripts/smoke_local.py",
+    "$env:EDGE_MAINT_CDP_PORT='9358'; node scripts/test_admin_dashboard_acceptance_browser.mjs",
+    "$env:EDGE_MAINT_CDP_PORT='9356'; node scripts/test_admin_dashboard_analysis_browser.mjs",
+    "$env:EDGE_MAINT_CDP_PORT='9357'; node scripts/test_admin_dashboard_foundation_browser.mjs",
+    "git -c core.safecrlf=false diff --check"
+  ],
+  "runtime": {
+    "port": 18090,
+    "web_image": "sha256:071f587d76810f4dfe431cbcee12a5a12b28dc0ab39af3abf7f256fe745579f8",
+    "previous_web_image": "sha256:24fb7a914dfacaa8bc32c680b6a838524fc2d72f2696a3353fdfd8db346fd493",
+    "app_image": "sha256:715a274563329445509fcd9ed6f9b3463a5b4be8664229bca59206729296c085",
+    "rollback_tag": "helpdesk-m0-web:pre-dashboard-f3-20261126",
+    "healthy_services": [
+      "app",
+      "web",
+      "db",
+      "scanner"
+    ],
+    "working_db_rows": {
+      "tickets": 136,
+      "attachments": 51,
+      "media": 17
+    }
+  },
+  "limits": [
+    "Sepuluh peran staf sintetis diperiksa pada 390 × 844, serta Koordinator pada 320 × 568 dan 1440 × 900. Ini sampel viewport Edge, bukan matriks browser atau perangkat fisik.",
+    "Uji label ekstrem dan kegagalan jaringan dilakukan pada browser uji. Pemeriksaan keyboard mencakup fokus, pemulihan, grafik dan pembukaan tiket. Pembaca layar dan UAT manusia belum diuji.",
+    "Kandidat hanya memperbarui kontainer web. Tidak ada mutasi tiket, lampiran, media, master, atau kebijakan selama pengujian."
+  ],
+  "checks": {
+    "initial_viewport": {
+      "result": "PASS",
+      "coordinator_320x568": {
+        "action_bottom_px": 227,
+        "kpis_bottom_px": 506,
+        "horizontal_overflow_px": 0
+      },
+      "coordinator_390x844": {
+        "action_bottom_px": 227,
+        "kpis_bottom_px": 490
+      },
+      "coordinator_1440x900": {
+        "action_bottom_px": 210,
+        "kpis_bottom_px": 401
+      }
+    },
+    "states": "PASS: skeleton dan aria-busy selama muat; keadaan kosong; simulasi ringkasan/tabel gagal; coba lagi dapat dijalankan lewat Enter.",
+    "roles": "PASS: Operator, Teknisi, Koordinator, Pimpinan, Super Admin, Admin OPD, Administrator Platform, Editor, Penerbit dan Auditor melihat aksi, KPI, detail dan ekspor sesuai mandat. Gerbang masuk berlaku tanpa sesi.",
+    "readability": "PASS: nama, PD dan judul panjang membungkus; status berlabel dibedakan pada tema terang dan gelap.",
+    "keyboard": "PASS: Tab ke kartu, Enter ke tabel, fokus kembali ke asal, panah pada tren, Enter dari baris membuka detail tiket dengan ID yang sama.",
+    "regression": "PASS: kartu dan SLA sesuai API; agregat, detail, kapasitas, pencarian dan penolakan ekspor lintas PD.",
+    "browser": "browser.json"
+  }
+}

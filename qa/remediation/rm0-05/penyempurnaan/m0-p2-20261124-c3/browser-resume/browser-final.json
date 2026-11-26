@@ -1,0 +1,16 @@
+{
+  "timestamp": "2026-11-24T04:51:04.137Z",
+  "base_url": "http://127.0.0.1:18191",
+  "browser": "Microsoft Edge Headless (CDP)",
+  "suites": {
+    "R4-D_form_lost_response_draft_tracking": {
+      "status": "FAIL",
+      "error": "Validation summary failed: {\"visible\":false,\"count\":0,\"focusedId\":\"top\"}"
+    }
+  },
+  "from_suite": "R4-D_form_lost_response_draft_tracking",
+  "csp_violations": [],
+  "console_errors": [],
+  "exceptions": [],
+  "result": "FAIL"
+}

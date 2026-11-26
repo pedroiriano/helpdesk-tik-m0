@@ -1,0 +1,70 @@
+{
+  "result": "PASS",
+  "target": "http://127.0.0.1:18090/admin/app/dashboard/index.html",
+  "periods": [
+    {
+      "days": 7,
+      "scope": "Dinas Komunikasi dan Informatika Kota Depok",
+      "from": "2026-11-19T04:12:28.486Z",
+      "to": "2026-11-26T04:12:28.486Z",
+      "accepted": 0,
+      "active_in_period": 0,
+      "completed": 0,
+      "sla_percent": null,
+      "measured": 0,
+      "on_time": 0,
+      "late": 0,
+      "unmeasured": 0
+    },
+    {
+      "days": 30,
+      "scope": "Dinas Komunikasi dan Informatika Kota Depok",
+      "from": "2026-10-27T04:12:29.461Z",
+      "to": "2026-11-26T04:12:29.461Z",
+      "accepted": 114,
+      "active_in_period": 64,
+      "completed": 50,
+      "sla_percent": 100,
+      "measured": 15,
+      "on_time": 15,
+      "late": 0,
+      "unmeasured": 35
+    }
+  ],
+  "coordinator_scope_options": 1,
+  "out_of_scope_status": 403,
+  "mobile": {
+    "overflow": 0,
+    "kpisBottom": 490,
+    "viewport": 844
+  },
+  "keyboard_disclosure": true,
+  "failed_request_hides_old_data": true,
+  "retry": true,
+  "expired_session_hides_private_data": true,
+  "technician_shortcut_without_reports": true,
+  "super_admin": {
+    "role": "SUPER_ADMIN",
+    "mode": "SYNTHETIC_LAB",
+    "scopeMatches": true,
+    "denied": [
+      403,
+      403
+    ],
+    "matched_7_and_30_days": true,
+    "period_30": {
+      "days": 30,
+      "scope": "Dinas Komunikasi dan Informatika Kota Depok",
+      "from": "2026-10-27T04:12:35.938Z",
+      "to": "2026-11-26T04:12:35.938Z",
+      "accepted": 114,
+      "active_in_period": 64,
+      "completed": 50,
+      "sla_percent": 100,
+      "measured": 15,
+      "on_time": 15,
+      "late": 0,
+      "unmeasured": 35
+    }
+  }
+}

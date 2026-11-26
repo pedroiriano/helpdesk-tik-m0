@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5"
+	identity "helpdesk.local/m0/internal/modules/m1/api"
 	"helpdesk.local/m0/internal/modules/m3/api"
 	"helpdesk.local/m0/internal/platform/database"
 	"helpdesk.local/m0/internal/platform/web"
@@ -17,8 +18,8 @@ var validTicketStates = map[string]bool{
 	"IN_PROGRESS": true, "RESOLVED": true, "CLOSED": true, "CANCELLED": true,
 }
 
-func (s *Service) ListFiltered(ctx context.Context, c Credentials, p web.Page, state, serviceID string) (any, error) {
-	_, scope, e := s.actor(ctx, c, false)
+func (s *Service) ListFiltered(ctx context.Context, c Credentials, p web.Page, state, serviceID, query string) (any, error) {
+	actor, scope, e := s.actor(ctx, c, false)
 	if e != nil {
 		return nil, e
 	}
@@ -30,8 +31,46 @@ func (s *Service) ListFiltered(ctx context.Context, c Credentials, p web.Page, s
 	if serviceID != "" && !web.UUID(serviceID) {
 		return nil, web.Fail(400, "Filter layanan tidak valid")
 	}
-	v, e := s.Store.ListFiltered(ctx, scope, p, state, serviceID)
-	return web.List(v, p.Limit, func(v api.Ticket) string { return v.ID }), e
+	query = strings.TrimSpace(query)
+	if query != "" && (len(query) < 2 || len(query) > 100) {
+		return nil, web.Fail(400, "Kata kunci tiket harus 2–100 byte")
+	}
+	tickets, err := s.Store.ListFiltered(ctx, scope, p, state, serviceID, query)
+	if err != nil {
+		return nil, err
+	}
+	if scope.Internal {
+		if err := s.assessAbsences(ctx, actor, tickets); err != nil {
+			return nil, err
+		}
+	}
+	return web.List(tickets, p.Limit, func(item api.Ticket) string { return item.ID }), nil
+}
+
+func (s *Service) assessAbsences(ctx context.Context, actor identity.Actor, tickets []api.Ticket) error {
+	indexes := []int{}
+	subjects := []string{}
+	for i, ticket := range tickets {
+		if ticket.AssigneeID == nil || ticket.HandlingTeamID == nil || (ticket.State != "ASSIGNED" && ticket.State != "IN_PROGRESS") {
+			continue
+		}
+		if !actor.HasTeamMandate(ticket.OwnerOrg, *ticket.HandlingTeamID, "ticket.dispatch") {
+			continue
+		}
+		indexes = append(indexes, i)
+		subjects = append(subjects, *ticket.AssigneeID)
+	}
+	if len(subjects) == 0 {
+		return nil
+	}
+	absent, err := s.Assignment.AbsentTechnicians(ctx, subjects)
+	if err != nil {
+		return err
+	}
+	for _, i := range indexes {
+		tickets[i].AssignmentNeedsReview = absent[*tickets[i].AssigneeID]
+	}
+	return nil
 }
 
 func (s *Service) ReadOperationalRecords(ctx context.Context, c Credentials, id string) (map[string]any, error) {
@@ -152,7 +191,11 @@ func (s *Service) RejectHandoff(ctx context.Context, c Credentials, id, handoffI
 	if in.ExpectedVersion < 1 || len(in.Reason) < 5 || len(in.Reason) > 2000 {
 		return database.Result{}, web.Fail(422, "Versi tiket dan alasan penolakan handoff wajib diisi (minimal 5 karakter)")
 	}
-	if _, err := s.Store.ReadHandoffOffer(ctx, id, handoffID, acceptOrgs); err != nil {
+	offer, err := s.Store.ReadHandoffOffer(ctx, id, handoffID, acceptOrgs)
+	if err != nil {
+		return database.Result{}, err
+	}
+	if err = identity.CheckMaintenance(ctx, s.Identity, false, offer.FromOrgID, offer.TargetOrgID); err != nil {
 		return database.Result{}, err
 	}
 	now := s.now()

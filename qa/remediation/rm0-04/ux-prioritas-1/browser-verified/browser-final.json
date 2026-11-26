@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-11-24T05:57:40.953Z",
+  "base_url": "http://127.0.0.1:18191",
+  "browser": "Microsoft Edge Headless (CDP)",
+  "suites": {
+    "R4-E_queue_lifecycle_conflict": {
+      "status": "PASS",
+      "workLink": "Perlu Verifikasi",
+      "desktopOv": 0,
+      "mobOv": 0,
+      "queueRestored": true,
+      "audience": true,
+      "selectedRoster": "Teknisi L1 OPD A · Keahlian: hardware, network · Jadwal aktif hingga Senin, 31 Des 2035 • 07.00 WIB · 0 tiket aktif",
+      "concurrentDispatchCode": 200,
+      "conflictUiShown": true,
+      "dispatchedAssigneeId": "20000000-0000-4000-8000-000000000009",
+      "resolveStatus": "Hasil penanganan tersimpan dan menunggu konfirmasi pemohon."
+    }
+  },
+  "from_suite": "R4-E_queue_lifecycle_conflict",
+  "through_suite": "R4-E_queue_lifecycle_conflict",
+  "csp_violations": [],
+  "console_errors": [],
+  "exceptions": [],
+  "result": "PASS"
+}

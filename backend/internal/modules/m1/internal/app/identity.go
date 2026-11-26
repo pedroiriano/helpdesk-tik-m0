@@ -52,7 +52,7 @@ var LabIDs = []string{
 	"20000000-0000-4000-8000-000000000014",
 	"20000000-0000-4000-8000-000000000015",
 	"20000000-0000-4000-8000-000000000016",
-	"20000000-0000-4000-8000-000000000017",
+	labSuperAdminID,
 	"20000000-0000-4000-8000-000000000018",
 }
 
@@ -74,7 +74,7 @@ func (s *Service) Authenticate(ctx context.Context, c api.Credentials) (api.Acto
 	if c.Write && !domain.EqualHash(c.CSRF, session.CSRF) {
 		return zero, web.Fail(403, "Verifikasi CSRF gagal")
 	}
-	if err := s.applyRolePolicy(ctx, &session.Actor); err != nil {
+	if err := s.applyRolePolicy(ctx, &session.Actor, session.LabFixture); err != nil {
 		return zero, err
 	}
 	return session.Actor, nil
@@ -540,7 +540,7 @@ func (s *Service) Access(ctx context.Context, id string) (api.Actor, error) {
 		return api.Actor{}, err
 	}
 	a := api.Actor{ID: u.ID, Name: u.Name, Kind: u.Kind, Role: u.Role, Memberships: memberships}
-	if err := s.applyRolePolicy(ctx, &a); err != nil {
+	if err := s.applyRolePolicy(ctx, &a, false); err != nil {
 		return api.Actor{}, err
 	}
 	return a, nil

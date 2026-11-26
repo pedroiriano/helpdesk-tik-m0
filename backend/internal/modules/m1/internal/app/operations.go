@@ -6,24 +6,26 @@ import (
 	"fmt"
 	"github.com/jackc/pgx/v5"
 	"helpdesk.local/m0/internal/platform/database"
+	"slices"
 	"strings"
 	"time"
 
 	"helpdesk.local/m0/internal/modules/m1/api"
 	"helpdesk.local/m0/internal/modules/m1/internal/domain"
+	"helpdesk.local/m0/internal/modules/m1/internal/store"
 	"helpdesk.local/m0/internal/platform/web"
 )
 
 // ConfigureMaintenance schedules a maintenance policy window (AC24).
-func (s *Service) ConfigureMaintenance(ctx context.Context, c api.Credentials, in api.MaintenancePolicyInput, key string) (*api.MaintenancePolicy, error) {
+func (s *Service) ConfigureMaintenance(ctx context.Context, c api.Credentials, in api.MaintenancePolicyInput, key string) (database.Result, error) {
 	c.Write = true
 	actor, err := s.Authenticate(ctx, c)
 	if err != nil {
-		return nil, err
+		return database.Result{}, err
 	}
 
 	if !s.hasPermission(actor, "system.maintenance") {
-		return nil, web.Fail(403, "Izin system.maintenance diperlukan")
+		return database.Result{}, web.Fail(403, "Izin system.maintenance diperlukan")
 	}
 
 	if in.OrgID == nil && in.OrganizationID != "" {
@@ -31,15 +33,18 @@ func (s *Service) ConfigureMaintenance(ctx context.Context, c api.Credentials, i
 	}
 	if in.OrgID != nil && *in.OrgID != "" {
 		if web.UUID(*in.OrgID) && !actor.Can("system.maintenance", *in.OrgID) {
-			return nil, web.Fail(403, "Organisasi target di luar mandat system.maintenance")
+			return database.Result{}, web.Fail(403, "Organisasi target di luar mandat system.maintenance")
 		}
 	} else if actor.Role != "SUPER_ADMIN" && actor.Role != "PLATFORM_ADMIN" {
 		orgs := actor.Orgs("system.maintenance")
 		if len(orgs) == 1 {
 			in.OrgID = &orgs[0]
 		} else {
-			return nil, web.Fail(403, "Pemeliharaan global memerlukan kewenangan Platform Admin atau Super Admin; tentukan organisasi target")
+			return database.Result{}, web.Fail(403, "Pemeliharaan global memerlukan kewenangan Platform Admin atau Super Admin; tentukan organisasi target")
 		}
+	}
+	if in.TargetID != "" && (in.Mode != "NORMAL" || !web.UUID(in.TargetID)) {
+		return database.Result{}, web.Fail(422, "Target penghentian pemeliharaan tidak valid")
 	}
 	if in.Message == "" {
 		in.Message = "Jendela pemeliharaan sistem aktif"
@@ -60,15 +65,31 @@ func (s *Service) ConfigureMaintenance(ctx context.Context, c api.Credentials, i
 	}
 
 	if err := domain.ValidateMaintenancePolicy(in); err != nil {
-		return nil, err
+		return database.Result{}, err
 	}
 
-	policy, err := s.Store.InsertMaintenancePolicy(ctx, in)
-	if err != nil {
-		return nil, err
+	scope := "global"
+	if in.OrgID != nil && *in.OrgID != "" {
+		scope = *in.OrgID
 	}
-
-	return policy, nil
+	in.Message = strings.TrimSpace(in.Message)
+	if len(in.Message) > 500 {
+		return database.Result{}, web.Fail(422, "Pesan pemeliharaan maksimal 500 byte")
+	}
+	id := web.ID()
+	mutation := database.Mutation{Owner: "M1", Actor: actor.ID, Command: "ConfigureMaintenance", Target: scope,
+		Scope: scope, Reason: in.Message, Key: key, Payload: in}
+	return database.Mutate(ctx, s.Store.Pool, mutation, func(tx pgx.Tx) (database.Result, error) {
+		// Schedule changes and stop actions on the same scope are ordered.
+		if _, err := tx.Exec(ctx, "SELECT pg_advisory_xact_lock(hashtextextended($1,0))", "maintenance:"+scope); err != nil {
+			return database.Result{}, err
+		}
+		policy, err := store.InsertMaintenancePolicy(ctx, tx, id, in)
+		if err != nil {
+			return database.Result{}, err
+		}
+		return database.Response(201, policy)
+	})
 }
 
 // PublicMaintenanceStatus exposes safe maintenance status and upcoming windows for public views.
@@ -225,7 +246,7 @@ func (s *Service) ListSystemJobs(ctx context.Context, c api.Credentials, limit i
 	return s.Store.ListSystemJobs(ctx, orgs, actor.ID, actor.Role == "SUPER_ADMIN", limit)
 }
 
-func (s *Service) ListStaffDirectory(ctx context.Context, c api.Credentials, orgID string) ([]api.Subject, error) {
+func (s *Service) ListStaffDirectory(ctx context.Context, c api.Credentials, orgID, teamID string) ([]api.Subject, error) {
 	actor, err := s.Authenticate(ctx, c)
 	if err != nil {
 		return nil, err
@@ -236,10 +257,32 @@ func (s *Service) ListStaffDirectory(ctx context.Context, c api.Credentials, org
 	if !web.UUID(orgID) {
 		return nil, web.Fail(400, "organization_id wajib UUID valid")
 	}
-	if !actor.Can("ticket.read", orgID) && !actor.Can("ticket.vendor", orgID) && !actor.Can("ticket.dispatch", orgID) {
+	if !actor.Can("ticket.read", orgID) && !actor.Can("ticket.vendor", orgID) && !actor.Can("ticket.dispatch", orgID) && !(actor.Can("rules.write", orgID) && actor.Can("identity.grant", orgID)) {
 		return nil, web.Fail(403, "Organisasi di luar mandat staf")
 	}
-	return s.Store.StaffInOrg(ctx, orgID)
+	if teamID != "" {
+		if !web.UUID(teamID) {
+			return nil, web.Fail(400, "Filter tim tidak valid")
+		}
+		if !actor.CanManageRoster(orgID, teamID) {
+			return nil, web.Fail(403, "Izin pengelolaan jadwal tim diperlukan")
+		}
+		active, err := s.Store.ActiveTeamInOrg(ctx, teamID, orgID)
+		if err != nil {
+			return nil, err
+		}
+		if !active {
+			return nil, web.Fail(404, "Tim aktif pada organisasi ini tidak ditemukan")
+		}
+		policy, err := s.policy(ctx, "TECHNICIAN")
+		if err != nil {
+			return nil, err
+		}
+		if !slices.Contains(policy.Permissions, "ticket.read") || !slices.Contains(policy.Permissions, "ticket.resolve") {
+			return []api.Subject{}, nil
+		}
+	}
+	return s.Store.StaffInOrg(ctx, orgID, teamID)
 }
 
 func (s *Service) ReadSystemJob(ctx context.Context, c api.Credentials, id string) (*api.SystemJob, error) {

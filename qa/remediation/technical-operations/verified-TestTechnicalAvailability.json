@@ -1,0 +1,8 @@
+{
+  "suite": "TestTechnicalAvailability",
+  "timestamp": "2026-11-24T08:14:32.394991+00:00",
+  "result": "PASS",
+  "baseline_migration": "043",
+  "target": "disposable PostgreSQL",
+  "output": "=== RUN   TestTechnicalAvailability\n2026/11/24 08:15:19 web.WriteError: Izin pengelolaan jadwal tim diperlukan\n2026/11/24 08:15:19 web.WriteError: Mandat teknisi aktif diperlukan\n2026/11/24 08:15:19 web.WriteError: Jadwal tersedia untuk organisasi dalam mandat Anda\n2026/11/24 08:15:19 web.WriteError: Izin pengelolaan jadwal diperlukan\n2026/11/24 08:15:19 web.WriteError: Izin pengelolaan jadwal diperlukan\n2026/11/24 08:15:19 web.WriteError: Izin pengelolaan jadwal tim diperlukan\n2026/11/24 08:15:19 web.WriteError: Jadwal atau versinya berubah. Muat ulang data.\n2026/11/24 08:15:19 web.WriteError: Jadwal aktif teknisi pada tim ini bertumpuk\n2026/11/24 08:15:19 web.WriteError: Izin pengelolaan jadwal tim diperlukan\n2026/11/24 08:15:19 web.WriteError: Periode ketidakhadiran bertumpuk\n2026/11/24 08:15:19 web.WriteError: Ketidakhadiran tidak ditemukan\n2026/11/24 08:15:19 web.WriteError: Ketidakhadiran berubah. Muat ulang data.\n--- PASS: TestTechnicalAvailability (0.57s)\nPASS\nok  \thelpdesk.local/m0/internal/bootstrap\t0.584s"
+}

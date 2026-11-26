@@ -13,8 +13,8 @@ TELEGRAM_TOKEN_RE = re.compile(r'\b[0-9]{8,11}:AA[A-Za-z0-9_-]{30,}\b')
 
 
 def git_tracked_files():
-    out = subprocess.check_output(['git', 'ls-files'], cwd=ROOT, text=True, encoding='utf-8')
-    return [line.strip() for line in out.splitlines() if line.strip()]
+    out = subprocess.check_output(['git', 'ls-files', '-z', '--cached', '--others', '--exclude-standard'], cwd=ROOT)
+    return sorted(set(out.decode('utf-8').split('\0')) - {''})
 
 
 def check_secrets_and_hygiene(tracked):
@@ -96,7 +96,7 @@ def check_hardening():
     return issues
 
 
-def build_sbom(tracked):
+def build_sbom(tracked, candidate_id="rm0-05-rc4"):
     components = []
 
     # 1. Container base images pinned by digest
@@ -170,7 +170,7 @@ def build_sbom(tracked):
             'component': {
                 'type': 'application',
                 'name': 'helpdesk-tik-depok-m0',
-                'version': 'rm0-05-rc4',
+                'version': candidate_id,
             },
             'properties': [{'name': 'helpdesk:tracked_file_digest', 'value': manifest_hash}],
         },
@@ -182,12 +182,13 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--report', type=Path, default=Path('qa/remediation/rm0-05/security-gate.json'))
     parser.add_argument('--sbom', type=Path, default=Path('qa/remediation/rm0-05/sbom-m0.json'))
+    parser.add_argument('--candidate-id', default='rm0-05-rc4')
     args = parser.parse_args()
 
     tracked = git_tracked_files()
     secret_findings = check_secrets_and_hygiene(tracked)
     hardening_issues = check_hardening()
-    sbom = build_sbom(tracked)
+    sbom = build_sbom(tracked, args.candidate_id)
 
     sbom_path = args.sbom if args.sbom.is_absolute() else ROOT / args.sbom
     sbom_path.parent.mkdir(parents=True, exist_ok=True)

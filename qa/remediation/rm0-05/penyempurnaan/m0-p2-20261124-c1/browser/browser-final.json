@@ -1,0 +1,47 @@
+{
+  "timestamp": "2026-11-24T04:32:53.589Z",
+  "base_url": "http://127.0.0.1:18191",
+  "browser": "Microsoft Edge Headless (CDP)",
+  "suites": {
+    "R4-B_csp_routes_overflow_faq": {
+      "status": "PASS",
+      "checked": 25,
+      "homeFaqCheck": {
+        "count": 5,
+        "afterFirst": "true",
+        "firstAfterSecond": "false",
+        "secondExpanded": "true"
+      },
+      "pageFaqCheck": {
+        "count": 5,
+        "afterFirst": true,
+        "firstAfterSecond": false,
+        "secondOpen": true
+      }
+    },
+    "candidate_access_profiles": {
+      "status": "PASS",
+      "profileCount": 5,
+      "ceilingWarn": "7 izin berada di luar kebijakan atau mandat delegasi saat ini. Sesuaikan pilihan sebelum menyimpan.",
+      "editInfo": "Operator OPD A · OperatorDinas Komunikasi dan Informatika Ko",
+      "saveMsg": "Tersimpan pada server. Versi 2.",
+      "editorTitleAfterSave": "Ubah akses pengguna"
+    },
+    "candidate_catalog_routing": {
+      "status": "PASS",
+      "catCount": 25,
+      "opdCount": 37,
+      "routeSaveTrigger": true,
+      "routeStatus": "Aturan tersimpan. Versi 2.",
+      "reloadedVersion": "Aturan versi 2."
+    },
+    "candidate_role_hero": {
+      "status": "FAIL",
+      "error": "waitFor timeout (hero restore draft)"
+    }
+  },
+  "csp_violations": [],
+  "console_errors": [],
+  "exceptions": [],
+  "result": "FAIL"
+}

@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"sync/atomic"
@@ -69,14 +70,18 @@ func NewApplication(pools database.Pools, options m1.Options) *Runtime {
 	intake.Service().LabLifecycle = options.Lab
 	intake.Service().SharedBlobReferences = knowledgeMod.BlobReferenced
 	notifyMod := m9.New(pools[8], intake.ReportScope)
+	notifyMod.BindTechnicalFacts(intake.TechnicalFacts)
+	notifyMod.BindDashboard(intake)
 	notifyMod.EnableLabSink(options.Lab && web.ValidLabOrigin(options.Origin))
 	notifyMod.ConfigureDelivery(deliveryOptionsFromEnv(identity.ContactEmail))
 
+	loadSource := intake.SourceForM5()
+	assignment.BindLoadSource(loadSource)
 	bindings := []delivery.Binding{
 		{Source: identity.Source(), Consumer: notifyMod.Consumer()},
 		{Source: catalog.Source(), Consumer: notifyMod.Consumer()},
 		{Source: intake.Source(), Consumer: notifyMod.Consumer()},
-		{Source: intake.SourceForM5(), Consumer: assignment.Consumer()},
+		{Source: loadSource, Consumer: assignment.Consumer()},
 		{Source: assignment.Source(), Consumer: notifyMod.Consumer()},
 		{Source: intake.SourceForM6(), Consumer: slaMod.Consumer()},
 		{Source: intake.SourceForM7(), Consumer: escalationMod.Consumer()},
@@ -106,6 +111,7 @@ func NewApplication(pools database.Pools, options m1.Options) *Runtime {
 		escalationMod.RegisterSchedulerListing(mux, intake.Service().AuthorizeScheduler, intake.Service().AuthorizeSchedulerBatch)
 		registerRuleRoutes(mux, identity.Port(), "/api/v1/admin/classification-rules", classifyMod)
 		registerRuleRoutes(mux, identity.Port(), "/api/v1/admin/routing-rules", assignment)
+		assignment.RegisterRoster(mux)
 		registerRuleRoutes(mux, identity.Port(), "/api/v1/admin/sla-rules", slaMod)
 		registerRuleRoutes(mux, identity.Port(), "/api/v1/admin/escalation-rules", escalationMod)
 	}
@@ -118,11 +124,21 @@ func NewApplication(pools database.Pools, options m1.Options) *Runtime {
 				return
 			}
 			q := strings.TrimSpace(r.URL.Query().Get("q"))
-			if len(q) < 2 {
-				web.WriteError(w, web.Fail(400, "Parameter pencarian q minimal 2 karakter"))
+			if len(q) < 2 || len(q) > 100 {
+				web.WriteError(w, web.Fail(400, "Parameter pencarian q harus 2–100 byte"))
 				return
 			}
-			p, err := web.Pagination(r)
+			kind := r.URL.Query().Get("kind")
+			if kind != "" && (kind != "MEDIA" || owner == "M2") {
+				web.WriteError(w, web.Fail(400, "Jenis pencarian tidak valid"))
+				return
+			}
+			qParams := r.URL.Query()
+			cursor := qParams.Get("cursor")
+			qParams.Del("cursor")
+			withoutCursor := r.Clone(r.Context())
+			withoutCursor.URL.RawQuery = qParams.Encode()
+			p, err := web.Pagination(withoutCursor)
 			if err != nil {
 				web.WriteError(w, err)
 				return
@@ -135,6 +151,8 @@ func NewApplication(pools database.Pools, options m1.Options) *Runtime {
 			var isStaff bool
 			var userOrgs []string
 			var knowledgeScope m8api.Scope
+			guest := r.Header.Get("X-Guest-Capability")
+			tracking := web.Cookie(r, "helpdesk_tracking")
 			if tok != "" {
 				sess, err := identity.Port().Authenticate(r.Context(), m1api.Credentials{Token: tok, CSRF: csrf})
 				if err != nil {
@@ -181,36 +199,98 @@ func NewApplication(pools database.Pools, options m1.Options) *Runtime {
 				Snippet string `json:"snippet"`
 			}
 			var hits []SearchHitOutput
-
-			switch owner {
-			case "M2":
-				res, err := catalog.SearchServices(r.Context(), q, actorKind, knowledgeScope.Orgs, p.Limit)
+			var next string
+			// Re-evaluate visibility on every page. The cursor only carries a sort position,
+			// and is bound to the query, filter and current requester.
+			binding := []string{owner, kind, q, p.Organization, actorID, guest, tracking}
+			if cursor != "" {
+				p.Cursor, err = readSearchCursor(options.Key, cursor, binding)
 				if err != nil {
 					web.WriteError(w, err)
 					return
 				}
-				for _, h := range res {
-					hits = append(hits, SearchHitOutput{
-						ID:      h.ID,
-						Owner:   h.Owner,
-						Kind:    h.Kind,
-						Title:   h.Title,
-						Snippet: h.Snippet,
-					})
+			}
+			if p.Organization != "" {
+				// Search uses each owner's live permissions. Unsupported filters must not
+				// silently return results from other organizations.
+				web.WriteError(w, web.Fail(400, "Pencarian ini belum menerima filter organisasi"))
+				return
+			}
+			if kind == "MEDIA" {
+				switch owner {
+				case "M3":
+					if tok != "" || guest != "" || tracking != "" {
+						var items []m3api.MediaItem
+						var more *string
+						items, more, err = intake.ListMediaM3(r.Context(), tok, csrf, guest, p.Limit, p.Cursor, true, q, tracking)
+						if err == nil {
+							next = searchNext(more)
+							for _, item := range items {
+								hits = append(hits, SearchHitOutput{ID: item.ID, Owner: owner, Kind: kind, Title: item.Alt, Snippet: item.Caption})
+							}
+						}
+					}
+				case "M8":
+					var items []m8api.MediaItem
+					var more *string
+					items, more, err = knowledgeMod.SearchMedia(r.Context(), q, p, knowledgeScope)
+					if err == nil {
+						next = searchNext(more)
+						for _, item := range items {
+							hits = append(hits, SearchHitOutput{ID: item.ID, Owner: owner, Kind: kind, Title: item.Alt, Snippet: item.Caption})
+						}
+					}
 				}
-			case "M3":
-				cap := r.Header.Get("X-Guest-Capability")
-				isGuest := false
-				var capHash []byte
-				if cap != "" {
-					h := sha256.Sum256([]byte(cap))
-					capHash = h[:]
-					isGuest = true
+				if err != nil {
+					web.WriteError(w, err)
+					return
 				}
-				if !isGuest && actorID == "" {
-					hits = []SearchHitOutput{}
-				} else {
-					res, err := intake.SearchTickets(r.Context(), actorID, isGuest, capHash, userOrgs, q, p.Limit, actorRole)
+			} else {
+				switch owner {
+				case "M2":
+					res, err := catalog.SearchServices(r.Context(), q, actorKind, knowledgeScope.Orgs, p.Limit+1, p.Cursor)
+					if err != nil {
+						web.WriteError(w, err)
+						return
+					}
+					for _, h := range res {
+						hits = append(hits, SearchHitOutput{
+							ID:      h.ID,
+							Owner:   h.Owner,
+							Kind:    h.Kind,
+							Title:   h.Title,
+							Snippet: h.Snippet,
+						})
+					}
+				case "M3":
+					cap := r.Header.Get("X-Guest-Capability")
+					isGuest := false
+					var capHash []byte
+					if cap != "" {
+						h := sha256.Sum256([]byte(cap))
+						capHash = h[:]
+						isGuest = true
+					}
+					if !isGuest && actorID == "" {
+						hits = []SearchHitOutput{}
+					} else {
+						res, err := intake.SearchTickets(r.Context(), actorID, isGuest, capHash, userOrgs, q, p.Limit+1, p.Cursor, actorRole)
+						if err != nil {
+							web.WriteError(w, err)
+							return
+						}
+						for _, h := range res {
+							hits = append(hits, SearchHitOutput{
+								ID:      h.ID,
+								Owner:   h.Owner,
+								Kind:    h.Kind,
+								Title:   h.Title,
+								Snippet: h.Snippet,
+							})
+						}
+					}
+				case "M8":
+					res, err := knowledgeMod.SearchArticles(r.Context(), q, aud, isStaff, p.Limit+1, p.Cursor, knowledgeScope)
 					if err != nil {
 						web.WriteError(w, err)
 						return
@@ -225,29 +305,23 @@ func NewApplication(pools database.Pools, options m1.Options) *Runtime {
 						})
 					}
 				}
-			case "M8":
-				res, err := knowledgeMod.SearchArticles(r.Context(), q, aud, isStaff, p.Limit, knowledgeScope)
-				if err != nil {
-					web.WriteError(w, err)
-					return
-				}
-				for _, h := range res {
-					hits = append(hits, SearchHitOutput{
-						ID:      h.ID,
-						Owner:   h.Owner,
-						Kind:    h.Kind,
-						Title:   h.Title,
-						Snippet: h.Snippet,
-					})
-				}
-			}
 
+			}
+			if len(hits) > p.Limit {
+				hits = hits[:p.Limit]
+				next = hits[len(hits)-1].ID
+			}
+			var responseCursor any
+			if next != "" {
+				responseCursor = signSearchCursor(options.Key, next, binding)
+			}
+			w.Header().Set("Cache-Control", "no-store")
 			if hits == nil {
 				hits = []SearchHitOutput{}
 			}
 			web.JSON(w, 200, map[string]any{
 				"items":       hits,
-				"next_cursor": nil,
+				"next_cursor": responseCursor,
 				"as_of":       time.Now().UTC(),
 			})
 		})
@@ -258,16 +332,9 @@ func NewApplication(pools database.Pools, options m1.Options) *Runtime {
 		if r.Method != "GET" && r.Method != "HEAD" {
 			p := r.URL.Path
 			if !strings.HasPrefix(p, "/api/v1/auth/") && p != "/api/v1/admin/maintenance" {
-				pol, err := identity.Port().ActiveMaintenance(r.Context(), "")
-				if err == nil && pol != nil {
-					if pol.Mode == "READ_ONLY" {
-						web.WriteError(w, web.Fail(503, fmt.Sprintf("Sistem sedang dalam mode pemeliharaan (READ_ONLY): %s", pol.Message)))
-						return
-					}
-					if pol.Mode == "DRAIN" && (p == "/api/v1/tickets" && r.Method == "POST") {
-						web.WriteError(w, web.Fail(503, fmt.Sprintf("Sistem sedang dalam mode pengosongan (DRAIN): %s", pol.Message)))
-						return
-					}
+				if err := m1api.CheckMaintenance(r.Context(), identity.Port(), p == "/api/v1/tickets" && r.Method == "POST", ""); err != nil {
+					web.WriteError(w, err)
+					return
 				}
 			}
 		}
@@ -460,6 +527,9 @@ func readSecretValue(path, envFallback string) string {
 			return trimmed
 		}
 	}
+	if value, err := os.ReadFile("/run/integrations/" + filepath.Base(path)); err == nil && strings.TrimSpace(string(value)) != "" {
+		return strings.TrimSpace(string(value))
+	}
 	return strings.TrimSpace(os.Getenv(envFallback))
 }
 
@@ -467,6 +537,10 @@ func deliveryOptionsFromEnv(contactEmail func(context.Context, string) (string, 
 	smtpPort, _ := strconv.Atoi(strings.TrimSpace(os.Getenv("HELPDESK_SMTP_PORT")))
 	if smtpPort <= 0 {
 		smtpPort = 587
+	}
+	smtpPassword := readSecretValue("/run/secrets/smtp_password", "HELPDESK_SMTP_PASSWORD")
+	if smtpPassword == "" {
+		smtpPassword = strings.TrimSpace(os.Getenv("HELPDESK_SMTP_PASS"))
 	}
 	return m9.DeliveryOptions{
 		TelegramEnabled:  os.Getenv("HELPDESK_NOTIFY_TELEGRAM_ENABLED") == "1",
@@ -477,7 +551,7 @@ func deliveryOptionsFromEnv(contactEmail func(context.Context, string) (string, 
 		SMTPPort:         smtpPort,
 		SMTPFrom:         strings.TrimSpace(os.Getenv("HELPDESK_SMTP_FROM")),
 		SMTPUser:         strings.TrimSpace(os.Getenv("HELPDESK_SMTP_USER")),
-		SMTPPass:         readSecretValue("/run/secrets/smtp_password", "HELPDESK_SMTP_PASSWORD"),
+		SMTPPass:         smtpPassword,
 		SMTPUseTLS:       os.Getenv("HELPDESK_SMTP_TLS") != "0",
 		ContactEmail:     contactEmail,
 	}
@@ -492,6 +566,10 @@ func LabOptions() (m1.Options, error) {
 		return m1.Options{}, fmt.Errorf("invalid public origin")
 	}
 	key, keyErr := os.ReadFile("/run/secrets/session_key")
+	redirect := strings.TrimSpace(os.Getenv("HELPDESK_SSO_REDIRECT_URI"))
+	if redirect == "" {
+		redirect = strings.TrimSpace(os.Getenv("HELPDESK_SSO_REDIRECT_URL"))
+	}
 	options := m1.Options{
 		Origin:       origin,
 		Lab:          os.Getenv("HELPDESK_LAB_AUTH") == "1",
@@ -506,7 +584,7 @@ func LabOptions() (m1.Options, error) {
 			AuthURL:       strings.TrimSpace(os.Getenv("HELPDESK_SSO_AUTH_URL")),
 			TokenURL:      strings.TrimSpace(os.Getenv("HELPDESK_SSO_TOKEN_URL")),
 			JWKSURL:       strings.TrimSpace(os.Getenv("HELPDESK_SSO_JWKS_URL")),
-			RedirectURL:   strings.TrimSpace(os.Getenv("HELPDESK_SSO_REDIRECT_URI")),
+			RedirectURL:   redirect,
 		},
 	}
 	if keyErr == nil && len(key) >= 32 {

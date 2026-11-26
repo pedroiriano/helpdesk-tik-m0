@@ -1,0 +1,20 @@
+{
+  "result": "FAIL",
+  "scope": "Freshclam with bundled CVD replay against internal mirror; no external egress",
+  "fixture_without_mirror_exit_nonzero": true,
+  "fixture_with_mirror_exit": 11,
+  "output": [
+    "ClamAV update process started at Tue Nov 24 04:08:00 2026",
+    "WARNING: DNS Update Info disabled. Falling back to HTTP mode.",
+    "Trying to retrieve CVD header from http://mirror:8080/daily.cld",
+    "ERROR: remote_cvdhead: Download failed (7) ERROR:  Message: Could not connect to server",
+    "Trying to retrieve CVD header from http://mirror:8080/daily.cvd",
+    "ERROR: remote_cvdhead: Download failed (7) ERROR:  Message: Could not connect to server",
+    "WARNING: Failed to get daily database version information from server: http://mirror:8080",
+    "ERROR: check_for_new_database_version: Failed to find daily database using server http://mirror:8080.",
+    "Giving up on http://mirror:8080...",
+    "ERROR: Update failed for database: daily",
+    "ERROR: Database update process failed: HTTP GET failed",
+    "ERROR: Update failed."
+  ]
+}

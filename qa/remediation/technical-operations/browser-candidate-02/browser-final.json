@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-11-24T08:09:26.823Z",
+  "base_url": "http://127.0.0.1:18193",
+  "browser": "Microsoft Edge Headless (CDP)",
+  "suites": {
+    "technical-operations": {
+      "status": "FAIL",
+      "error": "{\"status\":422,\"message\":\"Pilih kategori aktif pada organisasi pemilik tiket\"}"
+    }
+  },
+  "from_suite": "technical-operations",
+  "through_suite": "technical-operations",
+  "csp_violations": [],
+  "console_errors": [],
+  "exceptions": [],
+  "result": "FAIL"
+}

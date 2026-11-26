@@ -1,0 +1,77 @@
+{
+  "task_id": "M0-UX-20261126",
+  "acceptance": "AC11 (penyempurnaan antarmuka lab dan regresi representatif)",
+  "date_jakarta": "2026-11-26",
+  "result": "DONE_VERIFIED_LAB",
+  "gateway": "http://127.0.0.1:18090/",
+  "deliverable": "Penyempurnaan antarmuka publik PIUI Modern dan Admin PIUI Zero pada gateway pengembangan",
+  "changes": {
+    "public": [
+      "Hero maksimal satu viewport dengan lima thumbnail manual, CTA terpisah, serta tautan bagian setelah banner",
+      "Heading halaman tugas seragam, filter katalog mendahului hasil, label kebutuhan akun dan tindakan laporan sesuai layanan",
+      "Formulir tampil setelah handler validasi siap, petunjuk ringkas, keterbacaan dialog, dan pelacakan tamu",
+      "Indeks dan detail panduan, tautan kembali, lebar bacaan, dan spasi paragraf serta daftar"
+    ],
+    "admin": [
+      "Pintasan tugas berbasis peran, konteks akun dan organisasi, indikator dasbor, serta nama produk yang membungkus di ponsel",
+      "Pencarian antrean menurut cakupan akun terpisah dari pilihan tabel halaman aktif. Filter lanjutan dan tindakan massal bisa dibuka sesuai kebutuhan",
+      "Status dan prioritas tiket, target penyelesaian, laporan kinerja, dan informasi kapasitas roster",
+      "Kontras, kerapatan, serta target interaksi pada tombol, pemilih, dialog, tabel, dan modul master melalui gaya bersama"
+    ]
+  },
+  "changed_files": [
+    "frontend/landing-page.mjs",
+    "frontend/business-pages.mjs",
+    "frontend/ticket-pages.mjs",
+    "frontend/public-ui.css",
+    "frontend/public-pages.css",
+    "frontend/business.css",
+    "frontend/src/features/admin-shell.ts",
+    "frontend/src/features/admin-datatable.ts",
+    "frontend/src/features/dashboard.ts",
+    "frontend/src/features/m0-03.ts",
+    "frontend/src/features/m0-04.ts",
+    "frontend/src/features/roster.ts",
+    "docs/05_ATURAN_UI_UX_WEB_PUBLIK.md",
+    "docs/06_ATURAN_UI_UX_WEB_ADMIN.md",
+    "scripts/test_ux_priority3_browser.mjs",
+    "scripts/test_admin_datatables_browser.mjs"
+  ],
+  "verification": [
+    {"command": "npm.cmd --prefix frontend run build", "result": "PASS"},
+    {"command": "python -X utf8 scripts/test_piui_build.py", "result": "PASS"},
+    {"command": "node scripts/test_admin_navigation.mjs", "result": "PASS"},
+    {"command": "python -X utf8 scripts/smoke_local.py", "result": "PASS", "proof": "Gateway, readiness, header keamanan, rute, dan byte aset lokal"},
+    {"command": "$env:EDGE_MAINT_CDP_PORT='9336'; node .local/ui-ux-20261126/audit.mjs final", "result": "PASS", "proof": "49 kombinasi halaman dan viewport pada kandidat sebelum penyempurnaan akhir"},
+    {"command": "$env:EDGE_MAINT_CDP_PORT='9336'; node .local/ui-ux-20261126/audit.mjs refinement", "result": "PASS", "proof": "6 pemeriksaan ulang pada kandidat aktif untuk Hero, laporan, detail panduan dan antrean"},
+    {"command": "$env:HELPDESK_BASE_URL='http://127.0.0.1:18090'; $env:HELPDESK_UX_REPORT_DIR='qa/remediation/ui-ux-20261126'; $env:EDGE_MAINT_CDP_PORT='9337'; node scripts/test_ux_priority3_browser.mjs", "result": "PASS", "evidence": "accessibility.json"},
+    {"command": "node --check scripts/test_admin_datatables_browser.mjs", "result": "PASS"},
+    {"command": "git -c core.safecrlf=false diff --check", "result": "PASS"}
+  ],
+  "visual_observations": {
+    "document_overflow": 0,
+    "missing_stylesheets": 0,
+    "uncaught_javascript_errors": 0,
+    "mobile_390_title_top_px": {"catalog_before": 243, "catalog_after": 121, "dashboard_before": 134, "dashboard_after": 76},
+    "final_hero": [
+      {"viewport": "320x568", "hero_height_px": 568, "thumbnails_bottom_px": 556},
+      {"viewport": "844x390", "hero_height_px": 390, "thumbnails_bottom_px": 378}
+    ],
+    "final_report_first_input_top_px_at_390x844": 800,
+    "final_queue_first_row_top_px": {"1440x900": 819, "390x844": 875}
+  },
+  "runtime": {
+    "compose_replacement": "web only",
+    "healthy_services": ["web", "app", "db", "scanner"],
+    "web_image": "sha256:3da93dcdaf11ecda4de6a96a540d17583d1063c89a37e2113183a8cc7628ec2a",
+    "rollback_tag": "helpdesk-m0-web:pre-ux-20261126",
+    "app_image": "sha256:b84e3a631395f6a72a7363ef31b48e0a964eda00aaeab41ac52b97117d6e6aee",
+    "working_db_row_counts": {"tickets": 136, "attachments": 51, "media": 17}
+  },
+  "limits": [
+    "Pemeriksaan di Edge dengan viewport emulasi dan akun lab. Laporan dibuka sampai pratinjau dan dibatalkan",
+    "Tangkapan layar berisi tampilan data lab dan disimpan di .local",
+    "Suite datatable yang melakukan mutasi dan CI terlindungi tidak dijalankan. Regresi kontrol antrean diverifikasi secara baca saja",
+    "UAT manusia, perangkat mobile fisik, pembaca layar dan rilis produksi belum dinilai"
+  ]
+}

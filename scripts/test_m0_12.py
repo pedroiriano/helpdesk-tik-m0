@@ -1,4 +1,5 @@
 """M0-12 End-to-End Go/HTTP/PostgreSQL integration across all 9 modules, on disposable Docker network."""
+import argparse
 import datetime
 import hashlib
 import json
@@ -10,6 +11,10 @@ from test_owner_migrations import MigrationGate, ROOT
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--report", type=Path, default=Path("qa/m0-12/integration.json"))
+    parser.add_argument("--scanner", choices=("helpdesk-m0-scanner", "helpdesk-penyempurnaan-fase1-scanner"), default="helpdesk-m0-scanner")
+    args = parser.parse_args()
     gate = MigrationGate()
     network = gate.name + '-net'
     worker = gate.name + '-go'
@@ -17,7 +22,7 @@ def main():
     report = {
         'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat(),
         'scope': 'M0-12 End-to-end integration across all 9 modules (M1-M9), guest lifecycle, CAS concurrency collision, search & dynamic revocation, inter-OPD handoff & escalation, maintenance mode, scoped runner, purge protection, reports analytics & CSV sanitization, readiness & liveness probes; real HTTP and PostgreSQL; zero working DB writes',
-        'command': 'python scripts/test_m0_12.py',
+        'command': f'python scripts/test_m0_12.py --scanner {args.scanner} --report {args.report.as_posix()}',
         'host_ports': [],
         'persistent_volumes': []
     }
@@ -30,7 +35,7 @@ def main():
             raise RuntimeError(build.stderr[-4000:])
         gate.docker('network', 'create', '--internal', '--label', 'helpdesk.scope=m0-12-test', network)
         created_network = True
-        gate.docker('network', 'connect', network, 'helpdesk-m0-scanner')
+        gate.docker('network', 'connect', network, args.scanner)
         gate.provision(network)
         gate.apply()
         seed = (ROOT / 'seeds/m0-03-lab.sql').read_text(encoding='utf-8')
@@ -42,7 +47,7 @@ def main():
             '--label', 'helpdesk.scope=m0-12-test',
             '--network', network, '--cpus', '1', '--memory', '1024m',
             '-e', 'HELPDESK_M012_TEST=1',
-            '-e', 'HELPDESK_TEST_SCANNER=helpdesk-m0-scanner:3310',
+            '-e', 'HELPDESK_TEST_SCANNER=' + args.scanner + ':3310',
             '-e', 'HELPDESK_TEST_DB_HOST=' + gate.name,
             '-e', 'HELPDESK_TEST_PASSWORD=' + gate.password,
             'helpdesk-m0-m012-test:0.1.0',
@@ -64,7 +69,7 @@ def main():
             pass
         try:
             if created_network:
-                gate.docker('network', 'disconnect', network, 'helpdesk-m0-scanner', ok=False)
+                gate.docker('network', 'disconnect', network, args.scanner, ok=False)
         except Exception:
             pass
         try:
@@ -83,7 +88,7 @@ def main():
         if path.is_file() and not any(part in {'.git', 'dist', 'tmp'} for part in path.parts):
             sources[path.relative_to(ROOT).as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()
     report['source_hashes'] = sources
-    out = ROOT / 'qa/m0-12/integration.json'
+    out = ROOT / args.report
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(report, indent=2), encoding='utf-8')
     print(f'{report["result"]} M0-12 integration gate -> {out}')

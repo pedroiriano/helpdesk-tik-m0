@@ -1,0 +1,69 @@
+{
+  "result": "PASS",
+  "target": "http://127.0.0.1:18090/admin/app/dashboard/index.html",
+  "period": {
+    "from": "2026-10-27T04:24:37.060Z",
+    "to": "2026-11-26T04:24:37.060Z",
+    "organization_id": "10000000-0000-4000-8000-000000000001"
+  },
+  "aggregates": {
+    "accepted": 114,
+    "backlog": 64,
+    "completed": 50,
+    "age": [
+      {
+        "key": "age_lt24",
+        "count": 0
+      },
+      {
+        "key": "age_24_72",
+        "count": 0
+      },
+      {
+        "key": "age_gte72",
+        "count": 64
+      }
+    ],
+    "deadline": [
+      {
+        "key": "overdue",
+        "count": 12
+      },
+      {
+        "key": "due_soon",
+        "count": 0
+      },
+      {
+        "key": "on_track",
+        "count": 0
+      },
+      {
+        "key": "paused",
+        "count": 0
+      },
+      {
+        "key": "unmeasured",
+        "count": 52
+      }
+    ]
+  },
+  "reconciled_ticket_rows": 114,
+  "searched_from_second_page": true,
+  "title_search": true,
+  "chart_and_card_drill": true,
+  "same_filters_in_capacity_performance_export": true,
+  "mobile": {
+    "overflow": 0,
+    "chartOverflow": 881
+  },
+  "keyboard_focus": true,
+  "out_of_mandate": {
+    "aggregate": 403,
+    "detail": 403,
+    "search": 403,
+    "technical_export": 403,
+    "cohort_export": 403,
+    "capacity": 403
+  },
+  "report_only_account_no_detail_or_exports": true
+}

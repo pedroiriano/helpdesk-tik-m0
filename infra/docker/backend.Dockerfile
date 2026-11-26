@@ -9,6 +9,7 @@ RUN go vet ./... && go test ./...
 FROM source AS build
 RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/helpdesk ./cmd/helpdesk
 FROM scratch AS runtime
+COPY --from=source /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY --from=build /out/helpdesk /helpdesk
 COPY configs/M0.json /app/configs/M0.json
 COPY migrations/manifest.json migrations/checksums.sha256 /app/migrations/

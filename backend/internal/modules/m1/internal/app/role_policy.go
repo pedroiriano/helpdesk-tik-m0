@@ -28,6 +28,11 @@ type rolePolicyInput struct {
 	Reason          string   `json:"reason"`
 }
 
+const (
+	labSuperAdminID = "20000000-0000-4000-8000-000000000017"
+	labReportsOrgID = "10000000-0000-4000-8000-000000000001"
+)
+
 func editableRole(role string) bool {
 	switch role {
 	case "OPERATOR", "TECHNICIAN", "COORDINATOR", "LEADERSHIP", "ADMIN_OPD", "PLATFORM_ADMIN", "EDITOR", "PUBLISHER", "AUDITOR":
@@ -67,16 +72,20 @@ func (s *Service) policy(ctx context.Context, role string) (rolePolicy, error) {
 	return out, err
 }
 
-func (s *Service) applyRolePolicy(ctx context.Context, actor *api.Actor) error {
+func (s *Service) applyRolePolicy(ctx context.Context, actor *api.Actor, labSession bool) error {
 	policy, err := s.policy(ctx, actor.Role)
 	if err != nil {
 		return err
 	}
+	// The lab fixture has a dedicated read grant for the dashboard demonstration.
+	labReports := s.Options.Lab && labSession &&
+		actor.ID == labSuperAdminID && actor.Kind == "STAFF" && actor.Role == "SUPER_ADMIN"
 	for i := range actor.Memberships {
 		m := &actor.Memberships[i]
+		labReportScope := labReports && m.OrganizationActive && m.TeamID == nil && m.OrganizationID == labReportsOrgID
 		filtered := make([]string, 0, len(m.Permissions))
 		for _, p := range m.Permissions {
-			if slices.Contains(policy.Permissions, p) {
+			if slices.Contains(policy.Permissions, p) || (labReportScope && p == "report.read") {
 				filtered = append(filtered, p)
 			}
 		}

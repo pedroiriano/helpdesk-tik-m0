@@ -1,0 +1,22 @@
+{
+  "result": "PASS",
+  "target": "http://127.0.0.1:18090/admin/app/dashboard/index.html",
+  "super_admin": {
+    "role": "SUPER_ADMIN",
+    "total_icons": 22,
+    "submenu_icons": 16,
+    "scrollable": true
+  },
+  "technician": {
+    "role": "TECHNICIAN",
+    "total_icons": 8,
+    "submenu_icons": 4,
+    "scrollable": false
+  },
+  "all_authorized_icons_rendered": true,
+  "keyboard_link_and_active_route": true,
+  "focus_scrolls_to_bottom": true,
+  "desktop_disclosure_state_preserved": true,
+  "mobile_drawer_labels_and_escape": true,
+  "unauthorized_routes_hidden": true
+}

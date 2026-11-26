@@ -1,0 +1,2 @@
+PASS package consistency: 9 modules, 13 tasks, 25 acceptance, 29 source groups, 21 chapters
+NOT_RUN application tests, agent runtime loading, UAT and deployment

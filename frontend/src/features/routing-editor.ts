@@ -9,6 +9,7 @@ export function bindRoutingEditor(form: HTMLFormElement, session: Components['Se
   const tier = find<HTMLSelectElement>('[name="tier"]');
   const category = find<HTMLSelectElement>('[name="category"]');
   const organization = find<HTMLSelectElement>('[name="organization"]');
+  const division = find<HTMLSelectElement>('[name="division"]');
   const team = find<HTMLSelectElement>('[name="team"]');
   const skills = find<HTMLInputElement>('[name="skills"]');
   const reason = find<HTMLInputElement>('[name="reason"]');
@@ -26,14 +27,28 @@ export function bindRoutingEditor(form: HTMLFormElement, session: Components['Se
     return `/admin/services/${service?.id}/routing/${tier.value}` +
       (category.value ? '?category_id='+encodeURIComponent(category.value) : '');
   }
-  async function loadTeams(pick = '') {
+  async function loadTeams(pick = '', reloadDivisions = false) {
     const stamp = ++teamEpoch;
+    const org = organization.value;
     team.replaceChildren(new Option('Pilih tim aktif',''));
-    if (!organization.value) return;
-    const page = await api<Page<Components['Team']>>('/admin/teams?limit=100&organization_id='+encodeURIComponent(organization.value));
+    if (reloadDivisions) division.replaceChildren(new Option('Semua bidang',''));
+    if (!org) return;
+    const divisionQuery = reloadDivisions
+      ? api<Page<Components['Division']>>('/admin/divisions?limit=100&organization_id='+encodeURIComponent(org)) : undefined;
+    const query = new URLSearchParams({limit:'100',organization_id:org});
+    if (division.value) query.set('division_id',division.value);
+    const [page,divisions] = await Promise.all([api<Page<Components['Team']>>('/admin/teams?'+query),divisionQuery]);
     if (stamp !== teamEpoch) return;
+    for (const item of divisions?.items ?? []) division.add(new Option(item.name,item.id));
     for (const item of page.items.filter(t=>t.active)) team.add(new Option(item.name,item.id));
     team.value = pick;
+    if (pick && reloadDivisions) {
+      const current = page.items.find(t=>t.id===pick);
+      if (current?.division_id && [...division.options].some(option=>option.value===current.division_id)) {
+        division.value = current.division_id;
+        await loadTeams(pick);
+      }
+    }
   }
   async function loadRule() {
     if (!service) return;
@@ -52,7 +67,7 @@ export function bindRoutingEditor(form: HTMLFormElement, session: Components['Se
       skills.value = rule?.required_skills.join(', ') ?? '';
       active.checked = rule?.active ?? true;
       reason.value = '';
-      await loadTeams(rule?.team_id);
+      await loadTeams(rule?.team_id,true);
       if (stamp !== epoch) return;
       feedback.textContent = version ? `Aturan versi ${version}.` : 'Belum ada aturan untuk pilihan ini.';
       submit.disabled = false;
@@ -61,7 +76,8 @@ export function bindRoutingEditor(form: HTMLFormElement, session: Components['Se
     }
   }
   for (const el of [tier,category]) el.addEventListener('change',()=>void loadRule());
-  organization.addEventListener('change',()=>void loadTeams().catch(error=>{feedback.textContent=errorText(error);}));
+  organization.addEventListener('change',()=>void loadTeams('',true).catch(error=>{feedback.textContent=errorText(error);}));
+  division.addEventListener('change',()=>void loadTeams().catch(error=>{feedback.textContent=errorText(error);}));
   form.addEventListener('submit',async event=>{
     event.preventDefault();
     if (!service || saving || submit.disabled || !form.reportValidity()) return;

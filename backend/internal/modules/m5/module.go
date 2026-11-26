@@ -2,6 +2,8 @@
 package m5
 
 import (
+	"net/http"
+
 	"github.com/jackc/pgx/v5/pgxpool"
 	identity "helpdesk.local/m0/internal/modules/m1/api"
 	"helpdesk.local/m0/internal/modules/m5/api"
@@ -26,6 +28,8 @@ func NewRuntime(pool *pgxpool.Pool, idPort identity.Port) *Module {
 	}
 }
 
+func (m *Module) BindLoadSource(source *delivery.Source) { m.service.LoadSource = source }
+
 func (m *Module) ID() string {
 	return "M5"
 }
@@ -45,3 +49,5 @@ func (m *Module) Consumer() delivery.Consumer {
 }
 
 func (m *Module) Source() *delivery.Source { return delivery.New(m.pool, "M5") }
+
+func (m *Module) RegisterRoster(mux *http.ServeMux) { m.service.RegisterRoster(mux) }

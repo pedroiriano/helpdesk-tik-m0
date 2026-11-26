@@ -275,13 +275,13 @@ export async function loadSchedulerJobs(): Promise<void> {
   const stateSelect = $<HTMLSelectElement>('#hd-scheduler-state');
   if (!rows) return;
   const st = stateSelect?.value ?? '';
-  if (stat) stat.textContent = 'Memuat antrean penjadwalan M7…';
+  if (stat) stat.textContent = 'Memuat pekerjaan terjadwal…';
   try {
     const res = await api<{ items: SchedulerJobItem[] }>(`/admin/scheduler-jobs?limit=100${st ? '&state=' + encodeURIComponent(st) : ''}`);
     rows.replaceChildren();
     if (!res.items.length) {
       rows.append(emptyRow(5, 'Tidak ada job penjadwalan pada filter ini.'));
-      if (stat) stat.textContent = 'Tidak ada job M7 ditemukan.';
+      if (stat) stat.textContent = 'Belum ada pekerjaan terjadwal.';
       return;
     }
     for (const job of res.items) {
@@ -325,7 +325,7 @@ export async function loadSchedulerJobs(): Promise<void> {
       );
       rows.append(tr);
     }
-    if (stat) stat.textContent = `Menampilkan ${res.items.length} job penjadwalan M7.`;
+    if (stat) stat.textContent = `Menampilkan ${res.items.length} pekerjaan terjadwal.`;
   } catch (err) {
     if (stat) stat.textContent = errorText(err);
   }
@@ -384,8 +384,8 @@ export async function loadMediaPickersAndApprovals(): Promise<void> {
       ...(m8.status === 'fulfilled' ? m8.value.items : []),
       ...(m3.status === 'fulfilled' ? m3.value.items : [])
     ];
-    fillMediaOptions(srcPick, allMedia, 'Pilih media sumber CLEAN…');
-    fillMediaOptions(copyPick, m8.status === 'fulfilled' ? m8.value.items : [], 'Pilih salinan hasil redaksi CLEAN (M8)…');
+    fillMediaOptions(srcPick, allMedia, 'Pilih media sumber yang lolos pemindaian…');
+    fillMediaOptions(copyPick, m8.status === 'fulfilled' ? m8.value.items : [], 'Pilih salinan redaksi yang lolos pemindaian…');
   } catch {}
 
   if (targetPick) {
@@ -394,7 +394,7 @@ export async function loadMediaPickersAndApprovals(): Promise<void> {
         api<Page<{ id: string; kind: string; title: string; audience?: string }>>('/knowledge/articles?limit=40'),
         api<Page<{ id: string; kind: string; title: string; audience?: string }>>('/portal/pages?limit=40')
       ]);
-      targetPick.replaceChildren(new Option('Pilih artikel/halaman M8 tujuan…', ''));
+      targetPick.replaceChildren(new Option('Pilih artikel atau halaman tujuan…', ''));
       for (const list of [arts, pgs]) {
         if (list.status !== 'fulfilled') continue;
         for (const item of list.value.items) {

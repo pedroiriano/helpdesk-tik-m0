@@ -1,0 +1,263 @@
+{
+  "task_id": "PENYEMPURNAAN_M0_FASE_1",
+  "status": "DONE_VERIFIED_LAB",
+  "result": "PASS_LAB",
+  "timestamp": "2026-11-24T04:25:47.573435+00:00",
+  "baseline": {
+    "branch": "main",
+    "git_sha": "8f9ab58a668830ad1bf92b8d70580eae36a7bef8",
+    "reference_tag": "rm0-05-rc4",
+    "tag_sha": "68b9922af7695e545fcb161bd6498b4579cba5b4",
+    "baseline_changes_preserved": [
+      "status/evidence.jsonl",
+      "prompts/01_FASE_PENYEMPURNAAN_M0.md",
+      "prompts/02_FASE_PENYEMPURNAAN_M0.md",
+      "qa/audit-helpdesk-2026-11-24.md"
+    ]
+  },
+  "candidate": {
+    "working_tree": true,
+    "source_manifest": "qa/remediation/rm0-05/penyempurnaan/fase1-source-manifest.json",
+    "source_manifest_sha256": "446227ac463a4d62fc5a2a2d80f801b654cc915f60fe725eeebcfdbdb9d2c22a",
+    "fixture": "http://127.0.0.1:18191",
+    "database_ledger": "001–043",
+    "images": {
+      "app": "sha256:68b4d09b02da52968e6006b2d55ebb6ecc1a7c940f2477f31c4fa734e2096a17",
+      "web": "sha256:e891beb6d56d939d1a0a52ff7a8687aa213a567437375e594dddf3aba0d38a29",
+      "scanner": "sha256:7054e3f34308c384ea43cd786ea17abf899bd44af40af9f1b099853d7a5c214e",
+      "db": "sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015"
+    }
+  },
+  "findings": {
+    "A02": "Verified scoped maintenance, two PD, scheduled, READ_ONLY and DRAIN, global and recovery",
+    "A05": "Verified roster ACL, version, audit, overlap, eligibility and manual fallback; regression suite PASS",
+    "UX": "Verified nine Edge checks, five profiles, keyboard, mobile, ticket workflow, roster",
+    "A07": "Verified scoped cursor, list filtering, anonymous and live revocation, media and upload ACL regression",
+    "A03": "Verified clean file scans and successful definition restoration through a synthetic private mirror",
+    "A04": "Verified production Compose parsing and OIDC/notification sinks; actual providers pending",
+    "A01": "Baseline delta recorded; release candidate freeze remains in Fase 2",
+    "A06": "Release worksheet alignment belongs to Fase 2"
+  },
+  "changes": [
+    "backend/internal/bootstrap/application.go",
+    "backend/internal/bootstrap/diagnostics.go",
+    "backend/internal/bootstrap/fase2_integration_test.go",
+    "backend/internal/bootstrap/search_cursor.go",
+    "backend/internal/modules/m1/api/identity.go",
+    "backend/internal/modules/m1/api/maintenance.go",
+    "backend/internal/modules/m1/api/operations.go",
+    "backend/internal/modules/m1/internal/app/directory.go",
+    "backend/internal/modules/m1/internal/app/http.go",
+    "backend/internal/modules/m1/internal/app/operations.go",
+    "backend/internal/modules/m1/internal/store/operations.go",
+    "backend/internal/modules/m2/internal/app/catalog.go",
+    "backend/internal/modules/m2/internal/store/catalog.go",
+    "backend/internal/modules/m2/module.go",
+    "backend/internal/modules/m3/api/tickets.go",
+    "backend/internal/modules/m3/internal/app/http.go",
+    "backend/internal/modules/m3/internal/app/ops_completion.go",
+    "backend/internal/modules/m3/internal/app/tickets.go",
+    "backend/internal/modules/m3/internal/store/ops_completion.go",
+    "backend/internal/modules/m3/internal/store/tickets.go",
+    "backend/internal/modules/m3/module.go",
+    "backend/internal/modules/m5/api/assignment.go",
+    "backend/internal/modules/m5/api/roster.go",
+    "backend/internal/modules/m5/internal/app/assignment.go",
+    "backend/internal/modules/m5/internal/app/roster.go",
+    "backend/internal/modules/m5/internal/store/assignment.go",
+    "backend/internal/modules/m5/internal/store/roster.go",
+    "backend/internal/modules/m5/module.go",
+    "backend/internal/modules/m8/internal/app/service.go",
+    "backend/internal/modules/m8/internal/store/content.go",
+    "backend/internal/modules/m8/module.go",
+    "backend/internal/platform/blob/files.go",
+    "compose.prod-integrations.yml",
+    "compose.prod.yml",
+    "contracts/business_traceability.csv",
+    "contracts/feature_coverage.csv",
+    "contracts/openapi/business.json",
+    "docs/06_ATURAN_UI_UX_WEB_ADMIN.md",
+    "docs/ARCHITECTURE_M0_C3_F9.md",
+    "frontend/admin-profiles.mjs",
+    "frontend/business-pages.mjs",
+    "frontend/src/features/business-types.generated.ts",
+    "frontend/src/features/fase2-ticket.ts",
+    "frontend/src/features/m0-03.ts",
+    "frontend/src/features/m0-04.ts",
+    "frontend/src/features/roster.ts",
+    "frontend/src/features/search-combobox.ts",
+    "infra/docker/backend.Dockerfile",
+    "migrations/checksums.sha256",
+    "migrations/m5/043-roster-active.sql",
+    "migrations/manifest.json",
+    "planning/remediation_backlog.csv",
+    "qa/remediation/rm0-05/penyempurnaan/fase1-browser.json",
+    "qa/remediation/rm0-05/penyempurnaan/fase1-dispatch-regression.json",
+    "qa/remediation/rm0-05/penyempurnaan/fase1-fase2-backend-first-attempt.json",
+    "qa/remediation/rm0-05/penyempurnaan/fase1-fase2-backend-manual-attempt.json",
+    "qa/remediation/rm0-05/penyempurnaan/fase1-fase2-backend.json",
+    "qa/remediation/rm0-05/penyempurnaan/fase1-fase3-backend.json",
+    "qa/remediation/rm0-05/penyempurnaan/fase1-scanner-mirror-first-attempt.json",
+    "qa/remediation/rm0-05/penyempurnaan/fase1-scanner-mirror.json",
+    "qa/remediation/rm0-05/penyempurnaan/fase1-source-manifest.json",
+    "qa/remediation/rm0-05/penyempurnaan/fase1-uploads.json",
+    "runbooks/production-cutover.md",
+    "scripts/build_business_contracts.py",
+    "scripts/m0_05_contracts.py",
+    "scripts/test_m0_04.py",
+    "scripts/test_maintenance_under_maintenance_browser.mjs",
+    "scripts/test_penyempurnaan_fase1_browser.mjs",
+    "scripts/test_penyempurnaan_fase1_scanner.py",
+    "status/PROJECT_STATE.md",
+    "status/evidence.jsonl"
+  ],
+  "tests": [
+    {
+      "command": "python -X utf8 scripts/test_fase2_backend.py --report qa/remediation/rm0-05/penyempurnaan/fase1-fase2-backend.json",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "evidence": "qa/remediation/rm0-05/penyempurnaan/fase1-fase2-backend.json"
+    },
+    {
+      "command": "python -X utf8 scripts/test_rm0_02.py --report qa/remediation/rm0-05/penyempurnaan/fase1-dispatch-regression.json",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "evidence": "qa/remediation/rm0-05/penyempurnaan/fase1-dispatch-regression.json"
+    },
+    {
+      "command": "python -X utf8 scripts/test_fase3_backend.py --report qa/remediation/rm0-05/penyempurnaan/fase1-fase3-backend.json",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "evidence": "qa/remediation/rm0-05/penyempurnaan/fase1-fase3-backend.json",
+      "observations": "Run after integration settings change. Later source changes affect maintenance, queue, and manual dispatch, plus the TLS root bundle in the runtime image."
+    },
+    {
+      "command": "python -X utf8 scripts/test_m0_04.py --scanner helpdesk-penyempurnaan-fase1-scanner --report qa/remediation/rm0-05/penyempurnaan/fase1-uploads.json",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "evidence": "qa/remediation/rm0-05/penyempurnaan/fase1-uploads.json"
+    },
+    {
+      "command": "python -X utf8 scripts/test_penyempurnaan_fase1_scanner.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "evidence": "qa/remediation/rm0-05/penyempurnaan/fase1-scanner-mirror.json"
+    },
+    {
+      "command": "$env:HELPDESK_BASE_URL='http://127.0.0.1:18191'; $env:EDGE_MAINT_CDP_PORT='9248'; node scripts/test_penyempurnaan_fase1_browser.mjs",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "evidence": "qa/remediation/rm0-05/penyempurnaan/fase1-browser.json"
+    },
+    {
+      "command": "$env:HELPDESK_BASE_URL='http://127.0.0.1:18191'; $env:HELPDESK_MAINT_TEST_SERVICE_ID='30000000-0000-4000-8000-000000000001'; $env:EDGE_MAINT_CDP_PORT='9248'; node scripts/test_maintenance_under_maintenance_browser.mjs",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "observations": "Scheduled banner, emergency full screen, READ_ONLY 503, DRAIN form lock, stop and restore, staff ACL, mobile 390x844, 0 CSP errors"
+    },
+    {
+      "command": "python -X utf8 scripts/build_business_contracts.py --check",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "python -X utf8 scripts/check_boundaries.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "observations": "53 Go packages"
+    },
+    {
+      "command": "python -X utf8 -m unittest discover -s tests/contract",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "observations": "17 tests"
+    },
+    {
+      "command": "npm.cmd --prefix frontend run build",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "python -X utf8 scripts/test_piui_build.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "node scripts/test_admin_navigation.mjs",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "node scripts/test_admin_profiles.mjs",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "node scripts/test_ticket_actions.mjs",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "python -X utf8 scripts/verify_package.py",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "docker compose config --quiet",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "docker compose -f compose.yaml -f compose.prod.yml config --quiet",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS"
+    },
+    {
+      "command": "docker compose -f compose.yaml -f compose.prod.yml -f compose.prod-integrations.yml config --format json",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "observations": "Protected fixture bind read-only; no published scanner port; database internal; scanner-updates provides separate egress."
+    },
+    {
+      "command": "docker compose -p helpdesk-penyempurnaan-fase1 -f compose.yaml -f .local/penyempurnaan-fase1/compose.yml up -d --build --wait --wait-timeout 240 app web",
+      "cwd": "C:\\Datas\\Proyek\\Aplikasi\\helpdesk-monolith",
+      "exit": 0,
+      "result": "PASS",
+      "observations": "Pinned Docker build. Readiness HTTP 200 on fixture 18191 and existing working gateway 18090."
+    }
+  ],
+  "resolved_test_issues": [
+    "Bootstrap fixture credential used CRLF; recreated only the fixture DB with LF credentials.",
+    "M2 pagination assertion needed an authenticated fixture with more than one visible service.",
+    "Manual assignment emitted a recommendation fact with an empty digest; record only the ticket snapshot for manual mode.",
+    "CDP Enter needed text and native virtual key for the mobile button.",
+    "FreshClam mirror required a readiness probe and isolated loopback without proxy.",
+    "Guest browser fixture now conforms to the canonical 64 lowercase hexadecimal format.",
+    "Maintenance browser fixture ends READ_ONLY before exercising DRAIN, consistent with scope precedence."
+  ],
+  "scope_limits": [
+    "Only lab fixture was migrated or used for test mutations. Working 18090 gateway remained available.",
+    "No external provider sends or production deployment. Official mirrors/provider integration, human UAT, release freeze and authorization remain outstanding.",
+    "No benchmark, no comparison or implementation of C3/F9/G-OPT."
+  ],
+  "phase2": "NOT_STARTED"
+}

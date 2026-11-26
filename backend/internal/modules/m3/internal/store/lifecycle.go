@@ -99,8 +99,13 @@ func emitTicketSnapshot(ctx context.Context, tx pgx.Tx, kind string, ticket api.
 	if err != nil {
 		return err
 	}
+	var vendorOpen bool
+	if err := tx.QueryRow(ctx, "SELECT EXISTS(SELECT 1 FROM intake.vendor_cases WHERE ticket_id=$1 AND state='OPEN')", ticket.ID).Scan(&vendorOpen); err != nil {
+		return err
+	}
 	payload := map[string]any{
-		"state": ticket.State, "requester_id": ticket.RequesterID, "service_id": ticket.ServiceID,
+		"awaiting_vendor": vendorOpen,
+		"state":           ticket.State, "requester_id": ticket.RequesterID, "service_id": ticket.ServiceID,
 		"service_owner_org_id": ticket.OwnerOrg, "accepted_at": ticket.Accepted, "resolution_due_at": clock.Due,
 		"policy_version": ticket.PolicyVersion, "episode_id": ticket.EpisodeID, "assignee_id": ticket.AssigneeID,
 		"handling_team_id": ticket.HandlingTeamID, "resolution_endpoint": clock.Endpoint, "gross_seconds": clock.Gross, "net_seconds": clock.Net,
